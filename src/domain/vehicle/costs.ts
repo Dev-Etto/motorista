@@ -1,0 +1,102 @@
+export type VehicleKind = 'car' | 'motorcycle';
+export type Ownership = 'owned' | 'financed' | 'rented';
+export type FuelType = 'gasoline' | 'ethanol' | 'diesel' | 'cng' | 'electric';
+
+export interface CostProfile {
+  ownership: Ownership;
+  fuelPriceCents: number;
+    consumptionKmPerUnit: number;
+  oilChangeCents: number;
+  oilIntervalKm: number;
+  tiresCents: number;
+  tiresLifeKm: number;
+  maintenanceMonthlyCents: number;
+  insuranceMonthlyCents: number;
+  ipvaYearlyCents: number;
+  licensingYearlyCents: number;
+    paymentMonthlyCents: number;
+  vehicleValueCents: number;
+  depreciationAnnualPct: number;
+  depreciationEnabled: boolean;
+  otherFixedMonthlyCents: number;
+  plannedKmMonth: number;
+}
+
+export interface CostBreakdown {
+  fuelPerKm: number;
+  oilPerKm: number;
+  tiresPerKm: number;
+  maintenancePerKm: number;
+  variablePerKm: number;
+  insuranceMonthly: number;
+  taxesMonthly: number;
+  paymentMonthly: number;
+  depreciationMonthly: number;
+  otherFixedMonthly: number;
+  fixedMonthly: number;
+  fixedPerKm: number;
+    fullPerKm: number;
+}
+
+export function defaultDepreciationEnabled(ownership: Ownership): boolean {
+  return ownership === 'owned';
+}
+
+function safeDivide(value: number, by: number): number {
+  return by > 0 ? value / by : 0;
+}
+
+export function computeCosts(p: CostProfile): CostBreakdown {
+  const fuelPerKm = safeDivide(p.fuelPriceCents, p.consumptionKmPerUnit);
+  const oilPerKm = safeDivide(p.oilChangeCents, p.oilIntervalKm);
+  const tiresPerKm = safeDivide(p.tiresCents, p.tiresLifeKm);
+  const maintenancePerKm = safeDivide(p.maintenanceMonthlyCents, p.plannedKmMonth);
+  const variablePerKm = fuelPerKm + oilPerKm + tiresPerKm + maintenancePerKm;
+
+  const taxesMonthly = (p.ipvaYearlyCents + p.licensingYearlyCents) / 12;
+  const depreciates = p.depreciationEnabled && p.ownership !== 'rented';
+  const depreciationMonthly = depreciates ? (p.vehicleValueCents * (p.depreciationAnnualPct / 100)) / 12 : 0;
+  const paymentMonthly = p.ownership === 'owned' ? 0 : p.paymentMonthlyCents;
+  const fixedMonthly =
+    p.insuranceMonthlyCents + taxesMonthly + paymentMonthly + depreciationMonthly + p.otherFixedMonthlyCents;
+  const fixedPerKm = safeDivide(fixedMonthly, p.plannedKmMonth);
+
+  return {
+    fuelPerKm,
+    oilPerKm,
+    tiresPerKm,
+    maintenancePerKm,
+    variablePerKm,
+    insuranceMonthly: p.insuranceMonthlyCents,
+    taxesMonthly,
+    paymentMonthly,
+    depreciationMonthly,
+    otherFixedMonthly: p.otherFixedMonthlyCents,
+    fixedMonthly,
+    fixedPerKm,
+    fullPerKm: variablePerKm + fixedPerKm,
+  };
+}
+
+export function suggestedProfile(kind: VehicleKind, ownership: Ownership): CostProfile {
+  const isCar = kind === 'car';
+  return {
+    ownership,
+    fuelPriceCents: 600,
+    consumptionKmPerUnit: isCar ? 11 : 30,
+    oilChangeCents: isCar ? 25000 : 6000,
+    oilIntervalKm: isCar ? 10000 : 3000,
+    tiresCents: isCar ? 200000 : 60000,
+    tiresLifeKm: isCar ? 50000 : 20000,
+    maintenanceMonthlyCents: isCar ? 30000 : 10000,
+    insuranceMonthlyCents: 0,
+    ipvaYearlyCents: 0,
+    licensingYearlyCents: 0,
+    paymentMonthlyCents: 0,
+    vehicleValueCents: 0,
+    depreciationAnnualPct: 10,
+    depreciationEnabled: defaultDepreciationEnabled(ownership),
+    otherFixedMonthlyCents: 0,
+    plannedKmMonth: 4000,
+  };
+}
