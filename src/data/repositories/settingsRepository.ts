@@ -1,0 +1,33 @@
+import { getDb } from '@/data/database/connection';
+
+export const settingsRepository = {
+  async get(key: string): Promise<string | null> {
+    const row = await getDb().getFirstAsync<{ value: string }>('SELECT value FROM settings WHERE key = ?', key);
+    return row?.value ?? null;
+  },
+
+  async set(key: string, value: string): Promise<void> {
+    await getDb().runAsync(
+      'INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value',
+      key,
+      value,
+    );
+  },
+
+  async getJson<T>(key: string, fallback: T): Promise<T> {
+    const raw = await this.get(key);
+    return raw === null ? fallback : (JSON.parse(raw) as T);
+  },
+
+  async setJson(key: string, value: unknown): Promise<void> {
+    await this.set(key, JSON.stringify(value));
+  },
+};
+
+export const SETTING_KEYS = {
+  onboarded: 'onboarded',
+  lastBackupAt: 'last_backup_at',
+  offerTargets: 'offer_targets',
+  quoteDefaults: 'quote_defaults',
+  copilot: 'copilot_preferences',
+} as const;
