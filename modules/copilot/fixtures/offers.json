@@ -1,0 +1,15 @@
+{
+  "classification": [
+    { "valueCents": 2000, "km": 10, "minutes": 20, "costPerKm": 100, "targetPerKmCents": 200, "targetPerHourCents": 3000, "color": "green" },
+    { "valueCents": 1500, "km": 10, "minutes": 20, "costPerKm": 100, "targetPerKmCents": 200, "targetPerHourCents": 3000, "color": "yellow" },
+    { "valueCents": 2000, "km": 10, "minutes": 60, "costPerKm": 100, "targetPerKmCents": 200, "targetPerHourCents": 3000, "color": "yellow" },
+    { "valueCents": 900, "km": 10, "minutes": 20, "costPerKm": 100, "targetPerKmCents": 200, "targetPerHourCents": 3000, "color": "red" }
+  ],
+  "parsing": [
+    { "text": "R$ 18,40 | 5 min (2,1 km) | Viagem de 14 min (6,4 km) | Aceitar", "valueCents": 1840, "km": 8.5, "minutes": 19 },
+    { "text": "R$ 1.250,00 | 1 h 10 min | 90 km | Selecionar", "valueCents": 125000, "km": 90, "minutes": 70 },
+    { "text": "+R$ 3,00 | R$ 9,90 | 800 m | 2 km | 12 min | Aceitar", "valueCents": 990, "km": 2.8, "minutes": 12 },
+    { "text": "Ganhos de hoje R$ 120,00 | 12 corridas | 80 km | 5 h 30 min", "none": true },
+    { "text": "R$ 15,00 | Aceitar", "none": true }
+  ]
+}
