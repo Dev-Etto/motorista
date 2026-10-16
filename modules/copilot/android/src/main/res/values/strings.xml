@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="copilot_service_label">Copiloto de ofertas</string>
+  <string name="copilot_service_description">Lê valor, distância e tempo das ofertas nos apps de corrida para mostrar um cartão com seus números. Não toca na tela, não aceita nem recusa corridas, e nada sai do aparelho.</string>
+</resources>
