@@ -1,0 +1,162 @@
+import { useMemo, useState } from 'react';
+import { platformRepository } from '@/data/repositories/platformRepository';
+import { KmSource, shiftRepository } from '@/data/repositories/shiftRepository';
+import { vehicleRepository } from '@/data/repositories/vehicleRepository';
+import { countsAgainstProfit, ExpenseCategory } from '@/domain/expense/expense';
+import { computeShift } from '@/domain/shift/shift';
+import { useAsyncData } from '@/shared/hooks/useAsyncData';
+import { formatDate, parseDisplayDate, today } from '@/shared/utils/dates';
+import { centsToInput, parseBRL } from '@/shared/utils/money';
+import { centsOrZero, decimalOrNull, decimalOrZero, intOrNull } from '@/shared/utils/parse';
+
+export const JOURNEY_EXPENSES: { category: ExpenseCategory; label: string }[] = [
+  { category: 'toll', label: 'Pedágio' },
+  { category: 'parking', label: 'Estacionamento' },
+  { category: 'wash', label: 'Lavagem' },
+  { category: 'food', label: 'Alimentação' },
+  { category: 'other', label: 'Outras despesas' },
+];
+
+const MINUTES_PER_HOUR = 60;
+
+function resolveKm(mode: KmSource, kmText: string, startText: string, endText: string, gpsKm: number): number | null {
+  if (mode === 'gps') return gpsKm > 0 ? gpsKm : null;
+  if (mode === 'manual') return decimalOrNull(kmText);
+
+  const start = decimalOrNull(startText);
+  const end = decimalOrNull(endText);
+  if (start === null || end === null || end < start) return null;
+  return end - start;
+}
+
+async function loadFormData(shiftId: number | undefined, date: string) {
+  const [platforms, costs, existing] = await Promise.all([
+    platformRepository.list(),
+    vehicleRepository.getCostsAt(date),
+    shiftId ? shiftRepository.findById(shiftId) : Promise.resolve(null),
+  ]);
+  return { platforms, costs: costs.costs, existing };
+}
+
+export function useShiftForm(shiftId?: number) {
+  const [date, setDate] = useState(formatDate(today()));
+  const [hours, setHours] = useState('');
+  const [startHour, setStartHour] = useState('');
+  const [kmMode, setKmMode] = useState<KmSource>('manual');
+  const [kmText, setKmText] = useState('');
+  const [odometerStart, setOdometerStart] = useState('');
+  const [odometerEnd, setOdometerEnd] = useState('');
+  const [gpsKm, setGpsKm] = useState(0);
+  const [trips, setTrips] = useState('');
+  const [earnings, setEarnings] = useState<Record<number, string>>({});
+  const [expenses, setExpenses] = useState<Partial<Record<ExpenseCategory, string>>>({});
+  const [error, setError] = useState<string | null>(null);
+  const [hydrated, setHydrated] = useState(!shiftId);
+
+  const { data } = useAsyncData(async () => {
+    const loaded = await loadFormData(shiftId, today());
+    if (!loaded.existing || hydrated) return loaded;
+
+    const { shift, earnings: savedEarnings, expenses: savedExpenses } = loaded.existing;
+    setDate(formatDate(shift.date));
+    setHours(String(shift.minutes / MINUTES_PER_HOUR).replace('.', ','));
+    setStartHour(shift.start_hour === null ? '' : String(shift.start_hour));
+    setKmMode(shift.km_source === 'gps' ? 'manual' : shift.km_source);
+    setKmText(shift.km === null ? '' : String(shift.km).replace('.', ','));
+    setOdometerEnd(shift.odometer_end === null ? '' : String(shift.odometer_end));
+    setOdometerStart(shift.odometer_end === null || shift.km === null ? '' : String(shift.odometer_end - shift.km));
+    setTrips(shift.trips === null ? '' : String(shift.trips));
+    setEarnings(Object.fromEntries(savedEarnings.map((earning) => [earning.platform_id, centsToInput(earning.cents)])));
+    setExpenses(Object.fromEntries(savedExpenses.map((expense) => [expense.category, centsToInput(expense.cents)])));
+    setHydrated(true);
+    return loaded;
+  }, [shiftId]);
+
+  const km = resolveKm(kmMode, kmText, odometerStart, odometerEnd, gpsKm);
+  const minutes = Math.round(decimalOrZero(hours) * MINUTES_PER_HOUR);
+  const grossCents = Object.values(earnings).reduce((total, text) => total + centsOrZero(text), 0);
+  const expensesCents = JOURNEY_EXPENSES.filter(({ category }) => countsAgainstProfit(category)).reduce(
+    (total, { category }) => total + centsOrZero(expenses[category] ?? ''),
+    0,
+  );
+
+  const preview = useMemo(
+    () => computeShift({ grossCents, km, minutes, expensesCents, costPerKm: data?.costs?.fullPerKm ?? 0 }),
+    [grossCents, km, minutes, expensesCents, data?.costs?.fullPerKm],
+  );
+
+  const applyTimer = (timerMinutes: number, startedAt: number) => {
+    setHours(String(Math.round((timerMinutes / MINUTES_PER_HOUR) * 100) / 100).replace('.', ','));
+    if (startedAt > 0) setStartHour(String(new Date(startedAt).getHours()));
+  };
+
+  const applyGpsKm = (value: number) => {
+    setGpsKm(value);
+    setKmMode('gps');
+  };
+
+  const save = async (): Promise<boolean> => {
+    const isoDate = parseDisplayDate(date);
+    if (!isoDate) {
+      setError('Informe a data no formato dd/mm/aaaa.');
+      return false;
+    }
+    if (grossCents <= 0) {
+      setError('Informe o ganho de pelo menos uma plataforma.');
+      return false;
+    }
+    if (kmMode === 'odometer' && km === null && (odometerStart || odometerEnd)) {
+      setError('O odômetro final precisa ser maior que o inicial.');
+      return false;
+    }
+
+    await shiftRepository.save({
+      id: shiftId,
+      date: isoDate,
+      startHour: intOrNull(startHour),
+      minutes,
+      km,
+      kmSource: kmMode,
+      odometerEnd: kmMode === 'odometer' ? decimalOrNull(odometerEnd) : null,
+      trips: intOrNull(trips),
+      note: null,
+      earnings: Object.entries(earnings)
+        .map(([platformId, text]) => ({ platformId: Number(platformId), cents: parseBRL(text) ?? 0 }))
+        .filter((earning) => earning.cents > 0),
+      expenses: JOURNEY_EXPENSES.map(({ category }) => ({ category, cents: centsOrZero(expenses[category] ?? '') })).filter(
+        (expense) => expense.cents > 0,
+      ),
+    });
+    return true;
+  };
+
+  return {
+    platforms: data?.platforms ?? [],
+    date,
+    setDate,
+    hours,
+    setHours,
+    startHour,
+    setStartHour,
+    kmMode,
+    setKmMode,
+    kmText,
+    setKmText,
+    odometerStart,
+    setOdometerStart,
+    odometerEnd,
+    setOdometerEnd,
+    gpsKm,
+    trips,
+    setTrips,
+    earnings,
+    setEarning: (platformId: number, text: string) => setEarnings((current) => ({ ...current, [platformId]: text })),
+    expenses,
+    setExpense: (category: ExpenseCategory, text: string) => setExpenses((current) => ({ ...current, [category]: text })),
+    preview,
+    error,
+    applyTimer,
+    applyGpsKm,
+    save,
+  };
+}
