@@ -1,0 +1,73 @@
+import { useState } from 'react';
+import { ProfitCard } from '@/features/dashboard/ProfitCard';
+import { InsightCard } from '@/features/insights/InsightCard';
+import { MIN_SHIFTS_FOR_INSIGHTS } from '@/domain/insights/buildInsights';
+import { useMonthCursor } from '@/shared/hooks/useMonthCursor';
+import { BarChart } from '@/shared/ui/BarChart';
+import { MonthSwitcher } from '@/shared/ui/MonthSwitcher';
+import { Button, ButtonRow, Card, EmptyState, ListRow, Notice, Screen, Segmented } from '@/shared/ui/primitives';
+import { formatPerKm, profitTone } from '@/shared/utils/format';
+import { formatBRL } from '@/shared/utils/money';
+import { shareReportCsv, shareReportPdf } from './reportExport';
+import { ReportPeriod, useReport } from './useReport';
+
+const PERIODS: { value: ReportPeriod; label: string }[] = [
+  { value: 'week', label: 'Semana' },
+  { value: 'month', label: 'Mês' },
+  { value: 'year', label: 'Ano' },
+];
+
+export default function ReportsScreen() {
+  const [period, setPeriod] = useState<ReportPeriod>('month');
+  const cursor = useMonthCursor();
+  const { data, chart } = useReport(period, cursor.date);
+  const [exportError, setExportError] = useState<string | null>(null);
+
+  const runExport = async (action: () => Promise<void>) => {
+    setExportError(null);
+    try {
+      await action();
+    } catch {
+      setExportError('Não foi possível gerar o arquivo.');
+    }
+  };
+
+  return (
+    <Screen>
+      <Segmented value={period} options={PERIODS} onChange={setPeriod} />
+      <MonthSwitcher date={cursor.date} onPrevious={cursor.previous} onNext={cursor.next} />
+      {!data || data.shifts.length === 0 ? (
+        <EmptyState title="Sem jornadas neste período" message="Registre jornadas para ver gráficos e relatórios." />
+      ) : (
+        <>
+          <ProfitCard title="Lucro no período" summary={data.summary} />
+          <Card title="Lucro por dia">
+            <BarChart data={chart} accessibilityLabel={`Lucro no período: ${formatBRL(data.summary.profitCents)}`} />
+          </Card>
+          {data.monthClose ? (
+            <Card title="Mês fechado">
+              <ListRow title="Custo variável" value={formatBRL(data.monthClose.variableCents)} />
+              <ListRow title="Custo fixo do mês inteiro" value={formatBRL(data.monthClose.fixedCents)} />
+              <ListRow title="Despesas" value={formatBRL(data.monthClose.expensesCents)} />
+              <ListRow title="Custo real por km" value={formatPerKm(data.monthClose.realCostPerKm)} />
+              <ListRow title="Lucro com o fixo inteiro" value={formatBRL(data.monthClose.profitCents)} valueTone={profitTone(data.monthClose.profitCents)} />
+            </Card>
+          ) : null}
+          <Card title="Por plataforma">
+            {data.platforms.map((item) => (
+              <ListRow key={item.platform} title={item.platform} value={formatBRL(item.cents)} />
+            ))}
+          </Card>
+          <ButtonRow>
+            <Button label="Gerar PDF" onPress={() => runExport(() => shareReportPdf(data))} />
+            <Button label="Exportar CSV" variant="secondary" onPress={() => runExport(() => shareReportCsv(data))} />
+          </ButtonRow>
+          {exportError ? <Notice tone="negative" message={exportError} /> : null}
+        </>
+      )}
+      {data?.insights.length ? data.insights.map((insight) => <InsightCard key={insight.id} insight={insight} />) : (
+        <Notice tone="accent" message={`Os insights aparecem a partir de ${MIN_SHIFTS_FOR_INSIGHTS} jornadas.`} />
+      )}
+    </Screen>
+  );
+}
