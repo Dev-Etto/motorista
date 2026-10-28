@@ -96,6 +96,15 @@ const MIGRATIONS: string[] = [
   INSERT INTO platforms (name, sort) VALUES ('Uber', 1), ('99', 2), ('inDrive', 3), ('Particular', 4), ('Outros', 5);
   INSERT INTO gps_session (id) VALUES (1);
   `,
+  `
+  CREATE TABLE goal_day_overrides (
+    date TEXT PRIMARY KEY,
+    target_cents INTEGER NOT NULL
+  );
+  `,
+  `
+  ALTER TABLE goals ADD COLUMN hours_per_day REAL NOT NULL DEFAULT 8;
+  `,
 ];
 
 export const SCHEMA_VERSION = MIGRATIONS.length;

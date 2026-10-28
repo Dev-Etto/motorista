@@ -28,6 +28,9 @@ export const SETTING_KEYS = {
   onboarded: 'onboarded',
   lastBackupAt: 'last_backup_at',
   offerTargets: 'offer_targets',
-  quoteDefaults: 'quote_defaults',
-  copilot: 'copilot_preferences',
+  offerLowTargets: 'offer_low_targets',
+  offerMode: 'offer_mode',
+  theme: 'theme_mode',
+  tipsDismissed: 'tips_dismissed',
+  nextStepsDismissed: 'next_steps_dismissed',
 } as const;

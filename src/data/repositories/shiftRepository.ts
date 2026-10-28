@@ -187,6 +187,18 @@ export const shiftRepository = {
     });
   },
 
+  async usageStats() {
+    const row = await getDb().getFirstAsync<{ total: number; days: number; first: string | null; last: string | null }>(
+      'SELECT COUNT(*) AS total, COUNT(DISTINCT date) AS days, MIN(date) AS first, MAX(date) AS last FROM shifts',
+    );
+    return { total: row?.total ?? 0, days: row?.days ?? 0, first: row?.first ?? null, last: row?.last ?? null };
+  },
+
+  async totalKmEver(): Promise<number> {
+    const row = await getDb().getFirstAsync<{ value: number | null }>('SELECT SUM(km) AS value FROM shifts');
+    return row?.value ?? 0;
+  },
+
   async latestOdometer(): Promise<number | null> {
     const row = await getDb().getFirstAsync<{ value: number | null }>(
       `SELECT MAX(value) AS value FROM (

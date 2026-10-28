@@ -35,3 +35,11 @@ describe('backup', () => {
     expect(parseBackup(JSON.stringify({ ...validBackup, tables })).ok).toBe(false);
   });
 });
+
+describe('backup de versões anteriores', () => {
+  it('aceita arquivo sem as tabelas criadas depois', () => {
+    const { goal_day_overrides: _removed, ...older } = { ...emptyTables, goal_day_overrides: [] };
+    const parsed = parseBackup(JSON.stringify({ ...validBackup, schemaVersion: 1, tables: older }));
+    expect(parsed.ok).toBe(true);
+  });
+});

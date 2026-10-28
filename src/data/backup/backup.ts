@@ -9,20 +9,34 @@ const TABLES = [
   'shift_earnings',
   'expenses',
   'goals',
+  'goal_day_overrides',
   'quotes',
   'reminders',
   'settings',
 ] as const;
 
-type TableName = (typeof TABLES)[number];
 const scalar = z.union([z.string(), z.number(), z.null()]);
 const row = z.record(z.string().regex(/^[a-z_]+$/), scalar);
+
+const tablesSchema = z.object({
+  vehicles: z.array(row),
+  cost_profiles: z.array(row),
+  platforms: z.array(row),
+  shifts: z.array(row),
+  shift_earnings: z.array(row),
+  expenses: z.array(row),
+  goals: z.array(row),
+  goal_day_overrides: z.array(row).default([]),
+  quotes: z.array(row),
+  reminders: z.array(row),
+  settings: z.array(row),
+});
 
 export const backupSchema = z.object({
   app: z.literal('motorista'),
   schemaVersion: z.number().int().positive(),
   exportedAt: z.string(),
-  tables: z.object(Object.fromEntries(TABLES.map((t) => [t, z.array(row)])) as Record<TableName, z.ZodArray<typeof row>>),
+  tables: tablesSchema,
 });
 
 export type BackupFile = z.infer<typeof backupSchema>;
