@@ -7,7 +7,7 @@ import { accumulateGps } from '../gps/gps';
 import { buildInsights } from '../insights/buildInsights';
 import { ShiftFact } from '../insights/types';
 import { formatBRL, parseBRL, parseDecimal } from '@/shared/utils/money';
-import { addDays, monthBounds, weekBounds, workDaysLeft } from '@/shared/utils/dates';
+import { addDays, formatClock, monthBounds, weekBounds, workDaysLeft } from '@/shared/utils/dates';
 
 const profile = (over: Partial<CostProfile> = {}): CostProfile => ({
   ...suggestedProfile('car', 'owned'),
@@ -199,6 +199,12 @@ describe('gps', () => {
 });
 
 describe('datas', () => {
+  it('cronômetro mostra segundos', () => {
+    expect(formatClock(7000)).toBe('00:00:07');
+    expect(formatClock(3723000)).toBe('01:02:03');
+    expect(formatClock(-5)).toBe('00:00:00');
+  });
+
   it('limites de mês e semana', () => {
     expect(monthBounds('2026-02-10')).toEqual({ start: '2026-02-01', end: '2026-02-28', days: 28 });
     expect(weekBounds('2026-11-04')).toEqual({ start: '2026-11-02', end: '2026-11-08' });

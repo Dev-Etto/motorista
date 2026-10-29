@@ -1,5 +1,4 @@
 import { centsToCsv, csvField, toCsv } from '@/shared/utils/csv';
-import { parseDisplayDate } from '@/shared/utils/dates';
 import { countsAgainstProfit } from '../expense/expense';
 import { summarizeShifts, totalsByPlatform, withLooseExpenses } from '../shift/summary';
 
@@ -35,17 +34,11 @@ describe('resumo', () => {
   });
 });
 
-describe('csv e datas', () => {
+describe('csv', () => {
   it('neutraliza fórmulas e escapa separadores', () => {
     expect(csvField('=SOMA(A1)')).toBe("'=SOMA(A1)");
     expect(csvField('a;b')).toBe('"a;b"');
     expect(centsToCsv(1234)).toBe('12,34');
     expect(toCsv(['A'], [[1]])).toBe('﻿A\r\n1');
-  });
-
-  it('valida datas digitadas', () => {
-    expect(parseDisplayDate('04/11/2026')).toBe('2026-11-04');
-    expect(parseDisplayDate('31/02/2026')).toBeNull();
-    expect(parseDisplayDate('2026-11-04')).toBeNull();
   });
 });

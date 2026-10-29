@@ -26,6 +26,8 @@ export function computeQuote(quote: QuoteInput) {
     totalKm,
     vehicleCostCents,
     timeCents,
+    tollCents: quote.tollCents,
+    extrasCents: quote.extrasCents,
     rawPriceCents,
     priceCents,
     estimatedProfitCents: priceCents - totalCostCents,
