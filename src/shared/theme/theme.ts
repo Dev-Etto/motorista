@@ -1,6 +1,6 @@
 import { useColorScheme } from 'react-native';
 
-const palette = {
+export const palette = {
   light: {
     background: '#F4F6F5',
     surface: '#FFFFFF',
@@ -10,9 +10,9 @@ const palette = {
     border: '#D6DEDC',
     primary: '#0B3C49',
     onPrimary: '#FFFFFF',
-    accent: '#D9822B',
+    accent: '#99540F',
     positive: '#1F7A4D',
-    warning: '#B7791F',
+    warning: '#855A08',
     negative: '#B3362B',
   },
   dark: {

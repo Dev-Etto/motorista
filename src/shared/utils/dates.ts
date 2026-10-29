@@ -62,6 +62,13 @@ export function formatDuration(minutes: number): string {
   return h > 0 ? `${h}h${m > 0 ? ` ${pad(m)}min` : ''}` : `${m}min`;
 }
 
+export function formatClock(elapsedMs: number): string {
+  const totalSeconds = Math.max(0, Math.floor(elapsedMs / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  return `${pad(hours)}:${pad(minutes)}:${pad(totalSeconds % 60)}`;
+}
+
 export type DayPeriod = 'madrugada' | 'manhã' | 'tarde' | 'noite';
 
 export function dayPeriod(hour: number): DayPeriod {
@@ -80,13 +87,14 @@ export function workDaysLeft(todayISO: string, workWeekdays: number[]): number {
   return count;
 }
 
-export function parseDisplayDate(text: string): string | null {
-  const match = text.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (!match) return null;
+export function workDaysInMonth(iso: string, workWeekdays: number[]): number {
+  return workDaysLeft(monthBounds(iso).start, workWeekdays);
+}
 
-  const [day, month, year] = match.slice(1).map(Number);
-  const iso = `${year}-${pad(month)}-${pad(day)}`;
-  return toISODate(fromISODate(iso)) === iso ? iso : null;
+export function datesInRange(start: string, end: string): string[] {
+  const dates: string[] = [];
+  for (let cur = start; cur <= end; cur = addDays(cur, 1)) dates.push(cur);
+  return dates;
 }
 
 export const today = () => toISODate(new Date());
