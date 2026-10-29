@@ -12,15 +12,16 @@ interface TextFieldProps {
   keyboardType?: KeyboardTypeOptions;
   prefix?: string;
   suffix?: string;
+  hideLabel?: boolean;
 }
 
-export function TextField({ label, value, onChangeText, hint, error, placeholder, keyboardType, prefix, suffix }: TextFieldProps) {
+export function TextField({ label, value, onChangeText, hint, error, placeholder, keyboardType, prefix, suffix, hideLabel }: TextFieldProps) {
   const colors = useTheme();
   const borderColor = error ? colors.negative : colors.border;
 
   return (
     <View style={styles.field}>
-      <AppText variant="caption" tone="muted">{label}</AppText>
+      {hideLabel ? null : <AppText variant="caption" tone="muted">{label}</AppText>}
       <View style={[styles.input, { backgroundColor: colors.surface, borderColor }]}>
         {prefix ? <AppText tone="muted">{prefix}</AppText> : null}
         <TextInput

@@ -12,6 +12,7 @@ const CHART_HEIGHT = 140;
 const HORIZONTAL_INSET = spacing.lg * 4;
 const MAX_LABELS = 6;
 const BAR_GAP = 0.25;
+const MAX_BAR_WIDTH = 28;
 
 interface BarChartProps {
   data: BarDatum[];
@@ -29,6 +30,7 @@ export function BarChart({ data, accessibilityLabel }: BarChartProps) {
   const range = max - min || 1;
   const zeroY = (max / range) * CHART_HEIGHT;
   const slot = width / data.length;
+  const barWidth = Math.min(slot * (1 - BAR_GAP), MAX_BAR_WIDTH);
   const labelStep = Math.max(1, Math.ceil(data.length / MAX_LABELS));
   const visibleLabels = data.filter((_, index) => index % labelStep === 0);
 
@@ -41,9 +43,9 @@ export function BarChart({ data, accessibilityLabel }: BarChartProps) {
           return (
             <Rect
               key={`${datum.label}-${index}`}
-              x={index * slot + (slot * BAR_GAP) / 2}
+              x={index * slot + (slot - barWidth) / 2}
               y={datum.value >= 0 ? zeroY - height : zeroY}
-              width={slot * (1 - BAR_GAP)}
+              width={barWidth}
               height={height}
               rx={2}
               fill={datum.value >= 0 ? colors.positive : colors.negative}
