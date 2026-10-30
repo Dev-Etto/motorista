@@ -1,19 +1,27 @@
-import { copilot, CopilotStatus, OfferHistoryEntry } from '@modules/copilot';
+import { copilot, CopilotPreferences, CopilotStatus, OfferHistoryEntry } from '@modules/copilot';
+import * as Notifications from 'expo-notifications';
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { useInterval } from '@/shared/hooks/useInterval';
 import { syncCopilotTargets } from './syncTargets';
 
 const DIAGNOSTICS_REFRESH_MS = 2000;
-const SAMPLE_OFFER = 'R$ 18,40 | 5 min (2,1 km) | Viagem de 14 min (6,4 km) | Aceitar';
+const OUTSIDE_TEST_DELAY_MS = 5000;
+const SAMPLES = [
+  { source: 'com.ubercab.driver', text: 'R$ 18,40 | ★ 4,92 | 5 min (2,1 km) | Viagem de 14 min (6,4 km) | Aceitar' },
+  { source: 'com.app99.driver', text: 'R$ 11,20 | ★ 4,75 | 4 min (1,5 km) | Viagem de 18 min (6,5 km) | Aceitar' },
+  { source: 'sinet.startup.inDriver', text: 'R$ 7,00 | 6 min (3,0 km) | Viagem de 22 min (9,0 km) | Aceitar' },
+];
 
 export function useCopilot() {
   const [status, setStatus] = useState<CopilotStatus>(() => copilot.getStatus());
+  const [preferences, setPreferencesState] = useState<CopilotPreferences>(() => copilot.getPreferences());
   const [history, setHistory] = useState<OfferHistoryEntry[]>([]);
   const [diagnosticsOn, setDiagnosticsOn] = useState(false);
   const [diagnostics, setDiagnostics] = useState<string[]>([]);
   const [message, setMessage] = useState<string | null>(null);
+  const sampleIndex = useRef(0);
 
   const refresh = useCallback(() => {
     setStatus(copilot.getStatus());
@@ -29,27 +37,43 @@ export function useCopilot() {
   }, [refresh]);
   useInterval(() => setDiagnostics(copilot.getDiagnostics()), diagnosticsOn ? DIAGNOSTICS_REFRESH_MS : null);
 
+  const updatePreferences = (changes: Partial<CopilotPreferences>) => {
+    const next = { ...preferences, ...changes };
+    copilot.setPreferences(next);
+    setPreferencesState(next);
+  };
+
   const setEnabled = async (value: boolean) => {
     await syncCopilotTargets();
     copilot.setEnabled(value);
     refresh();
   };
 
-  const setVoiceEnabled = (value: boolean) => {
-    copilot.setVoiceEnabled(value);
-    refresh();
+  const setNotification = async (value: boolean) => {
+    if (!value) return updatePreferences({ notification: false });
+
+    const { granted } = await Notifications.requestPermissionsAsync();
+    if (!granted) return setMessage('Permita as notificações do app para usar este canal.');
+
+    updatePreferences({ notification: true });
   };
 
   const setFloating = (value: boolean) => {
     if (!value) {
       copilot.stopFloating();
-      return refresh();
+      return setTimeout(refresh, 300);
     }
     if (!copilot.startFloating()) {
       setMessage('Permita a sobreposição de tela para usar o botão flutuante.');
-      copilot.openOverlaySettings();
+      return copilot.openOverlaySettings();
     }
-    refresh();
+    setTimeout(refresh, 300);
+  };
+
+  const toggleMonitored = (packageName: string) => {
+    const current = preferences.monitoredPackages;
+    const monitoredPackages = current.includes(packageName) ? current.filter((item) => item !== packageName) : [...current, packageName];
+    updatePreferences({ monitoredPackages });
   };
 
   const toggleDiagnostics = (value: boolean) => {
@@ -58,9 +82,30 @@ export function useCopilot() {
     if (!value) setDiagnostics([]);
   };
 
-  const testCard = () => {
-    const shown = copilot.testOffer(SAMPLE_OFFER);
-    setMessage(shown ? 'Cartão de teste exibido no topo da tela.' : 'Ative o serviço de acessibilidade para ver o cartão.');
+  const nextSample = (): [string, string] => {
+    const sample = SAMPLES[sampleIndex.current % SAMPLES.length];
+    sampleIndex.current += 1;
+    return [sample.text, sample.source];
+  };
+
+  const test = () => {
+    const shown = copilot.testOffer(...nextSample());
+    setMessage(shown ? 'Teste enviado. Toque de novo para ver outra plataforma e outra nota.' : 'Ative o serviço de acessibilidade para testar.');
+    refresh();
+  };
+
+  const testNotification = async () => {
+    const { granted } = await Notifications.requestPermissionsAsync();
+    if (!granted) return setMessage('Permita as notificações do app para ver o exemplo.');
+
+    const shown = copilot.testNotification(...nextSample());
+    setMessage(shown ? 'Exemplo enviado. Veja no topo da tela ou deslize o painel de notificações.' : 'Permita as notificações do app para ver o exemplo.');
+  };
+
+  const testOutside = () => {
+    const [text, source] = nextSample();
+    const shown = copilot.testOffer(text, source, OUTSIDE_TEST_DELAY_MS);
+    setMessage(shown ? 'Saia do app agora. A oferta de exemplo aparece em 5 segundos.' : 'Ative o serviço de acessibilidade para testar.');
   };
 
   const clearHistory = () => {
@@ -70,17 +115,26 @@ export function useCopilot() {
 
   return {
     status,
+    preferences,
     history,
     diagnosticsOn,
     diagnostics,
     message,
     setEnabled,
-    setVoiceEnabled,
+    updatePreferences,
+    setNotification,
     setFloating,
+    toggleMonitored,
     toggleDiagnostics,
-    testCard,
+    test,
+    testOutside,
+    testNotification,
     clearHistory,
     openAccessibility: copilot.openAccessibilitySettings,
     openAppSettings: copilot.openAppSettings,
+    openVoiceSettings: copilot.openVoiceSettings,
+    openShortcutSettings: copilot.openShortcutSettings,
   };
 }
+
+export type CopilotState = ReturnType<typeof useCopilot>;
