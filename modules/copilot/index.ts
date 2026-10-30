@@ -2,10 +2,29 @@ import { requireOptionalNativeModule } from 'expo-modules-core';
 
 export interface CopilotStatus {
   enabled: boolean;
-  voiceEnabled: boolean;
   accessibilityGranted: boolean;
   overlayGranted: boolean;
   floatingRunning: boolean;
+  voiceAvailable: boolean;
+  failedReads: number;
+  shortcutEnabled: boolean;
+}
+
+export type PrimaryMetric = 'perKm' | 'profit';
+export type CardLayout = 'complete' | 'summary';
+export type CardSize = 'compact' | 'large' | 'extra';
+export type ThemeMode = 'system' | 'light' | 'dark';
+
+export interface CopilotPreferences {
+  voice: boolean;
+  card: boolean;
+  notification: boolean;
+  primaryMetric: PrimaryMetric;
+  cardLayout: CardLayout;
+  cardSize: CardSize;
+  theme: ThemeMode;
+  durationSeconds: number;
+  monitoredPackages: string[];
 }
 
 export interface TimerState {
@@ -23,21 +42,28 @@ export interface OfferHistoryEntry {
   minutes: number;
   perKmCents: number;
   perHourCents: number;
-  profitCents: number;
-  color: 'green' | 'yellow' | 'red';
+  profitCents?: number;
+  score?: number;
+  reason?: string;
+  color: 'green' | 'yellow' | 'red' | 'neutral';
 }
 
 interface CopilotNativeModule {
   getStatus(): CopilotStatus;
   setEnabled(value: boolean): void;
-  setVoiceEnabled(value: boolean): void;
+  getPreferences(): string;
+  setPreferences(json: string): void;
   setTargets(costPerKm: number, targetPerKmCents: number, targetPerHourCents: number): void;
+  resetCardPosition(): void;
   getHistory(): string;
   clearHistory(): void;
   openAccessibilitySettings(): void;
   openAppSettings(): void;
   openOverlaySettings(): void;
-  testOffer(text: string): boolean;
+  openVoiceSettings(): void;
+  openShortcutSettings(): void;
+  testOffer(text: string, source: string, delayMs: number): boolean;
+  testNotification(text: string, source: string): boolean;
   setDiagnosticsEnabled(value: boolean): void;
   getDiagnostics(): string[];
   getTimer(): TimerState;
@@ -46,6 +72,7 @@ interface CopilotNativeModule {
   resetTimer(): TimerState;
   startFloating(): boolean;
   stopFloating(): void;
+  setAppInForeground(value: boolean): void;
 }
 
 const native = requireOptionalNativeModule<CopilotNativeModule>('Copilot');
@@ -58,15 +85,20 @@ function requireModule(): CopilotNativeModule {
 export const copilot = {
   getStatus: () => requireModule().getStatus(),
   setEnabled: (value: boolean) => requireModule().setEnabled(value),
-  setVoiceEnabled: (value: boolean) => requireModule().setVoiceEnabled(value),
+  getPreferences: () => JSON.parse(requireModule().getPreferences()) as CopilotPreferences,
+  setPreferences: (preferences: CopilotPreferences) => requireModule().setPreferences(JSON.stringify(preferences)),
   setTargets: (costPerKm: number, targetPerKmCents: number, targetPerHourCents: number) =>
     requireModule().setTargets(costPerKm, targetPerKmCents, targetPerHourCents),
+  resetCardPosition: () => requireModule().resetCardPosition(),
   getHistory: () => JSON.parse(requireModule().getHistory()) as OfferHistoryEntry[],
   clearHistory: () => requireModule().clearHistory(),
   openAccessibilitySettings: () => requireModule().openAccessibilitySettings(),
   openAppSettings: () => requireModule().openAppSettings(),
   openOverlaySettings: () => requireModule().openOverlaySettings(),
-  testOffer: (text: string) => requireModule().testOffer(text),
+  openVoiceSettings: () => requireModule().openVoiceSettings(),
+  openShortcutSettings: () => requireModule().openShortcutSettings(),
+  testOffer: (text: string, source: string, delayMs = 0) => requireModule().testOffer(text, source, delayMs),
+  testNotification: (text: string, source: string) => requireModule().testNotification(text, source),
   setDiagnosticsEnabled: (value: boolean) => requireModule().setDiagnosticsEnabled(value),
   getDiagnostics: () => requireModule().getDiagnostics(),
   getTimer: () => requireModule().getTimer(),
@@ -75,4 +107,5 @@ export const copilot = {
   resetTimer: () => requireModule().resetTimer(),
   startFloating: () => requireModule().startFloating(),
   stopFloating: () => requireModule().stopFloating(),
+  setAppInForeground: (value: boolean) => requireModule().setAppInForeground(value),
 };

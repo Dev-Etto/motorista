@@ -1,15 +1,104 @@
 {
   "classification": [
-    { "valueCents": 2000, "km": 10, "minutes": 20, "costPerKm": 100, "targetPerKmCents": 200, "targetPerHourCents": 3000, "color": "green" },
-    { "valueCents": 1500, "km": 10, "minutes": 20, "costPerKm": 100, "targetPerKmCents": 200, "targetPerHourCents": 3000, "color": "yellow" },
-    { "valueCents": 2000, "km": 10, "minutes": 60, "costPerKm": 100, "targetPerKmCents": 200, "targetPerHourCents": 3000, "color": "yellow" },
-    { "valueCents": 900, "km": 10, "minutes": 20, "costPerKm": 100, "targetPerKmCents": 200, "targetPerHourCents": 3000, "color": "red" }
+    {
+      "valueCents": 2000,
+      "km": 10,
+      "minutes": 20,
+      "costPerKm": 100,
+      "targetPerKmCents": 200,
+      "targetPerHourCents": 3000,
+      "color": "green",
+      "score": 7.8,
+      "reason": "km: na meta · hora: 100% acima da meta"
+    },
+    {
+      "valueCents": 1500,
+      "km": 10,
+      "minutes": 20,
+      "costPerKm": 100,
+      "targetPerKmCents": 200,
+      "targetPerHourCents": 3000,
+      "color": "yellow",
+      "score": 6.4,
+      "reason": "km: 25% abaixo da meta · hora: 50% acima da meta"
+    },
+    {
+      "valueCents": 2000,
+      "km": 10,
+      "minutes": 60,
+      "costPerKm": 100,
+      "targetPerKmCents": 200,
+      "targetPerHourCents": 3000,
+      "color": "yellow",
+      "score": 5.3,
+      "reason": "km: na meta · hora: 33% abaixo da meta"
+    },
+    {
+      "valueCents": 900,
+      "km": 10,
+      "minutes": 20,
+      "costPerKm": 100,
+      "targetPerKmCents": 200,
+      "targetPerHourCents": 3000,
+      "color": "red",
+      "score": 3.9,
+      "reason": "Não cobre seu custo por km"
+    },
+    {
+      "valueCents": 2000,
+      "km": 10,
+      "minutes": 20,
+      "costPerKm": 0,
+      "targetPerKmCents": 200,
+      "targetPerHourCents": 3000,
+      "color": "neutral",
+      "score": null,
+      "reason": "Cadastre seus custos para ver a nota"
+    }
   ],
   "parsing": [
-    { "text": "R$ 18,40 | 5 min (2,1 km) | Viagem de 14 min (6,4 km) | Aceitar", "valueCents": 1840, "km": 8.5, "minutes": 19 },
-    { "text": "R$ 1.250,00 | 1 h 10 min | 90 km | Selecionar", "valueCents": 125000, "km": 90, "minutes": 70 },
-    { "text": "+R$ 3,00 | R$ 9,90 | 800 m | 2 km | 12 min | Aceitar", "valueCents": 990, "km": 2.8, "minutes": 12 },
-    { "text": "Ganhos de hoje R$ 120,00 | 12 corridas | 80 km | 5 h 30 min", "none": true },
-    { "text": "R$ 15,00 | Aceitar", "none": true }
+    {
+      "text": "R$ 18,40 | ★ 4,92 | 5 min (2,1 km) | Viagem de 14 min (6,4 km) | Aceitar",
+      "valueCents": 1840,
+      "km": 8.5,
+      "minutes": 19,
+      "rating": 4.92
+    },
+    {
+      "text": "R$ 1.250,00 | 1 h 10 min | 90 km | Selecionar",
+      "valueCents": 125000,
+      "km": 90,
+      "minutes": 70,
+      "rating": null
+    },
+    {
+      "text": "+R$ 3,00 | R$ 9,90 | 800 m | 2 km | 12 min | Aceitar",
+      "valueCents": 990,
+      "km": 2.8,
+      "minutes": 12,
+      "rating": null
+    },
+    {
+      "text": "Ganhos de hoje R$ 120,00 | 12 corridas | 80 km | 5 h 30 min",
+      "none": true
+    },
+    {
+      "text": "R$ 15,00 | Aceitar",
+      "none": true
+    },
+    {
+      "text": "R$ 12,00 | 4,87 | 3 km | 10 min | Aceitar",
+      "valueCents": 1200,
+      "km": 3,
+      "minutes": 10,
+      "rating": 4.87
+    },
+    {
+      "text": "R$ 12,00 | 1,50x | 3 km | 10 min | Aceitar",
+      "valueCents": 1200,
+      "km": 3,
+      "minutes": 10,
+      "rating": null
+    }
   ]
 }
