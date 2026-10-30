@@ -4,6 +4,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import expo.modules.kotlin.exception.Exceptions
 import expo.modules.kotlin.modules.Module
@@ -20,18 +22,22 @@ class CopilotModule : Module() {
       val store = CopilotStore(context)
       mapOf(
         "enabled" to store.enabled,
-        "voiceEnabled" to store.voiceEnabled,
         "accessibilityGranted" to isAccessibilityGranted(),
         "overlayGranted" to Settings.canDrawOverlays(context),
-        "floatingRunning" to floatingRunning,
+        "floatingRunning" to (FloatingTimerService.instance != null),
+        "voiceAvailable" to (OfferAccessibilityService.instance?.voiceAvailable ?: false),
+        "failedReads" to store.failedReads,
+        "shortcutEnabled" to isShortcutEnabled(),
       )
     }
 
     Function("setEnabled") { value: Boolean -> CopilotStore(context).enabled = value }
-    Function("setVoiceEnabled") { value: Boolean -> CopilotStore(context).voiceEnabled = value }
+    Function("getPreferences") { CopilotStore(context).preferences.toJson() }
+    Function("setPreferences") { json: String -> CopilotStore(context).preferences = CopilotPreferences.fromJson(json) }
     Function("setTargets") { costPerKm: Double, targetPerKmCents: Double, targetPerHourCents: Double ->
       CopilotStore(context).targets = OfferTargets(costPerKm, targetPerKmCents, targetPerHourCents)
     }
+    Function("resetCardPosition") { CopilotStore(context).cardPosition = null }
     Function("getHistory") { CopilotStore(context).history() }
     Function("clearHistory") { CopilotStore(context).clearHistory() }
 
@@ -42,11 +48,22 @@ class CopilotModule : Module() {
     Function("openOverlaySettings") {
       openIntent(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}")))
     }
+    Function("openShortcutSettings") { openIntent(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
+    Function("openVoiceSettings") { openIntent(Intent(TTS_SETTINGS_ACTION)) }
 
-    Function("testOffer") { text: String ->
+    Function("testOffer") { text: String, source: String, delayMs: Double ->
       val offer = OfferParser.parse(text) ?: return@Function false
       val service = OfferAccessibilityService.instance ?: return@Function false
-      service.present(offer, "teste", false)
+      Handler(Looper.getMainLooper()).postDelayed({ service.preview(offer, source) }, delayMs.toLong())
+      true
+    }
+
+    Function("testNotification") { text: String, source: String ->
+      val offer = OfferParser.parse(text) ?: return@Function false
+      val notifier = OfferNotifier(context)
+      if (!notifier.enabled) return@Function false
+      val store = CopilotStore(context)
+      notifier.show(OfferEvaluator.evaluate(offer, store.targets, OfferSources.label(source)), store.preferences)
       true
     }
 
@@ -60,20 +77,20 @@ class CopilotModule : Module() {
 
     Function("startFloating") {
       if (!Settings.canDrawOverlays(context)) return@Function false
-      context.startForegroundService(floatingIntent())
-      floatingRunning = true
+      context.startForegroundService(Intent(context, FloatingTimerService::class.java))
       true
     }
-    Function("stopFloating") {
-      context.stopService(floatingIntent())
-      floatingRunning = false
+    Function("setAppInForeground") { value: Boolean ->
+      Handler(Looper.getMainLooper()).post { FloatingTimerService.setAppInForeground(value) }
     }
+    Function("stopFloating") { context.stopService(Intent(context, FloatingTimerService::class.java)) }
   }
 
-  private fun floatingIntent() = Intent(context, FloatingTimerService::class.java)
-
   private fun openIntent(intent: Intent) {
-    context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+    val launched = runCatching { context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+    if (launched.isSuccess) return
+
+    context.startActivity(Intent(Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
   }
 
   private fun isAccessibilityGranted(): Boolean {
@@ -81,6 +98,12 @@ class CopilotModule : Module() {
       ?: return false
     val component = ComponentName(context, OfferAccessibilityService::class.java).flattenToString()
     return enabled.split(':').any { it.equals(component, ignoreCase = true) }
+  }
+
+  private fun isShortcutEnabled(): Boolean {
+    val targets = runCatching { Settings.Secure.getString(context.contentResolver, BUTTON_TARGETS_KEY) }.getOrNull()
+      ?: return false
+    return targets.contains(context.packageName)
   }
 
   private fun timerToMap(state: TimerState) = mapOf(
@@ -91,6 +114,7 @@ class CopilotModule : Module() {
   )
 
   private companion object {
-    var floatingRunning = false
+    const val TTS_SETTINGS_ACTION = "com.android.settings.TTS_SETTINGS"
+    const val BUTTON_TARGETS_KEY = "accessibility_button_targets"
   }
 }

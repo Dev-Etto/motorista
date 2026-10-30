@@ -12,9 +12,9 @@ class CopilotStore(context: Context) {
     get() = prefs.getBoolean(KEY_ENABLED, false)
     set(value) = prefs.edit().putBoolean(KEY_ENABLED, value).apply()
 
-  var voiceEnabled: Boolean
-    get() = prefs.getBoolean(KEY_VOICE, false)
-    set(value) = prefs.edit().putBoolean(KEY_VOICE, value).apply()
+  var preferences: CopilotPreferences
+    get() = CopilotPreferences.fromJson(prefs.getString(KEY_PREFERENCES, null))
+    set(value) = prefs.edit().putString(KEY_PREFERENCES, value.toJson()).apply()
 
   var targets: OfferTargets
     get() = OfferTargets(
@@ -28,9 +28,26 @@ class CopilotStore(context: Context) {
       .putFloat(KEY_TARGET_HOUR, value.targetPerHourCents.toFloat())
       .apply()
 
+  var cardPosition: Pair<Int, Int>?
+    get() {
+      if (!prefs.contains(KEY_CARD_X)) return null
+      return prefs.getInt(KEY_CARD_X, 0) to prefs.getInt(KEY_CARD_Y, 0)
+    }
+    set(value) {
+      val editor = prefs.edit()
+      if (value == null) editor.remove(KEY_CARD_X).remove(KEY_CARD_Y)
+      if (value != null) editor.putInt(KEY_CARD_X, value.first).putInt(KEY_CARD_Y, value.second)
+      editor.apply()
+    }
+
+  val failedReads: Int
+    get() = prefs.getInt(KEY_FAILED_READS, 0)
+
+  fun registerFailedRead() = prefs.edit().putInt(KEY_FAILED_READS, failedReads + 1).apply()
+
   fun history(): String = prefs.getString(KEY_HISTORY, "[]") ?: "[]"
 
-  fun clearHistory() = prefs.edit().remove(KEY_HISTORY).apply()
+  fun clearHistory() = prefs.edit().remove(KEY_HISTORY).remove(KEY_FAILED_READS).apply()
 
   fun record(evaluation: OfferEvaluation, source: String, timestamp: Long) {
     val current = JSONArray(history())
@@ -39,25 +56,33 @@ class CopilotStore(context: Context) {
     prefs.edit().putString(KEY_HISTORY, updated.toString()).apply()
   }
 
-  private fun toJson(evaluation: OfferEvaluation, source: String, timestamp: Long) = JSONObject()
-    .put("timestamp", timestamp)
-    .put("source", source)
-    .put("valueCents", evaluation.offer.valueCents)
-    .put("km", evaluation.offer.km)
-    .put("minutes", evaluation.offer.minutes)
-    .put("perKmCents", evaluation.perKmCents)
-    .put("perHourCents", evaluation.perHourCents)
-    .put("profitCents", evaluation.profitCents)
-    .put("color", evaluation.color.id)
+  private fun toJson(evaluation: OfferEvaluation, source: String, timestamp: Long): JSONObject {
+    val json = JSONObject()
+      .put("timestamp", timestamp)
+      .put("source", evaluation.sourceLabel)
+      .put("reason", evaluation.reason)
+      .put("valueCents", evaluation.offer.valueCents)
+      .put("km", evaluation.offer.km)
+      .put("minutes", evaluation.offer.minutes)
+      .put("perKmCents", evaluation.perKmCents)
+      .put("perHourCents", evaluation.perHourCents)
+      .put("color", evaluation.color.id)
+    evaluation.score?.let { json.put("score", it) }
+    val profit = evaluation.profitCents ?: return json
+    return json.put("profitCents", profit)
+  }
 
   private companion object {
     const val FILE = "copilot"
     const val KEY_ENABLED = "enabled"
-    const val KEY_VOICE = "voice"
+    const val KEY_PREFERENCES = "preferences"
     const val KEY_COST = "cost_per_km"
     const val KEY_TARGET_KM = "target_per_km"
     const val KEY_TARGET_HOUR = "target_per_hour"
     const val KEY_HISTORY = "history"
+    const val KEY_FAILED_READS = "failed_reads"
+    const val KEY_CARD_X = "card_x"
+    const val KEY_CARD_Y = "card_y"
     const val MAX_HISTORY = 100
   }
 }

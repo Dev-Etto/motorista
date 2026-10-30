@@ -17,7 +17,10 @@ class OfferFixturesTest {
       val case = cases.getJSONObject(index)
       val offer = ParsedOffer(case.getLong("valueCents"), case.getDouble("km"), case.getInt("minutes"))
       val targets = OfferTargets(case.getDouble("costPerKm"), case.getDouble("targetPerKmCents"), case.getDouble("targetPerHourCents"))
-      assertEquals(case.getString("color"), OfferEvaluator.evaluate(offer, targets).color.id)
+      val result = OfferEvaluator.evaluate(offer, targets)
+      assertEquals(case.getString("color"), result.color.id)
+      assertEquals(case.getString("reason"), result.reason)
+      if (case.isNull("score")) assertNull(result.score) else assertEquals(case.getDouble("score"), result.score!!, 0.001)
     }
   }
 
@@ -34,6 +37,7 @@ class OfferFixturesTest {
       assertEquals(case.getLong("valueCents"), parsed!!.valueCents)
       assertEquals(case.getDouble("km"), parsed.km, 0.001)
       assertEquals(case.getInt("minutes"), parsed.minutes)
+      if (case.isNull("rating")) assertNull(parsed.passengerRating) else assertEquals(case.getDouble("rating"), parsed.passengerRating!!, 0.001)
     }
   }
 

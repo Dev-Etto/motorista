@@ -9,23 +9,44 @@ import android.view.accessibility.AccessibilityNodeInfo
 class OfferAccessibilityService : AccessibilityService() {
   private val handler = Handler(Looper.getMainLooper())
   private val scan = Runnable { scanWindow() }
+  private val scheduler = HandlerOfferScheduler()
   private lateinit var store: CopilotStore
   private lateinit var card: OfferCard
   private lateinit var voice: OfferVoice
-  private var lastSignature: String? = null
-  private var lastSignatureAt = 0L
+  private lateinit var notifier: OfferNotifier
+  private lateinit var session: OfferSession
+  private val floating = FloatingOfferChannel()
   private var currentPackage = ""
 
-  override fun onServiceConnected() {
+  val voiceAvailable: Boolean
+    get() = voice.available
+
+  override fun onCreate() {
+    super.onCreate()
     store = CopilotStore(this)
-    card = OfferCard(this)
+    card = OfferCard(this, store)
     voice = OfferVoice(this)
+    notifier = OfferNotifier(this)
+    session = OfferSession(
+      channels = ::activeChannels,
+      preferences = { store.preferences },
+      evaluate = { offer, source -> OfferEvaluator.evaluate(offer, store.targets, OfferSources.label(source)) },
+      record = { evaluation, source -> store.record(evaluation, source, System.currentTimeMillis()) },
+      scheduler = scheduler,
+    )
+  }
+
+  override fun onServiceConnected() {
     instance = this
   }
 
   override fun onAccessibilityEvent(event: AccessibilityEvent?) {
     if (!store.enabled && !OfferDiagnostics.enabled) return
-    currentPackage = event?.packageName?.toString() ?: return
+
+    val source = event?.packageName?.toString() ?: return
+    if (source !in store.preferences.monitoredPackages) return
+
+    currentPackage = source
     handler.removeCallbacks(scan)
     handler.postDelayed(scan, SCAN_DELAY_MS)
   }
@@ -34,17 +55,26 @@ class OfferAccessibilityService : AccessibilityService() {
 
   override fun onDestroy() {
     handler.removeCallbacksAndMessages(null)
-    card.hide()
+    scheduler.cancelAll()
+    allChannels().forEach { it.hide() }
     voice.release()
     instance = null
     super.onDestroy()
   }
 
-  fun present(offer: ParsedOffer, source: String, remember: Boolean) {
-    val evaluation = OfferEvaluator.evaluate(offer, store.targets)
-    card.show(evaluation)
-    if (store.voiceEnabled) voice.announce(evaluation)
-    if (remember) store.record(evaluation, source, System.currentTimeMillis())
+  fun preview(offer: ParsedOffer, source: String) = session.preview(offer, source)
+
+  private fun allChannels(): List<OfferChannel> = listOf(card, voice, notifier, floating)
+
+  private fun activeChannels(): List<OfferChannel> {
+    val preferences = store.preferences
+    return buildList {
+      val floatingVisible = FloatingTimerService.instance?.visibleOutsideApp == true
+      if (preferences.card && !floatingVisible) add(card)
+      if (preferences.voice) add(voice)
+      if (preferences.notification) add(notifier)
+      if (floatingVisible) add(floating)
+    }
   }
 
   private fun scanWindow() {
@@ -53,14 +83,8 @@ class OfferAccessibilityService : AccessibilityService() {
     OfferDiagnostics.capture(text)
     if (!store.enabled) return
 
-    val offer = OfferParser.parse(text) ?: return
-    val now = System.currentTimeMillis()
-    val signature = "$currentPackage:${offer.valueCents}:${offer.km}:${offer.minutes}"
-    if (signature == lastSignature && now - lastSignatureAt < REPEAT_WINDOW_MS) return
-
-    lastSignature = signature
-    lastSignatureAt = now
-    present(offer, currentPackage, true)
+    if (OfferParser.isPartial(text)) store.registerFailedRead()
+    session.onScan(OfferParser.parse(text), currentPackage)
   }
 
   private fun collectText(root: AccessibilityNodeInfo): String {
@@ -79,7 +103,6 @@ class OfferAccessibilityService : AccessibilityService() {
 
   companion object {
     private const val SCAN_DELAY_MS = 300L
-    private const val REPEAT_WINDOW_MS = 60000L
     private const val MAX_NODES = 1500
 
     @Volatile
