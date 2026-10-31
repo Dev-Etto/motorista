@@ -1,17 +1,20 @@
 import { useMemo } from 'react';
 import { classifyOffer, OfferColor } from '@/domain/offer/offer';
+import { OfferTargetsCard } from '@/features/copilot/OfferTargetsCard';
+import { useOfferTargets } from '@/features/copilot/useOfferTargets';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { MoneyField, NumberField } from '@/shared/ui/fields';
-import { AppText, Card, Notice, Stat, StatGrid } from '@/shared/ui/primitives';
+import { LearnMore } from '@/shared/ui/LearnMore';
+import { AppText, Card, Collapsible, Stat, StatGrid } from '@/shared/ui/primitives';
 import { formatPerHour, formatPerKm, profitTone } from '@/shared/utils/format';
-import { formatBRL } from '@/shared/utils/money';
+import { formatBRL, formatNumber } from '@/shared/utils/money';
 import { centsOrZero, decimalOrZero } from '@/shared/utils/parse';
-import { useOfferTargets } from './useOfferTargets';
 
-const COLOR_LABELS: Record<OfferColor, { label: string; tone: 'positive' | 'warning' | 'negative' }> = {
-  green: { label: 'Verde: atinge suas duas metas', tone: 'positive' },
-  yellow: { label: 'Amarelo: cobre o custo, mas fica abaixo de uma meta', tone: 'warning' },
-  red: { label: 'Vermelho: não cobre o custo completo', tone: 'negative' },
+const COLOR_TONES: Record<OfferColor, 'positive' | 'warning' | 'negative' | 'muted'> = {
+  green: 'positive',
+  yellow: 'warning',
+  red: 'negative',
+  neutral: 'muted',
 };
 
 export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
@@ -30,27 +33,34 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
 
   return (
     <>
-      <Card title="Vale a pena?">
-        <MoneyField label="Valor da oferta" {...bind('value')} />
-        <NumberField label="Km totais (até o passageiro + viagem)" suffix="km" {...bind('km')} />
-        <NumberField label="Minutos totais" suffix="min" {...bind('minutes')} />
+      <Card title="Essa corrida compensa?">
+        <AppText tone="muted">Digite o que aparece na oferta e veja quanto sobra para você.</AppText>
+        <MoneyField label="Quanto a corrida paga" {...bind('value')} />
+        <NumberField label="Distância total" suffix="km" hint="Some o caminho até o passageiro e a viagem." {...bind('km')} />
+        <NumberField label="Tempo total" suffix="min" {...bind('minutes')} />
       </Card>
       {ready ? (
-        <Card title="Seus números">
-          <AppText bold tone={COLOR_LABELS[result.color].tone}>{COLOR_LABELS[result.color].label}</AppText>
+        <Card>
+          <AppText variant="caption" tone="muted" center>Sobra para você</AppText>
+          <AppText variant="display" bold center tone={profitTone(result.profitCents)}>{formatBRL(result.profitCents)}</AppText>
+          {result.score === null ? null : (
+            <AppText variant="subtitle" bold center tone={COLOR_TONES[result.color]}>Nota {formatNumber(result.score)} de 10</AppText>
+          )}
+          <AppText center>{result.reason}</AppText>
           <StatGrid>
-            <Stat label="Lucro estimado" value={formatBRL(result.profitCents)} tone={profitTone(result.profitCents)} />
-            <Stat label="Por km" value={formatPerKm(result.perKm)} />
-            <Stat label="Por hora" value={formatPerHour(result.perHour)} />
-            <Stat label="Seu custo" value={formatPerKm(costPerKm)} />
+            <Stat label="Paga por km" value={formatPerKm(result.perKm)} />
+            <Stat label="Paga por hora" value={formatPerHour(result.perHour)} />
           </StatGrid>
-          <Notice tone="accent" message="A decisão é sempre sua." />
+          <LearnMore title="Como a nota é calculada?">
+            <AppText variant="caption">A nota compara a corrida com o seu custo e as suas metas. De 7 para cima, ela atinge as duas metas. Abaixo de 4, não cobre o custo do carro.</AppText>
+            <AppText variant="caption">A nota só ajuda: quem decide é sempre você.</AppText>
+          </LearnMore>
         </Card>
       ) : null}
-      <Card title="Suas metas">
-        <MoneyField label="Mínimo por km" {...targets.bind('perKm')} />
-        <MoneyField label="Mínimo por hora" {...targets.bind('perHour')} />
-      </Card>
+      <Collapsible title="Minhas metas">
+        <AppText tone="muted">O mínimo que você quer ganhar. A nota usa esses valores.</AppText>
+        <OfferTargetsCard targets={targets} />
+      </Collapsible>
     </>
   );
 }

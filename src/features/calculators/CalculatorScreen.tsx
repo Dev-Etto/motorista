@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Notice, Screen, Segmented } from '@/shared/ui/primitives';
+import { Screen, Segmented } from '@/shared/ui/primitives';
+import { CostDependencyNotice } from './CostDependencyNotice';
 import { OfferCalculator } from './OfferCalculator';
 import { QuoteCalculator } from './QuoteCalculator';
 import { useCostPerKm } from './useCostPerKm';
@@ -7,8 +8,8 @@ import { useCostPerKm } from './useCostPerKm';
 type Tab = 'offer' | 'quote';
 
 const TABS: { value: Tab; label: string }[] = [
-  { value: 'offer', label: 'Vale a pena?' },
-  { value: 'quote', label: 'Particular' },
+  { value: 'offer', label: 'Avaliar oferta' },
+  { value: 'quote', label: 'Corrida particular' },
 ];
 
 export default function CalculatorScreen() {
@@ -18,7 +19,7 @@ export default function CalculatorScreen() {
   return (
     <Screen>
       <Segmented value={tab} options={TABS} onChange={setTab} />
-      {costPerKm > 0 ? null : <Notice message="Cadastre seu veículo em Mais para os cálculos considerarem seu custo." />}
+      <CostDependencyNotice costPerKm={costPerKm} />
       {tab === 'offer' ? <OfferCalculator costPerKm={costPerKm} /> : <QuoteCalculator costPerKm={costPerKm} />}
     </Screen>
   );

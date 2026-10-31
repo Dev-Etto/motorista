@@ -5,9 +5,10 @@ import { computeQuote } from '@/domain/quote/quote';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { MoneyField, NumberField, TextField } from '@/shared/ui/fields';
-import { AppText, Button, ButtonRow, Card, ListRow, Notice, Stat, StatGrid } from '@/shared/ui/primitives';
-import { formatPerKm, profitTone } from '@/shared/utils/format';
-import { formatBRL } from '@/shared/utils/money';
+import { AppText, Button, ButtonRow, Card, Collapsible, ListRow, Notice } from '@/shared/ui/primitives';
+import { confirmAction } from '@/shared/utils/confirm';
+import { profitTone } from '@/shared/utils/format';
+import { formatBRL, formatNumber } from '@/shared/utils/money';
 import { centsOrZero, decimalOrZero } from '@/shared/utils/parse';
 
 const INITIAL = { label: '', kmToPassenger: '', kmTrip: '', kmReturn: '', minutes: '', profitPerHour: '30,00', toll: '', extras: '', minimum: '' };
@@ -45,34 +46,43 @@ export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
 
   const share = () => Share.share({ message: buildShareMessage(values.label, quote.priceCents) });
 
-  const remove = async (id: number) => {
-    await quoteRepository.remove(id);
-    await saved.reload();
+  const remove = (id: number) => {
+    confirmAction({
+      title: 'Remover orçamento?',
+      message: 'Essa ação não pode ser desfeita.',
+      actionLabel: 'Remover',
+      onConfirm: async () => {
+        await quoteRepository.remove(id);
+        await saved.reload();
+      },
+    });
   };
 
   return (
     <>
-      <Card title="Viagem particular">
-        <TextField label="Descrição (opcional)" {...bind('label')} />
-        <NumberField label="Km até o passageiro" suffix="km" {...bind('kmToPassenger')} />
-        <NumberField label="Km da viagem" suffix="km" {...bind('kmTrip')} />
-        <NumberField label="Km de retorno (opcional)" suffix="km" {...bind('kmReturn')} />
-        <NumberField label="Minutos totais" suffix="min" {...bind('minutes')} />
-        <MoneyField label="Lucro desejado por hora" {...bind('profitPerHour')} />
-        <MoneyField label="Pedágio" {...bind('toll')} />
-        <MoneyField label="Espera e extras" {...bind('extras')} />
-        <MoneyField label="Valor mínimo" {...bind('minimum')} />
+      <Card title="Quanto cobrar nessa corrida?">
+        <AppText tone="muted">Para corridas combinadas direto com o passageiro, fora dos apps.</AppText>
+        <NumberField label="Até buscar o passageiro" suffix="km" {...bind('kmToPassenger')} />
+        <NumberField label="Da viagem" suffix="km" {...bind('kmTrip')} />
+        <NumberField label="Tempo total" suffix="min" hint="Inclua o caminho até o passageiro." {...bind('minutes')} />
       </Card>
+      <Collapsible title="Mais opções">
+        <NumberField label="Volta sem passageiro" suffix="km" hint="Se precisar voltar por sua conta." {...bind('kmReturn')} />
+        <MoneyField label="Quanto quer ganhar por hora" hint="É o valor do seu tempo no preço sugerido." {...bind('profitPerHour')} />
+        <MoneyField label="Pedágio" {...bind('toll')} />
+        <MoneyField label="Espera ou outros extras" {...bind('extras')} />
+        <MoneyField label="Não cobrar menos que" hint="Corrida curta pode dar um preço muito baixo. Se isso acontecer, o app sugere este valor." {...bind('minimum')} />
+      </Collapsible>
       {ready ? (
-        <Card title="Preço sugerido">
-          <AppText variant="display" bold>{formatBRL(quote.priceCents)}</AppText>
+        <Card>
+          <AppText variant="caption" tone="muted" center>Preço sugerido</AppText>
+          <AppText variant="display" bold center>{formatBRL(quote.priceCents)}</AppText>
           {quote.belowCost ? <Notice tone="negative" message="Esse valor fica abaixo do seu custo." /> : null}
-          <StatGrid>
-            <Stat label="Lucro estimado" value={formatBRL(quote.estimatedProfitCents)} tone={profitTone(quote.estimatedProfitCents)} />
-            <Stat label="Por km" value={formatPerKm(quote.perKm)} />
-            <Stat label="Custo do veículo" value={formatBRL(quote.vehicleCostCents)} />
-            <Stat label="Tempo" value={formatBRL(quote.timeCents)} />
-          </StatGrid>
+          <ListRow title="Para o carro" subtitle={`${formatNumber(quote.totalKm)} km com o seu custo por km`} value={formatBRL(quote.vehicleCostCents)} />
+          <ListRow title="Pelo seu tempo" value={formatBRL(quote.timeCents)} />
+          {quote.tollCents + quote.extrasCents > 0 ? <ListRow title="Pedágio e extras" value={formatBRL(quote.tollCents + quote.extrasCents)} /> : null}
+          <ListRow title="Sobra para você" value={formatBRL(quote.estimatedProfitCents)} valueTone={profitTone(quote.estimatedProfitCents)} />
+          <TextField label="Descrição (opcional)" placeholder="Centro ao aeroporto" {...bind('label')} />
           <ButtonRow>
             <Button label="Compartilhar" onPress={share} />
             <Button label="Salvar" variant="secondary" onPress={save} />
