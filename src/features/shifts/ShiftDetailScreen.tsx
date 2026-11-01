@@ -1,11 +1,11 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Alert } from 'react-native';
 import { shiftRepository } from '@/data/repositories/shiftRepository';
 import { countsAgainstProfit, EXPENSE_LABELS } from '@/domain/expense/expense';
 import { computeShift } from '@/domain/shift/shift';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { AppText, Button, Card, ListRow, Screen } from '@/shared/ui/primitives';
 import { formatDate, formatDuration } from '@/shared/utils/dates';
+import { confirmAction } from '@/shared/utils/confirm';
 import { formatKm } from '@/shared/utils/format';
 import { formatBRL } from '@/shared/utils/money';
 import { ShiftResultCard } from './ShiftResultCard';
@@ -28,17 +28,15 @@ export default function ShiftDetailScreen() {
   });
 
   const confirmDelete = () => {
-    Alert.alert('Excluir jornada?', 'Essa ação não pode ser desfeita.', [
-      { text: 'Cancelar', style: 'cancel' },
-      {
-        text: 'Excluir',
-        style: 'destructive',
-        onPress: async () => {
-          await shiftRepository.remove(shiftId);
-          router.back();
-        },
+    confirmAction({
+      title: 'Excluir jornada?',
+      message: 'Essa ação não pode ser desfeita.',
+      actionLabel: 'Excluir',
+      onConfirm: async () => {
+        await shiftRepository.remove(shiftId);
+        router.back();
       },
-    ]);
+    });
   };
 
   return (

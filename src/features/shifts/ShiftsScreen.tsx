@@ -1,11 +1,15 @@
 import { useRouter } from 'expo-router';
+import { useMemo, useState } from 'react';
 import { shiftRepository } from '@/data/repositories/shiftRepository';
 import { expenseRepository } from '@/data/repositories/expenseRepository';
+import { buildCalendar } from '@/domain/calendar/calendar';
 import { computeShift } from '@/domain/shift/shift';
 import { EXPENSE_LABELS } from '@/domain/expense/expense';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useMonthCursor } from '@/shared/hooks/useMonthCursor';
+import { MonthCalendar } from '@/shared/ui/MonthCalendar';
 import { MonthSwitcher } from '@/shared/ui/MonthSwitcher';
+import { ActiveShiftCard, NewShiftButton } from './ActiveShift';
 import { Button, Card, EmptyState, ListRow, Screen } from '@/shared/ui/primitives';
 import { formatDate, formatDuration, monthBounds } from '@/shared/utils/dates';
 import { profitTone } from '@/shared/utils/format';
@@ -21,19 +25,38 @@ export default function ShiftsScreen() {
   const router = useRouter();
   const cursor = useMonthCursor();
   const { data } = useAsyncData(() => loadMonth(cursor.date), [cursor.date]);
-  const shifts = data?.shifts ?? [];
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const allShifts = useMemo(() => data?.shifts ?? [], [data?.shifts]);
+  const shifts = selectedDate ? allShifts.filter((shift) => shift.date === selectedDate) : allShifts;
+  const calendar = useMemo(
+    () => buildCalendar(cursor.date, allShifts.map((shift) => ({ date: shift.date, profitCents: computeShift(shift).profitCents }))),
+    [cursor.date, allShifts],
+  );
   const expenses = data?.expenses ?? [];
 
   return (
     <Screen>
       <MonthSwitcher date={cursor.date} onPrevious={cursor.previous} onNext={cursor.next} />
-      <Button label="Nova jornada" onPress={() => router.push('/shift/new')} />
+      <ActiveShiftCard />
+      <NewShiftButton />
       <Button label="Lançar despesa ou abastecimento" variant="secondary" onPress={() => router.push('/expense/new')} />
 
+      <Card>
+        <MonthCalendar
+          weeks={calendar}
+          selectedDate={selectedDate}
+          onSelect={(date) => setSelectedDate((current) => (current === date ? null : date))}
+        />
+      </Card>
+
       {shifts.length === 0 ? (
-        <EmptyState title="Nenhuma jornada neste mês" message="Registre sua primeira jornada para ver seu lucro real." />
+        <EmptyState
+          illustration="empty"
+          title={selectedDate ? 'Nenhuma jornada neste dia' : 'Nenhuma jornada neste mês'}
+          message="Registre sua primeira jornada para ver seu lucro real."
+        />
       ) : (
-        <Card title="Jornadas">
+        <Card title={selectedDate ? `Jornadas de ${formatDate(selectedDate)}` : 'Jornadas'}>
           {shifts.map((shift) => {
             const { profitCents } = computeShift(shift);
             return (

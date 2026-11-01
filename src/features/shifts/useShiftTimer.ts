@@ -7,7 +7,12 @@ const TICK_MS = 1000;
 export function useShiftTimer() {
   const [state, setState] = useState<TimerState>(() => copilot.getTimer());
 
-  useInterval(() => setState(copilot.getTimer()), state.started ? TICK_MS : null);
+  useInterval(() => {
+    setState((current) => {
+      const next = copilot.getTimer();
+      return next.started || current.started ? next : current;
+    });
+  }, TICK_MS);
 
   const start = useCallback(() => setState(copilot.startTimer()), []);
   const pause = useCallback(() => setState(copilot.pauseTimer()), []);

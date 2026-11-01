@@ -1,5 +1,6 @@
 import * as TaskManager from 'expo-task-manager';
 import type { LocationObject } from 'expo-location';
+import { copilot } from '@modules/copilot';
 import { gpsSessionRepository } from '@/data/repositories/gpsSessionRepository';
 import { accumulateGps, GpsPoint } from '@/domain/gps/gps';
 
@@ -15,6 +16,7 @@ const toPoint = (location: LocationObject): GpsPoint => ({
 async function applyLocations(locations: LocationObject[]) {
   const session = await gpsSessionRepository.get();
   if (!session.running) return;
+  if (!copilot.getTimer().running) return gpsSessionRepository.save({ ...session, lastPoint: null });
 
   const next = locations.map(toPoint).reduce(
     (state, point) => {

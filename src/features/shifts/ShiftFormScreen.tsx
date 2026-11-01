@@ -1,73 +1,96 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { KmSource } from '@/data/repositories/shiftRepository';
-import { MoneyField, NumberField, TextField } from '@/shared/ui/fields';
-import { Button, Card, Notice, Screen, Segmented } from '@/shared/ui/primitives';
-import { GpsCard } from './GpsCard';
+import { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { spacing } from '@/shared/theme/theme';
+import { DateField } from '@/shared/ui/DateField';
+import { MoneyField, NumberField } from '@/shared/ui/fields';
+import { PlatformBadge } from '@/shared/ui/PlatformBadge';
+import { TipBanner } from '@/features/tips/TipBanner';
+import { useSubmit } from '@/shared/hooks/useSubmit';
+import { Button, Card, Collapsible, Notice, Screen, Segmented } from '@/shared/ui/primitives';
+import { LiveTrackingCard } from './LiveTrackingCard';
+import { useLiveTracking } from './useLiveTracking';
 import { ShiftResultCard } from './ShiftResultCard';
-import { TimerCard } from './TimerCard';
-import { JOURNEY_EXPENSES, useShiftForm } from './useShiftForm';
+import { JOURNEY_EXPENSES, KmEntryMode, useShiftForm } from './useShiftForm';
 
-const KM_OPTIONS: { value: KmSource; label: string }[] = [
+const KM_OPTIONS: { value: KmEntryMode; label: string }[] = [
   { value: 'manual', label: 'Total' },
   { value: 'odometer', label: 'Odômetro' },
-  { value: 'gps', label: 'GPS' },
 ];
 
 export default function ShiftFormScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id?: string }>();
   const form = useShiftForm(id ? Number(id) : undefined);
+  const live = useLiveTracking(form.applyLive);
+  const [measureError, setMeasureError] = useState<string | null>(null);
 
-  const handleSave = async () => {
+  const saving = useSubmit(async () => {
+    if (!id && live.pending) return setMeasureError('Você tem uma medição em andamento. Toque em Usar no registro para levar o tempo e os km, ou descarte a medição.');
+
+    setMeasureError(null);
     const saved = await form.save();
-    if (saved) router.back();
-  };
+    if (!saved) return;
+
+    if (!id && live.started) await live.discard();
+    router.back();
+  });
 
   return (
     <Screen>
-      <TimerCard onApply={form.applyTimer} />
+      <TipBanner id="shift" message="Registre com o carro parado. Só ganhos, km e horas já bastam para ver o lucro." />
+      {id ? null : <LiveTrackingCard live={live} />}
 
-      <Card title="Quando">
-        <TextField label="Data" value={form.date} onChangeText={form.setDate} placeholder="dd/mm/aaaa" keyboardType="numbers-and-punctuation" />
+      <Card title="Tempo e distância">
         <NumberField label="Horas trabalhadas" value={form.hours} onChangeText={form.setHours} suffix="h" placeholder="8,5" />
-        <NumberField label="Hora de início (opcional)" value={form.startHour} onChangeText={form.setStartHour} placeholder="8" hint="Ajuda a descobrir seu melhor período." />
-      </Card>
-
-      <Card title="Ganhos por plataforma">
-        {form.platforms.map((platform) => (
-          <MoneyField
-            key={platform.id}
-            label={platform.name}
-            value={form.earnings[platform.id] ?? ''}
-            onChangeText={(text) => form.setEarning(platform.id, text)}
-          />
-        ))}
-        <NumberField label="Corridas (opcional)" value={form.trips} onChangeText={form.setTrips} />
-      </Card>
-
-      <Card title="Quilômetros">
         <Segmented value={form.kmMode} options={KM_OPTIONS} onChange={form.setKmMode} />
         {form.kmMode === 'manual' ? (
-          <NumberField label="Km rodados" value={form.kmText} onChangeText={form.setKmText} suffix="km" />
-        ) : null}
-        {form.kmMode === 'odometer' ? (
+          <NumberField label="Km rodados" value={form.kmText} onChangeText={form.setKmText} suffix="km" hint={form.kmMeasured ? 'Medido por GPS. Você pode ajustar.' : undefined} />
+        ) : (
           <>
             <NumberField label="Odômetro inicial" value={form.odometerStart} onChangeText={form.setOdometerStart} suffix="km" />
             <NumberField label="Odômetro final" value={form.odometerEnd} onChangeText={form.setOdometerEnd} suffix="km" />
           </>
-        ) : null}
+        )}
       </Card>
-      {form.kmMode === 'gps' ? <GpsCard appliedKm={form.gpsKm} onApply={form.applyGpsKm} /> : null}
 
-      <Card title="Despesas do dia">
-        {JOURNEY_EXPENSES.map(({ category, label }) => (
-          <MoneyField key={category} label={label} value={form.expenses[category] ?? ''} onChangeText={(text) => form.setExpense(category, text)} />
+      <Card title="Ganhos por plataforma">
+        {form.platforms.map((platform) => (
+          <View key={platform.id} style={styles.platform}>
+            <PlatformBadge name={platform.name} />
+            <MoneyField
+              label={platform.name}
+              hideLabel
+              value={form.earnings[platform.id] ?? ''}
+              onChangeText={(text) => form.setEarning(platform.id, text)}
+            />
+          </View>
         ))}
       </Card>
 
+      <Card>
+        <DateField label="Data" value={form.date} onChange={(date) => date && form.setDate(date)} />
+      </Card>
+
+      <Collapsible title="Despesas do dia">
+        {JOURNEY_EXPENSES.map(({ category, label }) => (
+          <MoneyField key={category} label={label} value={form.expenses[category] ?? ''} onChangeText={(text) => form.setExpense(category, text)} />
+        ))}
+      </Collapsible>
+
+      <Collapsible title="Mais detalhes">
+        <NumberField label="Hora de início" value={form.startHour} onChangeText={form.setStartHour} placeholder="8" hint="Ajuda a descobrir seu melhor período." />
+        <NumberField label="Corridas" value={form.trips} onChangeText={form.setTrips} />
+      </Collapsible>
+
       <ShiftResultCard result={form.preview} />
       {form.error ? <Notice tone="negative" message={form.error} /> : null}
-      <Button label="Salvar jornada" onPress={handleSave} />
+      {measureError ? <Notice message={measureError} /> : null}
+      <Button label="Salvar jornada" busy={saving.busy} onPress={saving.submit} />
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  platform: { gap: spacing.xs },
+});
