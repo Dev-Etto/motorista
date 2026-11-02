@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { ProfitCard } from '@/features/dashboard/ProfitCard';
 import { InsightCard } from '@/features/insights/InsightCard';
+import { TipBanner } from '@/features/tips/TipBanner';
 import { MIN_SHIFTS_FOR_INSIGHTS } from '@/domain/insights/buildInsights';
 import { useMonthCursor } from '@/shared/hooks/useMonthCursor';
 import { BarChart } from '@/shared/ui/BarChart';
 import { MonthSwitcher } from '@/shared/ui/MonthSwitcher';
+import { PlatformBadge } from '@/shared/ui/PlatformBadge';
 import { Button, ButtonRow, Card, EmptyState, ListRow, Notice, Screen, Segmented } from '@/shared/ui/primitives';
 import { formatPerKm, profitTone } from '@/shared/utils/format';
 import { formatBRL } from '@/shared/utils/money';
@@ -34,14 +36,15 @@ export default function ReportsScreen() {
 
   return (
     <Screen>
+      <TipBanner id="reports" message="Mês fechado desconta o custo fixo inteiro. É onde você vê se rodou o suficiente para pagar os custos." />
       <Segmented value={period} options={PERIODS} onChange={setPeriod} />
       <MonthSwitcher date={cursor.date} onPrevious={cursor.previous} onNext={cursor.next} />
       {!data || data.shifts.length === 0 ? (
-        <EmptyState title="Sem jornadas neste período" message="Registre jornadas para ver gráficos e relatórios." />
+        <EmptyState illustration="empty" title="Sem jornadas neste período" message="Registre jornadas para ver gráficos e relatórios." />
       ) : (
         <>
           <ProfitCard title="Lucro no período" summary={data.summary} />
-          <Card title="Lucro por dia">
+          <Card title={period === 'year' ? 'Lucro por mês' : 'Lucro por dia'}>
             <BarChart data={chart} accessibilityLabel={`Lucro no período: ${formatBRL(data.summary.profitCents)}`} />
           </Card>
           {data.monthClose ? (
@@ -55,7 +58,7 @@ export default function ReportsScreen() {
           ) : null}
           <Card title="Por plataforma">
             {data.platforms.map((item) => (
-              <ListRow key={item.platform} title={item.platform} value={formatBRL(item.cents)} />
+              <ListRow key={item.platform} leading={<PlatformBadge name={item.platform} />} title="" value={formatBRL(item.cents)} />
             ))}
           </Card>
           <ButtonRow>

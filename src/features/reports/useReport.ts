@@ -7,7 +7,7 @@ import { summarizeShifts, totalsByPlatform, withLooseExpenses } from '@/domain/s
 import { loadInsights } from '@/features/insights/loadInsights';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { BarDatum } from '@/shared/ui/BarChart';
-import { monthBounds, today, weekBounds } from '@/shared/utils/dates';
+import { datesInRange, monthBounds, today, weekBounds } from '@/shared/utils/dates';
 
 export type ReportPeriod = 'week' | 'month' | 'year';
 
@@ -18,14 +18,18 @@ function periodBounds(period: ReportPeriod, date: string) {
   return { start: `${year}-01-01`, end: `${year}-12-31` };
 }
 
-function buildChart(period: ReportPeriod, shifts: ShiftListItem[]): BarDatum[] {
-  const labelOf = (date: string) => (period === 'year' ? date.slice(5, 7) : date.slice(8, 10));
+const MONTH_LABELS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+function buildChart(period: ReportPeriod, start: string, end: string, shifts: ShiftListItem[]): BarDatum[] {
   const totals = new Map<string, number>();
-  for (const shift of [...shifts].reverse()) {
-    const label = labelOf(shift.date);
-    totals.set(label, (totals.get(label) ?? 0) + computeShift(shift).profitCents);
+  const keyOf = (date: string) => (period === 'year' ? date.slice(5, 7) : date);
+  for (const shift of shifts) {
+    const key = keyOf(shift.date);
+    totals.set(key, (totals.get(key) ?? 0) + computeShift(shift).profitCents);
   }
-  return [...totals.entries()].map(([label, value]) => ({ label, value }));
+
+  if (period === 'year') return MONTH_LABELS.map((label, index) => ({ label, value: totals.get(String(index + 1).padStart(2, '0')) ?? 0 }));
+  return datesInRange(start, end).map((date) => ({ label: date.slice(8, 10), value: totals.get(date) ?? 0 }));
 }
 
 async function loadReport(period: ReportPeriod, date: string) {
@@ -55,6 +59,9 @@ export type ReportData = Awaited<ReturnType<typeof loadReport>>;
 
 export function useReport(period: ReportPeriod, date: string) {
   const report = useAsyncData(() => loadReport(period, date), [period, date]);
-  const chart = useMemo(() => buildChart(period, report.data?.shifts ?? []), [period, report.data?.shifts]);
+  const chart = useMemo(() => {
+    if (!report.data) return [];
+    return buildChart(period, report.data.start, report.data.end, report.data.shifts);
+  }, [period, report.data]);
   return { ...report, chart };
 }
