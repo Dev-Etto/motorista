@@ -1,7 +1,9 @@
 import * as Notifications from 'expo-notifications';
 import { reminderRepository, ReminderRow } from '@/data/repositories/reminderRepository';
+import { shiftRepository } from '@/data/repositories/shiftRepository';
+import { vehicleRepository } from '@/data/repositories/vehicleRepository';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
-import { fromISODate } from '@/shared/utils/dates';
+import { fromISODate, today } from '@/shared/utils/dates';
 
 const REMINDER_HOUR = 8;
 
@@ -24,11 +26,17 @@ async function cancelNotification(reminder: ReminderRow) {
   await Notifications.cancelScheduledNotificationAsync(reminder.notification_id);
 }
 
-export function useReminders() {
-  const { data, reload } = useAsyncData(() => reminderRepository.list());
+async function loadReminders() {
+  const [reminders, totalKm, { profile }] = await Promise.all([reminderRepository.list(), shiftRepository.totalKmEver(), vehicleRepository.getCostsAt(today())]);
+  return { reminders, totalKm, profile };
+}
 
-  const add = async (title: string, dueDate: string | null, dueKm: number | null) => {
+export function useReminders() {
+  const { data, reload } = useAsyncData(loadReminders);
+
+  const add = async (title: string, dueDate: string | null, kmFromNow: number | null) => {
     const notificationId = dueDate ? await scheduleDateReminder(title, dueDate) : null;
+    const dueKm = kmFromNow === null ? null : (data?.totalKm ?? 0) + kmFromNow;
     await reminderRepository.add({ title, due_date: dueDate, due_km: dueKm, notification_id: notificationId });
     await reload();
   };
@@ -45,5 +53,5 @@ export function useReminders() {
     await reload();
   };
 
-  return { reminders: data ?? [], add, complete, remove };
+  return { reminders: data?.reminders ?? [], totalKm: data?.totalKm ?? 0, profile: data?.profile ?? null, add, complete, remove };
 }
