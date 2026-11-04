@@ -43,7 +43,7 @@ app -> features -> data -> domain -> shared/utils
 | Padrão | Onde |
 |---|---|
 | Repository | `src/data/repositories` |
-| Strategy | Regras em `src/domain/insights/rules.ts` |
+| Strategy | Regras em `src/domain/insights/rules.ts` e canais `OfferChannel` do Copiloto |
 | Custom Hooks | `useAsyncData`, `useFormFields`, `useInterval`, `useMonthCursor` e hooks de cada funcionalidade |
 | Facade | `modules/copilot/index.ts` esconde o módulo nativo |
 | Composition | Telas montadas com componentes de `shared/ui` |
@@ -70,12 +70,39 @@ app -> features -> data -> domain -> shared/utils
 
 **SQL direto, sem ORM.** O esquema é pequeno, e `expo-sqlite` com repositórios evita uma dependência a mais.
 
-**Regras duplicadas de oferta.** O Copiloto precisa calcular em Kotlin porque roda com o app em segundo plano, e a calculadora manual usa TypeScript. Os dois lados são testados com `modules/copilot/fixtures/offers.json`, para continuarem iguais.
+**Regras duplicadas de oferta e da nota.** O Copiloto precisa calcular em Kotlin porque roda com o app em segundo plano, e a calculadora manual usa TypeScript. Os dois lados são testados com `modules/copilot/fixtures/offers.json`, para continuarem iguais.
 
 **Cronômetro no lado nativo.** O botão flutuante e o app precisam ver o mesmo estado, mesmo com o app fechado. Por isso o estado fica em `ShiftTimer`, no Kotlin.
 
 **Internet só no build de desenvolvimento.** O Metro exige `INTERNET`. Com `APP_VARIANT=release`, a permissão é removida em `app.config.ts`.
 
-**Copiloto só leitura.** O serviço declara `canPerformGestures=false`, e o cartão usa `FLAG_NOT_TOUCHABLE`. Qualquer automação de toque, aceite ou recusa está fora do produto.
+**Copiloto só leitura.** O serviço declara `canPerformGestures=false`. O cartão recebe toques só para ser arrastado e usa `FLAG_NOT_TOUCH_MODAL`, para os toques fora dele chegarem ao app embaixo. Qualquer automação de toque, aceite ou recusa está fora do produto.
 
 **Regra `set-state-in-effect` desligada.** Ela acusa carregamentos assíncronos que só alteram o estado depois de um `await`, o que é falso positivo neste projeto.
+
+**Sessão da oferta sem Android.** `OfferSession` recebe canais, relógio de tarefas e preferências por parâmetro, para ser testada sem aparelho.
+
+**Chamadas de interface na thread principal.** Funções do módulo que mexem em janelas usam `Handler(Looper.getMainLooper())`, porque o JavaScript roda em outra thread.
+
+**Só tabelas novas são opcionais no backup.** Um arquivo sem as tabelas originais é recusado, para uma restauração nunca apagar dados por um arquivo incompleto.
+
+**A avaliação do passageiro não entra na nota.** A nota mede o valor da oferta para o motorista, e a avaliação é só uma informação da plataforma.
+
+**Identidade visual em SVG.** Os ícones e as ilustrações em linha são componentes em `shared/ui/illustrations`, e os ícones do app são gerados das fontes em `assets/brand`. Nada depende de internet.
+
+**Selos no lugar de logos.** Logos de plataformas são marcas de terceiros. Os selos ficam em `PlatformBadge` e `OfferSources`, para a troca ser simples se houver autorização.
+
+## Decisões da versão 0.6.0
+
+- **Oferta dentro do botão flutuante:** `OfferAccessibilityService.activeChannels` usa o botão como canal quando ele está visível e o cartão avulso nos demais casos, evitando duas janelas para a mesma oferta.
+- **Medição protegida:** `useLiveTracking.apply` copia os valores e mantém a medição; só `discard` zera. O formulário bloqueia salvar com medição pendente.
+- **Metas derivadas da meta do mês:** `suggestOfferTargets` é função pura de domínio. A aplicação às metas por corrida é sempre uma ação explícita do usuário.
+- **Lembrete por km:** `due_km` guarda o total acumulado de km das jornadas em que o aviso vence, sem depender de odômetro informado.
+- **Layout da notificação:** a cor vem de `RemoteViews` no layout próprio, porque `setColor` sozinho não colore o corpo no Android atual.
+
+## Decisões da versão 0.7.0
+
+- **Uma jornada por vez:** existe um único cronômetro, salvo em `ShiftTimer`. `useShiftTimer` consulta esse estado a cada segundo, então o app reconhece uma jornada iniciada pelo botão flutuante.
+- **Km em pausa:** `gpsTask` ignora os pontos recebidos com o cronômetro pausado e descarta o último ponto, evitando somar o trecho percorrido durante a pausa.
+- **Distribuição:** o APK é publicado nas Releases do GitHub, com o nome fixo `motorista.apk`, para manter um link estável sem aumentar o histórico do git.
+- **Assinatura:** `scripts/release-apk.sh` assina o APK com uma chave mantida fora do repositório. Toda versão precisa usar a mesma chave para instalar por cima da anterior.
