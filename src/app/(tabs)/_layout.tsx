@@ -1,8 +1,9 @@
 import { Tabs } from 'expo-router';
-import { useTheme } from '@/shared/theme/theme';
-import { TabIcon, TabIconName } from '@/shared/ui/TabIcon';
+import { StyleSheet, View } from 'react-native';
+import { radius, useTheme } from '@/shared/theme/theme';
+import { AppIcon, AppIconName } from '@/shared/ui/AppIcon';
 
-const TABS: { name: string; title: string; icon: TabIconName }[] = [
+const TABS: { name: string; title: string; icon: AppIconName }[] = [
   { name: 'index', title: 'Início', icon: 'home' },
   { name: 'shifts', title: 'Jornadas', icon: 'shifts' },
   { name: 'calculator', title: 'Calculadora', icon: 'calculator' },
@@ -20,6 +21,7 @@ export default function TabsLayout() {
         headerTintColor: colors.text,
         tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
         tabBarActiveTintColor: colors.primary,
+        tabBarLabelStyle: styles.label,
         tabBarInactiveTintColor: colors.textMuted,
       }}
     >
@@ -27,9 +29,21 @@ export default function TabsLayout() {
         <Tabs.Screen
           key={tab.name}
           name={tab.name}
-          options={{ title: tab.title, tabBarIcon: ({ color }) => <TabIcon name={tab.icon} color={color} /> }}
+          options={{
+            title: tab.title,
+            tabBarIcon: ({ color, focused }) => (
+              <View style={[styles.icon, focused ? { backgroundColor: colors.primary } : null]}>
+                <AppIcon name={tab.icon} color={focused ? colors.onPrimary : color} size={22} />
+              </View>
+            ),
+          }}
         />
       ))}
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  icon: { width: 52, height: 30, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
+  label: { fontWeight: '700' },
+});

@@ -4,14 +4,21 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { migrate } from '@/data/database/connection';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
 import { syncCopilotTargets } from '@/features/copilot/syncTargets';
+import { useFloatingVisibility } from '@/features/copilot/useFloatingVisibility';
+import { restoreThemeMode } from '@/features/settings/themePreference';
 import '@/features/shifts/gpsTask';
 import { useTheme } from '@/shared/theme/theme';
+import { ThemedStatusBar } from '@/shared/ui/ThemedStatusBar';
 import { AppText, Notice, Screen } from '@/shared/ui/primitives';
 
 const SCREEN_TITLES: Record<string, string> = {
   vehicle: 'Veículo e custos',
   goal: 'Meta do mês',
   copilot: 'Copiloto de ofertas',
+  'copilot-setup': 'Configurar o Copiloto',
+  help: 'Ajuda',
+  permissions: 'Permissões',
+  summary: 'Meu resumo',
   platforms: 'Plataformas',
   reminders: 'Lembretes',
   backup: 'Backup',
@@ -32,6 +39,7 @@ function useAppBootstrap() {
       try {
         await migrate();
         await syncCopilotTargets();
+        await restoreThemeMode();
         const onboarded = await settingsRepository.get(SETTING_KEYS.onboarded);
         setState('ready');
         if (!onboarded) setTimeout(() => router.replace('/onboarding'));
@@ -47,10 +55,12 @@ function useAppBootstrap() {
 export default function RootLayout() {
   const colors = useTheme();
   const state = useAppBootstrap();
+  useFloatingVisibility();
 
   if (state === 'failed') {
     return (
       <SafeAreaProvider>
+        <ThemedStatusBar />
         <Screen safeTop>
           <Notice tone="negative" message="Não foi possível abrir os dados do app. Reinicie e tente novamente." />
         </Screen>
@@ -60,6 +70,7 @@ export default function RootLayout() {
   if (state === 'loading') {
     return (
       <SafeAreaProvider>
+        <ThemedStatusBar />
         <Screen safeTop>
           <AppText tone="muted">Carregando…</AppText>
         </Screen>
@@ -69,6 +80,7 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
+      <ThemedStatusBar />
       <Stack
         screenOptions={{
           headerStyle: { backgroundColor: colors.surface },
