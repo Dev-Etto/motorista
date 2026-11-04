@@ -1,8 +1,12 @@
 {
   "name": "motorista",
-  "version": "1.0.0",
+  "version": "0.7.0",
+  "license": "SEE LICENSE IN LICENSE",
+  "homepage": "https://github.com/Dev-Etto/motorista",
+  "repository": "github:Dev-Etto/motorista",
   "main": "expo-router/entry",
   "dependencies": {
+    "@react-native-community/datetimepicker": "9.2.1",
     "expo": "~58.0.23",
     "expo-asset": "~58.0.20",
     "expo-build-properties": "~58.0.12",
@@ -31,6 +35,7 @@
   },
   "devDependencies": {
     "@types/jest": "30.0.0",
+    "@types/node": "^26.6.6",
     "@types/react": "~19.3.0",
     "eslint": "^9.0.0",
     "eslint-config-expo": "~58.0.4",
@@ -46,7 +51,7 @@
     "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
-    "build:apk": "APP_VARIANT=release expo prebuild --platform android --clean --no-install && cd android && ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a,armeabi-v7a"
+    "build:apk": "bash scripts/release-apk.sh"
   },
   "private": true
 }

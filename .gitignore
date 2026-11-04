@@ -44,8 +44,10 @@ yarn-error.*
 /android
 /ios
 *.keystore
+*.jks
 keystore.properties
 
 /dist
 modules/*/android/build/
 modules/*/android/.gradle/
+
