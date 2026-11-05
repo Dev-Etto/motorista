@@ -10,10 +10,10 @@ enum class OfferColor(
   val dayText: Int,
   val nightAccent: Int,
 ) {
-  GREEN("green", "▲", 0xFF0F6B3E.toInt(), 0xFFFFFFFF.toInt(), 0xFF4ADE80.toInt()),
+  GREEN("green", "▲", 0xFF0B6E3E.toInt(), 0xFFFFFFFF.toInt(), 0xFF4FD08D.toInt()),
   YELLOW("yellow", "■", 0xFFF5C518.toInt(), 0xFF111111.toInt(), 0xFFF5C518.toInt()),
   RED("red", "▼", 0xFFB3261E.toInt(), 0xFFFFFFFF.toInt(), 0xFFFF8A80.toInt()),
-  NEUTRAL("neutral", "●", 0xFF37474F.toInt(), 0xFFFFFFFF.toInt(), 0xFFB0BEC5.toInt()),
+  NEUTRAL("neutral", "●", 0xFF404040.toInt(), 0xFFFFFFFF.toInt(), 0xFFA8A8A8.toInt()),
 }
 
 data class OfferTargets(val costPerKm: Double, val targetPerKmCents: Double, val targetPerHourCents: Double)

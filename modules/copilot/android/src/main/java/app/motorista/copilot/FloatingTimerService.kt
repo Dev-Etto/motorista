@@ -9,12 +9,12 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.graphics.Color
 import android.graphics.PixelFormat
-import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.provider.Settings
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -45,7 +45,7 @@ class FloatingTimerService : Service() {
   private var showingOffer = false
 
   val visibleOutsideApp: Boolean
-    get() = !appInForeground
+    get() = !appInForeground && Settings.canDrawOverlays(this)
 
   private val tick = object : Runnable {
     override fun run() {
@@ -63,6 +63,8 @@ class FloatingTimerService : Service() {
     store = CopilotStore(this)
     cardView = OfferCardView(this)
     goForeground()
+    if (!Settings.canDrawOverlays(this)) return stopSelf()
+
     addWindow()
     handler.post(tick)
     instance = this
@@ -71,7 +73,7 @@ class FloatingTimerService : Service() {
   override fun onDestroy() {
     instance = null
     handler.removeCallbacksAndMessages(null)
-    windowManager.removeView(root)
+    if (::root.isInitialized && root.isAttachedToWindow) windowManager.removeView(root)
     super.onDestroy()
   }
 
@@ -266,7 +268,7 @@ class FloatingTimerService : Service() {
     text = value
     setTextColor(Color.WHITE)
     setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeSp)
-    typeface = Typeface.DEFAULT_BOLD
+    typeface = AppFonts.bold(this@FloatingTimerService)
     gravity = Gravity.CENTER
     minHeight = dp(TOUCH_TARGET_DP)
     setPadding(dp(PADDING_DP), 0, dp(PADDING_DP), 0)
@@ -287,7 +289,7 @@ class FloatingTimerService : Service() {
     private const val TICK_MS = 1000L
     private const val MS_PER_SECOND = 1000L
     private const val MENU_CLOSE_MS = 6000L
-    private const val PILL_COLOR = 0xFF0B3C49.toInt()
+    private const val PILL_COLOR = 0xFF171717.toInt()
     private const val IDLE_ALPHA = 0.8f
     private const val CORNER_DP = 18
     private const val INITIAL_OFFSET_DP = 24

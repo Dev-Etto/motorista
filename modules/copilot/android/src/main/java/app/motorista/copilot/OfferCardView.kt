@@ -19,8 +19,8 @@ private data class CardPalette(
   val negative: Int,
 )
 
-private val DAY_PALETTE = CardPalette(Color.WHITE, 0xFF14211F.toInt(), 0xFF4F5F61.toInt(), 0xFF0F6B3E.toInt(), 0xFFB3261E.toInt())
-private val NIGHT_PALETTE = CardPalette(0xFF152124.toInt(), Color.WHITE, 0xFFB0BEC5.toInt(), 0xFF4ADE80.toInt(), 0xFFFF8A80.toInt())
+private val DAY_PALETTE = CardPalette(Color.WHITE, 0xFF171717.toInt(), 0xFF5E5E5E.toInt(), 0xFF0B6E3E.toInt(), 0xFFB3261E.toInt())
+private val NIGHT_PALETTE = CardPalette(0xFF1C1C1C.toInt(), 0xFFF5F5F5.toInt(), 0xFFA8A8A8.toInt(), 0xFF4FD08D.toInt(), 0xFFFF8A80.toInt())
 
 class OfferCardView(private val context: Context) {
   fun width(): Int = minOf(context.resources.displayMetrics.widthPixels - dp(SCREEN_MARGIN_DP) * 2, dp(MAX_WIDTH_DP))
@@ -66,7 +66,7 @@ class OfferCardView(private val context: Context) {
     orientation = LinearLayout.VERTICAL
     addView(sourceChip(evaluation.sourceLabel, scale), LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT))
     evaluation.offer.passengerRating?.let {
-      addView(label("★ ${OfferFormat.decimal(it, 2)}", CAPTION_SP * scale, evaluation.color.dayText, Typeface.DEFAULT))
+      addView(label("★ ${OfferFormat.decimal(it, 2)}", CAPTION_SP * scale, evaluation.color.dayText, AppFonts.regular(context)))
     }
   }
 
@@ -86,7 +86,7 @@ class OfferCardView(private val context: Context) {
       orientation = LinearLayout.HORIZONTAL
       gravity = Gravity.CENTER_VERTICAL
       addView(label(OfferFormat.money(evaluation.offer.valueCents.toDouble()), VALUE_SP * scale, palette.text), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-      addView(label(OfferFormat.distanceAndTime(evaluation), DETAIL_SP * scale, palette.muted, Typeface.DEFAULT))
+      addView(label(OfferFormat.distanceAndTime(evaluation), DETAIL_SP * scale, palette.muted, AppFonts.regular(context)))
     }
     val metrics = LinearLayout(context).apply {
       orientation = LinearLayout.HORIZONTAL
@@ -103,7 +103,7 @@ class OfferCardView(private val context: Context) {
 
   private fun metric(title: String, value: String, onTarget: Boolean?, palette: CardPalette, scale: Float, showArrow: Boolean = true) = LinearLayout(context).apply {
     orientation = LinearLayout.VERTICAL
-    addView(label(title, CAPTION_SP * scale, palette.muted, Typeface.DEFAULT))
+    addView(label(title, CAPTION_SP * scale, palette.muted, AppFonts.regular(context)))
     val tone = when (onTarget) {
       true -> palette.positive
       false -> palette.negative
@@ -119,7 +119,7 @@ class OfferCardView(private val context: Context) {
     body.addView(label(main, SUMMARY_SP * scale, palette.text))
   }
 
-  private fun label(value: String, sizeSp: Float, color: Int, face: Typeface = Typeface.DEFAULT_BOLD) = TextView(context).apply {
+  private fun label(value: String, sizeSp: Float, color: Int, face: Typeface = AppFonts.bold(context)) = TextView(context).apply {
     text = value
     setTextColor(color)
     setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeSp)
