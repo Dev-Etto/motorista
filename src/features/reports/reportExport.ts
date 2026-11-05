@@ -36,10 +36,10 @@ function buildReportHtml(report: ReportData): string {
   );
 
   return `<html><head><meta charset="utf-8"><style>
-    body { font-family: sans-serif; color: #14211F; padding: 24px; }
+    body { font-family: sans-serif; color: #171717; padding: 24px; }
     table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
-    td, th { border-bottom: 1px solid #D6DEDC; padding: 6px; text-align: left; font-size: 12px; }
-    small { color: #58686A; }
+    td, th { border-bottom: 1px solid #E2E2E2; padding: 6px; text-align: left; font-size: 12px; }
+    small { color: #5E5E5E; }
   </style></head><body>
     <h1>${escapeHtml(APP_NAME)}: relatório</h1>
     <p>${formatDate(report.start)} a ${formatDate(report.end)}</p>
