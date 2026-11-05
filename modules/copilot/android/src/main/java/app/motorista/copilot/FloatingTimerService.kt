@@ -7,9 +7,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
-import android.graphics.Color
 import android.graphics.PixelFormat
-import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
@@ -17,13 +15,11 @@ import android.os.Looper
 import android.provider.Settings
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 
 class FloatingTimerService : Service() {
   private val handler = Handler(Looper.getMainLooper())
@@ -34,15 +30,11 @@ class FloatingTimerService : Service() {
   private lateinit var store: CopilotStore
   private lateinit var cardView: OfferCardView
   private lateinit var root: FrameLayout
-  private lateinit var pill: LinearLayout
-  private lateinit var logo: ImageView
-  private lateinit var clockLabel: TextView
-  private lateinit var toggleLabel: TextView
-  private lateinit var lastOfferLabel: TextView
-  private lateinit var menu: LinearLayout
+  private lateinit var panel: FloatingPanel
   private lateinit var params: WindowManager.LayoutParams
   private var lastOffer: OfferEvaluation? = null
   private var showingOffer = false
+  private var menuOpen = false
 
   val visibleOutsideApp: Boolean
     get() = !appInForeground && Settings.canDrawOverlays(this)
@@ -80,8 +72,7 @@ class FloatingTimerService : Service() {
   fun showOffer(evaluation: OfferEvaluation, preferences: CopilotPreferences) {
     lastOffer = evaluation
     handler.removeCallbacks(closeOffer)
-    val shown = if (preferences.card) preferences else preferences.copy(cardLayout = CardLayout.SUMMARY)
-    renderCard(evaluation, shown)
+    renderCard(evaluation, preferences)
   }
 
   fun clearOffer() {
@@ -90,7 +81,7 @@ class FloatingTimerService : Service() {
 
     showingOffer = false
     root.removeAllViews()
-    root.addView(pill)
+    root.addView(panel.view)
     restorePillPosition()
     refresh()
   }
@@ -155,52 +146,30 @@ class FloatingTimerService : Service() {
   }
 
   private fun addWindow() {
-    logo = ImageView(this).apply {
-      setImageResource(R.drawable.ic_stat_motorista)
-      val padding = dp(LOGO_PADDING_DP)
-      setPadding(padding, padding, padding, padding)
-    }
-    clockLabel = label("", TIMER_SP)
-    toggleLabel = menuRow("Iniciar") { toggleTimer() }
-    lastOfferLabel = menuRow("Última oferta") { showLastOffer() }
-    menu = LinearLayout(this).apply {
-      orientation = LinearLayout.VERTICAL
-      addView(toggleLabel)
-      addView(lastOfferLabel)
-      addView(menuRow("Abrir app") { openApp() })
-      addView(menuRow("Ocultar") { stopSelf() })
-    }
-    val handle = LinearLayout(this).apply {
-      orientation = LinearLayout.HORIZONTAL
-      gravity = Gravity.CENTER
-      minimumHeight = dp(HANDLE_DP)
-      minimumWidth = dp(HANDLE_DP)
-      addView(logo, LinearLayout.LayoutParams(dp(LOGO_DP), dp(LOGO_DP)))
-      addView(clockLabel)
-    }
-    pill = LinearLayout(this).apply {
-      orientation = LinearLayout.VERTICAL
-      background = GradientDrawable().apply {
-        setColor(PILL_COLOR)
-        cornerRadius = dp(CORNER_DP).toFloat()
-      }
-      addView(handle)
-      addView(menu)
-    }
+    panel = FloatingPanel(
+      context = this,
+      onToggle = { toggleTimer() },
+      onLastOffer = { showLastOffer() },
+      onOpenApp = { openApp() },
+      onHide = { stopSelf() },
+    )
     root = FrameLayout(this)
-    root.addView(pill)
+    root.addView(panel.view)
+    root.setOnTouchListener { _, event ->
+      if (event.action == MotionEvent.ACTION_OUTSIDE) setMenuOpen(false)
+      false
+    }
     params = windowParams()
     WindowDrag.attach(
-      handle = handle,
+      handle = panel.handle,
       window = root,
       params = params,
       windowManager = windowManager,
-      clamp = { x, y -> x to clampPillY(y) },
+      clamp = { x, y -> clampToScreen(x, y).first to if (menuOpen) clampToScreen(x, y).second else clampPillY(y) },
       onEnd = { x, y -> getSharedPreferences(FILE, Context.MODE_PRIVATE).edit().putInt(KEY_X, x).putInt(KEY_Y, y).apply() },
-      onTap = { setMenuOpen(menu.visibility != View.VISIBLE) },
+      onTap = { setMenuOpen(!menuOpen) },
     )
     windowManager.addView(root, params)
-    setMenuOpen(false)
     refresh()
     applyVisibility()
   }
@@ -215,7 +184,7 @@ class FloatingTimerService : Service() {
       WindowManager.LayoutParams.WRAP_CONTENT,
       WindowManager.LayoutParams.WRAP_CONTENT,
       WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-      WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+      WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
       PixelFormat.TRANSLUCENT,
     ).apply {
       gravity = Gravity.TOP or Gravity.START
@@ -226,13 +195,27 @@ class FloatingTimerService : Service() {
 
   private fun setMenuOpen(open: Boolean) {
     handler.removeCallbacks(closeMenu)
-    menu.visibility = if (open) View.VISIBLE else View.GONE
+    val changed = menuOpen != open
+    menuOpen = open
     if (open) handler.postDelayed(closeMenu, MENU_CLOSE_MS)
     refresh()
+    if (!changed) return
+
+    if (open) fitOpenPanel() else restorePillPosition()
+  }
+
+  private fun fitOpenPanel() {
+    val metrics = resources.displayMetrics
+    root.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+    params.x = params.x.coerceIn(0, maxOf(0, metrics.widthPixels - root.measuredWidth))
+    params.y = params.y.coerceIn(0, maxOf(0, metrics.heightPixels - root.measuredHeight - dp(SCREEN_BOTTOM_DP)))
+    windowManager.updateViewLayout(root, params)
   }
 
   private fun toggleTimer() {
     if (timer.state().running) timer.pause() else timer.start()
+    handler.removeCallbacks(closeMenu)
+    handler.postDelayed(closeMenu, MENU_CLOSE_MS)
     refresh()
   }
 
@@ -252,26 +235,8 @@ class FloatingTimerService : Service() {
     if (showingOffer) return
 
     val state = timer.state()
-    logo.visibility = if (state.started) View.GONE else View.VISIBLE
-    clockLabel.visibility = if (state.started) View.VISIBLE else View.GONE
-    clockLabel.text = OfferFormat.clock(state.elapsedMs)
-    toggleLabel.text = if (state.running) "Pausar" else if (state.started) "Retomar" else "Iniciar cronômetro"
-    lastOfferLabel.visibility = if (lastOffer == null) View.GONE else View.VISIBLE
-    root.alpha = if (menu.visibility == View.VISIBLE || state.running) 1f else IDLE_ALPHA
-  }
-
-  private fun menuRow(value: String, onClick: () -> Unit) = label(value, MENU_SP).apply {
-    setOnClickListener { onClick() }
-  }
-
-  private fun label(value: String, sizeSp: Float) = TextView(this).apply {
-    text = value
-    setTextColor(Color.WHITE)
-    setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeSp)
-    typeface = AppFonts.bold(this@FloatingTimerService)
-    gravity = Gravity.CENTER
-    minHeight = dp(TOUCH_TARGET_DP)
-    setPadding(dp(PADDING_DP), 0, dp(PADDING_DP), 0)
+    panel.render(state, lastOffer, menuOpen, store.preferences.theme)
+    root.alpha = if (menuOpen || state.running) 1f else IDLE_ALPHA
   }
 
   private fun dp(value: Int) = TypedValue.applyDimension(
@@ -288,18 +253,11 @@ class FloatingTimerService : Service() {
     private const val KEY_Y = "y"
     private const val TICK_MS = 1000L
     private const val MS_PER_SECOND = 1000L
-    private const val MENU_CLOSE_MS = 6000L
-    private const val PILL_COLOR = 0xFF171717.toInt()
+    private const val MENU_CLOSE_MS = 8000L
     private const val IDLE_ALPHA = 0.8f
-    private const val CORNER_DP = 18
     private const val INITIAL_OFFSET_DP = 24
     private const val TOUCH_TARGET_DP = 64
-    private const val HANDLE_DP = 56
-    private const val LOGO_DP = 44
-    private const val LOGO_PADDING_DP = 8
-    private const val PADDING_DP = 14
-    private const val TIMER_SP = 20f
-    private const val MENU_SP = 18f
+    private const val SCREEN_BOTTOM_DP = 48
 
     @Volatile
     var instance: FloatingTimerService? = null

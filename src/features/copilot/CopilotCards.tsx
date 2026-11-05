@@ -87,6 +87,7 @@ export function CopilotDisplayCard({ copilot }: { copilot: CopilotState }) {
 
   return (
     <Collapsible title="Aparência do cartão">
+      <AppText variant="caption" tone="muted">Vale para o cartão na tela e para a oferta dentro do botão flutuante.</AppText>
       <AppText variant="caption" tone="muted">Formato</AppText>
       <Segmented value={preferences.cardLayout} options={LAYOUTS} onChange={(cardLayout) => copilot.updatePreferences({ cardLayout })} />
       <AppText variant="caption" tone="muted">Número principal (voz e formato resumido)</AppText>
