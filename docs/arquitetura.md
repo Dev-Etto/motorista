@@ -139,6 +139,13 @@ app -> features -> data -> domain -> shared/utils
 - **Mesma regra de oferta:** o botão flutuante usa as preferências do cartão como estão, sem forçar o formato resumido.
 - **Tempo do cartão:** o padrão é de 8 segundos, e um valor já salvo pelo usuário é mantido.
 
+## Faturamento estimado
+
+- **Estimativa, nunca registro:** `estimateEarnings` soma as ofertas aceitas por plataforma, mas só `ShiftEstimateCard` leva o valor para a jornada, e só quando o motorista pede. Aceitar não garante que a corrida terminou nem quanto foi pago.
+- **Registro no lado nativo:** o estado da oferta fica no histórico de `CopilotStore`, porque o serviço roda com o app fechado e não pode abrir o SQLite do app.
+- **Aceite pelo toque:** `typeViewClicked` só observa; o Copiloto continua sem gestos. `OfferOutcomeReader` lê o texto do elemento tocado, e um toque ambíguo não registra nada. O aceite é definitivo dentro da oferta.
+- **Contraoferta:** o toque em um valor exato fica como contraoferta e não entra na soma até o motorista marcar como aceita, porque o passageiro ainda precisa concordar.
+
 ## Decisões da versão 0.8.2
 
 - **Permissões conferidas no release:** `scripts/verificar-permissoes.sh` para o script de release se o APK pedir uma permissão fora da lista, como `INTERNET`.

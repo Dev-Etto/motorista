@@ -35,13 +35,18 @@ class OfferSessionTest {
   private val channel = FakeChannel()
   private val scheduler = FakeScheduler()
   private val recorded = mutableListOf<String>()
+  private val outcomes = mutableListOf<Pair<Long, OfferOutcome>>()
   private val targets = OfferTargets(100.0, 200.0, 3000.0)
   private val offer = ParsedOffer(2000, 10.0, 20)
   private val session = OfferSession(
     channels = { listOf(channel) },
     preferences = { CopilotPreferences() },
     evaluate = { offer, source -> OfferEvaluator.evaluate(offer, targets, source) },
-    record = { _, source -> recorded.add(source) },
+    record = { _, source ->
+      recorded.add(source)
+      recorded.size.toLong()
+    },
+    markOutcome = { offerId, outcome -> outcomes.add(offerId to outcome) },
     scheduler = scheduler,
   )
 
@@ -93,7 +98,7 @@ class OfferSessionTest {
   fun fechaOsCanaisQueMostraramMesmoSeACondicaoMudar() {
     val outro = FakeChannel()
     var canais = listOf<OfferChannel>(channel)
-    val sessao = OfferSession({ canais }, { CopilotPreferences() }, { o, s -> OfferEvaluator.evaluate(o, targets, s) }, { _, _ -> }, scheduler)
+    val sessao = OfferSession({ canais }, { CopilotPreferences() }, { o, s -> OfferEvaluator.evaluate(o, targets, s) }, { _, _ -> 1L }, { _, _ -> }, scheduler)
     sessao.onScan(offer, "uber")
     canais = listOf(outro)
     scheduler.fire("expire")
@@ -132,8 +137,52 @@ class OfferSessionTest {
   }
 
   @Test
+  fun toqueEmAceitarRegistraAOfertaAtual() {
+    session.onScan(offer, "uber")
+    session.onTap("Aceitar por R$ 13")
+    assertEquals(listOf(1L to OfferOutcome(OfferStatus.ACCEPTED)), outcomes)
+  }
+
+  @Test
+  fun aceiteNaoMudaDepoisDeOutrosToques() {
+    session.onScan(offer, "uber")
+    session.onTap("Aceitar")
+    session.onTap("Pular")
+    assertEquals(1, outcomes.size)
+  }
+
+  @Test
+  fun toqueSemOfertaNaoRegistra() {
+    session.onTap("Aceitar")
+    session.onScan(offer, "uber")
+    session.onScan(null, "uber")
+    scheduler.fire("gone")
+    session.onTap("Aceitar")
+    assertTrue(outcomes.isEmpty())
+  }
+
+  @Test
+  fun recusaEDepoisAceiteFicaComOAceite() {
+    session.onScan(offer, "uber")
+    session.onTap("R$ 14,50")
+    session.onTap("Aceitar")
+    assertEquals(OfferStatus.ACCEPTED, outcomes.last().second.status)
+  }
+
+  @Test
+  fun leituraDoToque() {
+    assertEquals(OfferStatus.ACCEPTED, OfferOutcomeReader.fromTap("Aceitar por R$ 13")?.status)
+    assertEquals(OfferStatus.DECLINED, OfferOutcomeReader.fromTap("Pular")?.status)
+    assertEquals(OfferStatus.DECLINED, OfferOutcomeReader.fromTap("Não aceitar")?.status)
+    assertEquals(OfferOutcome(OfferStatus.COUNTERED, 1450), OfferOutcomeReader.fromTap("R$ 14,50"))
+    assertEquals(null, OfferOutcomeReader.fromTap("Aceitar | Pular"))
+    assertEquals(null, OfferOutcomeReader.fromTap("R$ 3/km"))
+    assertEquals(null, OfferOutcomeReader.fromTap("Mapa"))
+  }
+
+  @Test
   fun preferenciasSobrevivemAoJson() {
-    val original = CopilotPreferences(voice = false, notification = true, primaryMetric = PrimaryMetric.PROFIT, cardSize = CardSize.EXTRA, theme = ThemeMode.DARK, durationSeconds = 8, monitoredPackages = setOf("a"))
+    val original = CopilotPreferences(voice = false, notification = true, primaryMetric = PrimaryMetric.PROFIT, cardSize = CardSize.EXTRA, theme = ThemeMode.DARK, durationSeconds = 8, monitoredPackages = setOf("a"), estimateEarnings = false)
     assertEquals(original, CopilotPreferences.fromJson(original.toJson()))
   }
 

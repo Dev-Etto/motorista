@@ -4,6 +4,7 @@ export const MORE_MENU: { icon: AppIconName; title: string; subtitle: string; hr
   { icon: 'vehicle', title: 'Veículo e custos', subtitle: 'Seu custo por km', href: '/vehicle' },
   { icon: 'goal', title: 'Meta e mínimos', subtitle: 'Seu lucro e o mínimo por corrida', href: '/goal' },
   { icon: 'copilot', title: 'Copiloto de ofertas', subtitle: 'Leitura, cartão, voz e botão flutuante', href: '/copilot' },
+  { icon: 'layers', title: 'Ofertas e faturamento', subtitle: 'Aceitas, não aceitas e o valor estimado', href: '/offers' },
   { icon: 'key', title: 'Permissões', subtitle: 'O que o app pode usar', href: '/permissions' },
   { icon: 'apps', title: 'Plataformas', subtitle: 'Apps em que você trabalha', href: '/platforms' },
   { icon: 'bell', title: 'Lembretes', subtitle: 'Óleo, pneus e revisões', href: '/reminders' },

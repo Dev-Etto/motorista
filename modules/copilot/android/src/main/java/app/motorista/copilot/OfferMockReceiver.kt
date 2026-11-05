@@ -12,6 +12,7 @@ class OfferMockReceiver(private val service: OfferAccessibilityService) : Broadc
     when (intent.action) {
       ACTION_SETUP -> setup(context, intent)
       ACTION_FORGOTTEN -> ForgottenShiftAlarm.notify(context)
+      ACTION_TAP -> service.mockTap(intent.getStringExtra(EXTRA_TEXT).orEmpty())
       ACTION_SCAN -> service.mockScan(intent.getStringExtra(EXTRA_TEXT).orEmpty(), intent.getStringExtra(EXTRA_SOURCE).orEmpty())
     }
   }
@@ -31,6 +32,7 @@ class OfferMockReceiver(private val service: OfferAccessibilityService) : Broadc
       addAction(ACTION_SETUP)
       addAction(ACTION_SCAN)
       addAction(ACTION_FORGOTTEN)
+      addAction(ACTION_TAP)
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       context.registerReceiver(this, filter, Context.RECEIVER_EXPORTED)
@@ -43,6 +45,7 @@ class OfferMockReceiver(private val service: OfferAccessibilityService) : Broadc
     private const val ACTION_SETUP = "app.motorista.copilot.MOCK_SETUP"
     private const val ACTION_SCAN = "app.motorista.copilot.MOCK_SCAN"
     private const val ACTION_FORGOTTEN = "app.motorista.copilot.MOCK_FORGOTTEN"
+    private const val ACTION_TAP = "app.motorista.copilot.MOCK_TAP"
     private const val EXTRA_TEXT = "text"
     private const val EXTRA_SOURCE = "source"
     private const val EXTRA_COST = "cost"

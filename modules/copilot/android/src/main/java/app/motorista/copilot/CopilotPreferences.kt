@@ -51,6 +51,7 @@ data class CopilotPreferences(
   val theme: ThemeMode = ThemeMode.SYSTEM,
   val durationSeconds: Int = DEFAULT_DURATION_SECONDS,
   val monitoredPackages: Set<String> = DEFAULT_PACKAGES,
+  val estimateEarnings: Boolean = true,
 ) {
   fun toJson(): String = JSONObject()
     .put("voice", voice)
@@ -62,6 +63,7 @@ data class CopilotPreferences(
     .put("theme", theme.id)
     .put("durationSeconds", durationSeconds)
     .put("monitoredPackages", JSONArray(monitoredPackages.toList()))
+    .put("estimateEarnings", estimateEarnings)
     .toString()
 
   companion object {
@@ -85,6 +87,7 @@ data class CopilotPreferences(
         theme = ThemeMode.from(json.optString("theme")),
         durationSeconds = json.optInt("durationSeconds", DEFAULT_DURATION_SECONDS).coerceIn(MIN_DURATION_SECONDS, MAX_DURATION_SECONDS),
         monitoredPackages = if (packages == null) DEFAULT_PACKAGES else (0 until packages.length()).map { packages.getString(it) }.toSet(),
+        estimateEarnings = json.optBoolean("estimateEarnings", true),
       )
     }
   }

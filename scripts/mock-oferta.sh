@@ -19,6 +19,11 @@ offer() {
   echo "Oferta enviada: $2"
 }
 
+tap() {
+  "$ADB" shell am broadcast -a app.motorista.copilot.MOCK_TAP --es text "'$1'" >/dev/null
+  echo "Toque enviado: $1"
+}
+
 finish_offer() {
   scan "$1" ""
   echo "Oferta encerrada."
@@ -66,6 +71,9 @@ case "${1:-ajuda}" in
     echo "Veículo e 6 jornadas de exemplo criados. Isso apaga as jornadas do emulador."
     ;;
   esquecida) "$ADB" shell am broadcast -a app.motorista.copilot.MOCK_FORGOTTEN >/dev/null ;;
+  aceitar) tap "Aceitar" ;;
+  recusar) tap "Recusar" ;;
+  contraoferta) tap "${2:-R\$ 14,50}" ;;
   fim) finish_offer "${2:-$UBER}" ;;
   sequencia)
     play "$INDRIVE" "$INDRIVE_OFFER"
@@ -84,6 +92,9 @@ Uso: npm run mock -- <comando>
   ruim               Envia uma oferta que não cobre o custo
   parcial            Envia uma leitura incompleta, que não deve gerar aviso
   texto "<texto>"    Envia um texto próprio, como o da Calibração
+  aceitar            Simula o toque em Aceitar na oferta da tela
+  recusar            Simula o toque em Recusar na oferta da tela
+  contraoferta       Simula o toque em uma contraoferta, como "R$ 14,50"
   fim                Encerra a oferta na tela
   sequencia          Envia quatro ofertas seguidas
   dados              Apaga as jornadas e cria um veículo e 6 jornadas de exemplo

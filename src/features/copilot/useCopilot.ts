@@ -108,11 +108,6 @@ export function useCopilot() {
     setMessage(shown ? 'Saia do app agora. A oferta de exemplo aparece em 5 segundos.' : 'Ative o serviço de acessibilidade para testar.');
   };
 
-  const clearHistory = () => {
-    copilot.clearHistory();
-    refresh();
-  };
-
   return {
     status,
     preferences,
@@ -129,7 +124,6 @@ export function useCopilot() {
     test,
     testOutside,
     testNotification,
-    clearHistory,
     openAccessibility: copilot.openAccessibilitySettings,
     openAppSettings: copilot.openAppSettings,
     openVoiceSettings: copilot.openVoiceSettings,

@@ -6,8 +6,9 @@ import { GoalProgressCard } from '@/features/goals/GoalProgressCard';
 import { InsightCard } from '@/features/insights/InsightCard';
 import { ActiveShiftCard, NewShiftButton } from '@/features/shifts/ActiveShift';
 import { LearnMore } from '@/shared/ui/LearnMore';
-import { AppText, Button, Card, EmptyState, Notice, Screen } from '@/shared/ui/primitives';
+import { AppText, Button, Card, EmptyState, ListRow, Notice, Screen } from '@/shared/ui/primitives';
 import { formatPerKm } from '@/shared/utils/format';
+import { formatBRL } from '@/shared/utils/money';
 import { ProfitCard } from './ProfitCard';
 import { useDashboard } from './useDashboard';
 
@@ -32,6 +33,11 @@ export default function DashboardScreen() {
       <ActiveShiftCard />
       <NextStepCard step={data.nextStep} onDismiss={reload} />
       <ProfitCard title="Lucro de hoje" summary={data.today} hero />
+      {data.estimatedToday && data.estimatedToday.trips > 0 ? (
+        <Card>
+          <ListRow icon="layers" title="Faturamento estimado hoje" subtitle="Pelos aceites. Confira ao registrar a jornada." value={formatBRL(data.estimatedToday.totalCents)} onPress={() => router.push('/offers')} />
+        </Card>
+      ) : null}
       {data.missingFixedCosts ? (
         <Notice tone="accent" message="Esse lucro ainda não considera seguro, IPVA, parcela ou aluguel. Inclua em Veículo e custos para ver o valor real." />
       ) : null}

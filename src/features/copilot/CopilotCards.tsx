@@ -1,15 +1,10 @@
-import { CardLayout, CardSize, copilot as nativeCopilot, OfferHistoryEntry, PrimaryMetric } from '@modules/copilot';
+import { CardLayout, CardSize, copilot as nativeCopilot, PrimaryMetric } from '@modules/copilot';
 import { useRouter } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
-import { spacing, useTheme } from '@/shared/theme/theme';
-import { PlatformBadge } from '@/shared/ui/PlatformBadge';
-import { ScoreBadge } from '@/shared/ui/ScoreBadge';
+import { OfferRow } from '@/features/offers/OfferRow';
 import { AppText, Button, ButtonRow, Card, Collapsible, Notice, Segmented, ToggleRow } from '@/shared/ui/primitives';
-import { formatPerHour, formatPerKm } from '@/shared/utils/format';
-import { formatBRL, formatNumber } from '@/shared/utils/money';
 import { CopilotState } from './useCopilot';
 
-const REASON_SEPARATOR = ' · ';
+const RECENT_OFFERS = 5;
 
 const METRICS: { value: PrimaryMetric; label: string }[] = [
   { value: 'perKm', label: 'R$/km' },
@@ -125,31 +120,16 @@ export function CopilotAppsCard({ copilot }: { copilot: CopilotState }) {
   );
 }
 
-function HistoryRow({ entry }: { entry: OfferHistoryEntry }) {
-  const colors = useTheme();
-  return (
-    <View style={[styles.historyRow, { borderBottomColor: colors.border }]}>
-      <View style={styles.historyHeader}>
-        <View><PlatformBadge name={entry.source} /></View>
-        <AppText variant="subtitle" bold style={styles.historyValue}>{formatBRL(entry.valueCents)}</AppText>
-        <ScoreBadge score={entry.score} color={entry.color} />
-      </View>
-      <AppText>{entry.minutes > 0 ? `${formatNumber(entry.km)} km • ${entry.minutes} min` : `${formatNumber(entry.km)} km`}</AppText>
-      <AppText variant="caption" tone="muted">{entry.minutes > 0 ? `${formatPerKm(entry.perKmCents)} • ${formatPerHour(entry.perHourCents)}` : formatPerKm(entry.perKmCents)}</AppText>
-      {entry.reason ? <AppText variant="caption" tone="muted">{entry.reason.replace(REASON_SEPARATOR, '\n')}</AppText> : null}
-    </View>
-  );
-}
-
 export function CopilotHistoryCard({ copilot }: { copilot: CopilotState }) {
+  const router = useRouter();
   if (copilot.history.length === 0) return null;
 
   return (
-    <Collapsible title={`Últimas ofertas (${copilot.history.length})`}>
-      {copilot.history.map((entry) => (
-        <HistoryRow key={entry.timestamp} entry={entry} />
+    <Collapsible title="Últimas ofertas">
+      {copilot.history.slice(0, RECENT_OFFERS).map((entry) => (
+        <OfferRow key={entry.timestamp} entry={entry} />
       ))}
-      <Button label="Limpar histórico" variant="danger" onPress={copilot.clearHistory} />
+      <Button label="Ver todas as ofertas" variant="secondary" onPress={() => router.push('/offers')} />
     </Collapsible>
   );
 }
@@ -172,9 +152,3 @@ export function CopilotCalibrationCard({ copilot }: { copilot: CopilotState }) {
     </Collapsible>
   );
 }
-
-const styles = StyleSheet.create({
-  historyRow: { gap: spacing.xs, paddingVertical: spacing.md, borderBottomWidth: StyleSheet.hairlineWidth },
-  historyHeader: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  historyValue: { flex: 1 },
-});

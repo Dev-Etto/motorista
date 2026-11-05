@@ -36,6 +36,7 @@ O Motorista quer democratizar esse tipo de app. Ele é uma opção profissional 
 - **Lucro de verdade:** por dia, semana, mês e ano, por km e por hora.
 - **Jornadas:** cronômetro, km medidos por GPS e ganhos por plataforma.
 - **Calculadoras:** avaliação de ofertas e preço de corridas particulares.
+- **Faturamento estimado:** soma as corridas que você aceitou, por app, como sugestão para conferir ao registrar a jornada, com a lista de aceitas e não aceitas.
 - **Meta e mínimos:** transforma o lucro que você quer em valor por dia e no mínimo que cada corrida deve pagar, por km e por hora.
 - **Copiloto de ofertas:** lê a oferta na tela e mostra uma nota de 0 a 5 por cartão, botão flutuante, notificação ou voz.
 - **Visual limpo:** preto, branco e cinza, com cor só onde ela informa, como no lucro e na nota da oferta. Tem tema claro e escuro.

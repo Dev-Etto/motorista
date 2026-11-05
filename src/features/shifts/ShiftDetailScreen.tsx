@@ -1,10 +1,13 @@
+import { copilot } from '@modules/copilot';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { shiftRepository } from '@/data/repositories/shiftRepository';
 import { countsAgainstProfit, EXPENSE_LABELS } from '@/domain/expense/expense';
+import { inRange, summarizeOutcomes } from '@/domain/offer/offerLog';
 import { computeShift } from '@/domain/shift/shift';
+import { OutcomeSummaryCard } from '@/features/offers/OutcomeSummaryCard';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { AppText, Button, Card, ListRow, Screen } from '@/shared/ui/primitives';
-import { formatDate, formatDuration } from '@/shared/utils/dates';
+import { dayRange, formatDate, formatDuration } from '@/shared/utils/dates';
 import { confirmAction } from '@/shared/utils/confirm';
 import { formatKm } from '@/shared/utils/format';
 import { formatBRL } from '@/shared/utils/money';
@@ -19,6 +22,7 @@ export default function ShiftDetailScreen() {
   if (!data) return <Screen>{null}</Screen>;
 
   const { shift, earnings, expenses } = data;
+  const dayOffers = inRange(copilot.getHistory(), dayRange(shift.date));
   const result = computeShift({
     grossCents: earnings.reduce((total, earning) => total + earning.cents, 0),
     km: shift.km,
@@ -54,6 +58,7 @@ export default function ShiftDetailScreen() {
           <ListRow key={expense.id} title={EXPENSE_LABELS[expense.category]} value={formatBRL(expense.cents)} />
         ))}
       </Card>
+      {dayOffers.length > 0 ? <OutcomeSummaryCard title="Ofertas do dia" summary={summarizeOutcomes(dayOffers)} /> : null}
       <Button label="Editar" variant="secondary" onPress={() => router.push({ pathname: '/shift/new', params: { id: shiftId } })} />
       <Button label="Excluir" variant="danger" onPress={confirmDelete} />
     </Screen>

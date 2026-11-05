@@ -16,6 +16,7 @@ const SCREEN_TITLES: Record<string, string> = {
   vehicle: 'Veículo e custos',
   goal: 'Meta e mínimos',
   copilot: 'Copiloto de ofertas',
+  offers: 'Ofertas e faturamento',
   'copilot-setup': 'Configurar o Copiloto',
   help: 'Ajuda',
   permissions: 'Permissões',

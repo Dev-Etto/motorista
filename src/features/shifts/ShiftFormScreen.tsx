@@ -1,12 +1,14 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { spacing } from '@/shared/theme/theme';
 import { DateField } from '@/shared/ui/DateField';
 import { MoneyField, NumberField } from '@/shared/ui/fields';
 import { PlatformBadge } from '@/shared/ui/PlatformBadge';
+import { ShiftEstimateCard } from '@/features/offers/ShiftEstimateCard';
 import { TipBanner } from '@/features/tips/TipBanner';
 import { useSubmit } from '@/shared/hooks/useSubmit';
+import { dayRange } from '@/shared/utils/dates';
 import { Button, Card, Collapsible, Notice, Screen, Segmented } from '@/shared/ui/primitives';
 import { LiveTrackingCard } from './LiveTrackingCard';
 import { useLiveTracking } from './useLiveTracking';
@@ -26,6 +28,10 @@ export default function ShiftFormScreen() {
   const [measureError, setMeasureError] = useState<string | null>(null);
 
   const finishApplied = useRef(false);
+  const estimateRange = useMemo(
+    () => (live.started && live.startedAt > 0 ? { from: live.startedAt, to: Number.POSITIVE_INFINITY } : dayRange(form.date)),
+    [live.started, live.startedAt, form.date],
+  );
 
   useEffect(() => {
     if (!finish || finishApplied.current || !live.started) return;
@@ -62,6 +68,8 @@ export default function ShiftFormScreen() {
           </>
         )}
       </Card>
+
+      {id ? null : <ShiftEstimateCard range={estimateRange} platforms={form.platforms} onApply={form.setEarning} />}
 
       <Card title="Ganhos por plataforma">
         {form.platforms.map((platform) => (

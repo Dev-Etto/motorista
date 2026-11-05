@@ -10,11 +10,12 @@ import { summarizeShifts, withLooseExpenses } from '@/domain/shift/summary';
 import Constants from 'expo-constants';
 import { BACKUP_REMINDER_DAYS, UPDATE_REMINDER_DAYS } from '@/config/app';
 import { isBackupDue, isUpdateDue } from '@/domain/maintenance/notices';
+import { estimateEarnings, inRange } from '@/domain/offer/offerLog';
 import { loadGoalProgress } from '@/features/goals/goalProgress';
 import { loadInsights } from '@/features/insights/loadInsights';
 import { loadNextStep } from '@/features/onboarding/nextStep';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
-import { monthBounds, today, weekBounds } from '@/shared/utils/dates';
+import { dayRange, monthBounds, today, weekBounds } from '@/shared/utils/dates';
 
 async function loadDashboard() {
   const date = today();
@@ -54,6 +55,7 @@ async function loadDashboard() {
     gpsRunning: measuring && gpsProblem === null,
     gpsProblem,
     copilotStopped: copilotStatus.enabled && !copilotStatus.accessibilityGranted,
+    estimatedToday: copilot.getPreferences().estimateEarnings ? estimateEarnings(inRange(copilot.getHistory(), dayRange(date))) : null,
   };
 }
 

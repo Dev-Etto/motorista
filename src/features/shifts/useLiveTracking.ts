@@ -44,6 +44,7 @@ export function useLiveTracking(onApply: (minutes: number, startedAt: number, km
     elapsedMs: timer.elapsedMs,
     running: timer.running,
     started: timer.started,
+    startedAt: timer.startedAt,
     km: gps.km,
     gpsError: gps.error,
     measureKm: timer.running ? gps.running : measureKm,

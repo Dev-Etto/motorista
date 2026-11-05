@@ -9,6 +9,11 @@ export function fromISODate(iso: string): Date {
   return new Date(y, m - 1, d, 12);
 }
 
+export function dayRange(iso: string): { from: number; to: number } {
+  const [y, m, d] = iso.split('-').map(Number);
+  return { from: new Date(y, m - 1, d).getTime(), to: new Date(y, m - 1, d + 1).getTime() };
+}
+
 export function monthKey(iso: string): string {
   return iso.slice(0, 7);
 }

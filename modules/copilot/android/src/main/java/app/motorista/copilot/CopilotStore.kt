@@ -58,11 +58,37 @@ class CopilotStore(context: Context) {
 
   fun clearHistory() = prefs.edit().remove(KEY_HISTORY).remove(KEY_FAILED_READS).apply()
 
-  fun record(evaluation: OfferEvaluation, source: String, timestamp: Long) {
+  fun record(evaluation: OfferEvaluation, source: String, timestamp: Long): Long = synchronized(historyLock) {
     val current = JSONArray(history())
     val updated = JSONArray().put(toJson(evaluation, source, timestamp))
     for (index in 0 until minOf(current.length(), MAX_HISTORY - 1)) updated.put(current.get(index))
     prefs.edit().putString(KEY_HISTORY, updated.toString()).apply()
+    timestamp
+  }
+
+  fun markOutcome(offerId: Long, outcome: OfferOutcome) = synchronized(historyLock) {
+    val current = JSONArray(history())
+    for (index in 0 until current.length()) {
+      val entry = current.getJSONObject(index)
+      if (entry.optLong("timestamp") != offerId) continue
+
+      entry.put("status", outcome.status.id)
+      if (outcome.counterCents == null) entry.remove("counterCents") else entry.put("counterCents", outcome.counterCents)
+      prefs.edit().putString(KEY_HISTORY, current.toString()).apply()
+      return@synchronized
+    }
+  }
+
+  fun setOfferStatus(offerId: Long, status: OfferStatus) = synchronized(historyLock) {
+    val current = JSONArray(history())
+    for (index in 0 until current.length()) {
+      val entry = current.getJSONObject(index)
+      if (entry.optLong("timestamp") != offerId) continue
+
+      entry.put("status", status.id)
+      prefs.edit().putString(KEY_HISTORY, current.toString()).apply()
+      return@synchronized
+    }
   }
 
   private fun toJson(evaluation: OfferEvaluation, source: String, timestamp: Long): JSONObject {
@@ -76,6 +102,7 @@ class CopilotStore(context: Context) {
       .put("perKmCents", evaluation.perKmCents)
       .put("perHourCents", evaluation.perHourCents)
       .put("color", evaluation.color.id)
+      .put("status", OfferStatus.UNANSWERED.id)
     evaluation.score?.let { json.put("score", it) }
     val profit = evaluation.profitCents ?: return json
     return json.put("profitCents", profit)
@@ -93,6 +120,7 @@ class CopilotStore(context: Context) {
     const val KEY_FAILED_READS = "failed_reads"
     const val KEY_CARD_X = "card_x"
     const val KEY_CARD_Y = "card_y"
-    const val MAX_HISTORY = 100
+    const val MAX_HISTORY = 500
+    val historyLock = Any()
   }
 }

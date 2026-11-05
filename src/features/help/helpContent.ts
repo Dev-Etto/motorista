@@ -59,6 +59,14 @@ export const HELP_SECTIONS: { title: string; paragraphs: string[] }[] = [
     paragraphs: ['Com o carro parado, arraste o cartão para onde preferir. A posição fica guardada, e você pode voltar ao topo na tela do Copiloto.'],
   },
   {
+    title: 'Como funciona o faturamento estimado',
+    paragraphs: [
+      'Quando você toca em aceitar em um app de corrida, o Copiloto soma o valor da oferta por plataforma. Em Mais, Ofertas e faturamento mostra o total e todas as ofertas, com filtros de aceitas e não aceitas.',
+      'É uma sugestão. O app não sabe se o passageiro cancelou nem quanto a plataforma pagou no fim, e alguns apps podem não avisar o toque. Se ele errar, marque a oferta como aceita ou não aceita.',
+      'Ao registrar a jornada, toque em Usar estes valores para preencher os ganhos. Confira antes de salvar: nada entra no seu lucro sem você confirmar.',
+    ],
+  },
+  {
     title: 'Backup e troca de celular',
     paragraphs: [
       'Seus dados ficam só no celular. Faça backups de vez em quando e guarde o arquivo fora dele, como no Drive.',

@@ -9,11 +9,14 @@ class OfferSession(
   private val channels: () -> List<OfferChannel>,
   private val preferences: () -> CopilotPreferences,
   private val evaluate: (ParsedOffer, String) -> OfferEvaluation,
-  private val record: (OfferEvaluation, String) -> Unit,
+  private val record: (OfferEvaluation, String) -> Long,
+  private val markOutcome: (Long, OfferOutcome) -> Unit,
   private val scheduler: OfferScheduler,
 ) {
   private var shown: List<OfferChannel> = emptyList()
   private var lastSignature: String? = null
+  private var currentOfferId: Long? = null
+  private var accepted = false
 
   fun onScan(offer: ParsedOffer?, source: String) {
     if (offer == null) return onOfferMissing()
@@ -25,7 +28,17 @@ class OfferSession(
     lastSignature = signature
     val evaluation = evaluate(offer, source)
     present(evaluation)
-    record(evaluation, source)
+    currentOfferId = record(evaluation, source)
+    accepted = false
+  }
+
+  fun onTap(label: String) {
+    val offerId = currentOfferId ?: return
+    if (accepted) return
+
+    val outcome = OfferOutcomeReader.fromTap(label) ?: return
+    accepted = outcome.status == OfferStatus.ACCEPTED
+    markOutcome(offerId, outcome)
   }
 
   fun preview(offer: ParsedOffer, source: String) = present(evaluate(offer, source))
@@ -43,6 +56,7 @@ class OfferSession(
 
     scheduler.schedule(KEY_GONE, GONE_GRACE_MS) {
       lastSignature = null
+      currentOfferId = null
       finish()
     }
   }

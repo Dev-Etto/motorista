@@ -33,6 +33,7 @@ class OfferAccessibilityService : AccessibilityService() {
       preferences = { store.preferences },
       evaluate = { offer, source -> OfferEvaluator.evaluate(offer, store.targets, OfferSources.label(source)) },
       record = { evaluation, source -> store.record(evaluation, source, System.currentTimeMillis()) },
+      markOutcome = { offerId, outcome -> store.markOutcome(offerId, outcome) },
       scheduler = scheduler,
     )
   }
@@ -47,6 +48,8 @@ class OfferAccessibilityService : AccessibilityService() {
 
     val source = event?.packageName?.toString() ?: return
     if (source !in store.preferences.monitoredPackages) return
+
+    if (event.eventType == AccessibilityEvent.TYPE_VIEW_CLICKED) return handleTap(tapLabel(event))
 
     currentPackage = source
     handler.removeCallbacks(scan)
@@ -80,9 +83,24 @@ class OfferAccessibilityService : AccessibilityService() {
     }
   }
 
+  fun mockTap(label: String) = handleTap(label)
+
   fun mockScan(text: String, source: String) {
     currentPackage = source
     process(text)
+  }
+
+  private fun handleTap(label: String) {
+    if (label.isBlank()) return
+
+    OfferDiagnostics.captureTap(label)
+    if (store.enabled && store.preferences.estimateEarnings) session.onTap(label)
+  }
+
+  private fun tapLabel(event: AccessibilityEvent): String {
+    val eventText = event.text.joinToString(" | ")
+    if (eventText.isNotBlank()) return eventText
+    return event.source?.let { collectText(it, MAX_TAP_NODES) }.orEmpty()
   }
 
   private fun scanWindow() = process(monitoredRoots().joinToString(" | ", transform = ::collectText))
@@ -100,11 +118,11 @@ class OfferAccessibilityService : AccessibilityService() {
     return roots.filter { it.packageName?.toString() == currentPackage }.distinct()
   }
 
-  private fun collectText(root: AccessibilityNodeInfo): String {
+  private fun collectText(root: AccessibilityNodeInfo, maxNodes: Int = MAX_NODES): String {
     val parts = mutableListOf<String>()
     val pending = ArrayDeque(listOf(root))
     var visited = 0
-    while (pending.isNotEmpty() && visited < MAX_NODES) {
+    while (pending.isNotEmpty() && visited < maxNodes) {
       val node = pending.removeFirst()
       visited++
       if (node.isVisibleToUser) {
@@ -119,6 +137,7 @@ class OfferAccessibilityService : AccessibilityService() {
   companion object {
     private const val SCAN_DELAY_MS = 300L
     private const val MAX_NODES = 1500
+    private const val MAX_TAP_NODES = 12
 
     @Volatile
     var instance: OfferAccessibilityService? = null
