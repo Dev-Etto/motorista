@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.provider.Settings
 import expo.modules.kotlin.exception.Exceptions
 import expo.modules.kotlin.modules.Module
@@ -28,6 +29,7 @@ class CopilotModule : Module() {
         "voiceAvailable" to (OfferAccessibilityService.instance?.voiceAvailable ?: false),
         "failedReads" to store.failedReads,
         "shortcutEnabled" to isShortcutEnabled(),
+        "batteryRestricted" to isBatteryRestricted(),
       )
     }
 
@@ -39,6 +41,7 @@ class CopilotModule : Module() {
     }
     Function("resetCardPosition") { CopilotStore(context).cardPosition = null }
     Function("getHistory") { CopilotStore(context).history() }
+    Function("setHistory") { json: String -> CopilotStore(context).replaceHistory(json) }
     Function("clearHistory") { CopilotStore(context).clearHistory() }
 
     Function("openAccessibilitySettings") { openIntent(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
@@ -49,6 +52,7 @@ class CopilotModule : Module() {
       openIntent(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}")))
     }
     Function("openShortcutSettings") { openIntent(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
+    Function("openBatterySettings") { openIntent(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)) }
     Function("openVoiceSettings") { openIntent(Intent(TTS_SETTINGS_ACTION)) }
 
     Function("testOffer") { text: String, source: String, delayMs: Double ->
@@ -98,6 +102,11 @@ class CopilotModule : Module() {
       ?: return false
     val component = ComponentName(context, OfferAccessibilityService::class.java).flattenToString()
     return enabled.split(':').any { it.equals(component, ignoreCase = true) }
+  }
+
+  private fun isBatteryRestricted(): Boolean {
+    val power = context.getSystemService(PowerManager::class.java)
+    return !power.isIgnoringBatteryOptimizations(context.packageName)
   }
 
   private fun isShortcutEnabled(): Boolean {

@@ -24,7 +24,7 @@ const INTRO_STEPS: Record<'register' | 'offers', { title: string; body: string; 
   },
   offers: {
     title: 'Avalie as ofertas com seus números',
-    body: 'Veja de onde vem cada oferta, quanto sobra e uma nota de 0 a 10. Você decide com mais clareza.',
+    body: 'Veja de onde vem cada oferta, quanto sobra e uma nota de 0 a 5. Você decide com mais clareza.',
     illustration: 'offers',
   },
 };

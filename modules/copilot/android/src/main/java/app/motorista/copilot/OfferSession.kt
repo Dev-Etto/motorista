@@ -19,7 +19,7 @@ class OfferSession(
     if (offer == null) return onOfferMissing()
 
     scheduler.cancel(KEY_GONE)
-    val signature = "$source:${offer.valueCents}:${offer.km}:${offer.minutes}"
+    val signature = "$source:${offer.valueCents}:${offer.km}"
     if (signature == lastSignature) return
 
     lastSignature = signature

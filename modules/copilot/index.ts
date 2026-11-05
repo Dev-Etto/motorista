@@ -8,6 +8,7 @@ export interface CopilotStatus {
   voiceAvailable: boolean;
   failedReads: number;
   shortcutEnabled: boolean;
+  batteryRestricted: boolean;
 }
 
 export type PrimaryMetric = 'perKm' | 'profit';
@@ -56,11 +57,13 @@ interface CopilotNativeModule {
   setTargets(costPerKm: number, targetPerKmCents: number, targetPerHourCents: number): void;
   resetCardPosition(): void;
   getHistory(): string;
+  setHistory(json: string): void;
   clearHistory(): void;
   openAccessibilitySettings(): void;
   openAppSettings(): void;
   openOverlaySettings(): void;
   openVoiceSettings(): void;
+  openBatterySettings(): void;
   openShortcutSettings(): void;
   testOffer(text: string, source: string, delayMs: number): boolean;
   testNotification(text: string, source: string): boolean;
@@ -92,10 +95,16 @@ export const copilot = {
   resetCardPosition: () => requireModule().resetCardPosition(),
   getHistory: () => JSON.parse(requireModule().getHistory()) as OfferHistoryEntry[],
   clearHistory: () => requireModule().clearHistory(),
+  exportState: () => ({ preferences: requireModule().getPreferences(), history: requireModule().getHistory() }),
+  importState: (state: { preferences: string; history: string }) => {
+    requireModule().setPreferences(state.preferences);
+    requireModule().setHistory(state.history);
+  },
   openAccessibilitySettings: () => requireModule().openAccessibilitySettings(),
   openAppSettings: () => requireModule().openAppSettings(),
   openOverlaySettings: () => requireModule().openOverlaySettings(),
   openVoiceSettings: () => requireModule().openVoiceSettings(),
+  openBatterySettings: () => requireModule().openBatterySettings(),
   openShortcutSettings: () => requireModule().openShortcutSettings(),
   testOffer: (text: string, source: string, delayMs = 0) => requireModule().testOffer(text, source, delayMs),
   testNotification: (text: string, source: string) => requireModule().testNotification(text, source),

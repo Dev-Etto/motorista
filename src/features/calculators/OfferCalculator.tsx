@@ -1,21 +1,18 @@
 import { useMemo } from 'react';
-import { classifyOffer, OfferColor } from '@/domain/offer/offer';
+import { StyleSheet, View } from 'react-native';
+import { classifyOffer } from '@/domain/offer/offer';
 import { OfferTargetsSummary } from '@/features/copilot/OfferTargetsCard';
 import { useOfferTargets } from '@/features/copilot/useOfferTargets';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { MoneyField, NumberField } from '@/shared/ui/fields';
 import { LearnMore } from '@/shared/ui/LearnMore';
 import { AppText, Card, Stat, StatGrid } from '@/shared/ui/primitives';
+import { ScoreBadge } from '@/shared/ui/ScoreBadge';
 import { formatPerHour, formatPerKm, profitTone } from '@/shared/utils/format';
-import { formatBRL, formatNumber } from '@/shared/utils/money';
+import { formatBRL } from '@/shared/utils/money';
 import { centsOrZero, decimalOrZero } from '@/shared/utils/parse';
 
-const COLOR_TONES: Record<OfferColor, 'positive' | 'warning' | 'negative' | 'muted'> = {
-  green: 'positive',
-  yellow: 'warning',
-  red: 'negative',
-  neutral: 'muted',
-};
+const SCORE_BADGE_HEIGHT = 48;
 
 export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
   const { bind, values } = useFormFields({ value: '', km: '', minutes: '' });
@@ -44,7 +41,9 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
           <AppText variant="caption" tone="muted" center>Sobra para você</AppText>
           <AppText variant="display" bold center tone={profitTone(result.profitCents)}>{formatBRL(result.profitCents)}</AppText>
           {result.score === null ? null : (
-            <AppText variant="subtitle" bold center tone={COLOR_TONES[result.color]}>Nota {formatNumber(result.score)} de 10</AppText>
+            <View style={styles.score}>
+              <ScoreBadge score={result.score} color={result.color} height={SCORE_BADGE_HEIGHT} />
+            </View>
           )}
           <AppText center>{result.reason}</AppText>
           <StatGrid>
@@ -52,7 +51,7 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
             <Stat label="Paga por hora" value={formatPerHour(result.perHour)} />
           </StatGrid>
           <LearnMore title="Como a nota é calculada?">
-            <AppText variant="caption">A nota compara a corrida com o seu custo e os seus mínimos. De 7 para cima, ela atinge os dois mínimos. Abaixo de 4, não cobre o custo do carro.</AppText>
+            <AppText variant="caption">A nota compara a corrida com o seu custo e os seus mínimos. De 3,5 para cima, ela atinge os dois mínimos. Abaixo de 2, não cobre o custo do carro.</AppText>
             <AppText variant="caption">A nota só ajuda: quem decide é sempre você.</AppText>
           </LearnMore>
         </Card>
@@ -61,3 +60,7 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  score: { alignItems: 'center' },
+});

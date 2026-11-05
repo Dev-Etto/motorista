@@ -19,16 +19,20 @@ object OfferFormat {
 
   fun decimal(value: Double, decimals: Int = 1): String = String.format(brazil, "%.${decimals}f", value)
 
-  fun scoreLabel(evaluation: OfferEvaluation): String {
-    val score = evaluation.score ?: return "${evaluation.color.shape} —"
-    return "${evaluation.color.shape} ${decimal(score)}"
+  fun scoreDescription(evaluation: OfferEvaluation): String {
+    val score = evaluation.score ?: return "Sem nota"
+    return "Nota ${decimal(score)} de 5"
   }
 
-  fun distanceAndTime(evaluation: OfferEvaluation) =
-    "${decimal(evaluation.offer.km)} km • ${evaluation.offer.minutes} min"
+  fun distanceAndTime(evaluation: OfferEvaluation): String {
+    val km = "${decimal(evaluation.offer.km)} km"
+    return if (evaluation.offer.minutes > 0) "$km • ${evaluation.offer.minutes} min" else km
+  }
 
-  fun rates(evaluation: OfferEvaluation) =
-    "${money(evaluation.perKmCents)}/km • ${wholeMoney(evaluation.perHourCents)}/h"
+  fun rates(evaluation: OfferEvaluation): String {
+    val perKm = "${money(evaluation.perKmCents)}/km"
+    return if (evaluation.offer.minutes > 0) "$perKm • ${wholeMoney(evaluation.perHourCents)}/h" else perKm
+  }
 
   fun profitAndRating(evaluation: OfferEvaluation): String {
     val parts = mutableListOf<String>()
@@ -49,7 +53,7 @@ object OfferFormat {
   private fun spokenIntro(evaluation: OfferEvaluation): String {
     val source = evaluation.sourceLabel.takeIf { it.isNotEmpty() }?.let { "$it. " }.orEmpty()
     val score = evaluation.score ?: return source.trim()
-    return "${source}Nota ${Math.round(score)}."
+    return "${source}Nota ${decimal(score)}."
   }
 
   private fun spokenAmount(cents: Double): String {

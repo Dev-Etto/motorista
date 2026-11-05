@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.widget.RemoteViews
@@ -40,18 +41,18 @@ class OfferNotifier(private val context: Context) : OfferChannel {
   override fun hide() = manager.cancel(NOTIFICATION_ID)
 
   private fun contentView(evaluation: OfferEvaluation, text: String) = RemoteViews(context.packageName, R.layout.notification_offer).apply {
-    val color = evaluation.color
     val source = OfferSources.style(evaluation.sourceLabel)
-    setInt(R.id.offer_band, "setBackgroundColor", color.dayBackground)
     setTextViewText(R.id.offer_source, source.label)
     setTextColor(R.id.offer_source, source.text)
     setInt(R.id.offer_source, "setBackgroundColor", source.background)
     setTextViewText(R.id.offer_value, OfferFormat.money(evaluation.offer.valueCents.toDouble()))
-    setTextColor(R.id.offer_value, color.dayText)
-    setTextViewText(R.id.offer_score, OfferFormat.scoreLabel(evaluation))
-    setTextColor(R.id.offer_score, color.dayText)
+    setImageViewBitmap(R.id.offer_score, ScoreBadge.bitmap(context, evaluation, context.resources.getDimensionPixelSize(R.dimen.offer_score_badge), isSystemNight()))
+    setContentDescription(R.id.offer_score, OfferFormat.scoreDescription(evaluation))
     setTextViewText(R.id.offer_text, text)
   }
+
+  private fun isSystemNight() =
+    context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
   private fun createChannel() {
     val channel = NotificationChannel(CHANNEL_ID, "Ofertas", NotificationManager.IMPORTANCE_HIGH).apply {
