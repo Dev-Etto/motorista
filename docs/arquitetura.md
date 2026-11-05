@@ -96,7 +96,7 @@ app -> features -> data -> domain -> shared/utils
 
 - **Oferta dentro do botão flutuante:** `OfferAccessibilityService.activeChannels` usa o botão como canal quando ele está visível e o cartão avulso nos demais casos, evitando duas janelas para a mesma oferta.
 - **Medição protegida:** `useLiveTracking.apply` copia os valores e mantém a medição; só `discard` zera. O formulário bloqueia salvar com medição pendente.
-- **Metas derivadas da meta do mês:** `suggestOfferTargets` é função pura de domínio. A aplicação às metas por corrida é sempre uma ação explícita do usuário.
+- **Mínimos derivados da meta do mês:** `suggestOfferTargets` é função pura de domínio.
 - **Lembrete por km:** `due_km` guarda o total acumulado de km das jornadas em que o aviso vence, sem depender de odômetro informado.
 - **Layout da notificação:** a cor vem de `RemoteViews` no layout próprio, porque `setColor` sozinho não colore o corpo no Android atual.
 
@@ -106,3 +106,8 @@ app -> features -> data -> domain -> shared/utils
 - **Km em pausa:** `gpsTask` ignora os pontos recebidos com o cronômetro pausado e descarta o último ponto, evitando somar o trecho percorrido durante a pausa.
 - **Distribuição:** o APK é publicado nas Releases do GitHub, com o nome fixo `motorista.apk`, para manter um link estável sem aumentar o histórico do git.
 - **Assinatura:** `scripts/release-apk.sh` assina o APK com uma chave mantida fora do repositório. Toda versão precisa usar a mesma chave para instalar por cima da anterior.
+
+## Decisões da versão 0.7.1
+
+- **Meta e mínimos na mesma tela:** "meta" é o objetivo do mês e "mínimo" é o valor exigido por corrida. Os valores são editados só em `GoalScreen`; Copiloto e Calculadora mostram um resumo.
+- **Acompanhar a meta:** com `followGoal` ligado, `withGoalTargets` calcula os mínimos do modo normal ao carregar as configurações. Assim, eles não ficam desatualizados quando a meta muda. Sem meta ou veículo, valem os valores salvos.
