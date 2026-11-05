@@ -167,7 +167,7 @@ describe('oferta', () => {
 });
 
 describe('meta do mês', () => {
-  const goal = { desiredProfitCents: 300000, profitSoFarCents: 100000, profitTodayCents: 0, workDaysLeft: 10, dayOverrideCents: null, costPerKm: 75, plannedKmPerDay: 160 };
+  const goal = { desiredProfitCents: 300000, profitSoFarCents: 100000, profitTodayCents: 0, expensesTodayCents: 0, todayIsWorkDay: true, workDaysLeft: 10, dayOverrideCents: null, costPerKm: 75, plannedKmPerDay: 160 };
 
   it('o plano soma lucro desejado, fixos e custo dos km previstos', () => {
     expect(requiredGrossForGoal({ desiredProfitCents: 300000, fixedMonthlyCents: 100000, plannedKm: 4000, variablePerKm: 50 })).toBe(600000);
@@ -196,6 +196,18 @@ describe('meta do mês', () => {
 
   it('o faturamento do dia soma o custo dos km previstos', () => {
     expect(computeGoalProgress(goal).grossForDayCents).toBe(20000 + 160 * 75);
+  });
+
+  it('o faturamento do dia também cobre as despesas de hoje', () => {
+    const result = computeGoalProgress({ ...goal, profitSoFarCents: 80000, profitTodayCents: -20000, expensesTodayCents: 20000 });
+    expect(result.dailyTargetCents).toBe(20000);
+    expect(result.grossForDayCents).toBe(20000 + 160 * 75 + 20000);
+  });
+
+  it('na folga, divide só o que falta agora e ignora as despesas de hoje', () => {
+    const result = computeGoalProgress({ ...goal, todayIsWorkDay: false, profitSoFarCents: 115000, profitTodayCents: 15000, expensesTodayCents: 5000 });
+    expect(result.dailyTargetCents).toBe(18500);
+    expect(result.grossForDayCents).toBe(18500 + 160 * 75);
   });
 
   it('sem custo, não estima o faturamento', () => {

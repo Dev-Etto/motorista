@@ -37,7 +37,12 @@ describe('frases da meta', () => {
   it('explica o dia de folga', () => {
     const text = describeGoalDay(facts({ todayIsWorkDay: false, workDaysLeft: 1 }));
     expect(text).toContain('Hoje não é dia de trabalho');
-    expect(text).toContain('1 dia de trabalho');
+    expect(text).toContain('No último dia de trabalho do mês, o objetivo é lucrar R$ 200,00.');
+    expect(describeGoalDay(facts({ todayIsWorkDay: false }))).toContain('Nos próximos 10 dias de trabalho, o objetivo é lucrar R$ 200,00 por dia.');
+  });
+
+  it('avisa no último dia de trabalho do mês', () => {
+    expect(describeGoalDay(facts({ workDaysLeft: 1 }))).toContain('Hoje é o último dia de trabalho do mês.');
   });
 
   it('explica quando não há mais dias', () => {

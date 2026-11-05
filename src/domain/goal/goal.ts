@@ -9,6 +9,8 @@ export interface GoalProgressInput {
   desiredProfitCents: number;
   profitSoFarCents: number;
   profitTodayCents: number;
+  expensesTodayCents: number;
+  todayIsWorkDay: boolean;
   workDaysLeft: number;
   dayOverrideCents: number | null;
   costPerKm: number | null;
@@ -23,7 +25,9 @@ export const requiredGrossForGoal = (plan: GoalPlanInput) => plan.desiredProfitC
 export function computeGoalProgress(goal: GoalProgressInput) {
   const remainingCents = Math.max(0, goal.desiredProfitCents - goal.profitSoFarCents);
   const remainingAtDayStart = Math.max(0, goal.desiredProfitCents - (goal.profitSoFarCents - goal.profitTodayCents));
-  const computedTarget = goal.workDaysLeft > 0 ? remainingAtDayStart / goal.workDaysLeft : null;
+  const remainingToSplit = goal.todayIsWorkDay ? remainingAtDayStart : remainingCents;
+  const computedTarget = goal.workDaysLeft > 0 ? remainingToSplit / goal.workDaysLeft : null;
+  const expensesToCover = goal.todayIsWorkDay ? goal.expensesTodayCents : 0;
   const dailyTargetCents = goal.dayOverrideCents ?? computedTarget;
 
   return {
@@ -33,7 +37,7 @@ export function computeGoalProgress(goal: GoalProgressInput) {
     progress: goal.desiredProfitCents > 0 ? Math.min(1, Math.max(0, goal.profitSoFarCents / goal.desiredProfitCents)) : 0,
     dailyTargetCents,
     leftTodayCents: dailyTargetCents === null ? null : Math.max(0, dailyTargetCents - goal.profitTodayCents),
-    grossForDayCents: dailyTargetCents === null || goal.costPerKm === null ? null : dailyTargetCents + goal.plannedKmPerDay * goal.costPerKm,
+    grossForDayCents: dailyTargetCents === null || goal.costPerKm === null ? null : dailyTargetCents + goal.plannedKmPerDay * goal.costPerKm + expensesToCover,
   };
 }
 

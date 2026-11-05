@@ -25,6 +25,7 @@ export async function loadGoalProgress(date: string) {
   const workDays = workDaysInMonth(date, goal.workWeekdays);
   const plannedKmPerDay = workDays > 0 ? plannedKm / workDays : 0;
   const daysLeft = workDaysLeft(date, goal.workWeekdays);
+  const todayIsWorkDay = goal.workWeekdays.includes(fromISODate(date).getDay());
   const requiredGrossCents = requiredGrossForGoal({
     desiredProfitCents: goal.desiredProfitCents,
     fixedMonthlyCents: costs?.fixedMonthly ?? 0,
@@ -38,7 +39,7 @@ export async function loadGoalProgress(date: string) {
     requiredGrossCents,
     plannedKmPerDay,
     workDaysLeft: daysLeft,
-    todayIsWorkDay: goal.workWeekdays.includes(fromISODate(date).getDay()),
+    todayIsWorkDay,
     profitSoFarCents: month.profitCents,
     profitTodayCents: today.profitCents,
     partialCount: month.partialCount,
@@ -46,6 +47,8 @@ export async function loadGoalProgress(date: string) {
       desiredProfitCents: goal.desiredProfitCents,
       profitSoFarCents: month.profitCents,
       profitTodayCents: today.profitCents,
+      expensesTodayCents: today.expensesCents,
+      todayIsWorkDay,
       workDaysLeft: daysLeft,
       dayOverrideCents: dayOverride,
       costPerKm: costs?.fullPerKm ?? null,
