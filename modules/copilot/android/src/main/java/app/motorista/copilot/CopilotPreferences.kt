@@ -49,7 +49,7 @@ data class CopilotPreferences(
   val cardLayout: CardLayout = CardLayout.COMPLETE,
   val cardSize: CardSize = CardSize.LARGE,
   val theme: ThemeMode = ThemeMode.SYSTEM,
-  val durationSeconds: Int = MAX_DURATION_SECONDS,
+  val durationSeconds: Int = DEFAULT_DURATION_SECONDS,
   val monitoredPackages: Set<String> = DEFAULT_PACKAGES,
 ) {
   fun toJson(): String = JSONObject()
@@ -65,7 +65,8 @@ data class CopilotPreferences(
     .toString()
 
   companion object {
-    const val MAX_DURATION_SECONDS = 15
+    const val DEFAULT_DURATION_SECONDS = 8
+    private const val MAX_DURATION_SECONDS = 15
     private const val MIN_DURATION_SECONDS = 5
     val DEFAULT_PACKAGES = setOf("com.ubercab.driver", "com.app99.driver", "sinet.startup.inDriver")
 
@@ -82,7 +83,7 @@ data class CopilotPreferences(
         cardLayout = CardLayout.from(json.optString("cardLayout")),
         cardSize = CardSize.from(json.optString("cardSize")),
         theme = ThemeMode.from(json.optString("theme")),
-        durationSeconds = json.optInt("durationSeconds", MAX_DURATION_SECONDS).coerceIn(MIN_DURATION_SECONDS, MAX_DURATION_SECONDS),
+        durationSeconds = json.optInt("durationSeconds", DEFAULT_DURATION_SECONDS).coerceIn(MIN_DURATION_SECONDS, MAX_DURATION_SECONDS),
         monitoredPackages = if (packages == null) DEFAULT_PACKAGES else (0 until packages.length()).map { packages.getString(it) }.toSet(),
       )
     }
