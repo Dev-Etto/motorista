@@ -50,4 +50,4 @@ keystore.properties
 /dist
 modules/*/android/build/
 modules/*/android/.gradle/
-
+.vscode/
