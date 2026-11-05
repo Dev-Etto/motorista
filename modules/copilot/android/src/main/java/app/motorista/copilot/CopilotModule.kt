@@ -60,7 +60,7 @@ class CopilotModule : Module() {
     Function("testOffer") { text: String, source: String, delayMs: Double ->
       val offer = OfferParser.parse(text) ?: return@Function false
       val service = OfferAccessibilityService.instance ?: return@Function false
-      Handler(Looper.getMainLooper()).postDelayed({ service.preview(offer, source) }, delayMs.toLong())
+      Handler(Looper.getMainLooper()).postDelayed({ if (OfferAccessibilityService.instance === service) service.preview(offer, source) }, delayMs.toLong())
       true
     }
 

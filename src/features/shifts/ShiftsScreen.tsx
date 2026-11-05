@@ -10,8 +10,9 @@ import { useMonthCursor } from '@/shared/hooks/useMonthCursor';
 import { MonthCalendar } from '@/shared/ui/MonthCalendar';
 import { MonthSwitcher } from '@/shared/ui/MonthSwitcher';
 import { ActiveShiftCard, NewShiftButton } from './ActiveShift';
-import { Button, Card, EmptyState, ListRow, Screen } from '@/shared/ui/primitives';
-import { formatDate, formatDuration, monthBounds } from '@/shared/utils/dates';
+import { AppText, Button, Card, EmptyState, ListRow, Screen } from '@/shared/ui/primitives';
+import { formatDate, formatDuration, monthBounds, monthKey } from '@/shared/utils/dates';
+import { confirmAction } from '@/shared/utils/confirm';
 import { profitTone } from '@/shared/utils/format';
 import { formatBRL } from '@/shared/utils/money';
 
@@ -24,8 +25,9 @@ async function loadMonth(date: string) {
 export default function ShiftsScreen() {
   const router = useRouter();
   const cursor = useMonthCursor();
-  const { data } = useAsyncData(() => loadMonth(cursor.date), [cursor.date]);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const { data, reload } = useAsyncData(() => loadMonth(cursor.date), [cursor.date]);
+  const [pickedDate, setSelectedDate] = useState<string | null>(null);
+  const selectedDate = pickedDate?.startsWith(monthKey(cursor.date)) ? pickedDate : null;
   const allShifts = useMemo(() => data?.shifts ?? [], [data?.shifts]);
   const shifts = selectedDate ? allShifts.filter((shift) => shift.date === selectedDate) : allShifts;
   const calendar = useMemo(
@@ -33,6 +35,18 @@ export default function ShiftsScreen() {
     [cursor.date, allShifts],
   );
   const expenses = data?.expenses ?? [];
+
+  const confirmDeleteExpense = (id: number, label: string, cents: number) => {
+    confirmAction({
+      title: `Excluir ${label}?`,
+      message: `O lançamento de ${formatBRL(cents)} sai dos seus resultados.`,
+      actionLabel: 'Excluir',
+      onConfirm: async () => {
+        await expenseRepository.remove(id);
+        await reload();
+      },
+    });
+  };
 
   return (
     <Screen>
@@ -75,12 +89,14 @@ export default function ShiftsScreen() {
 
       {expenses.length === 0 ? null : (
         <Card title="Lançamentos avulsos">
+          <AppText variant="caption" tone="muted">Toque em um lançamento para excluir.</AppText>
           {expenses.map((expense) => (
             <ListRow
               key={expense.id}
               title={EXPENSE_LABELS[expense.category]}
               subtitle={formatDate(expense.date)}
               value={formatBRL(expense.cents)}
+              onPress={() => confirmDeleteExpense(expense.id, EXPENSE_LABELS[expense.category], expense.cents)}
             />
           ))}
         </Card>

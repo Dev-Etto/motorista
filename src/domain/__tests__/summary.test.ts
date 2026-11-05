@@ -42,3 +42,17 @@ describe('csv', () => {
     expect(toCsv(['A'], [[1]])).toBe('﻿A\r\n1');
   });
 });
+
+describe('jornadas sem km no resumo', () => {
+  const base = { startHour: 8, minutes: 480, grossCents: 30000, expensesCents: 0, costPerKm: 100, earnings: [], date: '2026-11-05' };
+
+  it('calcula o R$/km só com as jornadas que têm km', () => {
+    const summary = summarizeShifts([{ ...base, km: 100 }, { ...base, km: null }]);
+    expect(summary.grossPerKm).toBe(300);
+  });
+
+  it('conta as jornadas parciais', () => {
+    const summary = summarizeShifts([{ ...base, km: 100 }, { ...base, km: null }, { ...base, km: 50, costPerKm: 0 }]);
+    expect(summary.partialCount).toBe(2);
+  });
+});

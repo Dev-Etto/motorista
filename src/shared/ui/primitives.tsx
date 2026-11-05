@@ -69,9 +69,10 @@ interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'danger';
   disabled?: boolean;
   busy?: boolean;
+  accessibilityLabel?: string;
 }
 
-export function Button({ label, onPress, variant = 'primary', disabled, busy }: ButtonProps) {
+export function Button({ label, onPress, variant = 'primary', disabled, busy, accessibilityLabel }: ButtonProps) {
   const colors = useTheme();
   const inactive = Boolean(disabled || busy);
   const isPrimary = variant === 'primary';
@@ -80,6 +81,7 @@ export function Button({ label, onPress, variant = 'primary', disabled, busy }: 
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
       accessibilityState={{ disabled: inactive, busy: Boolean(busy) }}
       disabled={inactive}
       onPress={onPress}

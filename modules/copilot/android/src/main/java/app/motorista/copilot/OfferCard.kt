@@ -15,7 +15,7 @@ class OfferCard(private val context: Context, private val store: CopilotStore) :
   override fun show(evaluation: OfferEvaluation, preferences: CopilotPreferences) {
     hide()
     val view = cardView.build(evaluation, preferences)
-    val params = layoutParams()
+    val params = layoutParams(view)
     WindowDrag.attach(
       handle = view,
       window = view,
@@ -34,14 +34,23 @@ class OfferCard(private val context: Context, private val store: CopilotStore) :
     current = null
   }
 
+  private fun keepInsideScreen(position: Pair<Int, Int>, width: Int, view: View): Pair<Int, Int> {
+    val metrics = context.resources.displayMetrics
+    view.measure(
+      View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+      View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+    )
+    return position.first.coerceIn(0, maxOf(0, metrics.widthPixels - width)) to position.second.coerceIn(0, maxOf(0, metrics.heightPixels - view.measuredHeight))
+  }
+
   private fun clampToScreen(x: Int, y: Int, view: View): Pair<Int, Int> {
     val metrics = context.resources.displayMetrics
     return x.coerceIn(0, maxOf(0, metrics.widthPixels - view.width)) to y.coerceIn(0, maxOf(0, metrics.heightPixels - view.height))
   }
 
-  private fun layoutParams(): WindowManager.LayoutParams {
+  private fun layoutParams(view: View): WindowManager.LayoutParams {
     val width = cardView.width()
-    val saved = store.cardPosition
+    val saved = store.cardPosition?.let { keepInsideScreen(it, width, view) }
     return WindowManager.LayoutParams(
       width,
       WindowManager.LayoutParams.WRAP_CONTENT,

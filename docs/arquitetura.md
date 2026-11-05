@@ -148,6 +148,15 @@ app -> features -> data -> domain -> shared/utils
 - **Aceite pelo toque:** `typeViewClicked` só observa; o Copiloto continua sem gestos. `OfferOutcomeReader` lê o texto do elemento tocado, e um toque ambíguo não registra nada. O aceite é definitivo dentro da oferta.
 - **Contraoferta:** o toque em um valor exato fica registrado como contraoferta, fora da soma, porque o passageiro ainda precisa concordar.
 
+## Revisão de leitura e dados
+
+- **Só conta como oferta o botão de aceitar:** `isAcceptAction` exige o rótulo do botão, sozinho. "Confirmar" saiu da lista, porque aparece em "Confirmar chegada" e "Confirmar pagamento" e criava ofertas e aceites falsos.
+- **O valor vem do botão:** `Aceitar por R$ X` tem prioridade. Sem ele, vale o primeiro valor na faixa que não seja bônus, ganhos ou saldo.
+- **Textos repetidos:** `joinParts` remove repetidos antes de ler, porque um mesmo texto pode vir como rótulo e como descrição e dobraria km e tempo. Dois trechos iguais contam como um; preferimos esse erro raro ao outro, mais comum.
+- **Android 8 ou mais novo:** `minSdkVersion` 26, porque canais de notificação e sobreposição do módulo exigem essa versão.
+- **Validar antes de salvar:** número preenchido e inválido bloqueia a jornada, em vez de virar zero. Consumo e km previstos são obrigatórios, porque zerá-los infla o lucro.
+- **Custo da jornada no mês fechado:** `useReport` soma `km * variable_per_km` de cada jornada, respeitando a cópia do custo. Jornadas antigas sem essa cópia usam o custo atual.
+
 ## Decisões da versão 0.8.2
 
 - **Permissões conferidas no release:** `scripts/verificar-permissoes.sh` para o script de release se o APK pedir uma permissão fora da lista, como `INTERNET`.

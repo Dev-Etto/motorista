@@ -1,5 +1,5 @@
 import { ShiftSummary } from '@/domain/shift/summary';
-import { AppText, Card, Stat, StatGrid } from '@/shared/ui/primitives';
+import { AppText, Card, Notice, Stat, StatGrid } from '@/shared/ui/primitives';
 import { formatDuration } from '@/shared/utils/dates';
 import { formatPerHour, formatPerKm, profitTone } from '@/shared/utils/format';
 import { formatBRL } from '@/shared/utils/money';
@@ -16,6 +16,7 @@ export function ProfitCard({ title, summary, hero }: { title: string; summary: S
         <Stat label="Por km" value={formatPerKm(summary.grossPerKm)} />
         <Stat label="Lucro por hora" value={formatPerHour(summary.profitPerHour)} />
       </StatGrid>
+      {summary.partialCount > 0 ? <Notice message={summary.partialCount === 1 ? '1 jornada sem km ou sem custo: o custo do veículo não foi descontado dela.' : `${summary.partialCount} jornadas sem km ou sem custo: o custo do veículo não foi descontado delas.`} /> : null}
     </Card>
   );
 }

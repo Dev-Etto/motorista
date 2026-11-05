@@ -49,6 +49,18 @@ describe('ajustes do Copiloto no backup', () => {
   });
 });
 
+describe('dados internos do backup', () => {
+  it('recusa um custo que não pode ser lido, para não travar o app ao abrir', () => {
+    const tables = { ...emptyTables, cost_profiles: [{ id: 1, vehicle_id: 1, valid_from: '2026-01-01', data: 'nao-e-json' }] };
+    expect(parseBackup(JSON.stringify({ ...validBackup, tables })).ok).toBe(false);
+  });
+
+  it('recusa uma meta que não pode ser lida', () => {
+    const tables = { ...emptyTables, goals: [{ month: '2026-11', desired_profit_cents: 1, work_weekdays: 'x' }] };
+    expect(parseBackup(JSON.stringify({ ...validBackup, tables })).ok).toBe(false);
+  });
+});
+
 describe('backup de versões anteriores', () => {
   it('aceita arquivo sem as tabelas criadas depois', () => {
     const { goal_day_overrides: _removed, ...older } = { ...emptyTables, goal_day_overrides: [] };

@@ -139,34 +139,96 @@ class OfferSessionTest {
   @Test
   fun toqueEmAceitarRegistraAOfertaAtual() {
     session.onScan(offer, "uber")
-    session.onTap("Aceitar por R$ 13")
+    session.onTap("Aceitar por R$ 13", "uber")
     assertEquals(listOf(1L to OfferOutcome(OfferStatus.ACCEPTED)), outcomes)
   }
 
   @Test
   fun aceiteNaoMudaDepoisDeOutrosToques() {
     session.onScan(offer, "uber")
-    session.onTap("Aceitar")
-    session.onTap("Pular")
+    session.onTap("Aceitar", "uber")
+    session.onTap("Pular", "uber")
     assertEquals(1, outcomes.size)
   }
 
   @Test
   fun toqueSemOfertaNaoRegistra() {
-    session.onTap("Aceitar")
+    session.onTap("Aceitar", "uber")
     session.onScan(offer, "uber")
     session.onScan(null, "uber")
     scheduler.fire("gone")
-    session.onTap("Aceitar")
+    session.onTap("Aceitar", "uber")
     assertTrue(outcomes.isEmpty())
   }
 
   @Test
   fun recusaEDepoisAceiteFicaComOAceite() {
     session.onScan(offer, "uber")
-    session.onTap("R$ 14,50")
-    session.onTap("Aceitar")
+    session.onTap("R$ 14,50", "uber")
+    session.onTap("Aceitar", "uber")
     assertEquals(OfferStatus.ACCEPTED, outcomes.last().second.status)
+  }
+
+  @Test
+  fun toqueEmOutroAppNaoRegistra() {
+    session.onScan(offer, "uber")
+    session.onTap("Aceitar", "99")
+    assertTrue(outcomes.isEmpty())
+  }
+
+  @Test
+  fun leiturasVaziasNaoAdiamOFimDaOferta() {
+    session.onScan(offer, "uber")
+    session.onScan(null, "uber")
+    val firstTimer = scheduler.pending.getValue("gone")
+    session.onScan(null, "uber")
+    assertTrue(firstTimer === scheduler.pending.getValue("gone"))
+  }
+
+  @Test
+  fun depoisDoPrazoOToqueNaoContaMais() {
+    session.onScan(offer, "uber")
+    scheduler.fire("tap_window")
+    session.onTap("Aceitar", "uber")
+    assertTrue(outcomes.isEmpty())
+  }
+
+  @Test
+  fun kmQueMudaNaoRepeteAOferta() {
+    session.onScan(offer, "uber")
+    session.onScan(offer.copy(km = 12.0), "uber")
+    assertEquals(1, channel.shown)
+  }
+
+  @Test
+  fun umCanalComErroNaoDerrubaOsOutros() {
+    val outro = FakeChannel()
+    val quebrado = object : OfferChannel {
+      override fun show(evaluation: OfferEvaluation, preferences: CopilotPreferences) = throw IllegalStateException()
+      override fun hide() = throw IllegalStateException()
+    }
+    val sessao = OfferSession({ listOf(quebrado, outro) }, { CopilotPreferences() }, { o, s -> OfferEvaluator.evaluate(o, targets, s) }, { _, _ -> 1L }, { _, _ -> }, scheduler)
+    sessao.onScan(offer, "uber")
+    assertEquals(1, outro.shown)
+  }
+
+  @Test
+  fun toquesQueNaoSaoAceite() {
+    listOf("Aceitar automaticamente", "Confirmar chegada", "Confirmar recusa", "Confirmar", "R$ 20,00 | 5 km | Aceitar").forEach {
+      assertEquals(it, null, OfferOutcomeReader.fromTap(it))
+    }
+  }
+
+  @Test
+  fun vozFalaCentavosSemAmbiguidade() {
+    val result = OfferEvaluator.evaluate(ParsedOffer(1025, 5.0, 19), targets, "")
+    assertTrue(OfferFormat.spokenPhrase(result, PrimaryMetric.PER_KM).contains("2 e 5").not())
+    assertTrue(OfferFormat.spokenPhrase(OfferEvaluator.evaluate(ParsedOffer(1025, 5.0, 19), targets, ""), PrimaryMetric.PER_KM).contains("2 reais e 5 centavos"))
+  }
+
+  @Test
+  fun textosRepetidosNaoDobramOsNumeros() {
+    assertEquals("R$ 20,00 | 5 km | 12 min | Aceitar", OfferParser.joinParts(listOf("R$ 20,00", "5 km", "5 km", "12 min", "12 min", " ", "Aceitar")))
   }
 
   @Test

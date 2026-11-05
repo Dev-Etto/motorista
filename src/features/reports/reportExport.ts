@@ -62,7 +62,7 @@ export async function shareReportCsv(report: ReportData): Promise<void> {
   const rows = report.shifts.map((shift) => [
     shift.date,
     centsToCsv(shift.grossCents),
-    shift.km,
+    shift.km === null ? null : String(shift.km).replace('.', ','),
     shift.minutes,
     centsToCsv(shift.expensesCents),
     centsToCsv(computeShift(shift).profitCents),

@@ -1,7 +1,9 @@
+const NUMERIC = /^-?\d+([.,]\d+)?$/;
+
 export function csvField(value: string | number | null | undefined): string {
   if (value === null || value === undefined) return '';
   let text = String(value);
-  if (typeof value === 'string' && /^[=+\-@\t\r]/.test(text)) text = `'${text}`;
+  if (typeof value === 'string' && !NUMERIC.test(text) && /^[=+\-@\t\r]/.test(text)) text = `'${text}`;
   return /[;"\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 }
 

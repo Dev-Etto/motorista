@@ -62,6 +62,16 @@ export function fieldsToProfile(fields: CostFields, ownership: Ownership, deprec
   };
 }
 
+const MAX_FUEL_PRICE_CENTS = 5000;
+
+export function validateProfile(profile: CostProfile): string | null {
+  if (profile.consumptionKmPerUnit <= 0) return 'Informe o consumo do veículo.';
+  if (profile.plannedKmMonth <= 0) return 'Informe quantos km você roda por mês.';
+  if (profile.fuelPriceCents <= 0) return 'Informe o preço do combustível.';
+  if (profile.fuelPriceCents > MAX_FUEL_PRICE_CENTS) return 'Confira o preço do combustível. Use vírgula nos centavos, como 5,89.';
+  return null;
+}
+
 export const CONSUMPTION_UNITS: Record<FuelType, string> = {
   gasoline: 'km/l',
   ethanol: 'km/l',

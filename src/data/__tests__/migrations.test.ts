@@ -38,7 +38,7 @@ function seed() {
     INSERT INTO vehicles (id, name, kind, fuel, created_at) VALUES (1, 'Carro', 'car', 'gas', 1);
     INSERT INTO shifts (id, vehicle_id, date, minutes, km, cost_per_km, created_at) VALUES (1, 1, '2026-11-05', 480, 120.5, 90, 1);
     INSERT INTO shift_earnings (shift_id, platform_id, cents) VALUES (1, 1, 25000);
-    INSERT INTO goals (month, desired_profit_cents, work_weekdays) VALUES ('2026-11', 300000, '1,2,3');
+    INSERT INTO goals (month, desired_profit_cents, work_weekdays) VALUES ('2026-11', 300000, '[1,2,3]');
     INSERT INTO settings (key, value) VALUES ('onboarded', '1');
   `);
 }

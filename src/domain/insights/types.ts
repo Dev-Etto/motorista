@@ -8,6 +8,7 @@ export interface ShiftFact {
   grossCents: number;
   expensesCents: number;
   costPerKm: number;
+  variablePerKm?: number;
   earnings: { platform: string; cents: number }[];
 }
 
@@ -25,6 +26,7 @@ export interface InsightContext {
   plannedKmMonth: number;
   fuelPaidCents: number;
   fuelKm: number;
+  looseExpenses?: { date: string; cents: number }[];
 }
 
 export type InsightRule = (context: InsightContext) => Insight | null;

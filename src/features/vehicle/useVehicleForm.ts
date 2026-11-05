@@ -4,12 +4,13 @@ import { computeCosts, FuelType, Ownership, VehicleKind } from '@/domain/vehicle
 import { syncCopilotTargets } from '@/features/copilot/syncTargets';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { today } from '@/shared/utils/dates';
-import { CostFields, defaultDepreciationEnabled, fieldsToProfile, profileToFields, suggestedProfile } from './vehicleForm';
+import { CostFields, defaultDepreciationEnabled, fieldsToProfile, validateProfile, profileToFields, suggestedProfile } from './vehicleForm';
 
 const DEFAULT_NAME = 'Meu veículo';
 
 export function useVehicleForm() {
   const [vehicleId, setVehicleId] = useState<number | undefined>();
+  const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState(DEFAULT_NAME);
   const [kind, setKindState] = useState<VehicleKind>('car');
   const [fuel, setFuel] = useState<FuelType>('gasoline');
@@ -54,11 +55,16 @@ export function useVehicleForm() {
   );
   const costs = useMemo(() => computeCosts(profile), [profile]);
 
-  const save = async () => {
+  const save = async (): Promise<boolean> => {
+    const problem = validateProfile(profile);
+    setError(problem);
+    if (problem) return false;
+
     const id = await vehicleRepository.save({ id: vehicleId, name: name.trim() || DEFAULT_NAME, kind, fuel });
     await vehicleRepository.saveCostProfile(id, today(), profile);
     await syncCopilotTargets();
     setVehicleId(id);
+    return true;
   };
 
   return {
@@ -74,6 +80,7 @@ export function useVehicleForm() {
     setDepreciationEnabled,
     bind: form.bind,
     costs,
+    error,
     save,
   };
 }

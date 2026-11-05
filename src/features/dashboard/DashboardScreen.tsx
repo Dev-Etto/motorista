@@ -53,7 +53,12 @@ export default function DashboardScreen() {
       {data.dueKmReminders.map((reminder) => (
         <Notice key={reminder.id} message={`Lembrete: ${reminder.title}`} />
       ))}
-      {data.backupDue ? <Notice tone="accent" message="Que tal fazer um backup? Assim seus dados ficam guardados também fora do celular." /> : null}
+      {data.backupDue ? (
+        <>
+          <Notice tone="accent" message="Que tal fazer um backup? Assim seus dados ficam guardados também fora do celular." />
+          <Button label="Fazer backup" variant="secondary" onPress={() => router.push('/backup')} />
+        </>
+      ) : null}
       {data.updateDue ? (
         <>
           <Notice tone="accent" message="Esta versão do app já tem mais de um mês. Uma versão nova pode corrigir a leitura das ofertas." />

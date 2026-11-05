@@ -1,8 +1,11 @@
 import { useCallback, useRef, useState } from 'react';
 import { useLatest } from './useLatest';
 
+const SAVE_ERROR = 'Não foi possível salvar. Tente de novo.';
+
 export function useSubmit(action: () => Promise<unknown>) {
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const inFlight = useRef(false);
   const latest = useLatest(action);
 
@@ -11,13 +14,16 @@ export function useSubmit(action: () => Promise<unknown>) {
 
     inFlight.current = true;
     setBusy(true);
+    setError(null);
     try {
       await latest.current();
+    } catch {
+      setError(SAVE_ERROR);
     } finally {
       inFlight.current = false;
       setBusy(false);
     }
   }, [latest]);
 
-  return { busy, submit };
+  return { busy, error, submit };
 }

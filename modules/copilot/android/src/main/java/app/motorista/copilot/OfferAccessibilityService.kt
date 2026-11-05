@@ -32,14 +32,15 @@ class OfferAccessibilityService : AccessibilityService() {
       channels = ::activeChannels,
       preferences = { store.preferences },
       evaluate = { offer, source -> OfferEvaluator.evaluate(offer, store.targets, OfferSources.label(source)) },
-      record = { evaluation, source -> store.record(evaluation, source, System.currentTimeMillis()) },
-      markOutcome = { offerId, outcome -> store.markOutcome(offerId, outcome) },
+      record = { evaluation, source -> recordOffer(evaluation, source) },
+      markOutcome = { offerId, outcome -> runCatching { store.markOutcome(offerId, outcome) } },
       scheduler = scheduler,
     )
   }
 
   override fun onServiceConnected() {
     instance = this
+    ShiftTimer(this).restoreAlarm()
     if (OfferMockReceiver.isAllowed(this)) mockReceiver = OfferMockReceiver(this).also { it.register(this) }
   }
 
@@ -49,7 +50,7 @@ class OfferAccessibilityService : AccessibilityService() {
     val source = event?.packageName?.toString() ?: return
     if (source !in store.preferences.monitoredPackages) return
 
-    if (event.eventType == AccessibilityEvent.TYPE_VIEW_CLICKED) return handleTap(tapLabel(event))
+    if (event.eventType == AccessibilityEvent.TYPE_VIEW_CLICKED) return handleTap(tapLabel(event), source)
 
     currentPackage = source
     handler.removeCallbacks(scan)
@@ -83,22 +84,28 @@ class OfferAccessibilityService : AccessibilityService() {
     }
   }
 
-  fun mockTap(label: String) = handleTap(label)
+  fun mockTap(label: String) = handleTap(label, currentPackage)
 
   fun mockScan(text: String, source: String) {
     currentPackage = source
     process(text)
   }
 
-  private fun handleTap(label: String) {
+  private fun recordOffer(evaluation: OfferEvaluation, source: String): Long {
+    val timestamp = System.currentTimeMillis()
+    runCatching { store.record(evaluation, source, timestamp) }
+    return timestamp
+  }
+
+  private fun handleTap(label: String, source: String) {
     if (label.isBlank()) return
 
     OfferDiagnostics.captureTap(label)
-    if (store.enabled && store.preferences.estimateEarnings) session.onTap(label)
+    if (store.enabled && store.preferences.estimateEarnings) session.onTap(label, source)
   }
 
   private fun tapLabel(event: AccessibilityEvent): String {
-    val eventText = event.text.joinToString(" | ")
+    val eventText = OfferParser.joinParts(event.text.map { it.toString() })
     if (eventText.isNotBlank()) return eventText
     return event.source?.let { collectText(it, MAX_TAP_NODES) }.orEmpty()
   }
@@ -131,7 +138,7 @@ class OfferAccessibilityService : AccessibilityService() {
       }
       for (index in 0 until node.childCount) node.getChild(index)?.let { pending.addLast(it) }
     }
-    return parts.joinToString(" | ")
+    return OfferParser.joinParts(parts)
   }
 
   companion object {

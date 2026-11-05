@@ -8,7 +8,7 @@ import { useOfferTargets } from '@/features/copilot/useOfferTargets';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useSubmit } from '@/shared/hooks/useSubmit';
 import { MoneyField, NumberField } from '@/shared/ui/fields';
-import { AppText, Button, Card, Collapsible, Screen } from '@/shared/ui/primitives';
+import { AppText, Button, Card, Collapsible, Notice, Screen } from '@/shared/ui/primitives';
 import { WeekdayPicker } from '@/shared/ui/WeekdayPicker';
 import { formatMonth, monthKey, today } from '@/shared/utils/dates';
 import { centsToInput, parseBRL, parseDecimal } from '@/shared/utils/money';
@@ -62,6 +62,7 @@ export default function GoalScreen() {
         <NumberField label="Horas de trabalho por dia" value={hoursPerDay} onChangeText={setHoursPerDay} suffix="h" />
         <AppText variant="caption" tone="muted">Dias de trabalho</AppText>
         <WeekdayPicker selected={weekdays} onToggle={toggleWeekday} />
+        {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
         <Button label={progress ? 'Atualizar meta' : 'Calcular meu plano'} busy={saving.busy} onPress={saving.submit} />
       </Card>
       {progress ? <GoalProgressCard progress={progress} /> : null}

@@ -153,6 +153,98 @@
       "km": 3,
       "minutes": 10,
       "rating": null
+    },
+    {
+      "text": "R$ 20,00 | 5 km | 12 min | Farmácia 24h | Aceitar",
+      "valueCents": 2000,
+      "km": 5,
+      "minutes": 12,
+      "rating": null
+    },
+    {
+      "text": "Chegada às 14h | R$ 20,00 | 5 km | 12 min | Aceitar",
+      "valueCents": 2000,
+      "km": 5,
+      "minutes": 12,
+      "rating": null
+    },
+    {
+      "text": "Rod. SP-330 km 23 | R$ 20,00 | 5 km | 12 min | Aceitar",
+      "valueCents": 2000,
+      "km": 5,
+      "minutes": 12,
+      "rating": null
+    },
+    {
+      "text": "R$ 20,00 | 60 km/h | 5 km | 12 min | Aceitar",
+      "valueCents": 2000,
+      "km": 5,
+      "minutes": 12,
+      "rating": null
+    },
+    {
+      "text": "R$ 20,00 | 5 km | 1h20 | Aceitar",
+      "valueCents": 2000,
+      "km": 5,
+      "minutes": 80,
+      "rating": null
+    },
+    {
+      "text": "R$ 20,00 | 5 km | 1 h 20 | Aceitar",
+      "valueCents": 2000,
+      "km": 5,
+      "minutes": 80,
+      "rating": null
+    },
+    {
+      "text": "R$ 20,00 | 5 km | há 2 min | 12 min | Aceitar",
+      "valueCents": 2000,
+      "km": 5,
+      "minutes": 12,
+      "rating": null
+    },
+    {
+      "text": "R$ 3,00 de bônus | R$ 20,00 | 5 km | 12 min | Aceitar",
+      "valueCents": 2000,
+      "km": 5,
+      "minutes": 12,
+      "rating": null
+    },
+    {
+      "text": "+ | R$ 3,00 | R$ 20,00 | 5 km | 12 min | Aceitar",
+      "valueCents": 2000,
+      "km": 5,
+      "minutes": 12,
+      "rating": null
+    },
+    {
+      "text": "Ganhos de hoje R$ 120,00 | R$ 20,00 | 5 km | 12 min | Aceitar",
+      "valueCents": 2000,
+      "km": 5,
+      "minutes": 12,
+      "rating": null
+    },
+    {
+      "text": "R$ 1,50 | R$ 20,00 | 5 km | 12 min | Aceitar",
+      "valueCents": 2000,
+      "km": 5,
+      "minutes": 12,
+      "rating": null
+    },
+    {
+      "text": "R$ 20,00 | 5 km | 12 min | Aceitar",
+      "valueCents": 2000,
+      "km": 5,
+      "minutes": 12,
+      "rating": null
+    },
+    {
+      "text": "R$ 45,00 | Corrida concluída | 12 km | 30 min | Confirmar pagamento",
+      "none": true
+    },
+    {
+      "text": "R$ 20,00 | 5 km | 12 min | Aceitar automaticamente",
+      "none": true
     }
   ]
 }

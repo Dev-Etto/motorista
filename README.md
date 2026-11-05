@@ -50,6 +50,8 @@ O Copiloto só lê e informa. Ele nunca toca na tela, nunca aceita nem recusa co
 
 ## Como instalar
 
+Funciona em celulares com **Android 8 ou mais novo**.
+
 1. Toque em [**Baixar o APK**](https://github.com/Dev-Etto/motorista/releases/latest/download/motorista.apk) no celular Android.
 2. Abra o arquivo baixado e permita a instalação quando o Android pedir.
 3. Abra o Motorista e siga a introdução.

@@ -7,16 +7,8 @@ import { summarizeShifts, totalsByPlatform, withLooseExpenses } from '@/domain/s
 import { loadInsights } from '@/features/insights/loadInsights';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { BarDatum } from '@/shared/ui/BarChart';
-import { datesInRange, monthBounds, today, weekBounds } from '@/shared/utils/dates';
-
-export type ReportPeriod = 'week' | 'month' | 'year';
-
-function periodBounds(period: ReportPeriod, date: string) {
-  if (period === 'week') return weekBounds(date);
-  if (period === 'month') return monthBounds(date);
-  const year = date.slice(0, 4);
-  return { start: `${year}-01-01`, end: `${year}-12-31` };
-}
+import { datesInRange, today } from '@/shared/utils/dates';
+import { periodBounds, ReportPeriod } from './reportPeriod';
 
 const MONTH_LABELS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
@@ -41,18 +33,19 @@ async function loadReport(period: ReportPeriod, date: string) {
     loadInsights(today()),
   ]);
   const summary = withLooseExpenses(summarizeShifts(shifts), loose);
+  const currentVariablePerKm = costs.costs?.variablePerKm ?? 0;
   const monthClose =
     period === 'month' && costs.costs
       ? computeMonthClose({
           grossCents: summary.grossCents,
           km: summary.km,
           expensesCents: summary.expensesCents,
-          variablePerKm: costs.costs.variablePerKm,
+          variableCents: shifts.reduce((total, shift) => total + (shift.km ?? 0) * (shift.variablePerKm || currentVariablePerKm), 0),
           fixedMonthlyCents: costs.costs.fixedMonthly,
         })
       : null;
 
-  return { start, end, shifts, summary, platforms: totalsByPlatform(shifts), monthClose, insights };
+  return { period, start, end, shifts, summary, platforms: totalsByPlatform(shifts), monthClose, insights };
 }
 
 export type ReportData = Awaited<ReturnType<typeof loadReport>>;
@@ -61,7 +54,7 @@ export function useReport(period: ReportPeriod, date: string) {
   const report = useAsyncData(() => loadReport(period, date), [period, date]);
   const chart = useMemo(() => {
     if (!report.data) return [];
-    return buildChart(period, report.data.start, report.data.end, report.data.shifts);
-  }, [period, report.data]);
+    return buildChart(report.data.period, report.data.start, report.data.end, report.data.shifts);
+  }, [report.data]);
   return { ...report, chart };
 }

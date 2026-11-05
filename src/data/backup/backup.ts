@@ -18,28 +18,32 @@ const TABLES = [
 const scalar = z.union([z.string(), z.number(), z.null()]);
 const row = z.record(z.string().regex(/^[a-z_]+$/), scalar);
 
+const isJson = (value: unknown) => {
+  if (typeof value !== 'string') return false;
+  try {
+    JSON.parse(value);
+    return true;
+  } catch {
+    return false;
+  }
+};
+const rowWithJson = (column: string) => row.refine((record) => isJson(record[column]));
+
 const tablesSchema = z.object({
   vehicles: z.array(row),
-  cost_profiles: z.array(row),
+  cost_profiles: z.array(rowWithJson('data')),
   platforms: z.array(row),
   shifts: z.array(row),
   shift_earnings: z.array(row),
   expenses: z.array(row),
-  goals: z.array(row),
+  goals: z.array(rowWithJson('work_weekdays')),
   goal_day_overrides: z.array(row).default([]),
   quotes: z.array(row),
   reminders: z.array(row),
   settings: z.array(row),
 });
 
-const jsonText = z.string().refine((text) => {
-  try {
-    JSON.parse(text);
-    return true;
-  } catch {
-    return false;
-  }
-});
+const jsonText = z.string().refine(isJson);
 
 export const backupSchema = z.object({
   app: z.literal('motorista'),

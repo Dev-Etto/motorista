@@ -179,6 +179,7 @@ export const shiftRepository = {
         minutes: shift.minutes,
         km: shift.km,
         costPerKm: shift.cost_per_km,
+        variablePerKm: shift.variable_per_km,
         grossCents: own.reduce((total, earning) => total + earning.cents, 0),
         expensesCents: countable.reduce((total, expense) => total + expense.cents, 0),
         earnings: own.map((earning) => ({ platform: earning.name, cents: earning.cents })),
@@ -199,15 +200,6 @@ export const shiftRepository = {
     return row?.value ?? 0;
   },
 
-  async latestOdometer(): Promise<number | null> {
-    const row = await getDb().getFirstAsync<{ value: number | null }>(
-      `SELECT MAX(value) AS value FROM (
-         SELECT MAX(odometer_end) AS value FROM shifts
-         UNION ALL SELECT MAX(odometer) AS value FROM expenses
-       )`,
-    );
-    return row?.value ?? null;
-  },
 
   async totalKm(start: string, end: string): Promise<number> {
     const row = await getDb().getFirstAsync<{ value: number | null }>(

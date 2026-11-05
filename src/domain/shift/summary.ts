@@ -9,6 +9,7 @@ export interface ShiftSummary {
   profitCents: number;
   km: number;
   minutes: number;
+  partialCount: number;
   grossPerKm: number | null;
   grossPerHour: number | null;
   profitPerHour: number | null;
@@ -25,15 +26,19 @@ export function summarizeShifts(shifts: ShiftFact[]): ShiftSummary {
         expensesCents: acc.expensesCents + result.expensesCents,
         profitCents: acc.profitCents + result.profitCents,
         km: acc.km + (shift.km ?? 0),
+        grossWithKm: acc.grossWithKm + (shift.km ? result.grossCents : 0),
+        partialCount: acc.partialCount + (result.partial ? 1 : 0),
         minutes: acc.minutes + shift.minutes,
       };
     },
-    { count: 0, grossCents: 0, vehicleCostCents: 0, expensesCents: 0, profitCents: 0, km: 0, minutes: 0 },
+    { count: 0, grossCents: 0, vehicleCostCents: 0, expensesCents: 0, profitCents: 0, km: 0, minutes: 0, grossWithKm: 0, partialCount: 0 },
   );
 
+  const { grossWithKm, ...summary } = totals;
+
   return {
-    ...totals,
-    grossPerKm: totals.km > 0 ? totals.grossCents / totals.km : null,
+    ...summary,
+    grossPerKm: totals.km > 0 ? grossWithKm / totals.km : null,
     grossPerHour: totals.minutes > 0 ? (totals.grossCents / totals.minutes) * 60 : null,
     profitPerHour: totals.minutes > 0 ? (totals.profitCents / totals.minutes) * 60 : null,
   };

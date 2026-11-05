@@ -9,6 +9,7 @@ class CopilotStore(context: Context) {
   private val prefs: SharedPreferences = context.applicationContext.getSharedPreferences(FILE, Context.MODE_PRIVATE)
 
   private val log = OfferLogDatabase.get(context)
+  private var cachedPreferences: Pair<String?, CopilotPreferences>? = null
 
   init {
     if (prefs.contains(KEY_LEGACY_HISTORY)) prefs.edit().remove(KEY_LEGACY_HISTORY).apply()
@@ -20,7 +21,12 @@ class CopilotStore(context: Context) {
     set(value) = prefs.edit().putBoolean(KEY_ENABLED, value).apply()
 
   var preferences: CopilotPreferences
-    get() = CopilotPreferences.fromJson(prefs.getString(KEY_PREFERENCES, null))
+    get() {
+      val raw = prefs.getString(KEY_PREFERENCES, null)
+      val cached = cachedPreferences
+      if (cached != null && cached.first == raw) return cached.second
+      return CopilotPreferences.fromJson(raw).also { cachedPreferences = raw to it }
+    }
     set(value) = prefs.edit().putString(KEY_PREFERENCES, value.toJson()).apply()
 
   var targets: OfferTargets
@@ -54,7 +60,7 @@ class CopilotStore(context: Context) {
 
   private fun migrateHistoryFromPreferences() {
     val stored = prefs.getString(KEY_HISTORY, null) ?: return
-    if (log.isEmpty()) replaceHistory(stored)
+    runCatching { if (log.isEmpty()) replaceHistory(stored) }
     prefs.edit().remove(KEY_HISTORY).apply()
   }
 

@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { activeTargets, DEFAULT_LOW_DEMAND_TARGETS, DEFAULT_OFFER_TARGETS, OfferMode, OfferSettings } from '@/domain/offer/offer';
 import { centsToInput } from '@/shared/utils/money';
 import { centsOrZero } from '@/shared/utils/parse';
-import { loadOfferSettings, saveOfferSettings } from './syncTargets';
+import { loadOfferSettings, saveFollowGoal, saveModeTargets, saveOfferMode } from './syncTargets';
 
 const INITIAL: OfferSettings = { mode: 'normal', normal: DEFAULT_OFFER_TARGETS, low: DEFAULT_LOW_DEMAND_TARGETS, followGoal: false };
 
@@ -33,17 +33,17 @@ export function useOfferTargets() {
       [settings.mode]: { targetPerKmCents: centsOrZero(nextPerKm), targetPerHourCents: centsOrZero(nextPerHour) },
     };
     setSettings(next);
-    void saveOfferSettings(next);
+    const targets = next[settings.mode];
+    if (targets.targetPerKmCents > 0 && targets.targetPerHourCents > 0) void saveModeTargets(settings.mode, targets);
   };
 
   const setMode = (mode: OfferMode) => {
-    const next = { ...settings, mode };
-    loadFields(next);
-    void saveOfferSettings(next);
+    loadFields({ ...settings, mode });
+    void saveOfferMode(mode);
   };
 
   const setFollowGoal = async (followGoal: boolean) => {
-    await saveOfferSettings({ ...settings, followGoal });
+    await saveFollowGoal(followGoal);
     await reload();
   };
 

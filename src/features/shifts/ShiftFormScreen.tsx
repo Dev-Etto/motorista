@@ -86,7 +86,7 @@ export default function ShiftFormScreen() {
       </Card>
 
       <Card>
-        <DateField label="Data" value={form.date} onChange={(date) => date && form.setDate(date)} />
+        <DateField label="Data" value={form.date} onChange={(date) => date && form.setDate(date)} maximumDate={new Date()} />
       </Card>
 
       <Collapsible title="Despesas do dia">
@@ -103,6 +103,7 @@ export default function ShiftFormScreen() {
       <ShiftResultCard result={form.preview} />
       {form.error ? <Notice tone="negative" message={form.error} /> : null}
       {measureError ? <Notice message={measureError} /> : null}
+      {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
       <Button label="Salvar jornada" busy={saving.busy} onPress={saving.submit} />
     </Screen>
   );

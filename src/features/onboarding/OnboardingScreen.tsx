@@ -47,8 +47,7 @@ export default function OnboardingScreen() {
   };
 
   const saving = useSubmit(async () => {
-    await form.save();
-    setStep('result');
+    if (await form.save()) setStep('result');
   });
 
   if (step === 'welcome') {
@@ -90,6 +89,8 @@ export default function OnboardingScreen() {
         <AppText variant="title" bold center>Seu custo em poucos dados</AppText>
         <AppText tone="muted" center>Óleo, pneus e manutenção começam com estimativas. Seguro, IPVA e parcela você inclui depois.</AppText>
         <VehicleQuickForm form={form} />
+        {form.error ? <Notice tone="negative" message={form.error} /> : null}
+        {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
         <Button label="Ver meu custo" busy={saving.busy} onPress={saving.submit} />
         <Button label="Fazer isso depois" variant="secondary" onPress={() => finish('/')} />
       </Screen>

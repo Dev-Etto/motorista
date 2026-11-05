@@ -34,15 +34,16 @@ function rankByProfitPerHour(shifts: ShiftFact[], keyOf: (shift: ShiftFact) => s
     .sort((a, b) => b.perHour - a.perHour);
 }
 
-export const realProfitRule: InsightRule = ({ shifts }) => {
+export const realProfitRule: InsightRule = ({ shifts, looseExpenses = [] }) => {
   const gross = sumBy(shifts, (shift) => shift.grossCents);
   if (gross <= 0) return null;
 
-  const profit = sumBy(shifts, profitOf);
+  const profit = sumBy(shifts, profitOf) - sumBy(looseExpenses, (expense) => expense.cents);
+  const shareOfHundred = Math.round((profit / gross) * 100);
   return {
     id: 'real-profit',
     title: 'Lucro real',
-    message: `De cada R$ 100 faturados, R$ ${Math.round((profit / gross) * 100)} ficaram com você.`,
+    message: profit >= 0 ? `De cada R$ 100 faturados, R$ ${shareOfHundred} ficaram com você.` : `Para cada R$ 100 faturados, faltaram R$ ${-shareOfHundred} para cobrir os custos.`,
     basis: `Faturamento ${formatBRL(gross)} e lucro ${formatBRL(profit)} em ${shifts.length} jornadas.`,
   };
 };
@@ -160,14 +161,15 @@ export const breakEvenRule: InsightRule = ({ shifts, costs, today }) => {
   };
 };
 
-export const projectionRule: InsightRule = ({ shifts, costs, today }) => {
+export const projectionRule: InsightRule = ({ shifts, costs, today, looseExpenses = [] }) => {
   if (!costs) return null;
 
   const { start, days } = monthBounds(today);
   const month = shifts.filter((shift) => shift.date >= start && shift.date <= today);
   if (month.length < MIN_MONTH_SHIFTS) return null;
 
-  const profit = sumBy(month, profitOf);
+  const monthLoose = looseExpenses.filter((expense) => expense.date >= start && expense.date <= today);
+  const profit = sumBy(month, profitOf) - sumBy(monthLoose, (expense) => expense.cents);
   const dayOfMonth = Number(today.slice(8, 10));
 
   return {

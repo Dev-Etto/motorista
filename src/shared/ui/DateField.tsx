@@ -11,10 +11,11 @@ interface DateFieldProps {
   onChange: (date: string | null) => void;
   placeholder?: string;
   minimumDate?: Date;
+  maximumDate?: Date;
   clearable?: boolean;
 }
 
-export function DateField({ label, value, onChange, placeholder = 'Escolher data', minimumDate, clearable }: DateFieldProps) {
+export function DateField({ label, value, onChange, placeholder = 'Escolher data', minimumDate, maximumDate, clearable }: DateFieldProps) {
   const colors = useTheme();
   const current = value ? fromISODate(value) : new Date();
 
@@ -23,6 +24,7 @@ export function DateField({ label, value, onChange, placeholder = 'Escolher data
       value: current,
       mode: 'date',
       minimumDate,
+      maximumDate,
       onValueChange: (_event, date) => onChange(toISODate(date)),
     });
   };
@@ -36,6 +38,7 @@ export function DateField({ label, value, onChange, placeholder = 'Escolher data
           mode="date"
           display="compact"
           minimumDate={minimumDate}
+          maximumDate={maximumDate}
           onValueChange={(_event, date) => onChange(toISODate(date))}
         />
       </View>

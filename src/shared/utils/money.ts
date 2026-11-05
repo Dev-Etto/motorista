@@ -14,7 +14,7 @@ export function parseBRL(input: string): number | null {
 }
 
 export function parseDecimal(input: string): number | null {
-  const clean = input.replace(/R\$|\s/g, '');
+  const clean = input.replace(/R\$|\s/g, '').replace(/[.,]$/, '');
   if (!clean) return null;
   let normalized = clean;
   if (clean.includes(',')) {

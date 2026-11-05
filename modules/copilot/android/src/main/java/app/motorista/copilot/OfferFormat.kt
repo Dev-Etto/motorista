@@ -61,6 +61,7 @@ object OfferFormat {
     val reais = total / 100
     val centavos = total % 100
     if (centavos == 0L) return "$reais reais"
+    if (centavos < 10) return "$reais reais e $centavos centavos"
     return "$reais e $centavos"
   }
 

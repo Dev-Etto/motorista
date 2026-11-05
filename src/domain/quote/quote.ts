@@ -19,7 +19,7 @@ export function computeQuote(quote: QuoteInput) {
   const timeCents = quote.minutes * (quote.desiredProfitPerHourCents / 60);
   const rawPriceCents = vehicleCostCents + timeCents + quote.tollCents + quote.extrasCents;
   const step = quote.roundToCents ?? DEFAULT_ROUNDING_CENTS;
-  const priceCents = Math.max(Math.round(rawPriceCents / step) * step, quote.minimumCents);
+  const priceCents = Math.max(Math.ceil(rawPriceCents / step) * step, quote.minimumCents);
   const totalCostCents = vehicleCostCents + quote.tollCents;
 
   return {
@@ -32,6 +32,5 @@ export function computeQuote(quote: QuoteInput) {
     priceCents,
     estimatedProfitCents: priceCents - totalCostCents,
     perKm: totalKm > 0 ? priceCents / totalKm : null,
-    belowCost: priceCents < totalCostCents,
   };
 }

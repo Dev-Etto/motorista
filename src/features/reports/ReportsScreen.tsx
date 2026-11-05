@@ -3,15 +3,16 @@ import { ProfitCard } from '@/features/dashboard/ProfitCard';
 import { InsightCard } from '@/features/insights/InsightCard';
 import { TipBanner } from '@/features/tips/TipBanner';
 import { MIN_SHIFTS_FOR_INSIGHTS } from '@/domain/insights/buildInsights';
-import { useMonthCursor } from '@/shared/hooks/useMonthCursor';
 import { BarChart } from '@/shared/ui/BarChart';
-import { MonthSwitcher } from '@/shared/ui/MonthSwitcher';
+import { PeriodSwitcher } from '@/shared/ui/MonthSwitcher';
 import { PlatformBadge } from '@/shared/ui/PlatformBadge';
 import { Button, ButtonRow, Card, EmptyState, ListRow, Notice, Screen, Segmented } from '@/shared/ui/primitives';
+import { today } from '@/shared/utils/dates';
 import { formatPerKm, profitTone } from '@/shared/utils/format';
 import { formatBRL } from '@/shared/utils/money';
 import { shareReportCsv, shareReportPdf } from './reportExport';
-import { ReportPeriod, useReport } from './useReport';
+import { PERIOD_NOUNS, periodLabel, ReportPeriod, stepPeriod } from './reportPeriod';
+import { useReport } from './useReport';
 
 const PERIODS: { value: ReportPeriod; label: string }[] = [
   { value: 'week', label: 'Semana' },
@@ -21,8 +22,8 @@ const PERIODS: { value: ReportPeriod; label: string }[] = [
 
 export default function ReportsScreen() {
   const [period, setPeriod] = useState<ReportPeriod>('month');
-  const cursor = useMonthCursor();
-  const { data, chart } = useReport(period, cursor.date);
+  const [date, setDate] = useState(today);
+  const { data, chart } = useReport(period, date);
   const [exportError, setExportError] = useState<string | null>(null);
 
   const runExport = async (action: () => Promise<void>) => {
@@ -38,7 +39,7 @@ export default function ReportsScreen() {
     <Screen>
       <TipBanner id="reports" message="Mês fechado desconta o custo fixo inteiro. É onde você vê se rodou o suficiente para pagar os custos." />
       <Segmented value={period} options={PERIODS} onChange={setPeriod} />
-      <MonthSwitcher date={cursor.date} onPrevious={cursor.previous} onNext={cursor.next} />
+      <PeriodSwitcher label={periodLabel(period, date)} noun={PERIOD_NOUNS[period]} onPrevious={() => setDate(stepPeriod(period, date, -1))} onNext={() => setDate(stepPeriod(period, date, 1))} />
       {!data || data.shifts.length === 0 ? (
         <EmptyState illustration="empty" title="Sem jornadas neste período" message="Registre jornadas para ver gráficos e relatórios." />
       ) : (

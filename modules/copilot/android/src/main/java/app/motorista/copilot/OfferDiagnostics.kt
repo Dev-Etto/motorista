@@ -7,6 +7,10 @@ object OfferDiagnostics {
   private val keptWords = Regex("""(?i)^(r\$|km|m|min|h|aceitar|selecionar|corresponder|confirmar|accept|match|recusar|rejeitar|pular|ignorar|dispensar|decline|reject|skip|\+)$""")
   private val token = Regex("""\S+""")
   private val letters = Regex("""\p{L}""")
+  private val digits = Regex("""\d""")
+  private val measure = Regex("""(?i)^(?:R\$\d+(?:[.,]\d+)?|[~(]*\d+(?:[.,]\d+)?(?:km|m|min|h))[).,]*$""")
+  private val rating = Regex("""^[1-5][.,]\d{1,2}$""")
+  private val unit = Regex("""(?i)^\(?(?:km|m|min|h)\b""")
   private val moneyMark = Regex("""R\$""")
   private val entries = ArrayDeque<String>()
   private val otherEntries = ArrayDeque<String>()
@@ -42,7 +46,18 @@ object OfferDiagnostics {
     while (target.size > limit) target.removeLast()
   }
 
-  fun mask(text: String): String = token.replace(text) { match ->
-    if (keptWords.matches(match.value)) match.value else letters.replace(match.value, "x")
+  fun mask(text: String): String {
+    val tokens = token.findAll(text).map { it.value }.toList()
+    return tokens.mapIndexed { index, value -> maskToken(value, tokens.getOrNull(index - 1), tokens.getOrNull(index + 1)) }.joinToString(" ")
+  }
+
+  private fun maskToken(value: String, previous: String?, next: String?): String {
+    if (keptWords.matches(value)) return value
+
+    val hidden = letters.replace(value, "x")
+    if (!digits.containsMatchIn(value)) return hidden
+    if (measure.matches(value) || rating.matches(value)) return hidden
+    if (previous?.equals("R$", ignoreCase = true) == true || next?.let { unit.containsMatchIn(it) } == true) return hidden
+    return digits.replace(hidden, "#")
   }
 }

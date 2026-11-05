@@ -3,7 +3,7 @@ import { platformRepository } from '@/data/repositories/platformRepository';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { TextField } from '@/shared/ui/fields';
 import { PlatformBadge } from '@/shared/ui/PlatformBadge';
-import { AppText, Button, Card, ListRow, Screen } from '@/shared/ui/primitives';
+import { AppText, Button, Card, ListRow, Notice, Screen } from '@/shared/ui/primitives';
 import { confirmAction } from '@/shared/utils/confirm';
 
 export default function PlatformsScreen() {
@@ -36,9 +36,10 @@ export default function PlatformsScreen() {
         <TextField label="Nome" placeholder="iFood, Lalamove…" value={name} onChangeText={setName} />
         <Button label="Adicionar" onPress={add} />
       </Card>
+      {(data ?? []).length === 1 ? <Notice tone="accent" message="Mantenha pelo menos uma plataforma para registrar seus ganhos." /> : null}
       <Card title="Suas plataformas">
         {(data ?? []).map((platform) => (
-          <ListRow key={platform.id} leading={<PlatformBadge name={platform.name} />} value="Remover" valueTone="muted" onPress={() => remove(platform.id, platform.name)} />
+          <ListRow key={platform.id} leading={<PlatformBadge name={platform.name} />} value={data?.length === 1 ? undefined : 'Remover'} valueTone="muted" onPress={data?.length === 1 ? undefined : () => remove(platform.id, platform.name)} />
         ))}
       </Card>
     </Screen>

@@ -5,9 +5,9 @@ import { vehicleRepository } from '@/data/repositories/vehicleRepository';
 import { countsAgainstProfit, ExpenseCategory } from '@/domain/expense/expense';
 import { computeShift } from '@/domain/shift/shift';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
-import { today } from '@/shared/utils/dates';
+import { toISODate, today } from '@/shared/utils/dates';
 import { centsToInput, parseBRL } from '@/shared/utils/money';
-import { centsOrZero, decimalOrNull, decimalOrZero, intOrNull } from '@/shared/utils/parse';
+import { centsOrZero, decimalOrNull, hasInvalidNumber, intOrNull, parseHours } from '@/shared/utils/parse';
 
 export const JOURNEY_EXPENSES: { category: ExpenseCategory; label: string }[] = [
   { category: 'toll', label: 'Pedágio' },
@@ -18,6 +18,7 @@ export const JOURNEY_EXPENSES: { category: ExpenseCategory; label: string }[] = 
 ];
 
 const MINUTES_PER_HOUR = 60;
+const MAX_SHIFT_MINUTES = 24 * MINUTES_PER_HOUR;
 
 export type KmEntryMode = 'manual' | 'odometer';
 
@@ -36,7 +37,8 @@ async function loadFormData(shiftId: number | undefined, date: string) {
     vehicleRepository.getCostsAt(date),
     shiftId ? shiftRepository.findById(shiftId) : Promise.resolve(null),
   ]);
-  return { platforms, costs: costs.costs, existing };
+  const inactive = (existing?.earnings ?? []).filter((earning) => !platforms.some((platform) => platform.id === earning.platform_id));
+  return { platforms: [...platforms, ...inactive.map((earning) => ({ id: earning.platform_id, name: earning.name }))], costs: costs.costs, existing };
 }
 
 export function useShiftForm(shiftId?: number) {
@@ -75,21 +77,28 @@ export function useShiftForm(shiftId?: number) {
   }, [shiftId]);
 
   const km = resolveKm(kmMode, kmText, odometerStart, odometerEnd);
-  const minutes = Math.round(decimalOrZero(hours) * MINUTES_PER_HOUR);
+  const minutes = Math.round((parseHours(hours) ?? 0) * MINUTES_PER_HOUR);
   const grossCents = Object.values(earnings).reduce((total, text) => total + centsOrZero(text), 0);
   const expensesCents = JOURNEY_EXPENSES.filter(({ category }) => countsAgainstProfit(category)).reduce(
     (total, { category }) => total + centsOrZero(expenses[category] ?? ''),
     0,
   );
 
+  const { data: costsAtDate } = useAsyncData(() => vehicleRepository.getCostsAt(date), [date]);
+  const savedShift = data?.existing?.shift;
+  const costPerKm = savedShift?.date === date ? savedShift.cost_per_km : (costsAtDate?.costs?.fullPerKm ?? 0);
+
   const preview = useMemo(
-    () => computeShift({ grossCents, km, minutes, expensesCents, costPerKm: data?.costs?.fullPerKm ?? 0 }),
-    [grossCents, km, minutes, expensesCents, data?.costs?.fullPerKm],
+    () => computeShift({ grossCents, km, minutes, expensesCents, costPerKm }),
+    [grossCents, km, minutes, expensesCents, costPerKm],
   );
 
   const applyLive = (timerMinutes: number, startedAt: number, measuredKm: number) => {
     setHours(String(Math.round((timerMinutes / MINUTES_PER_HOUR) * 100) / 100).replace('.', ','));
-    if (startedAt > 0) setStartHour(String(new Date(startedAt).getHours()));
+    if (startedAt > 0) {
+      setStartHour(String(new Date(startedAt).getHours()));
+      setDate(toISODate(new Date(startedAt)));
+    }
     if (measuredKm <= 0) return;
 
     setKmMode('manual');
@@ -102,7 +111,17 @@ export function useShiftForm(shiftId?: number) {
     setKmMeasured(false);
   };
 
+  const typedNumbers = [kmMode === 'manual' ? kmText : '', odometerStart, odometerEnd, trips, startHour, ...Object.values(earnings), ...Object.values(expenses).map((text) => text ?? '')];
+
   const save = async (): Promise<boolean> => {
+    if (typedNumbers.some(hasInvalidNumber) || (hours.trim() !== '' && parseHours(hours) === null)) {
+      setError('Confira os números digitados. Use só números, como 150,50.');
+      return false;
+    }
+    if (minutes > MAX_SHIFT_MINUTES) {
+      setError('Uma jornada tem no máximo 24 horas. Confira as horas trabalhadas.');
+      return false;
+    }
     if (grossCents <= 0) {
       setError('Informe o ganho de pelo menos uma plataforma.');
       return false;

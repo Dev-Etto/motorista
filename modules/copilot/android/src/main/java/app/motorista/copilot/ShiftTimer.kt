@@ -39,6 +39,10 @@ class ShiftTimer(private val context: Context) {
     ForgottenShiftAlarm.schedule(context, prefs.getLong(KEY_ACCUMULATED, 0), now)
   }
 
+  fun restoreAlarm() {
+    if (state().running) ForgottenShiftAlarm.schedule(context, prefs.getLong(KEY_ACCUMULATED, 0), prefs.getLong(KEY_RESUMED_AT, 0))
+  }
+
   fun reset() {
     prefs.edit().clear().apply()
     ForgottenShiftAlarm.cancel(context)

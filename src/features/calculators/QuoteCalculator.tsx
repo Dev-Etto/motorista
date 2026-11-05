@@ -5,7 +5,7 @@ import { computeQuote } from '@/domain/quote/quote';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { MoneyField, NumberField, TextField } from '@/shared/ui/fields';
-import { AppText, Button, ButtonRow, Card, Collapsible, ListRow, Notice } from '@/shared/ui/primitives';
+import { AppText, Button, ButtonRow, Card, Collapsible, ListRow } from '@/shared/ui/primitives';
 import { confirmAction } from '@/shared/utils/confirm';
 import { profitTone } from '@/shared/utils/format';
 import { formatBRL, formatNumber } from '@/shared/utils/money';
@@ -77,7 +77,6 @@ export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
         <Card>
           <AppText variant="caption" tone="muted" center>Preço sugerido</AppText>
           <AppText variant="display" bold center>{formatBRL(quote.priceCents)}</AppText>
-          {quote.belowCost ? <Notice tone="negative" message="Esse valor fica abaixo do seu custo." /> : null}
           <ListRow title="Para o carro" subtitle={`${formatNumber(quote.totalKm)} km com o seu custo por km`} value={formatBRL(quote.vehicleCostCents)} />
           <ListRow title="Pelo seu tempo" value={formatBRL(quote.timeCents)} />
           {quote.tollCents + quote.extrasCents > 0 ? <ListRow title="Pedágio e extras" value={formatBRL(quote.tollCents + quote.extrasCents)} /> : null}

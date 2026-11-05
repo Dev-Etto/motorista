@@ -16,13 +16,18 @@ export async function loadOfferSettings(): Promise<OfferSettings> {
   return withGoalTargets({ mode: (mode as OfferMode | null) ?? 'normal', normal, low, followGoal }, progress?.suggestion ?? null);
 }
 
-export async function saveOfferSettings(settings: OfferSettings): Promise<void> {
-  await Promise.all([
-    settingsRepository.set(SETTING_KEYS.offerMode, settings.mode),
-    settingsRepository.setJson(SETTING_KEYS.offerTargets, settings.normal),
-    settingsRepository.setJson(SETTING_KEYS.offerLowTargets, settings.low),
-    settingsRepository.setJson(SETTING_KEYS.offerFollowGoal, settings.followGoal),
-  ]);
+export async function saveOfferMode(mode: OfferMode): Promise<void> {
+  await settingsRepository.set(SETTING_KEYS.offerMode, mode);
+  await syncCopilotTargets();
+}
+
+export async function saveFollowGoal(followGoal: boolean): Promise<void> {
+  await settingsRepository.setJson(SETTING_KEYS.offerFollowGoal, followGoal);
+  await syncCopilotTargets();
+}
+
+export async function saveModeTargets(mode: OfferMode, targets: OfferTargets): Promise<void> {
+  await settingsRepository.setJson(mode === 'normal' ? SETTING_KEYS.offerTargets : SETTING_KEYS.offerLowTargets, targets);
   await syncCopilotTargets();
 }
 

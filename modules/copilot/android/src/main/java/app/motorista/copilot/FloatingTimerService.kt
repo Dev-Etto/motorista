@@ -232,7 +232,7 @@ class FloatingTimerService : Service() {
   }
 
   private fun refresh() {
-    if (showingOffer) return
+    if (showingOffer || root.visibility != View.VISIBLE) return
 
     val state = timer.state()
     panel.render(state, lastOffer, menuOpen, store.preferences.theme)
@@ -264,7 +264,7 @@ class FloatingTimerService : Service() {
       private set
 
     @Volatile
-    private var appInForeground = true
+    private var appInForeground = false
 
     fun setAppInForeground(value: Boolean) {
       appInForeground = value

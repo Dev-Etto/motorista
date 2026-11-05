@@ -45,7 +45,7 @@ class OfferFixturesTest {
   fun telasSemValorNaoApagamAsLeiturasDeOferta() {
     OfferDiagnostics.enabled = true
     OfferDiagnostics.capture("R$ 13 Aceitar")
-    repeat(20) { OfferDiagnostics.capture("tela $it") }
+    repeat(20) { OfferDiagnostics.capture("tela".padEnd(it + 5, 'a')) }
     assertEquals("R$ 13 Aceitar", OfferDiagnostics.snapshot().first())
     assertEquals(6, OfferDiagnostics.snapshot().size)
     OfferDiagnostics.enabled = false
@@ -58,6 +58,13 @@ class OfferFixturesTest {
     assertEquals(1000L + limit, ForgottenShiftAlarm.triggerAt(0, 1000L))
     assertEquals(1000L + 1, ForgottenShiftAlarm.triggerAt(limit - 1, 1000L))
     assertNull(ForgottenShiftAlarm.triggerAt(limit, 1000L))
+  }
+
+  @Test
+  fun diagnosticosEscondemNumerosPessoais() {
+    val masked = OfferDiagnostics.mask("Maria (11) 91234-5678 Rua Augusta 1500 CPF 123.456.789-00 R$ 18,40 5 km 12 min 4,92")
+    listOf("91234", "5678", "1500", "123.456").forEach { assertFalse(it, masked.contains(it)) }
+    listOf("R$ 18,40", "5 km", "12 min", "4,92").forEach { assertEquals(it, true, masked.contains(it)) }
   }
 
   @Test

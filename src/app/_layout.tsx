@@ -43,8 +43,7 @@ function useAppBootstrap() {
       try {
         await migrate();
         if (__DEV__) await applyRequestedSeed();
-        await syncCopilotTargets();
-        await restoreThemeMode();
+        await Promise.allSettled([syncCopilotTargets(), restoreThemeMode()]);
         const onboarded = await settingsRepository.get(SETTING_KEYS.onboarded);
         setState('ready');
         if (!onboarded) setTimeout(() => router.replace('/onboarding'));

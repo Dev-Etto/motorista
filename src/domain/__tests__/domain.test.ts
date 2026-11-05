@@ -107,7 +107,7 @@ describe('jornada', () => {
   });
 
   it('mês fechado desconta o fixo inteiro', () => {
-    const m = computeMonthClose({ grossCents: 500000, km: 2000, expensesCents: 10000, variablePerKm: 60, fixedMonthlyCents: 100000 });
+    const m = computeMonthClose({ grossCents: 500000, km: 2000, expensesCents: 10000, variableCents: 120000, fixedMonthlyCents: 100000 });
     expect(m.profitCents).toBe(270000);
     expect(m.realCostPerKm).toBe(110);
   });
@@ -133,16 +133,17 @@ describe('viagem particular', () => {
     expect(q.timeCents).toBeCloseTo(2500);
     expect(q.rawPriceCents).toBeCloseTo(7460);
     expect(q.priceCents).toBe(7500);
-    expect(q.belowCost).toBe(false);
   });
 
   it('respeita o valor mínimo', () => {
     expect(computeQuote({ ...quote, minimumCents: 10000 }).priceCents).toBe(10000);
   });
 
-  it('avisa quando fica abaixo do custo', () => {
-    const q = computeQuote({ ...quote, desiredProfitPerHourCents: 0, costPerKm: 1000, minimumCents: 0, tollCents: 0, roundToCents: 100000 });
-    expect(q.belowCost).toBe(true);
+  it('arredonda para cima, para o preço nunca ficar abaixo do custo', () => {
+    const q = computeQuote({ ...quote, kmToPassenger: 0, kmTrip: 40, kmReturn: 0, costPerKm: 80.9, minutes: 0, tollCents: 0, extrasCents: 0, minimumCents: 0 });
+    expect(q.vehicleCostCents).toBeCloseTo(3236);
+    expect(q.priceCents).toBe(3300);
+    expect(q.estimatedProfitCents).toBeGreaterThan(0);
   });
 });
 

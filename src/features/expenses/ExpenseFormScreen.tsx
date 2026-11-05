@@ -8,7 +8,7 @@ import { MoneyField, NumberField, TextField } from '@/shared/ui/fields';
 import { Button, Card, Notice, Screen, Segmented } from '@/shared/ui/primitives';
 import { today } from '@/shared/utils/dates';
 import { parseBRL } from '@/shared/utils/money';
-import { decimalOrNull } from '@/shared/utils/parse';
+import { decimalOrNull, hasInvalidNumber } from '@/shared/utils/parse';
 
 type LooseCategory = 'fuel' | 'maintenance' | 'other';
 
@@ -31,6 +31,7 @@ export default function ExpenseFormScreen() {
   const saving = useSubmit(async () => {
     const cents = parseBRL(value);
     if (!cents) return setError('Informe um valor maior que zero.');
+    if (hasInvalidNumber(liters) || hasInvalidNumber(odometer)) return setError('Confira os números digitados. Use só números, como 45,5.');
 
     await expenseRepository.add({
       date,
@@ -56,6 +57,7 @@ export default function ExpenseFormScreen() {
         <NumberField label="Odômetro (opcional)" value={odometer} onChangeText={setOdometer} suffix="km" />
         <TextField label="Observação (opcional)" value={note} onChangeText={setNote} />
       </Card>
+      {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
       <Button label="Salvar" busy={saving.busy} onPress={saving.submit} />
     </Screen>
   );

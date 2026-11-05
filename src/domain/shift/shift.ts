@@ -21,7 +21,7 @@ export interface MonthCloseInput {
   grossCents: number;
   km: number;
   expensesCents: number;
-  variablePerKm: number;
+  variableCents: number;
   fixedMonthlyCents: number;
 }
 
@@ -45,13 +45,11 @@ export function computeShift(shift: ShiftInput): ShiftResult {
 }
 
 export function computeMonthClose(month: MonthCloseInput) {
-  const variableCents = month.km * month.variablePerKm;
-
   return {
-    variableCents,
+    variableCents: month.variableCents,
     fixedCents: month.fixedMonthlyCents,
     expensesCents: month.expensesCents,
-    profitCents: month.grossCents - variableCents - month.fixedMonthlyCents - month.expensesCents,
-    realCostPerKm: month.km > 0 ? (variableCents + month.fixedMonthlyCents) / month.km : null,
+    profitCents: month.grossCents - month.variableCents - month.fixedMonthlyCents - month.expensesCents,
+    realCostPerKm: month.km > 0 ? (month.variableCents + month.fixedMonthlyCents) / month.km : null,
   };
 }

@@ -44,7 +44,7 @@ export function useBackup() {
       await shareTextFile(`backup-${today()}.json`, JSON.stringify(await fullBackup()), 'application/json');
       await settingsRepository.set(SETTING_KEYS.lastBackupAt, String(Date.now()));
       await lastBackup.reload();
-      setMessage({ tone: 'positive', text: 'Backup gerado. Guarde o arquivo em um lugar seguro.' });
+      setMessage({ tone: 'positive', text: 'Backup gerado. Confira se o arquivo foi salvo onde você escolheu.' });
     } catch {
       setMessage({ tone: 'negative', text: 'Não foi possível gerar o backup.' });
     }
