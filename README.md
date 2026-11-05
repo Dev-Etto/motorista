@@ -37,9 +37,9 @@ O Motorista quer democratizar esse tipo de app. Ele é uma opção profissional 
 - **Jornadas:** cronômetro, km medidos por GPS e ganhos por plataforma.
 - **Calculadoras:** avaliação de ofertas e preço de corridas particulares.
 - **Meta e mínimos:** transforma o lucro que você quer em valor por dia e no mínimo que cada corrida deve pagar, por km e por hora.
-- **Copiloto de ofertas:** lê a oferta na tela e mostra uma nota de 0 a 10 por cartão, botão flutuante, notificação ou voz.
+- **Copiloto de ofertas:** lê a oferta na tela e mostra uma nota de 0 a 5 por cartão, botão flutuante, notificação ou voz.
 - **Visual limpo:** preto, branco e cinza, com cor só onde ela informa, como no lucro e na nota da oferta. Tem tema claro e escuro.
-- **Mais recursos:** relatórios, lembretes de manutenção e backup em arquivo.
+- **Mais recursos:** relatórios, lembretes de manutenção e do fim do dia, e backup em arquivo.
 
 ### Você sempre decide
 
@@ -69,7 +69,7 @@ O app é distribuído fora das lojas, então o Android pode mostrar avisos extra
 
 ## Problemas e sugestões
 
-Encontrou um problema ou teve uma ideia? Conte para a gente, seja motorista ou desenvolvedor. Basta ter uma conta gratuita no GitHub.
+Encontrou um problema ou teve uma ideia? No app, abra Mais e toque em Relatar um problema: você revisa o texto e envia por onde quiser, como o WhatsApp. Se preferir o GitHub, use os links abaixo, com uma conta gratuita.
 
 - [**Relatar um problema**](https://github.com/Dev-Etto/motorista/issues/new?template=problema.yml)
 - [**Sugerir uma melhoria**](https://github.com/Dev-Etto/motorista/issues/new?template=sugestao.yml)
@@ -97,7 +97,9 @@ npm run lint
 npm run android
 ```
 
-`npm run build:apk` gera o APK assinado em `dist/motorista.apk`. Ele exige uma chave de assinatura própria, indicada pelas variáveis `MOTORISTA_KEYSTORE` e `MOTORISTA_KEYSTORE_PASSWORD`.
+Para testar o Copiloto sem uma oferta real, use `npm run android`, depois `npm run mock -- setup` e `npm run mock -- uber`. O comando `npm run mock` lista as outras opções. As ofertas são simuladas e funcionam só em build de debug.
+
+`npm run build:apk` roda as verificações, gera o APK assinado em `dist/motorista.apk` e confere as permissões dele. Ele exige uma chave de assinatura própria, indicada pelas variáveis `MOTORISTA_KEYSTORE` e `MOTORISTA_KEYSTORE_PASSWORD`.
 
 ## Licença
 
