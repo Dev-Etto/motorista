@@ -18,7 +18,7 @@ const STEPS: Record<NextStep['id'], NextStep> = {
     id: 'vehicle',
     title: 'Descubra seu custo por km',
     message: 'Com ele, o app mostra quanto sobra de verdade em cada jornada.',
-    actionLabel: 'Calcular meu custo',
+    actionLabel: 'Calcular custo',
     href: '/vehicle',
   },
   'first-shift': {

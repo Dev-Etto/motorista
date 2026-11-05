@@ -9,7 +9,7 @@ export function CostDependencyNotice({ costPerKm }: { costPerKm: number }) {
     <Card>
       <AppText bold>Primeiro, descubra seu custo por km</AppText>
       <AppText tone="muted">Sem ele, a calculadora não sabe quanto do valor vai para o carro.</AppText>
-      <Button label="Calcular meu custo" onPress={() => router.push('/vehicle')} />
+      <Button label="Calcular custo" onPress={() => router.push('/vehicle')} />
     </Card>
   );
 }
