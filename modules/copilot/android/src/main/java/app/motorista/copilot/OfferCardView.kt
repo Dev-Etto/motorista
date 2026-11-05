@@ -11,7 +11,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 
-private data class CardPalette(
+data class CardPalette(
   val surface: Int,
   val text: Int,
   val muted: Int,
@@ -31,8 +31,10 @@ class OfferCardView(private val context: Context) {
     return mode == Configuration.UI_MODE_NIGHT_YES
   }
 
+  fun palette(theme: ThemeMode) = if (isNight(theme)) NIGHT_PALETTE else DAY_PALETTE
+
   fun build(evaluation: OfferEvaluation, preferences: CopilotPreferences): View {
-    val palette = if (isNight(preferences.theme)) NIGHT_PALETTE else DAY_PALETTE
+    val palette = palette(preferences.theme)
     val scale = preferences.cardSize.scale
     val body = LinearLayout(context).apply {
       orientation = LinearLayout.VERTICAL
