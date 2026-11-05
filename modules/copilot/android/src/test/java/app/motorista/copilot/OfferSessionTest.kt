@@ -137,7 +137,7 @@ class OfferSessionTest {
     val result = OfferEvaluator.evaluate(ParsedOffer(1840, 8.5, 19, 4.92), targets, "99")
     assertEquals("99 • Nota 8,1 • R$ 18,40", OfferFormat.notificationTitle(result).replace('\u00a0', ' '))
     assertTrue(OfferFormat.notificationDetails(result).contains("★ 4,92"))
-    assertTrue(OfferFormat.notificationDetails(result).contains("8% acima da meta"))
+    assertTrue(OfferFormat.notificationDetails(result).contains("8% acima do mínimo"))
   }
 
   @Test

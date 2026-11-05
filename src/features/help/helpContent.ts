@@ -16,11 +16,11 @@ export const HELP_SECTIONS: { title: string; paragraphs: string[] }[] = [
   {
     title: 'Como entender a nota da oferta',
     paragraphs: [
-      'A nota vai de 0 a 10 e compara a oferta com seu custo e suas metas de R$/km e R$/hora.',
-      '▲ 7 ou mais, em verde: atinge as duas metas. Quanto mais acima delas, maior a nota.',
-      '■ De 4 a 6,9, em amarelo: cobre seu custo, mas fica abaixo de alguma meta.',
+      'A nota vai de 0 a 10 e compara a oferta com seu custo e seus mínimos de R$/km e R$/hora.',
+      '▲ 7 ou mais, em verde: atinge os dois mínimos. Quanto mais acima deles, maior a nota.',
+      '■ De 4 a 6,9, em amarelo: cobre seu custo, mas fica abaixo de algum mínimo.',
       '▼ Até 3,9, em vermelho: não cobre seu custo por km.',
-      'No cartão, ▲ ao lado do valor por km ou por hora indica que ele atingiu a sua meta, e ▼ indica que ficou abaixo.',
+      'No cartão, ▲ ao lado do valor por km ou por hora indica que ele atingiu o seu mínimo, e ▼ indica que ficou abaixo.',
       '★ é a avaliação do passageiro, quando o app de corrida a mostra. Ela não entra na nota.',
       'Sem custos cadastrados, a oferta aparece sem nota. A decisão é sempre sua.',
     ],

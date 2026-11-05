@@ -9,7 +9,7 @@
       "targetPerHourCents": 3000,
       "color": "green",
       "score": 7.8,
-      "reason": "km: na meta · hora: 100% acima da meta"
+      "reason": "km: no mínimo · hora: 100% acima do mínimo"
     },
     {
       "valueCents": 1500,
@@ -20,7 +20,7 @@
       "targetPerHourCents": 3000,
       "color": "yellow",
       "score": 6.4,
-      "reason": "km: 25% abaixo da meta · hora: 50% acima da meta"
+      "reason": "km: 25% abaixo do mínimo · hora: 50% acima do mínimo"
     },
     {
       "valueCents": 2000,
@@ -31,7 +31,7 @@
       "targetPerHourCents": 3000,
       "color": "yellow",
       "score": 5.3,
-      "reason": "km: na meta · hora: 33% abaixo da meta"
+      "reason": "km: no mínimo · hora: 33% abaixo do mínimo"
     },
     {
       "valueCents": 900,

@@ -92,9 +92,9 @@ object OfferEvaluator {
   }
 
   private fun comparison(value: Double, target: Double): String {
-    if (target <= 0) return "sem meta"
+    if (target <= 0) return "sem mínimo"
     val percent = Math.round((value / target - 1) * 100)
-    if (percent == 0L) return "na meta"
-    return if (percent > 0) "$percent% acima da meta" else "${-percent}% abaixo da meta"
+    if (percent == 0L) return "no mínimo"
+    return if (percent > 0) "$percent% acima do mínimo" else "${-percent}% abaixo do mínimo"
   }
 }
