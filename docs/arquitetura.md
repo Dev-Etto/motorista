@@ -139,6 +139,14 @@ app -> features -> data -> domain -> shared/utils
 - **Mesma regra de oferta:** o botão flutuante usa as preferências do cartão como estão, sem forçar o formato resumido.
 - **Tempo do cartão:** o padrão é de 8 segundos, e um valor já salvo pelo usuário é mantido.
 
+## Meta do mês
+
+- **A meta mede lucro:** `computeGoalProgress` usa o mesmo lucro de "Neste mês" no início, com despesas avulsas, para as duas telas nunca discordarem. Faturar muito rodando muito não bate a meta.
+- **Meta do dia estável:** divide o que faltava no começo do dia pelos dias restantes, para o número não encolher enquanto o motorista lucra.
+- **Plano separado:** `requiredGrossForGoal` é uma previsão com os km informados e continua alimentando os mínimos por corrida, que precisam existir antes de rodar.
+- **Diferença para o Mês fechado:** o lucro da meta dilui o custo fixo pelos km previstos, e o Mês fechado desconta o fixo inteiro. A tela explica isso em "Como essa conta funciona?".
+- **Ajuste do dia:** `goal_day_overrides` agora guarda lucro, não faturamento. Só o valor do próprio dia é usado, então ajustes antigos não afetam nada.
+
 ## Faturamento estimado
 
 - **Estimativa, nunca registro:** `estimateEarnings` soma as ofertas aceitas por plataforma, mas só `ShiftEstimateCard` leva o valor para a jornada, e só quando o motorista pede. Aceitar não garante que a corrida terminou nem quanto foi pago.

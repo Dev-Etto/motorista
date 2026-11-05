@@ -56,7 +56,7 @@ export default function GoalScreen() {
   return (
     <Screen>
       <AppText variant="title" bold>Meta de {formatMonth(date)}</AppText>
-      <AppText tone="muted">Diga quanto quer lucrar, e o app mostra quanto precisa faturar e o mínimo que cada corrida deve pagar.</AppText>
+      <AppText tone="muted">Diga quanto quer lucrar no mês. O app acompanha seu lucro real e mostra o que falta, hoje e até o fim do mês.</AppText>
       <Card title="Sua meta">
         <MoneyField label="Quanto quer lucrar no mês" value={desired} onChangeText={setDesired} error={error} />
         <NumberField label="Horas de trabalho por dia" value={hoursPerDay} onChangeText={setHoursPerDay} suffix="h" />
@@ -68,8 +68,8 @@ export default function GoalScreen() {
       {progress ? <GoalProgressCard progress={progress} /> : null}
       {progress ? <GoalPlanCard progress={progress} /> : null}
       {progress ? (
-        <Collapsible title="Ajustar só a meta de hoje">
-          <MoneyField label="Meta de hoje" value={dayTarget} onChangeText={setDayTarget} hint="Vale só para hoje. Em branco, usa o cálculo automático." />
+        <Collapsible title="Ajustar a meta de hoje">
+          <MoneyField label="Lucro que quer fazer hoje" value={dayTarget} onChangeText={setDayTarget} hint="Vale só para hoje. Em branco, o app calcula." />
           <Button label="Salvar" variant="secondary" busy={saving.busy} onPress={saving.submit} />
         </Collapsible>
       ) : null}

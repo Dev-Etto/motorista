@@ -2,7 +2,7 @@ import { computeCosts, suggestedProfile, CostProfile } from '../vehicle/costs';
 import { computeMonthClose, computeShift } from '../shift/shift';
 import { computeQuote } from '../quote/quote';
 import { classifyOffer } from '../offer/offer';
-import { computeGoal } from '../goal/goal';
+import { computeGoalProgress, requiredGrossForGoal } from '../goal/goal';
 import { accumulateGps } from '../gps/gps';
 import { buildInsights } from '../insights/buildInsights';
 import { ShiftFact } from '../insights/types';
@@ -166,18 +166,63 @@ describe('oferta', () => {
   });
 });
 
-describe('metas', () => {
-  it('calcula faturamento necessário e meta do dia', () => {
-    const g = computeGoal({ desiredProfitCents: 300000, fixedMonthlyCents: 100000, plannedKm: 4000, variablePerKm: 50, grossSoFarCents: 100000, workDaysLeft: 10 });
-    expect(g.requiredGrossCents).toBe(600000);
-    expect(g.dailyTargetCents).toBe(50000);
-    expect(g.progress).toBeCloseTo(1 / 6);
+describe('meta do mês', () => {
+  const goal = { desiredProfitCents: 300000, profitSoFarCents: 100000, profitTodayCents: 0, workDaysLeft: 10, dayOverrideCents: null, costPerKm: 75, plannedKmPerDay: 160 };
+
+  it('o plano soma lucro desejado, fixos e custo dos km previstos', () => {
+    expect(requiredGrossForGoal({ desiredProfitCents: 300000, fixedMonthlyCents: 100000, plannedKm: 4000, variablePerKm: 50 })).toBe(600000);
   });
 
-  it('meta batida não fica negativa', () => {
-    const g = computeGoal({ desiredProfitCents: 100, fixedMonthlyCents: 0, plannedKm: 0, variablePerKm: 0, grossSoFarCents: 500, workDaysLeft: 3 });
-    expect(g.dailyTargetCents).toBe(0);
-    expect(g.progress).toBe(1);
+  it('mede o progresso pelo lucro, não pelo faturamento', () => {
+    const result = computeGoalProgress({ ...goal, profitSoFarCents: 200000 });
+    expect(result.progress).toBeCloseTo(2 / 3);
+    expect(result.remainingCents).toBe(100000);
+    expect(result.reached).toBe(false);
+  });
+
+  it('divide o que falta pelos dias restantes', () => {
+    expect(computeGoalProgress(goal).dailyTargetCents).toBe(20000);
+  });
+
+  it('a meta do dia não muda enquanto ele lucra', () => {
+    const later = computeGoalProgress({ ...goal, profitSoFarCents: 115000, profitTodayCents: 15000 });
+    expect(later.dailyTargetCents).toBe(20000);
+    expect(later.leftTodayCents).toBe(5000);
+  });
+
+  it('meta do dia batida não fica negativa', () => {
+    expect(computeGoalProgress({ ...goal, profitSoFarCents: 130000, profitTodayCents: 30000 }).leftTodayCents).toBe(0);
+  });
+
+  it('o faturamento do dia soma o custo dos km previstos', () => {
+    expect(computeGoalProgress(goal).grossForDayCents).toBe(20000 + 160 * 75);
+  });
+
+  it('sem custo, não estima o faturamento', () => {
+    expect(computeGoalProgress({ ...goal, costPerKm: null }).grossForDayCents).toBeNull();
+  });
+
+  it('respeita a meta de hoje ajustada', () => {
+    const result = computeGoalProgress({ ...goal, dayOverrideCents: 5000, profitTodayCents: 2000 });
+    expect(result.dailyTargetCents).toBe(5000);
+    expect(result.leftTodayCents).toBe(3000);
+  });
+
+  it('meta batida mostra o que passou', () => {
+    const result = computeGoalProgress({ ...goal, profitSoFarCents: 350000 });
+    expect(result).toMatchObject({ reached: true, surplusCents: 50000, remainingCents: 0, progress: 1 });
+  });
+
+  it('prejuízo não deixa a barra negativa e aumenta o que falta', () => {
+    const result = computeGoalProgress({ ...goal, profitSoFarCents: -50000 });
+    expect(result.progress).toBe(0);
+    expect(result.remainingCents).toBe(350000);
+  });
+
+  it('sem dias restantes, não há meta para hoje', () => {
+    const result = computeGoalProgress({ ...goal, workDaysLeft: 0 });
+    expect(result.dailyTargetCents).toBeNull();
+    expect(result.leftTodayCents).toBeNull();
   });
 });
 

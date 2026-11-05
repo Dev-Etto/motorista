@@ -6,7 +6,9 @@ import { reminderRepository } from '@/data/repositories/reminderRepository';
 import { settingsRepository } from '@/data/repositories/settingsRepository';
 import { shiftRepository } from '@/data/repositories/shiftRepository';
 import { vehicleRepository } from '@/data/repositories/vehicleRepository';
+import { summarizeShifts, withLooseExpenses } from '@/domain/shift/summary';
 import { computeCosts, CostProfile } from '@/domain/vehicle/costs';
+import { loadGoalProgress } from '@/features/goals/goalProgress';
 import { openTestDatabase } from './sqliteHarness';
 
 jest.mock('expo-sqlite', () => jest.requireActual('./sqliteHarness').expoSqliteMock);
@@ -193,5 +195,53 @@ describe('metas, lembretes e ajustes', () => {
     await settingsRepository.remove('chave');
     expect(await settingsRepository.get('chave')).toBeNull();
     expect(await settingsRepository.getJson('chave', 'padrão')).toBe('padrão');
+  });
+});
+
+describe('progresso da meta', () => {
+  const date = '2026-11-05';
+
+  async function profitLikeDashboard() {
+    const facts = await shiftRepository.listFacts('2026-11-01', '2026-11-30');
+    return withLooseExpenses(summarizeShifts(facts), await expenseRepository.totalLooseCountable('2026-11-01', '2026-11-30')).profitCents;
+  }
+
+  it('usa exatamente o mesmo lucro do início, com despesas avulsas', async () => {
+    await createVehicle();
+    await goalRepository.save({ month: '2026-11', desiredProfitCents: 300000, workWeekdays: [1, 2, 3, 4, 5], hoursPerDay: 8 });
+    await shiftRepository.save(shiftInput());
+    await shiftRepository.save(shiftInput({ date: '2026-11-04' }));
+    await expenseRepository.add({ date, category: 'other', cents: 5000, liters: null, odometer: null, note: null });
+
+    const progress = await loadGoalProgress(date);
+
+    expect(progress?.profitSoFarCents).toBeCloseTo(await profitLikeDashboard());
+    expect(progress?.profitTodayCents).toBeLessThan(progress?.profitSoFarCents ?? 0);
+  });
+
+  it('rodar mais km com o mesmo faturamento diminui o progresso', async () => {
+    await createVehicle();
+    await goalRepository.save({ month: '2026-11', desiredProfitCents: 300000, workWeekdays: [4], hoursPerDay: 8 });
+    const id = await shiftRepository.save(shiftInput({ km: 50 }));
+    const pouco = await loadGoalProgress(date);
+    await shiftRepository.save(shiftInput({ id, km: 400 }));
+    const muito = await loadGoalProgress(date);
+
+    expect(muito?.progress).toBeLessThan(pouco?.progress ?? 0);
+  });
+
+  it('avisa quando há jornada sem km e reconhece o dia de folga', async () => {
+    await createVehicle();
+    await goalRepository.save({ month: '2026-11', desiredProfitCents: 300000, workWeekdays: [1], hoursPerDay: 8 });
+    await shiftRepository.save(shiftInput({ km: null }));
+
+    const progress = await loadGoalProgress(date);
+
+    expect(progress?.partialCount).toBe(1);
+    expect(progress?.todayIsWorkDay).toBe(false);
+  });
+
+  it('sem meta no mês, não há progresso', async () => {
+    expect(await loadGoalProgress(date)).toBeNull();
   });
 });

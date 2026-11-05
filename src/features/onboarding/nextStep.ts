@@ -31,7 +31,7 @@ const STEPS: Record<NextStep['id'], NextStep> = {
   goal: {
     id: 'goal',
     title: 'Defina sua meta do mês',
-    message: 'Veja quanto precisa faturar por dia e quais corridas ajudam a chegar lá.',
+    message: 'Diga quanto quer lucrar e veja quanto falta hoje e até o fim do mês.',
     actionLabel: 'Definir meta',
     href: '/goal',
   },

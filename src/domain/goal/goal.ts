@@ -1,24 +1,39 @@
-export interface GoalInput {
+export interface GoalPlanInput {
   desiredProfitCents: number;
   fixedMonthlyCents: number;
   plannedKm: number;
   variablePerKm: number;
-  grossSoFarCents: number;
+}
+
+export interface GoalProgressInput {
+  desiredProfitCents: number;
+  profitSoFarCents: number;
+  profitTodayCents: number;
   workDaysLeft: number;
+  dayOverrideCents: number | null;
+  costPerKm: number | null;
+  plannedKmPerDay: number;
 }
 
 export const DEFAULT_WORK_WEEKDAYS = [1, 2, 3, 4, 5, 6];
 export const DEFAULT_HOURS_PER_DAY = 8;
 
-export function computeGoal(goal: GoalInput) {
-  const requiredGrossCents = goal.desiredProfitCents + goal.fixedMonthlyCents + goal.plannedKm * goal.variablePerKm;
-  const remainingCents = Math.max(0, requiredGrossCents - goal.grossSoFarCents);
+export const requiredGrossForGoal = (plan: GoalPlanInput) => plan.desiredProfitCents + plan.fixedMonthlyCents + plan.plannedKm * plan.variablePerKm;
+
+export function computeGoalProgress(goal: GoalProgressInput) {
+  const remainingCents = Math.max(0, goal.desiredProfitCents - goal.profitSoFarCents);
+  const remainingAtDayStart = Math.max(0, goal.desiredProfitCents - (goal.profitSoFarCents - goal.profitTodayCents));
+  const computedTarget = goal.workDaysLeft > 0 ? remainingAtDayStart / goal.workDaysLeft : null;
+  const dailyTargetCents = goal.dayOverrideCents ?? computedTarget;
 
   return {
-    requiredGrossCents,
     remainingCents,
-    dailyTargetCents: goal.workDaysLeft > 0 ? remainingCents / goal.workDaysLeft : remainingCents,
-    progress: requiredGrossCents > 0 ? Math.min(1, goal.grossSoFarCents / requiredGrossCents) : 0,
+    reached: goal.profitSoFarCents >= goal.desiredProfitCents,
+    surplusCents: Math.max(0, goal.profitSoFarCents - goal.desiredProfitCents),
+    progress: goal.desiredProfitCents > 0 ? Math.min(1, Math.max(0, goal.profitSoFarCents / goal.desiredProfitCents)) : 0,
+    dailyTargetCents,
+    leftTodayCents: dailyTargetCents === null ? null : Math.max(0, dailyTargetCents - goal.profitTodayCents),
+    grossForDayCents: dailyTargetCents === null || goal.costPerKm === null ? null : dailyTargetCents + goal.plannedKmPerDay * goal.costPerKm,
   };
 }
 

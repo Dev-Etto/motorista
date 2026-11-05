@@ -59,6 +59,15 @@ export const HELP_SECTIONS: { title: string; paragraphs: string[] }[] = [
     paragraphs: ['Com o carro parado, arraste o cartão para onde preferir. A posição fica guardada, e você pode voltar ao topo na tela do Copiloto.'],
   },
   {
+    title: 'Como funciona a meta do mês',
+    paragraphs: [
+      'A meta mede seu lucro real, o mesmo de Neste mês no início: o que você faturou menos o custo por km e as despesas. Se rodar mais km pelo mesmo valor, seu lucro cai e a barra anda menos.',
+      'A meta de hoje divide o que faltava no começo do dia pelos dias de trabalho restantes e não muda durante o dia. O faturamento mostrado é só uma referência para chegar nela.',
+      'O plano do mês é uma previsão com os km que você informou, e é dele que saem os mínimos por corrida.',
+      'O Mês fechado, em Relatórios, desconta o custo fixo inteiro. Se você rodar menos que o previsto, ele será menor que o lucro da meta.',
+    ],
+  },
+  {
     title: 'Como funciona o faturamento estimado',
     paragraphs: [
       'Quando você toca em aceitar em um app de corrida, o Copiloto soma o valor da oferta por plataforma. Em Mais, Ofertas e faturamento mostra o total e todas as ofertas, com filtros de período, app, aceitas e não aceitas. As ofertas ficam guardadas por até 12 meses.',

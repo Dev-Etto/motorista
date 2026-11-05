@@ -48,7 +48,7 @@ export default function DashboardScreen() {
         </LearnMore>
       </Card>
       <NewShiftButton />
-      {data.goal ? <GoalProgressCard progress={data.goal} /> : null}
+      {data.goal ? <GoalProgressCard progress={data.goal} onOpenDetails={() => router.push('/goal')} /> : null}
       {data.topInsight ? <InsightCard insight={data.topInsight} /> : null}
       {data.dueKmReminders.map((reminder) => (
         <Notice key={reminder.id} message={`Lembrete: ${reminder.title}`} />

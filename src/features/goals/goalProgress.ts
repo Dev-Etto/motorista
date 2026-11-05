@@ -1,41 +1,56 @@
+import { expenseRepository } from '@/data/repositories/expenseRepository';
 import { goalRepository } from '@/data/repositories/goalRepository';
 import { shiftRepository } from '@/data/repositories/shiftRepository';
 import { vehicleRepository } from '@/data/repositories/vehicleRepository';
-import { computeGoal, suggestOfferTargets } from '@/domain/goal/goal';
-import { monthBounds, monthKey, workDaysInMonth, workDaysLeft } from '@/shared/utils/dates';
+import { computeGoalProgress, requiredGrossForGoal, suggestOfferTargets } from '@/domain/goal/goal';
+import { summarizeShifts, withLooseExpenses } from '@/domain/shift/summary';
+import { fromISODate, monthBounds, monthKey, workDaysInMonth, workDaysLeft } from '@/shared/utils/dates';
 
 export async function loadGoalProgress(date: string) {
   const goal = await goalRepository.find(monthKey(date));
   if (!goal) return null;
 
   const { start, end } = monthBounds(date);
-  const [{ costs, profile }, facts, dayOverride] = await Promise.all([
+  const [{ costs, profile }, facts, dayOverride, looseMonth, looseToday] = await Promise.all([
     vehicleRepository.getCostsAt(date),
     shiftRepository.listFacts(start, end),
     goalRepository.findDayOverride(date),
+    expenseRepository.totalLooseCountable(start, end),
+    expenseRepository.totalLooseCountable(date, date),
   ]);
-  const grossSoFarCents = facts.reduce((total, fact) => total + fact.grossCents, 0);
 
-  const computed = computeGoal({
+  const month = withLooseExpenses(summarizeShifts(facts), looseMonth);
+  const today = withLooseExpenses(summarizeShifts(facts.filter((fact) => fact.date === date)), looseToday);
+  const plannedKm = profile?.plannedKmMonth ?? 0;
+  const workDays = workDaysInMonth(date, goal.workWeekdays);
+  const plannedKmPerDay = workDays > 0 ? plannedKm / workDays : 0;
+  const daysLeft = workDaysLeft(date, goal.workWeekdays);
+  const requiredGrossCents = requiredGrossForGoal({
     desiredProfitCents: goal.desiredProfitCents,
     fixedMonthlyCents: costs?.fixedMonthly ?? 0,
-    plannedKm: profile?.plannedKmMonth ?? 0,
+    plannedKm,
     variablePerKm: costs?.variablePerKm ?? 0,
-    grossSoFarCents,
-    workDaysLeft: workDaysLeft(date, goal.workWeekdays),
   });
 
   return {
     goal,
-    ...computed,
-    dailyTargetCents: dayOverride ?? computed.dailyTargetCents,
     dayOverride,
-    grossSoFarCents,
-    suggestion: suggestOfferTargets({
-      requiredGrossCents: computed.requiredGrossCents,
-      plannedKm: profile?.plannedKmMonth ?? 0,
-      workDaysInMonth: workDaysInMonth(date, goal.workWeekdays),
-      hoursPerDay: goal.hoursPerDay,
+    requiredGrossCents,
+    plannedKmPerDay,
+    workDaysLeft: daysLeft,
+    todayIsWorkDay: goal.workWeekdays.includes(fromISODate(date).getDay()),
+    profitSoFarCents: month.profitCents,
+    profitTodayCents: today.profitCents,
+    partialCount: month.partialCount,
+    ...computeGoalProgress({
+      desiredProfitCents: goal.desiredProfitCents,
+      profitSoFarCents: month.profitCents,
+      profitTodayCents: today.profitCents,
+      workDaysLeft: daysLeft,
+      dayOverrideCents: dayOverride,
+      costPerKm: costs?.fullPerKm ?? null,
+      plannedKmPerDay,
     }),
+    suggestion: suggestOfferTargets({ requiredGrossCents, plannedKm, workDaysInMonth: workDays, hoursPerDay: goal.hoursPerDay }),
   };
 }
