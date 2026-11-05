@@ -2,7 +2,7 @@ import { AppIconName } from '@/shared/ui/AppIcon';
 
 export const MORE_MENU: { icon: AppIconName; title: string; subtitle: string; href: string }[] = [
   { icon: 'vehicle', title: 'Veículo e custos', subtitle: 'Seu custo por km', href: '/vehicle' },
-  { icon: 'goal', title: 'Meta do mês', subtitle: 'Quanto você quer lucrar', href: '/goal' },
+  { icon: 'goal', title: 'Meta e mínimos', subtitle: 'Seu lucro e o mínimo por corrida', href: '/goal' },
   { icon: 'copilot', title: 'Copiloto de ofertas', subtitle: 'Leitura, cartão, voz e botão flutuante', href: '/copilot' },
   { icon: 'key', title: 'Permissões', subtitle: 'O que o app pode usar', href: '/permissions' },
   { icon: 'apps', title: 'Plataformas', subtitle: 'Apps em que você trabalha', href: '/platforms' },
