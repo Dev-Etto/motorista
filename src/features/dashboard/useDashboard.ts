@@ -10,7 +10,7 @@ import { summarizeShifts, withLooseExpenses } from '@/domain/shift/summary';
 import Constants from 'expo-constants';
 import { BACKUP_REMINDER_DAYS, UPDATE_REMINDER_DAYS } from '@/config/app';
 import { isBackupDue, isUpdateDue } from '@/domain/maintenance/notices';
-import { estimateEarnings, inRange } from '@/domain/offer/offerLog';
+import { estimateEarnings } from '@/domain/offer/offerLog';
 import { loadGoalProgress } from '@/features/goals/goalProgress';
 import { loadInsights } from '@/features/insights/loadInsights';
 import { loadNextStep } from '@/features/onboarding/nextStep';
@@ -55,7 +55,7 @@ async function loadDashboard() {
     gpsRunning: measuring && gpsProblem === null,
     gpsProblem,
     copilotStopped: copilotStatus.enabled && !copilotStatus.accessibilityGranted,
-    estimatedToday: copilot.getPreferences().estimateEarnings ? estimateEarnings(inRange(copilot.getHistory(), dayRange(date))) : null,
+    estimatedToday: copilot.getPreferences().estimateEarnings ? estimateEarnings(copilot.getOffers(dayRange(date).from, dayRange(date).to)) : null,
   };
 }
 

@@ -7,7 +7,6 @@ export interface OfferLogEntry {
   valueCents: number;
   km: number;
   status?: OfferStatus;
-  counterCents?: number;
 }
 
 export interface OfferRange {
@@ -44,8 +43,6 @@ export const statusOf = (entry: OfferLogEntry): OfferStatus => entry.status ?? '
 
 const isAccepted = (entry: OfferLogEntry) => statusOf(entry) === 'accepted';
 
-export const estimatedCents = (entry: OfferLogEntry) => entry.counterCents ?? entry.valueCents;
-
 export const inRange = (entries: OfferLogEntry[], { from, to }: OfferRange) =>
   entries.filter((entry) => entry.timestamp >= from && entry.timestamp < to);
 
@@ -65,7 +62,7 @@ export function estimateEarnings(entries: OfferLogEntry[]): EarningsEstimate {
   const totals = new Map<string, PlatformEstimate>();
   for (const entry of entries.filter(isAccepted)) {
     const current = totals.get(entry.source) ?? { source: entry.source, cents: 0, trips: 0 };
-    totals.set(entry.source, { ...current, cents: current.cents + estimatedCents(entry), trips: current.trips + 1 });
+    totals.set(entry.source, { ...current, cents: current.cents + entry.valueCents, trips: current.trips + 1 });
   }
   const byPlatform = [...totals.values()].sort((a, b) => b.cents - a.cents);
   return {
@@ -78,7 +75,7 @@ export function estimateEarnings(entries: OfferLogEntry[]): EarningsEstimate {
 function averagePerKm(entries: OfferLogEntry[]): number | null {
   const km = entries.reduce((total, entry) => total + entry.km, 0);
   if (km <= 0) return null;
-  return entries.reduce((total, entry) => total + estimatedCents(entry), 0) / km;
+  return entries.reduce((total, entry) => total + entry.valueCents, 0) / km;
 }
 
 export function summarizeOutcomes(entries: OfferLogEntry[]): OutcomeSummary {

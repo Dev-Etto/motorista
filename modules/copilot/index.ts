@@ -62,7 +62,8 @@ interface CopilotNativeModule {
   getHistory(): string;
   setHistory(json: string): void;
   clearHistory(): void;
-  setOfferStatus(offerId: number, status: string): void;
+  getOffers(from: number, to: number): string;
+  getRecentOffers(limit: number): string;
   openAccessibilitySettings(): void;
   openAppSettings(): void;
   openOverlaySettings(): void;
@@ -97,9 +98,9 @@ export const copilot = {
   setTargets: (costPerKm: number, targetPerKmCents: number, targetPerHourCents: number) =>
     requireModule().setTargets(costPerKm, targetPerKmCents, targetPerHourCents),
   resetCardPosition: () => requireModule().resetCardPosition(),
-  getHistory: () => JSON.parse(requireModule().getHistory()) as OfferHistoryEntry[],
+  getOffers: (from: number, to: number) => JSON.parse(requireModule().getOffers(from, Math.min(to, Number.MAX_SAFE_INTEGER))) as OfferHistoryEntry[],
+  getRecentOffers: (limit: number) => JSON.parse(requireModule().getRecentOffers(limit)) as OfferHistoryEntry[],
   clearHistory: () => requireModule().clearHistory(),
-  setOfferStatus: (offerId: number, status: NonNullable<OfferHistoryEntry['status']>) => requireModule().setOfferStatus(offerId, status),
   exportState: () => ({ preferences: requireModule().getPreferences(), history: requireModule().getHistory() }),
   importState: (state: { preferences: string; history: string }) => {
     requireModule().setPreferences(state.preferences);

@@ -4,11 +4,7 @@ enum class OfferStatus(val id: String) {
   ACCEPTED("accepted"),
   DECLINED("declined"),
   COUNTERED("countered"),
-  UNANSWERED("unanswered");
-
-  companion object {
-    fun from(id: String) = entries.firstOrNull { it.id == id } ?: UNANSWERED
-  }
+  UNANSWERED("unanswered"),
 }
 
 data class OfferOutcome(val status: OfferStatus, val counterCents: Long? = null)

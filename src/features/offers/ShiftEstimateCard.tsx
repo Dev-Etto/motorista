@@ -11,7 +11,7 @@ interface ShiftEstimateCardProps {
 }
 
 export function ShiftEstimateCard({ range, platforms, onApply }: ShiftEstimateCardProps) {
-  const { entries } = useOfferHistory();
+  const { entries } = useOfferHistory(range);
   const [applied, setApplied] = useState(false);
   const estimate = useMemo(() => estimateEarnings(inRange(entries, range)), [entries, range]);
   const { matched, unmatched } = matchPlatforms(estimate, platforms);

@@ -4,8 +4,6 @@ import { OfferRow } from '@/features/offers/OfferRow';
 import { AppText, Button, ButtonRow, Card, Collapsible, Notice, Segmented, ToggleRow } from '@/shared/ui/primitives';
 import { CopilotState } from './useCopilot';
 
-const RECENT_OFFERS = 5;
-
 const METRICS: { value: PrimaryMetric; label: string }[] = [
   { value: 'perKm', label: 'R$/km' },
   { value: 'profit', label: 'Lucro' },
@@ -126,7 +124,7 @@ export function CopilotHistoryCard({ copilot }: { copilot: CopilotState }) {
 
   return (
     <Collapsible title="Últimas ofertas">
-      {copilot.history.slice(0, RECENT_OFFERS).map((entry) => (
+      {copilot.history.map((entry) => (
         <OfferRow key={entry.timestamp} entry={entry} />
       ))}
       <Button label="Ver todas as ofertas" variant="secondary" onPress={() => router.push('/offers')} />

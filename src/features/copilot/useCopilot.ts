@@ -6,6 +6,7 @@ import { AppState } from 'react-native';
 import { useInterval } from '@/shared/hooks/useInterval';
 import { syncCopilotTargets } from './syncTargets';
 
+const RECENT_OFFERS = 5;
 const DIAGNOSTICS_REFRESH_MS = 2000;
 const OUTSIDE_TEST_DELAY_MS = 5000;
 const SAMPLES = [
@@ -25,7 +26,7 @@ export function useCopilot() {
 
   const refresh = useCallback(() => {
     setStatus(copilot.getStatus());
-    setHistory(copilot.getHistory());
+    setHistory(copilot.getRecentOffers(RECENT_OFFERS));
   }, []);
 
   useFocusEffect(refresh);

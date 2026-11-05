@@ -2,7 +2,7 @@ import { copilot } from '@modules/copilot';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { shiftRepository } from '@/data/repositories/shiftRepository';
 import { countsAgainstProfit, EXPENSE_LABELS } from '@/domain/expense/expense';
-import { inRange, summarizeOutcomes } from '@/domain/offer/offerLog';
+import { summarizeOutcomes } from '@/domain/offer/offerLog';
 import { computeShift } from '@/domain/shift/shift';
 import { OutcomeSummaryCard } from '@/features/offers/OutcomeSummaryCard';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
@@ -22,7 +22,8 @@ export default function ShiftDetailScreen() {
   if (!data) return <Screen>{null}</Screen>;
 
   const { shift, earnings, expenses } = data;
-  const dayOffers = inRange(copilot.getHistory(), dayRange(shift.date));
+  const { from, to } = dayRange(shift.date);
+  const dayOffers = copilot.getOffers(from, to);
   const result = computeShift({
     grossCents: earnings.reduce((total, earning) => total + earning.cents, 0),
     km: shift.km,

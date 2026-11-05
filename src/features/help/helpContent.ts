@@ -61,9 +61,9 @@ export const HELP_SECTIONS: { title: string; paragraphs: string[] }[] = [
   {
     title: 'Como funciona o faturamento estimado',
     paragraphs: [
-      'Quando você toca em aceitar em um app de corrida, o Copiloto soma o valor da oferta por plataforma. Em Mais, Ofertas e faturamento mostra o total e todas as ofertas, com filtros de aceitas e não aceitas.',
-      'É uma sugestão. O app não sabe se o passageiro cancelou nem quanto a plataforma pagou no fim, e alguns apps podem não avisar o toque. Se ele errar, marque a oferta como aceita ou não aceita.',
-      'Ao registrar a jornada, toque em Usar estes valores para preencher os ganhos. Confira antes de salvar: nada entra no seu lucro sem você confirmar.',
+      'Quando você toca em aceitar em um app de corrida, o Copiloto soma o valor da oferta por plataforma. Em Mais, Ofertas e faturamento mostra o total e todas as ofertas, com filtros de período, app, aceitas e não aceitas. As ofertas ficam guardadas por até 12 meses.',
+      'É uma sugestão. O app não sabe se o passageiro cancelou nem quanto a plataforma pagou no fim, e alguns apps podem não avisar o toque.',
+      'Ao registrar a jornada, toque em Usar estes valores para preencher os ganhos. Se o valor estiver diferente do que você recebeu, corrija antes de salvar: nada entra no seu lucro sem você confirmar.',
     ],
   },
   {

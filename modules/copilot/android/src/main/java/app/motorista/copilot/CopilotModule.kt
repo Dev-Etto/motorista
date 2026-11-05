@@ -41,9 +41,8 @@ class CopilotModule : Module() {
     }
     Function("resetCardPosition") { CopilotStore(context).cardPosition = null }
     Function("getHistory") { CopilotStore(context).history() }
-    Function("setOfferStatus") { offerId: Double, status: String ->
-      CopilotStore(context).setOfferStatus(offerId.toLong(), OfferStatus.from(status))
-    }
+    Function("getOffers") { from: Double, to: Double -> CopilotStore(context).offers(from.toLong(), to.toLong()) }
+    Function("getRecentOffers") { limit: Int -> CopilotStore(context).recentOffers(limit) }
     Function("setHistory") { json: String -> CopilotStore(context).replaceHistory(json) }
     Function("clearHistory") { CopilotStore(context).clearHistory() }
 

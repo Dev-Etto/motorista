@@ -8,8 +8,11 @@ import org.json.JSONObject
 class CopilotStore(context: Context) {
   private val prefs: SharedPreferences = context.applicationContext.getSharedPreferences(FILE, Context.MODE_PRIVATE)
 
+  private val log = OfferLogDatabase.get(context)
+
   init {
     if (prefs.contains(KEY_LEGACY_HISTORY)) prefs.edit().remove(KEY_LEGACY_HISTORY).apply()
+    migrateHistoryFromPreferences()
   }
 
   var enabled: Boolean
@@ -49,46 +52,36 @@ class CopilotStore(context: Context) {
 
   fun registerFailedRead() = prefs.edit().putInt(KEY_FAILED_READS, failedReads + 1).apply()
 
-  fun history(): String = prefs.getString(KEY_HISTORY, "[]") ?: "[]"
+  private fun migrateHistoryFromPreferences() {
+    val stored = prefs.getString(KEY_HISTORY, null) ?: return
+    if (log.isEmpty()) replaceHistory(stored)
+    prefs.edit().remove(KEY_HISTORY).apply()
+  }
+
+  fun history(): String = log.all()
+
+  fun offers(from: Long, to: Long): String = log.between(from, to)
+
+  fun recentOffers(limit: Int): String = log.recent(limit)
 
   fun replaceHistory(json: String) {
-    if (runCatching { JSONArray(json) }.isFailure) return
-    prefs.edit().putString(KEY_HISTORY, json).apply()
+    val entries = runCatching { JSONArray(json) }.getOrNull() ?: return
+    log.replaceAll(entries)
   }
 
-  fun clearHistory() = prefs.edit().remove(KEY_HISTORY).remove(KEY_FAILED_READS).apply()
-
-  fun record(evaluation: OfferEvaluation, source: String, timestamp: Long): Long = synchronized(historyLock) {
-    val current = JSONArray(history())
-    val updated = JSONArray().put(toJson(evaluation, source, timestamp))
-    for (index in 0 until minOf(current.length(), MAX_HISTORY - 1)) updated.put(current.get(index))
-    prefs.edit().putString(KEY_HISTORY, updated.toString()).apply()
-    timestamp
+  fun clearHistory() {
+    log.clear()
+    prefs.edit().remove(KEY_FAILED_READS).apply()
   }
 
-  fun markOutcome(offerId: Long, outcome: OfferOutcome) = synchronized(historyLock) {
-    val current = JSONArray(history())
-    for (index in 0 until current.length()) {
-      val entry = current.getJSONObject(index)
-      if (entry.optLong("timestamp") != offerId) continue
-
-      entry.put("status", outcome.status.id)
-      if (outcome.counterCents == null) entry.remove("counterCents") else entry.put("counterCents", outcome.counterCents)
-      prefs.edit().putString(KEY_HISTORY, current.toString()).apply()
-      return@synchronized
-    }
+  fun record(evaluation: OfferEvaluation, source: String, timestamp: Long): Long {
+    log.insert(toJson(evaluation, source, timestamp), timestamp - RETENTION_MS)
+    return timestamp
   }
 
-  fun setOfferStatus(offerId: Long, status: OfferStatus) = synchronized(historyLock) {
-    val current = JSONArray(history())
-    for (index in 0 until current.length()) {
-      val entry = current.getJSONObject(index)
-      if (entry.optLong("timestamp") != offerId) continue
-
-      entry.put("status", status.id)
-      prefs.edit().putString(KEY_HISTORY, current.toString()).apply()
-      return@synchronized
-    }
+  fun markOutcome(offerId: Long, outcome: OfferOutcome) = log.update(offerId) { entry ->
+    entry.put("status", outcome.status.id)
+    if (outcome.counterCents == null) entry.remove("counterCents") else entry.put("counterCents", outcome.counterCents)
   }
 
   private fun toJson(evaluation: OfferEvaluation, source: String, timestamp: Long): JSONObject {
@@ -120,7 +113,6 @@ class CopilotStore(context: Context) {
     const val KEY_FAILED_READS = "failed_reads"
     const val KEY_CARD_X = "card_x"
     const val KEY_CARD_Y = "card_y"
-    const val MAX_HISTORY = 500
-    val historyLock = Any()
+    const val RETENTION_MS = 365L * 24 * 60 * 60 * 1000
   }
 }

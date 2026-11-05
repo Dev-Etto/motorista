@@ -142,9 +142,11 @@ app -> features -> data -> domain -> shared/utils
 ## Faturamento estimado
 
 - **Estimativa, nunca registro:** `estimateEarnings` soma as ofertas aceitas por plataforma, mas só `ShiftEstimateCard` leva o valor para a jornada, e só quando o motorista pede. Aceitar não garante que a corrida terminou nem quanto foi pago.
-- **Registro no lado nativo:** o estado da oferta fica no histórico de `CopilotStore`, porque o serviço roda com o app fechado e não pode abrir o SQLite do app.
+- **Registro no lado nativo:** o serviço roda com o app fechado e não pode abrir o SQLite do app. Por isso, as ofertas ficam em `offer_log.db`, um arquivo separado, com consulta por período e guardadas por 12 meses. Cada arquivo tem uma só biblioteca SQLite.
+- **Sem correção por oferta:** o app registra sozinho, e o motorista corrige o valor na jornada. Marcar oferta por oferta criaria duas fontes para o mesmo número.
+- **Filtros que crescem:** `FilterChips` quebra a linha conforme a largura e o tamanho da letra. `Segmented` divide a largura e serve só para poucas opções fixas. As opções de app vêm das ofertas do período. Para um app novo, basta incluir o pacote em `copilot_accessibility_service.xml` e em `OfferSources`, além de `DEFAULT_PACKAGES`.
 - **Aceite pelo toque:** `typeViewClicked` só observa; o Copiloto continua sem gestos. `OfferOutcomeReader` lê o texto do elemento tocado, e um toque ambíguo não registra nada. O aceite é definitivo dentro da oferta.
-- **Contraoferta:** o toque em um valor exato fica como contraoferta e não entra na soma até o motorista marcar como aceita, porque o passageiro ainda precisa concordar.
+- **Contraoferta:** o toque em um valor exato fica registrado como contraoferta, fora da soma, porque o passageiro ainda precisa concordar.
 
 ## Decisões da versão 0.8.2
 

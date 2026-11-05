@@ -7,7 +7,7 @@ const OFFERS = [
   offer({ timestamp: 200, source: '99', valueCents: 2000, km: 10, status: 'accepted' }),
   offer({ timestamp: 300, source: 'inDrive', status: 'declined' }),
   offer({ timestamp: 400, status: 'unanswered' }),
-  offer({ timestamp: 500, source: 'inDrive', status: 'countered', counterCents: 1450 }),
+  offer({ timestamp: 500, source: 'inDrive', status: 'countered' }),
 ];
 const WHOLE = { from: 0, to: 1000, outcome: 'all', source: null } as const;
 
@@ -19,9 +19,8 @@ describe('estimativa de faturamento', () => {
     expect(estimate.byPlatform).toEqual([{ source: '99', cents: 2000, trips: 1 }, { source: 'Uber', cents: 1000, trips: 1 }]);
   });
 
-  it('usa o valor da contraoferta quando ela foi aceita', () => {
-    const estimate = estimateEarnings([offer({ status: 'accepted', counterCents: 1450 })]);
-    expect(estimate.totalCents).toBe(1450);
+  it('contraoferta fica fora da soma', () => {
+    expect(estimateEarnings([offer({ status: 'countered' })]).totalCents).toBe(0);
   });
 
   it('sem aceites, a estimativa é zero', () => {
@@ -54,7 +53,7 @@ describe('comparação', () => {
   it('conta e calcula o R$/km de cada grupo', () => {
     const summary = summarizeOutcomes(OFFERS);
     expect(summary).toMatchObject({ received: 5, accepted: 2, notAccepted: 3, acceptedPerKmCents: 200 });
-    expect(summary.notAcceptedPerKmCents).toBeCloseTo((1000 + 1000 + 1450) / 15);
+    expect(summary.notAcceptedPerKmCents).toBeCloseTo(3000 / 15);
   });
 
   it('sem km, não há R$/km', () => {
