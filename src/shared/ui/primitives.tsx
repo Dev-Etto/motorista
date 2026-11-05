@@ -1,12 +1,15 @@
 import { Children, ReactNode, useState } from 'react';
 import { KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Switch, Text, TextProps, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { fontSize, MIN_TOUCH_TARGET, radius, spacing, ThemeColors, useTheme } from '@/shared/theme/theme';
+import { fonts, fontSize, MIN_TOUCH_TARGET, radius, spacing, ThemeColors, useTheme } from '@/shared/theme/theme';
 import { AppIcon, AppIconName } from './AppIcon';
 import { Illustration, IllustrationName } from './illustrations/Illustration';
 
 type Tone = 'default' | 'muted' | 'positive' | 'warning' | 'negative' | 'accent';
 type Variant = 'caption' | 'body' | 'subtitle' | 'title' | 'display';
+
+const TABULAR: ['tabular-nums'] = ['tabular-nums'];
+const SEGMENTS = 12;
 
 const TONE_COLORS: Record<Tone, keyof ThemeColors> = {
   default: 'text',
@@ -26,7 +29,7 @@ interface AppTextProps extends TextProps {
 
 export function AppText({ variant = 'body', tone = 'default', bold, center, style, ...props }: AppTextProps) {
   const colors = useTheme();
-  const textStyle = { color: colors[TONE_COLORS[tone]], fontSize: fontSize[variant], fontWeight: bold ? '700' : '400', textAlign: center ? 'center' : 'auto' } as const;
+  const textStyle = { color: colors[TONE_COLORS[tone]], fontSize: fontSize[variant], fontFamily: bold ? fonts.bold : fonts.regular, fontVariant: TABULAR, textAlign: center ? 'center' : 'auto' } as const;
   return <Text style={[textStyle, style]} {...props} />;
 }
 
@@ -53,7 +56,7 @@ export function Screen({ children, scroll = true, safeTop = false, centered = fa
 export function Card({ children, title }: { children: ReactNode; title?: string }) {
   const colors = useTheme();
   return (
-    <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+    <View style={[styles.card, { backgroundColor: colors.surface, boxShadow: colors.cardShadow }]}>
       {title ? <AppText variant="subtitle" bold>{title}</AppText> : null}
       {children}
     </View>
@@ -88,7 +91,7 @@ export function Button({ label, onPress, variant = 'primary', disabled, busy }: 
         },
       ]}
     >
-      <Text style={{ color: labelColor, fontSize: fontSize.body, fontWeight: '700' }}>{label}</Text>
+      <Text style={{ color: labelColor, fontSize: fontSize.body, fontFamily: fonts.bold }}>{label}</Text>
     </Pressable>
   );
 }
@@ -123,7 +126,7 @@ export function Segmented<T extends string>({ value, options, onChange }: Segmen
             onPress={() => onChange(option.value)}
             style={[styles.segment, selected && { backgroundColor: colors.primary }]}
           >
-            <Text style={{ color: selected ? colors.onPrimary : colors.text, fontWeight: '600', textAlign: 'center' }}>
+            <Text style={{ color: selected ? colors.onPrimary : colors.text, fontFamily: fonts.semibold, textAlign: 'center' }}>
               {option.label}
             </Text>
           </Pressable>
@@ -134,13 +137,14 @@ export function Segmented<T extends string>({ value, options, onChange }: Segmen
 }
 
 export function ToggleRow({ label, hint, value, onChange }: { label: string; hint?: string; value: boolean; onChange: (next: boolean) => void }) {
+  const colors = useTheme();
   return (
     <View style={styles.rowBetween}>
       <View style={styles.flex}>
         <AppText>{label}</AppText>
         {hint ? <AppText variant="caption" tone="muted">{hint}</AppText> : null}
       </View>
-      <Switch accessibilityLabel={label} value={value} onValueChange={onChange} />
+      <Switch accessibilityLabel={label} value={value} onValueChange={onChange} trackColor={{ false: colors.border, true: colors.primary }} thumbColor={value ? colors.onPrimary : colors.textMuted} />
     </View>
   );
 }
@@ -184,7 +188,7 @@ export function Collapsible({ title, children, initiallyOpen = false }: { title:
   const [open, setOpen] = useState(initiallyOpen);
 
   return (
-    <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+    <View style={[styles.card, { backgroundColor: colors.surface, boxShadow: colors.cardShadow }]}>
       <Pressable
         accessibilityRole="button"
         accessibilityState={{ expanded: open }}
@@ -214,10 +218,13 @@ export function StatGrid({ children }: { children: ReactNode }) {
 
 export function ProgressBar({ progress }: { progress: number }) {
   const colors = useTheme();
-  const width = `${Math.round(Math.max(0, Math.min(1, progress)) * 100)}%` as const;
+  const clamped = Math.max(0, Math.min(1, progress));
+  const filled = clamped > 0 ? Math.max(1, Math.round(clamped * SEGMENTS)) : 0;
   return (
-    <View style={[styles.progressTrack, { backgroundColor: colors.surfaceAlt }]}>
-      <View style={[styles.progressFill, { backgroundColor: colors.primary, width }]} />
+    <View accessible accessibilityLabel={`${Math.round(clamped * 100)}% concluído`} style={styles.progress}>
+      {Array.from({ length: SEGMENTS }, (_, index) => (
+        <View key={index} style={[styles.progressSegment, { backgroundColor: index < filled ? colors.primary : colors.surfaceAlt }]} />
+      ))}
     </View>
   );
 }
@@ -247,11 +254,21 @@ export function StepDots({ total, current }: { total: number; current: number })
   );
 }
 
+const NOTICE_ICONS: Record<Tone, AppIconName> = {
+  default: 'help',
+  muted: 'help',
+  accent: 'help',
+  positive: 'check',
+  warning: 'alert',
+  negative: 'alert',
+};
+
 export function Notice({ message, tone = 'warning' }: { message: string; tone?: Tone }) {
   const colors = useTheme();
   return (
-    <View style={[styles.notice, { borderLeftColor: colors[TONE_COLORS[tone]], backgroundColor: colors.surfaceAlt }]}>
-      <AppText variant="caption">{message}</AppText>
+    <View style={[styles.notice, { backgroundColor: colors.surfaceAlt }]}>
+      <AppIcon name={NOTICE_ICONS[tone]} color={colors[TONE_COLORS[tone]]} size={20} />
+      <AppText variant="caption" style={styles.flex}>{message}</AppText>
     </View>
   );
 }
@@ -260,7 +277,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   screen: { padding: spacing.lg, gap: spacing.lg, flexGrow: 1 },
   centered: { justifyContent: 'center' },
-  card: { borderWidth: 1, borderRadius: radius.lg, padding: spacing.lg, gap: spacing.md },
+  card: { borderRadius: radius.lg, padding: spacing.lg, gap: spacing.md },
   button: { minHeight: MIN_TOUCH_TARGET, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center', paddingHorizontal: spacing.lg },
   buttonRow: { flexDirection: 'row', gap: spacing.sm },
   segmented: { flexDirection: 'row', borderRadius: radius.md, padding: spacing.xs, gap: spacing.xs },
@@ -269,11 +286,11 @@ const styles = StyleSheet.create({
   listRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: MIN_TOUCH_TARGET + spacing.sm, paddingVertical: spacing.sm, borderBottomWidth: StyleSheet.hairlineWidth },
   stat: { flexBasis: '45%', flexGrow: 1, gap: 2 },
   statGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
-  progressTrack: { height: 10, borderRadius: radius.pill, overflow: 'hidden' },
-  progressFill: { height: '100%', borderRadius: radius.pill },
+  progress: { flexDirection: 'row', gap: spacing.xs },
+  progressSegment: { flex: 1, height: 8 },
   iconBadge: { width: 40, height: 40, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center' },
   dots: { flexDirection: 'row', justifyContent: 'center', gap: spacing.sm },
   dot: { width: 8, height: 8, borderRadius: radius.pill },
   dotActive: { width: 24 },
-  notice: { borderLeftWidth: 4, borderRadius: radius.sm, padding: spacing.md },
+  notice: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm, borderRadius: radius.md, padding: spacing.md },
 });

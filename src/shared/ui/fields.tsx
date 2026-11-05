@@ -1,5 +1,5 @@
 import { KeyboardTypeOptions, StyleSheet, TextInput, View } from 'react-native';
-import { fontSize, MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@/shared/theme/theme';
+import { fonts, fontSize, MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@/shared/theme/theme';
 import { AppText } from './primitives';
 
 interface TextFieldProps {
@@ -30,6 +30,8 @@ export function TextField({ label, value, onChangeText, hint, error, placeholder
           onChangeText={onChangeText}
           placeholder={placeholder}
           placeholderTextColor={colors.textMuted}
+          cursorColor={colors.primary}
+          selectionColor={colors.textMuted}
           keyboardType={keyboardType}
           style={[styles.textInput, { color: colors.text }]}
         />
@@ -62,5 +64,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: spacing.sm,
   },
-  textInput: { flex: 1, fontSize: fontSize.body, paddingVertical: spacing.sm },
+  textInput: { flex: 1, fontFamily: fonts.regular, fontSize: fontSize.body, paddingVertical: spacing.sm },
 });

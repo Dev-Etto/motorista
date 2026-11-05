@@ -7,7 +7,7 @@ import { syncCopilotTargets } from '@/features/copilot/syncTargets';
 import { useFloatingVisibility } from '@/features/copilot/useFloatingVisibility';
 import { restoreThemeMode } from '@/features/settings/themePreference';
 import '@/features/shifts/gpsTask';
-import { useTheme } from '@/shared/theme/theme';
+import { fonts, useTheme } from '@/shared/theme/theme';
 import { ThemedStatusBar } from '@/shared/ui/ThemedStatusBar';
 import { AppText, Notice, Screen } from '@/shared/ui/primitives';
 
@@ -23,6 +23,7 @@ const SCREEN_TITLES: Record<string, string> = {
   reminders: 'Lembretes',
   backup: 'Backup',
   privacy: 'Privacidade',
+  terms: 'Termos de uso',
   'shift/new': 'Jornada',
   'shift/[id]': 'Detalhes da jornada',
   'expense/new': 'Novo lançamento',
@@ -83,8 +84,10 @@ export default function RootLayout() {
       <ThemedStatusBar />
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: colors.surface },
+          headerStyle: { backgroundColor: colors.background },
           headerTintColor: colors.text,
+          headerShadowVisible: false,
+          headerTitleStyle: { fontFamily: fonts.bold },
           contentStyle: { backgroundColor: colors.background },
         }}
       >

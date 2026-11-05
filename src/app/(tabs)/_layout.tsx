@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
-import { radius, useTheme } from '@/shared/theme/theme';
+import { fonts, fontSize, radius, useTheme } from '@/shared/theme/theme';
 import { AppIcon, AppIconName } from '@/shared/ui/AppIcon';
 
 const TABS: { name: string; title: string; icon: AppIconName }[] = [
@@ -17,9 +17,11 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerStyle: { backgroundColor: colors.surface },
+        headerStyle: { backgroundColor: colors.background },
         headerTintColor: colors.text,
-        tabBarStyle: { backgroundColor: colors.surface, borderTopColor: colors.border },
+        headerShadowVisible: false,
+        headerTitleStyle: styles.title,
+        tabBarStyle: { backgroundColor: colors.surface, borderTopWidth: 0, boxShadow: colors.cardShadow },
         tabBarActiveTintColor: colors.primary,
         tabBarLabelStyle: styles.label,
         tabBarInactiveTintColor: colors.textMuted,
@@ -45,5 +47,6 @@ export default function TabsLayout() {
 
 const styles = StyleSheet.create({
   icon: { width: 52, height: 30, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
-  label: { fontWeight: '700' },
+  label: { fontFamily: fonts.bold },
+  title: { fontFamily: fonts.bold, fontSize: fontSize.title },
 });

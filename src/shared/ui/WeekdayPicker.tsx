@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@/shared/theme/theme';
+import { MIN_TOUCH_TARGET, radius, spacing, useTheme, fonts } from '@/shared/theme/theme';
 import { weekdayName } from '@/shared/utils/dates';
 
 const WEEKDAYS = [1, 2, 3, 4, 5, 6, 0];
@@ -21,7 +21,7 @@ export function WeekdayPicker({ selected, onToggle }: { selected: number[]; onTo
             onPress={() => onToggle(weekday)}
             style={[styles.day, { backgroundColor: active ? colors.primary : colors.surfaceAlt }]}
           >
-            <Text style={{ color: active ? colors.onPrimary : colors.text, fontWeight: '700' }}>{name.charAt(0)}</Text>
+            <Text style={{ color: active ? colors.onPrimary : colors.text, fontFamily: fonts.bold }}>{name.charAt(0)}</Text>
           </Pressable>
         );
       })}
