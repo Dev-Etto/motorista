@@ -7,7 +7,7 @@
 
   Sem conta. Sem cobrança. Sem anúncios. Seus dados ficam só no seu celular.
 
-  [**Baixar o APK para Android**](https://github.com/Dev-Etto/motorista/releases/latest/download/motorista.apk) · [Todas as versões](https://github.com/Dev-Etto/motorista/releases) · [Apoiar o projeto](https://buymeacoffee.com/contatodevj)
+  [**Baixar o APK para Android**](https://github.com/Dev-Etto/motorista/releases/latest/download/motorista.apk) · [Todas as versões](https://github.com/Dev-Etto/motorista/releases) · [Relatar um problema ou sugerir uma melhoria](https://github.com/Dev-Etto/motorista/issues/new/choose) · [Apoiar o projeto](https://buymeacoffee.com/contatodevj)
 </div>
 
 <p align="center">
@@ -59,13 +59,23 @@ O app é distribuído fora das lojas, então o Android pode mostrar avisos extra
 - O backup só sai do celular quando você compartilha o arquivo. Ele não tem senha, então guarde em um lugar só seu.
 - Os resultados são estimativas feitas com os dados que você informa. Não são aconselhamento financeiro nem fiscal.
 
-## Apoie o projeto
+## Problemas e sugestões
 
-O app é e continuará gratuito. Pretendo mantê-lo e adicionar novos recursos. Se ele ajudou você e quiser contribuir, a doação é totalmente opcional.
+Encontrou um problema ou teve uma ideia? Conte para a gente, seja motorista ou desenvolvedor. Basta ter uma conta gratuita no GitHub.
 
-<a href="https://buymeacoffee.com/contatodevj"><img src="docs/imagens/bmc_qr.png" width="180" alt="QR code para doar pelo Buy Me a Coffee" /></a>
+- [**Relatar um problema**](https://github.com/Dev-Etto/motorista/issues/new?template=problema.yml)
+- [**Sugerir uma melhoria**](https://github.com/Dev-Etto/motorista/issues/new?template=sugestao.yml)
 
-[**buymeacoffee.com/contatodevj**](https://buymeacoffee.com/contatodevj)
+## Contribua com o projeto
+
+O Motorista é gratuito, e você pode ajudar a mantê-lo e a levar novos recursos para mais motoristas, com código ou com apoio financeiro.
+
+- **Com código:** veja a seção [Para desenvolvedores](#para-desenvolvedores) e as [issues abertas](https://github.com/Dev-Etto/motorista/issues).
+- **Com apoio financeiro:** use o QR code abaixo ou acesse [buymeacoffee.com/contatodevj](https://buymeacoffee.com/contatodevj).
+
+<p align="center">
+  <a href="https://buymeacoffee.com/contatodevj"><img src="docs/imagens/bmc_qr.png" width="180" alt="QR code para apoiar o projeto pelo Buy Me a Coffee" /></a>
+</p>
 
 ## Para desenvolvedores
 

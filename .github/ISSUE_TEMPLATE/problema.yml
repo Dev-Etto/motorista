@@ -1,0 +1,44 @@
+name: Relatar um problema
+description: Algo não funcionou como esperado no app.
+title: "[Problema] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: ocorrido
+    attributes:
+      label: O que aconteceu?
+      description: Conte com suas palavras. Não precisa de termos técnicos.
+      placeholder: Ao salvar a jornada, o app fechou sozinho.
+    validations:
+      required: true
+  - type: textarea
+    id: passos
+    attributes:
+      label: Como fazer o problema acontecer de novo?
+      placeholder: |
+        1. Abri a tela de jornada
+        2. Toquei em Salvar
+    validations:
+      required: false
+  - type: input
+    id: versao
+    attributes:
+      label: Versão do app
+      description: Aparece no fim da aba Mais.
+      placeholder: "0.7.0"
+    validations:
+      required: false
+  - type: input
+    id: aparelho
+    attributes:
+      label: Celular e versão do Android
+      placeholder: Samsung A15, Android 14
+    validations:
+      required: false
+  - type: textarea
+    id: imagens
+    attributes:
+      label: Imagens
+      description: Se puder, anexe um print. Antes de enviar, esconda valores, nomes e endereços. Tudo aqui fica público.
+    validations:
+      required: false
