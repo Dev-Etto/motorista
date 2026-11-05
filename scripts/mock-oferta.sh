@@ -8,6 +8,7 @@ UBER="com.ubercab.driver"
 NOVENTA_E_NOVE="com.app99.driver"
 INDRIVE="sinet.startup.inDriver"
 OFFER_SECONDS=5
+RESTART_SECONDS=8
 
 scan() {
   "$ADB" shell am broadcast -a app.motorista.copilot.MOCK_SCAN --es source "$1" --es text "'$2'" >/dev/null
@@ -57,8 +58,12 @@ case "${1:-ajuda}" in
   parcial) offer "$UBER" "$PARTIAL_OFFER" ;;
   texto) offer "${3:-$UBER}" "$2" ;;
   dados)
-    "$ADB" shell am broadcast -a app.motorista.copilot.MOCK_SEED >/dev/null
-    echo "Veículo e 6 jornadas de exemplo criados. Isso apaga as jornadas do emulador. Reabra o app."
+    "$ADB" shell run-as "$PACKAGE" touch files/mock-seed
+    "$ADB" shell am force-stop "$PACKAGE"
+    "$ADB" shell monkey -p "$PACKAGE" -c android.intent.category.LAUNCHER 1 >/dev/null 2>&1
+    sleep "$RESTART_SECONDS"
+    setup
+    echo "Veículo e 6 jornadas de exemplo criados. Isso apaga as jornadas do emulador."
     ;;
   esquecida) "$ADB" shell am broadcast -a app.motorista.copilot.MOCK_FORGOTTEN >/dev/null ;;
   fim) finish_offer "${2:-$UBER}" ;;

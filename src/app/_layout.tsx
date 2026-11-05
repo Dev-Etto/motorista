@@ -2,6 +2,7 @@ import { Stack, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { migrate } from '@/data/database/connection';
+import { applyRequestedSeed } from '@/data/database/devSeed';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
 import { syncCopilotTargets } from '@/features/copilot/syncTargets';
 import { useFloatingVisibility } from '@/features/copilot/useFloatingVisibility';
@@ -40,6 +41,7 @@ function useAppBootstrap() {
     async function bootstrap() {
       try {
         await migrate();
+        if (__DEV__) await applyRequestedSeed();
         await syncCopilotTargets();
         await restoreThemeMode();
         const onboarded = await settingsRepository.get(SETTING_KEYS.onboarded);

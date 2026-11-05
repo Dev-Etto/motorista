@@ -1,8 +1,11 @@
 import { DatabaseSync } from 'node:sqlite';
 import { BackupFile, createBackup, parseBackup, restoreBackup } from '@/data/backup/backup';
 import { migrate, MIGRATIONS, SCHEMA_VERSION } from '@/data/database/connection';
+import { seedSampleData } from '@/data/database/devSeed';
 
 let mockDb: DatabaseSync;
+
+jest.mock('expo-file-system', () => ({ File: jest.fn(), Paths: { document: 'doc' } }));
 
 jest.mock('expo-sqlite', () => {
   const adapter = () => ({
@@ -70,6 +73,19 @@ describe('migrações', () => {
     seed();
     await migrate();
     expect(count('shifts')).toBe(1);
+  });
+});
+
+describe('dados de exemplo', () => {
+  it('cria o veículo e as jornadas no esquema atual e pode rodar de novo', async () => {
+    openAtVersion(SCHEMA_VERSION);
+    await seedSampleData();
+    await seedSampleData();
+
+    expect(count('vehicles')).toBe(1);
+    expect(count('shifts')).toBe(6);
+    expect(count('shift_earnings')).toBe(6);
+    expect(mockDb.prepare("SELECT value FROM settings WHERE key = 'onboarded'").get()).toEqual({ value: '1' });
   });
 });
 

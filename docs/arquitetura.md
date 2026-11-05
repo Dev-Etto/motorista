@@ -84,6 +84,8 @@ app -> features -> data -> domain -> shared/utils
 
 **Mock de ofertas só em debug.** `OfferMockReceiver` só é registrado quando o app é depurável, porque recebe comandos de fora do app. `scripts/mock-oferta.sh` envia o texto para o mesmo caminho da leitura real, mas não passa pela captura da tela das plataformas.
 
+**Dados de exemplo só pelo SQLite do app.** `devSeed` roda em `__DEV__`, na conexão do próprio app. O banco nunca deve ser aberto pelo SQLite do Android no mesmo processo: duas cópias da biblioteca corrompem o arquivo.
+
 **Cronômetro no lado nativo.** O botão flutuante e o app precisam ver o mesmo estado, mesmo com o app fechado. Por isso o estado fica em `ShiftTimer`, no Kotlin.
 
 **Internet só no build de desenvolvimento.** O Metro exige `INTERNET`. Com `APP_VARIANT=release`, a permissão é removida em `app.config.ts`.
