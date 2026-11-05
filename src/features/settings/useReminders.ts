@@ -39,6 +39,7 @@ export function useReminders() {
     const dueKm = kmFromNow === null ? null : (data?.totalKm ?? 0) + kmFromNow;
     await reminderRepository.add({ title, due_date: dueDate, due_km: dueKm, notification_id: notificationId });
     await reload();
+    return { notifies: !dueDate || notificationId !== null };
   };
 
   const complete = async (reminder: ReminderRow) => {

@@ -25,6 +25,7 @@ export default function RemindersScreen() {
   const { values, bind, setValues } = useFormFields(INITIAL);
   const [dueDate, setDueDate] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
 
   const submit = async () => {
     const dueKm = decimalOrNull(values.km);
@@ -32,7 +33,8 @@ export default function RemindersScreen() {
     if (!dueDate && !dueKm) return setError('Informe uma data ou os km.');
 
     setError(null);
-    await add(values.title.trim(), dueDate, dueKm);
+    const { notifies } = await add(values.title.trim(), dueDate, dueKm);
+    setWarning(notifies ? null : 'Lembrete salvo, mas sem aviso no celular. Permita as notificações do app ou escolha uma data futura.');
     setValues(INITIAL);
     setDueDate(null);
   };
@@ -49,6 +51,7 @@ export default function RemindersScreen() {
 
   return (
     <Screen>
+      {warning ? <Notice tone="accent" message={warning} /> : null}
       <Card title="Novo lembrete">
         {profile ? (
           <ButtonRow>
