@@ -1,5 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
+import { Pressable, StyleSheet } from 'react-native';
+import { MIN_TOUCH_TARGET } from '@/shared/theme/theme';
 import { APP_NAME } from '@/config/app';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
 import { PermissionsList } from '@/features/permissions/PermissionsList';
@@ -61,6 +63,9 @@ export default function OnboardingScreen() {
         </Card>
         <Button label="Começar" onPress={() => setStep('register')} />
         <Button label="Pular introdução" variant="secondary" onPress={() => setStep('setup')} />
+        <Pressable accessibilityRole="link" onPress={() => router.push('/terms')} style={styles.terms}>
+          <AppText variant="caption" tone="muted" center>Ao continuar, você concorda com os <AppText variant="caption" bold>Termos de uso</AppText>.</AppText>
+        </Pressable>
       </Screen>
     );
   }
@@ -129,3 +134,7 @@ export default function OnboardingScreen() {
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  terms: { minHeight: MIN_TOUCH_TARGET, justifyContent: 'center' },
+});

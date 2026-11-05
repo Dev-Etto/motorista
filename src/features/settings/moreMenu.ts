@@ -11,4 +11,5 @@ export const MORE_MENU: { icon: AppIconName; title: string; subtitle: string; hr
   { icon: 'help', title: 'Ajuda', subtitle: 'Como o app funciona', href: '/help' },
   { icon: 'reports', title: 'Meu resumo', subtitle: 'Números de uso para compartilhar', href: '/summary' },
   { icon: 'shield', title: 'Privacidade', subtitle: 'O que acontece com seus dados', href: '/privacy' },
+  { icon: 'document', title: 'Termos de uso', subtitle: 'As regras para usar o app', href: '/terms' },
 ];
