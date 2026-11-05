@@ -19,12 +19,22 @@ export interface OfferSettings {
   mode: OfferMode;
   normal: OfferTargets;
   low: OfferTargets;
+  followGoal: boolean;
 }
 
 export const DEFAULT_OFFER_TARGETS: OfferTargets = { targetPerKmCents: 200, targetPerHourCents: 3000 };
 export const DEFAULT_LOW_DEMAND_TARGETS: OfferTargets = { targetPerKmCents: 150, targetPerHourCents: 2000 };
 
 export const activeTargets = (settings: OfferSettings): OfferTargets => settings[settings.mode];
+
+export function withGoalTargets(settings: OfferSettings, suggestion: OfferTargets | null): OfferSettings {
+  if (!settings.followGoal || !suggestion) return settings;
+
+  return {
+    ...settings,
+    normal: { targetPerKmCents: suggestion.targetPerKmCents, targetPerHourCents: suggestion.targetPerHourCents },
+  };
+}
 
 function resolveColor(offer: OfferInput, profitCents: number, perKm: number, perHour: number): OfferColor {
   if (offer.costPerKm <= 0) return 'neutral';
@@ -62,11 +72,11 @@ function resolveScore(offer: OfferInput, color: OfferColor, perKm: number, perHo
 }
 
 function compareToTarget(value: number, target: number): string {
-  if (target <= 0) return 'sem meta';
+  if (target <= 0) return 'sem mínimo';
 
   const percent = Math.round((value / target - 1) * 100);
-  if (percent === 0) return 'na meta';
-  return percent > 0 ? `${percent}% acima da meta` : `${-percent}% abaixo da meta`;
+  if (percent === 0) return 'no mínimo';
+  return percent > 0 ? `${percent}% acima do mínimo` : `${-percent}% abaixo do mínimo`;
 }
 
 function resolveReason(offer: OfferInput, color: OfferColor, perKm: number, perHour: number): string {

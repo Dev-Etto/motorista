@@ -13,7 +13,7 @@ import { AppText, Notice, Screen } from '@/shared/ui/primitives';
 
 const SCREEN_TITLES: Record<string, string> = {
   vehicle: 'Veículo e custos',
-  goal: 'Meta do mês',
+  goal: 'Meta e mínimos',
   copilot: 'Copiloto de ofertas',
   'copilot-setup': 'Configurar o Copiloto',
   help: 'Ajuda',

@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 import { classifyOffer, OfferColor } from '@/domain/offer/offer';
-import { OfferTargetsCard } from '@/features/copilot/OfferTargetsCard';
+import { OfferTargetsSummary } from '@/features/copilot/OfferTargetsCard';
 import { useOfferTargets } from '@/features/copilot/useOfferTargets';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { MoneyField, NumberField } from '@/shared/ui/fields';
 import { LearnMore } from '@/shared/ui/LearnMore';
-import { AppText, Card, Collapsible, Stat, StatGrid } from '@/shared/ui/primitives';
+import { AppText, Card, Stat, StatGrid } from '@/shared/ui/primitives';
 import { formatPerHour, formatPerKm, profitTone } from '@/shared/utils/format';
 import { formatBRL, formatNumber } from '@/shared/utils/money';
 import { centsOrZero, decimalOrZero } from '@/shared/utils/parse';
@@ -52,15 +52,12 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
             <Stat label="Paga por hora" value={formatPerHour(result.perHour)} />
           </StatGrid>
           <LearnMore title="Como a nota é calculada?">
-            <AppText variant="caption">A nota compara a corrida com o seu custo e as suas metas. De 7 para cima, ela atinge as duas metas. Abaixo de 4, não cobre o custo do carro.</AppText>
+            <AppText variant="caption">A nota compara a corrida com o seu custo e os seus mínimos. De 7 para cima, ela atinge os dois mínimos. Abaixo de 4, não cobre o custo do carro.</AppText>
             <AppText variant="caption">A nota só ajuda: quem decide é sempre você.</AppText>
           </LearnMore>
         </Card>
       ) : null}
-      <Collapsible title="Minhas metas">
-        <AppText tone="muted">O mínimo que você quer ganhar. A nota usa esses valores.</AppText>
-        <OfferTargetsCard targets={targets} />
-      </Collapsible>
+      <OfferTargetsSummary targets={targets} />
     </>
   );
 }

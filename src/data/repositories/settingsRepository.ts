@@ -30,6 +30,7 @@ export const SETTING_KEYS = {
   offerTargets: 'offer_targets',
   offerLowTargets: 'offer_low_targets',
   offerMode: 'offer_mode',
+  offerFollowGoal: 'offer_follow_goal',
   theme: 'theme_mode',
   tipsDismissed: 'tips_dismissed',
   nextStepsDismissed: 'next_steps_dismissed',

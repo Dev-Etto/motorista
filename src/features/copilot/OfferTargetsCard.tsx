@@ -1,10 +1,7 @@
 import { useRouter } from 'expo-router';
-import { OfferMode } from '@/domain/offer/offer';
-import { loadGoalProgress } from '@/features/goals/goalProgress';
-import { useAsyncData } from '@/shared/hooks/useAsyncData';
+import { OfferMode, OfferTargets } from '@/domain/offer/offer';
 import { MoneyField } from '@/shared/ui/fields';
-import { AppText, Button, Card, Segmented } from '@/shared/ui/primitives';
-import { today } from '@/shared/utils/dates';
+import { AppText, Button, Card, ListRow, Segmented, ToggleRow } from '@/shared/ui/primitives';
 import { formatPerHour, formatPerKm } from '@/shared/utils/format';
 import { OfferTargetsState } from './useOfferTargets';
 
@@ -13,26 +10,52 @@ const MODES: { value: OfferMode; label: string }[] = [
   { value: 'low', label: 'Período fraco' },
 ];
 
-export function OfferTargetsCard({ targets }: { targets: OfferTargetsState }) {
-  const router = useRouter();
-  const { data: progress } = useAsyncData(() => loadGoalProgress(today()));
-  const suggestion = progress?.suggestion ?? null;
+function TargetValues({ targets }: { targets: OfferTargetsState }) {
+  return (
+    <>
+      <ListRow title="Mínimo por km" value={formatPerKm(targets.values.targetPerKmCents)} />
+      <ListRow title="Mínimo por hora" value={formatPerHour(targets.values.targetPerHourCents)} />
+    </>
+  );
+}
+
+export function OfferTargetsEditor({ targets, suggestion }: { targets: OfferTargetsState; suggestion: OfferTargets | null }) {
+  const isNormal = targets.mode === 'normal';
+  const following = isNormal && targets.followGoal && !!suggestion;
 
   return (
-    <Card title="Suas metas por corrida">
+    <Card title="Mínimos por corrida">
+      <AppText tone="muted">O menor valor que você quer receber em cada corrida. A nota das ofertas usa estes valores.</AppText>
+      <Segmented value={targets.mode} options={MODES} onChange={targets.setMode} />
+      {isNormal && suggestion ? (
+        <ToggleRow
+          label="Calcular pela minha meta"
+          hint={`Sua meta pede ${formatPerKm(suggestion.targetPerKmCents)} e ${formatPerHour(suggestion.targetPerHourCents)}. Ligado, acompanha a meta quando ela mudar.`}
+          value={targets.followGoal}
+          onChange={targets.setFollowGoal}
+        />
+      ) : null}
+      {following ? (
+        <TargetValues targets={targets} />
+      ) : (
+        <>
+          <MoneyField label="Mínimo por km" hint="Oferta abaixo do seu custo fica vermelha em qualquer modo." {...targets.perKm} />
+          <MoneyField label="Mínimo por hora" {...targets.perHour} />
+        </>
+      )}
+    </Card>
+  );
+}
+
+export function OfferTargetsSummary({ targets }: { targets: OfferTargetsState }) {
+  const router = useRouter();
+
+  return (
+    <Card title="Mínimos por corrida">
       <AppText tone="muted">A nota das ofertas compara cada corrida com estes valores.</AppText>
       <Segmented value={targets.mode} options={MODES} onChange={targets.setMode} />
-      <MoneyField label="Mínimo por km" hint="Oferta abaixo do seu custo fica vermelha em qualquer modo." {...targets.perKm} />
-      <MoneyField label="Mínimo por hora" {...targets.perHour} />
-      {suggestion ? (
-        <Button
-          label={`Usar os da minha meta: ${formatPerKm(suggestion.targetPerKmCents)} e ${formatPerHour(suggestion.targetPerHourCents)}`}
-          variant="secondary"
-          onPress={() => targets.replaceTargets({ targetPerKmCents: suggestion.targetPerKmCents, targetPerHourCents: suggestion.targetPerHourCents })}
-        />
-      ) : (
-        <Button label="Calcular pela minha meta do mês" variant="secondary" onPress={() => router.push('/goal')} />
-      )}
+      <TargetValues targets={targets} />
+      <Button label="Alterar" variant="secondary" onPress={() => router.push('/goal')} />
     </Card>
   );
 }

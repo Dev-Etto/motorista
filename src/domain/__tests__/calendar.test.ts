@@ -1,6 +1,6 @@
 import { buildCalendar } from '../calendar/calendar';
 import { suggestOfferTargets } from '../goal/goal';
-import { classifyOffer, activeTargets, DEFAULT_LOW_DEMAND_TARGETS, DEFAULT_OFFER_TARGETS } from '../offer/offer';
+import { classifyOffer, activeTargets, withGoalTargets, DEFAULT_LOW_DEMAND_TARGETS, DEFAULT_OFFER_TARGETS } from '../offer/offer';
 import { isTimerForgotten } from '../shift/forgotten';
 
 describe('calendário', () => {
@@ -26,10 +26,20 @@ describe('calendário', () => {
 });
 
 describe('modo de período fraco', () => {
-  const settings = { mode: 'low' as const, normal: DEFAULT_OFFER_TARGETS, low: DEFAULT_LOW_DEMAND_TARGETS };
+  const settings = { mode: 'low' as const, normal: DEFAULT_OFFER_TARGETS, low: DEFAULT_LOW_DEMAND_TARGETS, followGoal: false };
 
-  it('usa as metas do modo ativo', () => {
+  it('usa os mínimos do modo ativo', () => {
     expect(activeTargets(settings)).toBe(DEFAULT_LOW_DEMAND_TARGETS);
+  });
+
+  it('acompanha a meta só no modo normal e quando a opção está ligada', () => {
+    const suggestion = { targetPerKmCents: 170, targetPerHourCents: 3500 };
+    const following = { ...settings, followGoal: true };
+
+    expect(withGoalTargets(settings, suggestion)).toBe(settings);
+    expect(withGoalTargets(following, null)).toBe(following);
+    expect(withGoalTargets(following, suggestion).normal).toEqual(suggestion);
+    expect(withGoalTargets(following, suggestion).low).toBe(DEFAULT_LOW_DEMAND_TARGETS);
   });
 
   it('abaixo do custo continua vermelho', () => {
@@ -47,7 +57,7 @@ describe('jornada esquecida', () => {
   });
 });
 
-describe('metas sugeridas pela meta do mês', () => {
+describe('mínimos sugeridos pela meta do mês', () => {
   it('transforma o faturamento necessário em mínimos por km e por hora', () => {
     const result = suggestOfferTargets({ requiredGrossCents: 600000, plannedKm: 4000, workDaysInMonth: 25, hoursPerDay: 8 });
     expect(result?.targetPerKmCents).toBe(150);

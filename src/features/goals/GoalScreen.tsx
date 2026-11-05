@@ -2,7 +2,9 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { goalRepository } from '@/data/repositories/goalRepository';
 import { DEFAULT_HOURS_PER_DAY, DEFAULT_WORK_WEEKDAYS } from '@/domain/goal/goal';
-import { loadOfferSettings, saveOfferSettings } from '@/features/copilot/syncTargets';
+import { OfferTargetsEditor } from '@/features/copilot/OfferTargetsCard';
+import { syncCopilotTargets } from '@/features/copilot/syncTargets';
+import { useOfferTargets } from '@/features/copilot/useOfferTargets';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useSubmit } from '@/shared/hooks/useSubmit';
 import { MoneyField, NumberField } from '@/shared/ui/fields';
@@ -14,16 +16,11 @@ import { GoalPlanCard } from './GoalPlanCard';
 import { GoalProgressCard } from './GoalProgressCard';
 import { loadGoalProgress } from './goalProgress';
 
-async function loadGoalScreen(date: string) {
-  const [progress, offerSettings] = await Promise.all([loadGoalProgress(date), loadOfferSettings()]);
-  return { progress, offerSettings };
-}
-
 export default function GoalScreen() {
   const router = useRouter();
   const date = today();
-  const { data, reload } = useAsyncData(() => loadGoalScreen(date), [date]);
-  const progress = data?.progress ?? null;
+  const { data: progress, reload } = useAsyncData(() => loadGoalProgress(date), [date]);
+  const targets = useOfferTargets();
   const [desired, setDesired] = useState('');
   const [hoursPerDay, setHoursPerDay] = useState(String(DEFAULT_HOURS_PER_DAY));
   const [weekdays, setWeekdays] = useState<number[]>(DEFAULT_WORK_WEEKDAYS);
@@ -52,32 +49,14 @@ export default function GoalScreen() {
     setError(null);
     await goalRepository.save({ month: monthKey(date), desiredProfitCents: cents, workWeekdays: weekdays, hoursPerDay: hours });
     await goalRepository.saveDayOverride(date, parseBRL(dayTarget));
-    await reload();
+    await syncCopilotTargets();
+    await Promise.all([reload(), targets.reload()]);
   });
-
-  const suggestion = progress?.suggestion ?? null;
-  const offerSettings = data?.offerSettings;
-  const applied =
-    !!suggestion &&
-    !!offerSettings &&
-    offerSettings.normal.targetPerKmCents === suggestion.targetPerKmCents &&
-    offerSettings.normal.targetPerHourCents === suggestion.targetPerHourCents;
-
-  const applySuggestion = async () => {
-    if (!suggestion || !offerSettings) return;
-
-    await saveOfferSettings({
-      ...offerSettings,
-      mode: 'normal',
-      normal: { targetPerKmCents: suggestion.targetPerKmCents, targetPerHourCents: suggestion.targetPerHourCents },
-    });
-    await reload();
-  };
 
   return (
     <Screen>
       <AppText variant="title" bold>Meta de {formatMonth(date)}</AppText>
-      <AppText tone="muted">Diga quanto quer lucrar, e o app mostra quanto precisa faturar e quais corridas ajudam a chegar lá.</AppText>
+      <AppText tone="muted">Diga quanto quer lucrar, e o app mostra quanto precisa faturar e o mínimo que cada corrida deve pagar.</AppText>
       <Card title="Sua meta">
         <MoneyField label="Quanto quer lucrar no mês" value={desired} onChangeText={setDesired} error={error} />
         <NumberField label="Horas de trabalho por dia" value={hoursPerDay} onChangeText={setHoursPerDay} suffix="h" />
@@ -86,13 +65,14 @@ export default function GoalScreen() {
         <Button label={progress ? 'Atualizar meta' : 'Calcular meu plano'} busy={saving.busy} onPress={saving.submit} />
       </Card>
       {progress ? <GoalProgressCard progress={progress} /> : null}
-      {progress ? <GoalPlanCard progress={progress} applied={applied} onApply={applySuggestion} /> : null}
+      {progress ? <GoalPlanCard progress={progress} /> : null}
       {progress ? (
         <Collapsible title="Ajustar só a meta de hoje">
           <MoneyField label="Meta de hoje" value={dayTarget} onChangeText={setDayTarget} hint="Vale só para hoje. Em branco, usa o cálculo automático." />
           <Button label="Salvar" variant="secondary" busy={saving.busy} onPress={saving.submit} />
         </Collapsible>
       ) : null}
+      <OfferTargetsEditor targets={targets} suggestion={progress?.suggestion ?? null} />
       <Button label="Concluir" variant="secondary" onPress={() => router.back()} />
     </Screen>
   );
