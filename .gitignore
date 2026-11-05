@@ -51,3 +51,6 @@ keystore.properties
 modules/*/android/build/
 modules/*/android/.gradle/
 .vscode/
+
+# Grafo local do código
+graphify-out/
