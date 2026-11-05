@@ -14,9 +14,15 @@ OUTPUT="$ROOT/dist/motorista.apk"
 export MOTORISTA_KEYSTORE_PASSWORD="${MOTORISTA_KEYSTORE_PASSWORD:-$(security find-generic-password -a motorista -s motorista-release-keystore -w)}"
 
 cd "$ROOT"
+npm run typecheck
+npm run lint
+npm test
+
 APP_VARIANT=release npx expo prebuild --platform android --clean --no-install
 
 cd "$ROOT/android"
+./gradlew :copilot:testDebugUnitTest --no-daemon
+
 NODE_ENV=production APP_VARIANT=release ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a,armeabi-v7a --no-daemon
 
 mkdir -p "$ROOT/dist"
@@ -28,5 +34,6 @@ mkdir -p "$ROOT/dist"
   --out "$OUTPUT" \
   "$UNSIGNED"
 
+bash "$ROOT/scripts/verificar-permissoes.sh" "$OUTPUT"
 "$APKSIGNER" verify --print-certs "$OUTPUT" | grep "SHA-256"
 shasum -a 256 "$OUTPUT"
