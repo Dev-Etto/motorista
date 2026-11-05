@@ -7,20 +7,14 @@ import { vehicleRepository } from '@/data/repositories/vehicleRepository';
 import { copilot } from '@modules/copilot';
 import { gpsSessionRepository } from '@/data/repositories/gpsSessionRepository';
 import { summarizeShifts, withLooseExpenses } from '@/domain/shift/summary';
-import { BACKUP_REMINDER_DAYS } from '@/config/app';
+import Constants from 'expo-constants';
+import { BACKUP_REMINDER_DAYS, UPDATE_REMINDER_DAYS } from '@/config/app';
+import { isBackupDue, isUpdateDue } from '@/domain/maintenance/notices';
 import { loadGoalProgress } from '@/features/goals/goalProgress';
 import { loadInsights } from '@/features/insights/loadInsights';
 import { loadNextStep } from '@/features/onboarding/nextStep';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { monthBounds, today, weekBounds } from '@/shared/utils/dates';
-
-const MS_PER_DAY = 86400000;
-
-function isBackupDue(lastBackupAt: string | null, hasShifts: boolean): boolean {
-  if (!hasShifts) return false;
-  if (!lastBackupAt) return false;
-  return Date.now() - Number(lastBackupAt) > BACKUP_REMINDER_DAYS * MS_PER_DAY;
-}
 
 async function loadDashboard() {
   const date = today();
@@ -53,7 +47,8 @@ async function loadDashboard() {
     week: withLooseExpenses(summarizeShifts(weekFacts), looseWeek),
     month: withLooseExpenses(summarizeShifts(monthFacts), looseMonth),
     topInsight: insights[0] ?? null,
-    backupDue: isBackupDue(lastBackupAt, monthFacts.length > 0),
+    backupDue: nextStep?.id !== 'first-backup' && isBackupDue(lastBackupAt, monthFacts.length > 0, Date.now(), BACKUP_REMINDER_DAYS),
+    updateDue: isUpdateDue(Constants.expoConfig?.extra?.buildDate, Date.now(), UPDATE_REMINDER_DAYS),
     dueKmReminders,
     nextStep,
     gpsRunning: measuring && gpsProblem === null,

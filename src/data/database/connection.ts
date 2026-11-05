@@ -6,7 +6,7 @@ export function getDb(): SQLite.SQLiteDatabase {
   if (!instance) instance = SQLite.openDatabaseSync('motorista.db');
   return instance;
 }
-const MIGRATIONS: string[] = [
+export const MIGRATIONS: string[] = [
   `
   CREATE TABLE vehicles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

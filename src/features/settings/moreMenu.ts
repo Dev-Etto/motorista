@@ -8,6 +8,7 @@ export const MORE_MENU: { icon: AppIconName; title: string; subtitle: string; hr
   { icon: 'apps', title: 'Plataformas', subtitle: 'Apps em que você trabalha', href: '/platforms' },
   { icon: 'bell', title: 'Lembretes', subtitle: 'Óleo, pneus e revisões', href: '/reminders' },
   { icon: 'backup', title: 'Backup', subtitle: 'Salvar e restaurar seus dados', href: '/backup' },
+  { icon: 'flag', title: 'Relatar um problema', subtitle: 'Ou sugerir uma melhoria', href: '/report' },
   { icon: 'help', title: 'Ajuda', subtitle: 'Como o app funciona', href: '/help' },
   { icon: 'reports', title: 'Meu resumo', subtitle: 'Números de uso para compartilhar', href: '/summary' },
   { icon: 'shield', title: 'Privacidade', subtitle: 'O que acontece com seus dados', href: '/privacy' },

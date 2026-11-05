@@ -17,6 +17,15 @@ export default function BackupScreen() {
     });
   };
 
+  const confirmUndo = () => {
+    confirmAction({
+      title: 'Desfazer a restauração?',
+      message: 'Os dados voltam a ser os de antes da última restauração.',
+      actionLabel: 'Desfazer',
+      onConfirm: backup.undoRestore,
+    });
+  };
+
   return (
     <Screen>
       <TipBanner id="backup" message="Guarde o arquivo fora do celular, como no Drive ou em seu e-mail. Na troca de aparelho, use Restaurar." />
@@ -25,6 +34,7 @@ export default function BackupScreen() {
         <ListRow title="Último backup" value={lastLabel} />
         <Button label="Fazer backup" onPress={backup.exportBackup} />
         <Button label="Restaurar de um arquivo" variant="secondary" onPress={confirmRestore} />
+        {backup.canUndo ? <Button label="Desfazer a última restauração" variant="secondary" onPress={confirmUndo} /> : null}
       </Card>
       {backup.message ? <Notice tone={backup.message.tone} message={backup.message.text} /> : null}
     </Screen>

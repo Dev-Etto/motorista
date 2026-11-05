@@ -32,11 +32,21 @@ const tablesSchema = z.object({
   settings: z.array(row),
 });
 
+const jsonText = z.string().refine((text) => {
+  try {
+    JSON.parse(text);
+    return true;
+  } catch {
+    return false;
+  }
+});
+
 export const backupSchema = z.object({
   app: z.literal('motorista'),
   schemaVersion: z.number().int().positive(),
   exportedAt: z.string(),
   tables: tablesSchema,
+  copilot: z.object({ preferences: jsonText, history: jsonText }).optional(),
 });
 
 export type BackupFile = z.infer<typeof backupSchema>;

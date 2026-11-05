@@ -1,4 +1,6 @@
 import { useRouter } from 'expo-router';
+import { Linking } from 'react-native';
+import { RELEASES_URL } from '@/config/app';
 import { NextStepCard } from '@/features/onboarding/NextStepCard';
 import { GoalProgressCard } from '@/features/goals/GoalProgressCard';
 import { InsightCard } from '@/features/insights/InsightCard';
@@ -46,6 +48,12 @@ export default function DashboardScreen() {
         <Notice key={reminder.id} message={`Lembrete: ${reminder.title}`} />
       ))}
       {data.backupDue ? <Notice tone="accent" message="Que tal fazer um backup? Assim seus dados ficam guardados também fora do celular." /> : null}
+      {data.updateDue ? (
+        <>
+          <Notice tone="accent" message="Esta versão do app já tem mais de um mês. Uma versão nova pode corrigir a leitura das ofertas." />
+          <Button label="Verificar atualização" variant="secondary" onPress={() => Linking.openURL(RELEASES_URL)} />
+        </>
+      ) : null}
       <ProfitCard title="Nesta semana" summary={data.week} />
       <ProfitCard title="Neste mês" summary={data.month} />
     </Screen>

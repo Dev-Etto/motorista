@@ -22,6 +22,7 @@ const SCREEN_TITLES: Record<string, string> = {
   platforms: 'Plataformas',
   reminders: 'Lembretes',
   backup: 'Backup',
+  report: 'Relatar um problema',
   privacy: 'Privacidade',
   terms: 'Termos de uso',
   'shift/new': 'Jornada',
