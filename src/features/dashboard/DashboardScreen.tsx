@@ -26,6 +26,7 @@ export default function DashboardScreen() {
         />
       ) : null}
       {data.gpsRunning ? <Notice tone="accent" message="Medindo seus km por GPS. Em deslocamentos pessoais, é só pausar." /> : null}
+      {data.gpsProblem ? <Notice tone="negative" message={`Os km não estão sendo medidos. ${data.gpsProblem}`} /> : null}
       <ActiveShiftCard />
       <NextStepCard step={data.nextStep} onDismiss={reload} />
       <ProfitCard title="Lucro de hoje" summary={data.today} hero />

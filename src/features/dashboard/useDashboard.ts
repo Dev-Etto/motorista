@@ -1,3 +1,4 @@
+import { readGpsProblem } from '@/features/shifts/gpsStatus';
 import { expenseRepository } from '@/data/repositories/expenseRepository';
 import { reminderRepository } from '@/data/repositories/reminderRepository';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
@@ -40,6 +41,8 @@ async function loadDashboard() {
   ]);
   const [nextStep, gpsSession] = await Promise.all([loadNextStep(), gpsSessionRepository.get()]);
   const copilotStatus = copilot.getStatus();
+  const measuring = gpsSession.running && copilot.getTimer().running;
+  const gpsProblem = measuring ? await readGpsProblem() : null;
   const dueKmReminders = reminders.filter((reminder) => !reminder.done && reminder.due_km !== null && totalKm >= reminder.due_km);
 
   return {
@@ -53,7 +56,8 @@ async function loadDashboard() {
     backupDue: isBackupDue(lastBackupAt, monthFacts.length > 0),
     dueKmReminders,
     nextStep,
-    gpsRunning: gpsSession.running && copilot.getTimer().running,
+    gpsRunning: measuring && gpsProblem === null,
+    gpsProblem,
     copilotStopped: copilotStatus.enabled && !copilotStatus.accessibilityGranted,
   };
 }

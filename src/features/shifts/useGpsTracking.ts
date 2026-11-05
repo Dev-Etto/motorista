@@ -2,11 +2,14 @@ import * as Location from 'expo-location';
 import { useCallback, useEffect, useState } from 'react';
 import { gpsSessionRepository } from '@/data/repositories/gpsSessionRepository';
 import { useInterval } from '@/shared/hooks/useInterval';
+import { readGpsProblem } from './gpsStatus';
 import { GPS_TASK } from './gpsTask';
 
 const REFRESH_MS = 3000;
 const DISTANCE_INTERVAL_M = 25;
 const TIME_INTERVAL_MS = 5000;
+const START_ERROR = 'Não foi possível iniciar o GPS. Confira a localização do celular e tente de novo.';
+const STOPPED_ERROR = 'A medição de km parou. Ligue o GPS de novo para continuar.';
 
 export function useGpsTracking() {
   const [running, setRunning] = useState(false);
@@ -15,8 +18,15 @@ export function useGpsTracking() {
 
   const refresh = useCallback(async () => {
     const session = await gpsSessionRepository.get();
-    setRunning(session.running);
     setMeters(session.meters);
+    if (!session.running) return setRunning(false);
+
+    const problem = (await readGpsProblem()) ?? ((await Location.hasStartedLocationUpdatesAsync(GPS_TASK)) ? null : STOPPED_ERROR);
+    setRunning(problem === null);
+    if (problem === null) return;
+
+    setError(problem);
+    await gpsSessionRepository.save({ meters: session.meters, lastPoint: null, running: false });
   }, []);
 
   useEffect(() => {
@@ -29,17 +39,24 @@ export function useGpsTracking() {
     const { granted } = await Location.requestForegroundPermissionsAsync();
     if (!granted) return setError('Permita a localização para medir os km por GPS.');
 
+    const problem = await readGpsProblem();
+    if (problem) return setError(problem);
+
     const session = await gpsSessionRepository.get();
+    try {
+      await Location.startLocationUpdatesAsync(GPS_TASK, {
+        accuracy: Location.Accuracy.High,
+        distanceInterval: DISTANCE_INTERVAL_M,
+        timeInterval: TIME_INTERVAL_MS,
+        foregroundService: {
+          notificationTitle: 'Medindo os km da jornada',
+          notificationBody: 'A posição fica só no aparelho. Pause em deslocamentos pessoais.',
+        },
+      });
+    } catch {
+      return setError(START_ERROR);
+    }
     await gpsSessionRepository.save({ meters: session.meters, lastPoint: null, running: true });
-    await Location.startLocationUpdatesAsync(GPS_TASK, {
-      accuracy: Location.Accuracy.High,
-      distanceInterval: DISTANCE_INTERVAL_M,
-      timeInterval: TIME_INTERVAL_MS,
-      foregroundService: {
-        notificationTitle: 'Medindo os km da jornada',
-        notificationBody: 'A posição fica só no aparelho. Pause em deslocamentos pessoais.',
-      },
-    });
     await refresh();
   };
 
