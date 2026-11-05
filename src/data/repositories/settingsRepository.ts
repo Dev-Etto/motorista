@@ -14,6 +14,10 @@ export const settingsRepository = {
     );
   },
 
+  async remove(key: string): Promise<void> {
+    await getDb().runAsync('DELETE FROM settings WHERE key = ?', key);
+  },
+
   async getJson<T>(key: string, fallback: T): Promise<T> {
     const raw = await this.get(key);
     return raw === null ? fallback : (JSON.parse(raw) as T);
@@ -34,4 +38,6 @@ export const SETTING_KEYS = {
   theme: 'theme_mode',
   tipsDismissed: 'tips_dismissed',
   nextStepsDismissed: 'next_steps_dismissed',
+  dailyReminderId: 'daily_reminder_id',
+  dailyReminderHour: 'daily_reminder_hour',
 } as const;

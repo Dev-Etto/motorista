@@ -17,6 +17,15 @@ describe('jornada em andamento', () => {
   });
   afterEach(() => jest.useRealTimers());
 
+  it('encerrar leva ao formulário já pedindo o fechamento', async () => {
+    timer.mockReturnValue(state(true, true));
+    await render(<ActiveShiftCard />);
+
+    await fireEvent.press(screen.getByText('Encerrar e registrar'));
+
+    expect(mockPush).toHaveBeenCalledWith({ pathname: '/shift/new', params: { finish: '1' } });
+  });
+
   it('sem jornada, mostra só o botão de nova jornada', async () => {
     timer.mockReturnValue(state(false, false));
     await render(<><ActiveShiftCard /><NewShiftButton /></>);

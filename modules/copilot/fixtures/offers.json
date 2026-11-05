@@ -8,7 +8,7 @@
       "targetPerKmCents": 200,
       "targetPerHourCents": 3000,
       "color": "green",
-      "score": 7.8,
+      "score": 3.9,
       "reason": "km: no mínimo · hora: 100% acima do mínimo"
     },
     {
@@ -19,7 +19,7 @@
       "targetPerKmCents": 200,
       "targetPerHourCents": 3000,
       "color": "yellow",
-      "score": 6.4,
+      "score": 3.2,
       "reason": "km: 25% abaixo do mínimo · hora: 50% acima do mínimo"
     },
     {
@@ -30,7 +30,7 @@
       "targetPerKmCents": 200,
       "targetPerHourCents": 3000,
       "color": "yellow",
-      "score": 5.3,
+      "score": 2.6,
       "reason": "km: no mínimo · hora: 33% abaixo do mínimo"
     },
     {
@@ -41,8 +41,30 @@
       "targetPerKmCents": 200,
       "targetPerHourCents": 3000,
       "color": "red",
-      "score": 3.9,
+      "score": 1.9,
       "reason": "Não cobre seu custo por km"
+    },
+    {
+      "valueCents": 2000,
+      "km": 10,
+      "minutes": 0,
+      "costPerKm": 100,
+      "targetPerKmCents": 200,
+      "targetPerHourCents": 3000,
+      "color": "green",
+      "score": 3.5,
+      "reason": "km: no mínimo · hora: sem tempo na oferta"
+    },
+    {
+      "valueCents": 1300,
+      "km": 4.3,
+      "minutes": 0,
+      "costPerKm": 90,
+      "targetPerKmCents": 200,
+      "targetPerHourCents": 3000,
+      "color": "green",
+      "score": 4,
+      "reason": "km: 51% acima do mínimo · hora: sem tempo na oferta"
     },
     {
       "valueCents": 2000,
@@ -57,6 +79,38 @@
     }
   ],
   "parsing": [
+    {
+      "text": "R$ 3/km | ~2,2 km | R$ 13 | 5.0 (16) | 2 min. | Aceitar por R$ 13 | Ofereça sua tarifa | R$ 14,50 | R$ 16 | Pular",
+      "valueCents": 1300,
+      "km": 4.3,
+      "minutes": 0,
+      "rating": null
+    },
+    {
+      "text": "R$ 2,3/km | ~3,3 km | R$ 10 | 4,96 (9) | Agora mesmo | Aceitar por R$ 10 | R$ 11 | R$ 12 | Pular",
+      "valueCents": 1000,
+      "km": 4.3,
+      "minutes": 0,
+      "rating": 4.96
+    },
+    {
+      "text": "8 min | 3,3 km | 5 min | 1,1 km | R$ 2,3/km | ~3,3 km | R$ 10 | 4,96 (9) | Aceitar por R$ 10 | R$ 11 | Pular",
+      "valueCents": 1000,
+      "km": 4.3,
+      "minutes": 13,
+      "rating": 4.96
+    },
+    {
+      "text": "R$ 2,30 por km | R$ 15,00 | 6 km | 12 min | Aceitar",
+      "valueCents": 1500,
+      "km": 6.5,
+      "minutes": 12,
+      "rating": null
+    },
+    {
+      "text": "R$ 58,00/h | R$ 2,16 / km | 6 km | 12 min | Aceitar",
+      "none": true
+    },
     {
       "text": "R$ 18,40 | ★ 4,92 | 5 min (2,1 km) | Viagem de 14 min (6,4 km) | Aceitar",
       "valueCents": 1840,

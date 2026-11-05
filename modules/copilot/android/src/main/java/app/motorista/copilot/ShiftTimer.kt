@@ -4,7 +4,7 @@ import android.content.Context
 
 data class TimerState(val running: Boolean, val started: Boolean, val elapsedMs: Long, val startedAt: Long)
 
-class ShiftTimer(context: Context) {
+class ShiftTimer(private val context: Context) {
   private val prefs = context.applicationContext.getSharedPreferences(FILE, Context.MODE_PRIVATE)
 
   fun state(now: Long = System.currentTimeMillis()): TimerState {
@@ -23,20 +23,26 @@ class ShiftTimer(context: Context) {
       .putLong(KEY_ACCUMULATED, 0)
       .putBoolean(KEY_RUNNING, true)
       .apply()
+    ForgottenShiftAlarm.schedule(context, 0, now)
   }
 
   fun pause(now: Long = System.currentTimeMillis()) {
     val current = state(now)
     if (!current.running) return
     prefs.edit().putLong(KEY_ACCUMULATED, current.elapsedMs).putBoolean(KEY_RUNNING, false).apply()
+    ForgottenShiftAlarm.cancel(context)
   }
 
   fun resume(now: Long = System.currentTimeMillis()) {
     if (state(now).running) return
     prefs.edit().putLong(KEY_RESUMED_AT, now).putBoolean(KEY_RUNNING, true).apply()
+    ForgottenShiftAlarm.schedule(context, prefs.getLong(KEY_ACCUMULATED, 0), now)
   }
 
-  fun reset() = prefs.edit().clear().apply()
+  fun reset() {
+    prefs.edit().clear().apply()
+    ForgottenShiftAlarm.cancel(context)
+  }
 
   private companion object {
     const val FILE = "shift_timer"

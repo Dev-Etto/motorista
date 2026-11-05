@@ -18,6 +18,10 @@
         android:resource="@xml/copilot_accessibility_service" />
     </service>
 
+    <receiver
+      android:name=".ForgottenShiftReceiver"
+      android:exported="false" />
+
     <service
       android:name=".FloatingTimerService"
       android:exported="false"

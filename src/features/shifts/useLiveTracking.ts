@@ -29,8 +29,8 @@ export function useLiveTracking(onApply: (minutes: number, startedAt: number, km
 
   const apply = async () => {
     timer.pause();
-    await gps.pause();
-    onApply(timer.minutes, timer.startedAt, gps.km);
+    const km = await gps.pause();
+    onApply(timer.minutes, timer.startedAt, km);
     setApplied(true);
   };
 

@@ -42,6 +42,25 @@ class OfferFixturesTest {
   }
 
   @Test
+  fun telasSemValorNaoApagamAsLeiturasDeOferta() {
+    OfferDiagnostics.enabled = true
+    OfferDiagnostics.capture("R$ 13 Aceitar")
+    repeat(20) { OfferDiagnostics.capture("tela $it") }
+    assertEquals("R$ 13 Aceitar", OfferDiagnostics.snapshot().first())
+    assertEquals(6, OfferDiagnostics.snapshot().size)
+    OfferDiagnostics.enabled = false
+    assertEquals(0, OfferDiagnostics.snapshot().size)
+  }
+
+  @Test
+  fun jornadaEsquecidaAvisaDepoisDoLimite() {
+    val limit = 14 * 60 * 60 * 1000L
+    assertEquals(1000L + limit, ForgottenShiftAlarm.triggerAt(0, 1000L))
+    assertEquals(1000L + 1, ForgottenShiftAlarm.triggerAt(limit - 1, 1000L))
+    assertNull(ForgottenShiftAlarm.triggerAt(limit, 1000L))
+  }
+
+  @Test
   fun diagnosticsNeverKeepWords() {
     val masked = OfferDiagnostics.mask("Maria Silva R$ 18,40 Rua Augusta 5 km Aceitar")
     assertFalse(masked.contains("Maria"))

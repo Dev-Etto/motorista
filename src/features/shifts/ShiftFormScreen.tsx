@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { spacing } from '@/shared/theme/theme';
 import { DateField } from '@/shared/ui/DateField';
@@ -20,10 +20,19 @@ const KM_OPTIONS: { value: KmEntryMode; label: string }[] = [
 
 export default function ShiftFormScreen() {
   const router = useRouter();
-  const { id } = useLocalSearchParams<{ id?: string }>();
+  const { id, finish } = useLocalSearchParams<{ id?: string; finish?: string }>();
   const form = useShiftForm(id ? Number(id) : undefined);
   const live = useLiveTracking(form.applyLive);
   const [measureError, setMeasureError] = useState<string | null>(null);
+
+  const finishApplied = useRef(false);
+
+  useEffect(() => {
+    if (!finish || finishApplied.current || !live.started) return;
+
+    finishApplied.current = true;
+    void live.apply();
+  }, [finish, live]);
 
   const saving = useSubmit(async () => {
     if (!id && live.pending) return setMeasureError('Você tem uma medição em andamento. Toque em Usar no registro para levar o tempo e os km, ou descarte a medição.');

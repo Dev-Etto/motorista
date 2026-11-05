@@ -5,6 +5,7 @@ import { useInterval } from '@/shared/hooks/useInterval';
 import { readGpsProblem } from './gpsStatus';
 import { GPS_TASK } from './gpsTask';
 
+const METERS_PER_KM = 1000;
 const REFRESH_MS = 3000;
 const DISTANCE_INTERVAL_M = 25;
 const TIME_INTERVAL_MS = 5000;
@@ -70,6 +71,7 @@ export function useGpsTracking() {
     const session = await gpsSessionRepository.get();
     await gpsSessionRepository.save({ meters: session.meters, lastPoint: null, running: false });
     await refresh();
+    return session.meters / METERS_PER_KM;
   };
 
   const reset = async () => {
@@ -78,5 +80,5 @@ export function useGpsTracking() {
     await refresh();
   };
 
-  return { running, km: meters / 1000, error, start, pause, reset };
+  return { running, km: meters / METERS_PER_KM, error, start, pause, reset };
 }

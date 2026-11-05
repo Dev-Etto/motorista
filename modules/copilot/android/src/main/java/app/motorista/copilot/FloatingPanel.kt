@@ -37,8 +37,9 @@ class FloatingPanel(
   private val lastOfferDetail = text(CAPTION_SP, bold = false)
   private val rowIcons = mutableListOf<ImageView>()
   private val rowLabels = mutableListOf<TextView>()
-  private val lastOfferRow = row(R.drawable.ic_panel_offer, "Última oferta", lastOfferDetail, onLastOffer)
-  private val rows = listOf(lastOfferRow, row(R.drawable.ic_panel_open, "Abrir o app", null, onOpenApp), row(R.drawable.ic_panel_hide, "Ocultar o botão", null, onHide))
+  private val lastOfferBadge = ImageView(context)
+  private val lastOfferRow = row(R.drawable.ic_panel_offer, "Última oferta", lastOfferDetail, lastOfferBadge, onLastOffer)
+  private val rows = listOf(lastOfferRow, row(R.drawable.ic_panel_open, "Abrir o app", null, null, onOpenApp), row(R.drawable.ic_panel_hide, "Ocultar o botão", null, null, onHide))
   private val titles = LinearLayout(context).apply {
     orientation = LinearLayout.VERTICAL
     addView(title)
@@ -69,7 +70,7 @@ class FloatingPanel(
     val colors = palette.palette(theme)
     val clock = OfferFormat.clock(timer.elapsedMs)
     menu.visibility = if (open) View.VISIBLE else View.GONE
-    if (open) renderOpen(timer, lastOffer, clock, colors) else renderClosed(timer, clock)
+    if (open) renderOpen(timer, lastOffer, clock, colors, palette.isNight(theme)) else renderClosed(timer, clock)
   }
 
   private fun renderClosed(timer: TimerState, clock: String) {
@@ -90,7 +91,7 @@ class FloatingPanel(
     close.visibility = View.GONE
   }
 
-  private fun renderOpen(timer: TimerState, lastOffer: OfferEvaluation?, clock: String, colors: CardPalette) {
+  private fun renderOpen(timer: TimerState, lastOffer: OfferEvaluation?, clock: String, colors: CardPalette, night: Boolean) {
     view.background = rounded(colors.surface, OPEN_CORNER_DP)
     view.elevation = dp(ELEVATION_DP).toFloat()
     view.setPadding(dp(SPACE_M_DP), dp(SPACE_S_DP), dp(SPACE_M_DP), dp(SPACE_M_DP))
@@ -110,7 +111,7 @@ class FloatingPanel(
     close.visibility = View.VISIBLE
     close.imageTintList = ColorStateList.valueOf(colors.muted)
     renderToggle(timer, colors)
-    renderRows(lastOffer, colors)
+    renderRows(lastOffer, colors, night)
   }
 
   private fun statusText(timer: TimerState) = when {
@@ -127,16 +128,20 @@ class FloatingPanel(
     toggle.background = pressable(colors.text, colors.surface)
   }
 
-  private fun renderRows(lastOffer: OfferEvaluation?, colors: CardPalette) {
+  private fun renderRows(lastOffer: OfferEvaluation?, colors: CardPalette, night: Boolean) {
     lastOfferRow.visibility = if (lastOffer == null) View.GONE else View.VISIBLE
-    lastOffer?.let { lastOfferDetail.text = "${it.sourceLabel} · ${OfferFormat.money(it.offer.valueCents.toDouble())} · ${OfferFormat.scoreLabel(it)}" }
+    lastOffer?.let {
+      lastOfferDetail.text = "${it.sourceLabel} · ${OfferFormat.money(it.offer.valueCents.toDouble())}"
+      lastOfferBadge.setImageBitmap(ScoreBadge.bitmap(context, it, dp(BADGE_DP), night))
+      lastOfferBadge.contentDescription = OfferFormat.scoreDescription(it)
+    }
     lastOfferDetail.setTextColor(colors.muted)
     rowIcons.forEach { it.imageTintList = ColorStateList.valueOf(colors.text) }
     rowLabels.forEach { it.setTextColor(colors.text) }
     rows.forEach { it.background = pressable(Color.TRANSPARENT, colors.text) }
   }
 
-  private fun row(iconRes: Int, label: String, detail: TextView?, onClick: () -> Unit): LinearLayout {
+  private fun row(iconRes: Int, label: String, detail: TextView?, trailing: View?, onClick: () -> Unit): LinearLayout {
     val rowIcon = icon(iconRes, ICON_DP).also { rowIcons += it }
     val rowLabel = text(ROW_SP, bold = true).apply { text = label }.also { rowLabels += it }
     val column = LinearLayout(context).apply {
@@ -150,7 +155,8 @@ class FloatingPanel(
       minimumHeight = dp(ROW_DP)
       setPadding(dp(SPACE_S_DP), 0, dp(SPACE_S_DP), 0)
       addView(rowIcon, LinearLayout.LayoutParams(dp(ICON_DP), dp(ICON_DP)).apply { marginEnd = dp(SPACE_M_DP) })
-      addView(column)
+      addView(column, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+      trailing?.let { addView(it) }
       setOnClickListener { onClick() }
     }
   }
@@ -196,6 +202,7 @@ class FloatingPanel(
     const val LOGO_DP = 40
     const val LOGO_WITH_CLOCK_DP = 28
     const val ICON_DP = 22
+    const val BADGE_DP = 28
     const val SPACE_S_DP = 8
     const val SPACE_M_DP = 12
     const val SPACE_L_DP = 14

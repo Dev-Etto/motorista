@@ -36,6 +36,19 @@ describe('backup', () => {
   });
 });
 
+describe('ajustes do Copiloto no backup', () => {
+  it('aceita arquivo com os ajustes', () => {
+    const copilot = { preferences: '{"voice":true}', history: '[]' };
+    const parsed = parseBackup(JSON.stringify({ ...validBackup, copilot }));
+    expect(parsed.ok && parsed.backup.copilot).toEqual(copilot);
+  });
+
+  it('recusa ajustes ilegíveis', () => {
+    const copilot = { preferences: '{quebrado', history: '[]' };
+    expect(parseBackup(JSON.stringify({ ...validBackup, copilot })).ok).toBe(false);
+  });
+});
+
 describe('backup de versões anteriores', () => {
   it('aceita arquivo sem as tabelas criadas depois', () => {
     const { goal_day_overrides: _removed, ...older } = { ...emptyTables, goal_day_overrides: [] };

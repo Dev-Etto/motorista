@@ -8,6 +8,7 @@ import { Button, ButtonRow, Card, EmptyState, ListRow, Notice, Screen } from '@/
 import { formatDate } from '@/shared/utils/dates';
 import { formatKm } from '@/shared/utils/format';
 import { decimalOrNull } from '@/shared/utils/parse';
+import { DailyReminderCard } from './DailyReminderCard';
 import { useReminders } from './useReminders';
 
 const INITIAL = { title: '', km: '' };
@@ -65,6 +66,7 @@ export default function RemindersScreen() {
         {error ? <Notice tone="negative" message={error} /> : null}
         <Button label="Adicionar" onPress={submit} />
       </Card>
+      <DailyReminderCard />
       {pending.length === 0 ? (
         <EmptyState title="Nenhum lembrete" message="Crie lembretes para troca de óleo, pneus e revisões." />
       ) : (

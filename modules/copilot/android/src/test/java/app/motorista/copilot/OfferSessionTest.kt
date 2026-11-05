@@ -54,6 +54,14 @@ class OfferSessionTest {
   }
 
   @Test
+  fun tempoQueDiminuiNaoRepeteAOferta() {
+    session.onScan(offer, "uber")
+    session.onScan(offer.copy(minutes = 19), "uber")
+    assertEquals(1, channel.shown)
+    assertEquals(listOf("uber"), recorded)
+  }
+
+  @Test
   fun leituraFalhaRapidaNaoFechaOCartao() {
     session.onScan(offer, "uber")
     session.onScan(null, "uber")
@@ -110,8 +118,17 @@ class OfferSessionTest {
   @Test
   fun fraseDeVozCurta() {
     val result = OfferEvaluator.evaluate(ParsedOffer(1840, 8.5, 19), targets, "Uber")
-    assertEquals("Uber. Nota 8. 2 e 16 por quilômetro.", OfferFormat.spokenPhrase(result, PrimaryMetric.PER_KM))
-    assertEquals("Uber. Nota 8. 9 e 90 de lucro.", OfferFormat.spokenPhrase(result, PrimaryMetric.PROFIT))
+    assertEquals("Uber. Nota 4,1. 2 e 16 por quilômetro.", OfferFormat.spokenPhrase(result, PrimaryMetric.PER_KM))
+    assertEquals("Uber. Nota 4,1. 9 e 90 de lucro.", OfferFormat.spokenPhrase(result, PrimaryMetric.PROFIT))
+  }
+
+  @Test
+  fun semTempoAHoraNaoEntraNaAvaliacao() {
+    val result = OfferEvaluator.evaluate(ParsedOffer(1300, 4.3, 0), targets, "inDrive")
+    assertEquals(null, result.hourOnTarget)
+    assertEquals(OfferColor.GREEN, result.color)
+    assertEquals("4,3 km", OfferFormat.distanceAndTime(result))
+    assertEquals(false, OfferFormat.rates(result).contains("/h"))
   }
 
   @Test
@@ -135,7 +152,7 @@ class OfferSessionTest {
   @Test
   fun notificacaoMostraOrigemENota() {
     val result = OfferEvaluator.evaluate(ParsedOffer(1840, 8.5, 19, 4.92), targets, "99")
-    assertEquals("99 • Nota 8,1 • R$ 18,40", OfferFormat.notificationTitle(result).replace('\u00a0', ' '))
+    assertEquals("99 • Nota 4,1 • R$ 18,40", OfferFormat.notificationTitle(result).replace('\u00a0', ' '))
     assertTrue(OfferFormat.notificationDetails(result).contains("★ 4,92"))
     assertTrue(OfferFormat.notificationDetails(result).contains("8% acima do mínimo"))
   }

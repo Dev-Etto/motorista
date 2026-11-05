@@ -8,6 +8,10 @@ import org.json.JSONObject
 class CopilotStore(context: Context) {
   private val prefs: SharedPreferences = context.applicationContext.getSharedPreferences(FILE, Context.MODE_PRIVATE)
 
+  init {
+    if (prefs.contains(KEY_LEGACY_HISTORY)) prefs.edit().remove(KEY_LEGACY_HISTORY).apply()
+  }
+
   var enabled: Boolean
     get() = prefs.getBoolean(KEY_ENABLED, false)
     set(value) = prefs.edit().putBoolean(KEY_ENABLED, value).apply()
@@ -47,6 +51,11 @@ class CopilotStore(context: Context) {
 
   fun history(): String = prefs.getString(KEY_HISTORY, "[]") ?: "[]"
 
+  fun replaceHistory(json: String) {
+    if (runCatching { JSONArray(json) }.isFailure) return
+    prefs.edit().putString(KEY_HISTORY, json).apply()
+  }
+
   fun clearHistory() = prefs.edit().remove(KEY_HISTORY).remove(KEY_FAILED_READS).apply()
 
   fun record(evaluation: OfferEvaluation, source: String, timestamp: Long) {
@@ -79,7 +88,8 @@ class CopilotStore(context: Context) {
     const val KEY_COST = "cost_per_km"
     const val KEY_TARGET_KM = "target_per_km"
     const val KEY_TARGET_HOUR = "target_per_hour"
-    const val KEY_HISTORY = "history"
+    const val KEY_HISTORY = "history_v2"
+    const val KEY_LEGACY_HISTORY = "history"
     const val KEY_FAILED_READS = "failed_reads"
     const val KEY_CARD_X = "card_x"
     const val KEY_CARD_Y = "card_y"

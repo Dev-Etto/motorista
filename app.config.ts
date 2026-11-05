@@ -29,13 +29,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   name: NAME,
   slug: 'motorista',
   scheme: 'motorista',
-  version: '0.8.1',
+  version: '0.8.2',
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'automatic',
   android: {
     package: PACKAGE,
-    versionCode: 10,
+    versionCode: 11,
     allowBackup: false,
     adaptiveIcon: {
       backgroundColor: '#171717',
@@ -63,5 +63,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ['expo-location', { isAndroidForegroundServiceEnabled: true, isAndroidBackgroundLocationEnabled: false }],
     ['expo-notifications', { color: '#171717' }],
   ],
+  extra: { buildDate: new Date().toISOString().slice(0, 10) },
   experiments: { typedRoutes: false },
 });

@@ -13,9 +13,10 @@ interface TextFieldProps {
   prefix?: string;
   suffix?: string;
   hideLabel?: boolean;
+  multiline?: boolean;
 }
 
-export function TextField({ label, value, onChangeText, hint, error, placeholder, keyboardType, prefix, suffix, hideLabel }: TextFieldProps) {
+export function TextField({ label, value, onChangeText, hint, error, placeholder, keyboardType, prefix, suffix, hideLabel, multiline }: TextFieldProps) {
   const colors = useTheme();
   const borderColor = error ? colors.negative : colors.border;
 
@@ -33,6 +34,7 @@ export function TextField({ label, value, onChangeText, hint, error, placeholder
           cursorColor={colors.primary}
           selectionColor={colors.textMuted}
           keyboardType={keyboardType}
+          multiline={multiline}
           style={[styles.textInput, { color: colors.text }]}
         />
         {suffix ? <AppText tone="muted">{suffix}</AppText> : null}

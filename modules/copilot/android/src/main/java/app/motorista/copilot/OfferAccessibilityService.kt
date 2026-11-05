@@ -17,6 +17,7 @@ class OfferAccessibilityService : AccessibilityService() {
   private lateinit var session: OfferSession
   private val floating = FloatingOfferChannel()
   private var currentPackage = ""
+  private var mockReceiver: OfferMockReceiver? = null
 
   val voiceAvailable: Boolean
     get() = voice.available
@@ -38,6 +39,7 @@ class OfferAccessibilityService : AccessibilityService() {
 
   override fun onServiceConnected() {
     instance = this
+    if (OfferMockReceiver.isAllowed(this)) mockReceiver = OfferMockReceiver(this).also { it.register(this) }
   }
 
   override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -54,6 +56,7 @@ class OfferAccessibilityService : AccessibilityService() {
   override fun onInterrupt() = Unit
 
   override fun onDestroy() {
+    mockReceiver?.let { unregisterReceiver(it) }
     handler.removeCallbacksAndMessages(null)
     scheduler.cancelAll()
     allChannels().forEach { it.hide() }
@@ -77,14 +80,24 @@ class OfferAccessibilityService : AccessibilityService() {
     }
   }
 
-  private fun scanWindow() {
-    val root = rootInActiveWindow ?: return
-    val text = collectText(root)
-    OfferDiagnostics.capture(text)
+  fun mockScan(text: String, source: String) {
+    currentPackage = source
+    process(text)
+  }
+
+  private fun scanWindow() = process(monitoredRoots().joinToString(" | ", transform = ::collectText))
+
+  private fun process(text: String) {
+    if (text.isNotEmpty()) OfferDiagnostics.capture(text)
     if (!store.enabled) return
 
     if (OfferParser.isPartial(text)) store.registerFailedRead()
     session.onScan(OfferParser.parse(text), currentPackage)
+  }
+
+  private fun monitoredRoots(): List<AccessibilityNodeInfo> {
+    val roots = windows.mapNotNull { it.root } + listOfNotNull(rootInActiveWindow)
+    return roots.filter { it.packageName?.toString() == currentPackage }.distinct()
   }
 
   private fun collectText(root: AccessibilityNodeInfo): String {
@@ -94,8 +107,10 @@ class OfferAccessibilityService : AccessibilityService() {
     while (pending.isNotEmpty() && visited < MAX_NODES) {
       val node = pending.removeFirst()
       visited++
-      node.text?.let { parts.add(it.toString()) }
-      node.contentDescription?.let { parts.add(it.toString()) }
+      if (node.isVisibleToUser) {
+        node.text?.let { parts.add(it.toString()) }
+        node.contentDescription?.let { parts.add(it.toString()) }
+      }
       for (index in 0 until node.childCount) node.getChild(index)?.let { pending.addLast(it) }
     }
     return parts.joinToString(" | ")

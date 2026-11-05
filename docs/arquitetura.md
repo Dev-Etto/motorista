@@ -72,6 +72,20 @@ app -> features -> data -> domain -> shared/utils
 
 **Regras duplicadas de oferta e da nota.** O Copiloto precisa calcular em Kotlin porque roda com o app em segundo plano, e a calculadora manual usa TypeScript. Os dois lados são testados com `modules/copilot/fixtures/offers.json`, para continuarem iguais.
 
+**Preço por km não é valor da corrida.** Plataformas mostram `R$ 2,3/km` antes do valor. `OfferParser` ignora valores seguidos de `/km`, `/h` ou `por km`. Quando a tela traz esse preço, o km total é o valor dividido por ele, porque a distância escrita pode ser só o trecho até o passageiro.
+
+**Tempo da corrida pode faltar.** `2 min.` com ponto indica há quanto tempo o pedido foi feito, não a duração, e por isso é ignorado. Sem tempo na oferta, `minutes` é 0: a nota usa só o R$/km, e o R$/h fica vazio. Nunca estimamos o tempo.
+
+**Sem tempo, nota até 4.** Sem a duração não dá para saber se a corrida compensa por hora, então a nota não passa de 4.
+
+**Selo de nota.** A nota de 0 a 5 aparece sempre no mesmo selo, com a cor da faixa e o número escrito, para a faixa não depender só da cor. Cartão e notificação têm fundo neutro, e o selo é o único ponto de cor. O selo é desenhado em `ScoreBadge`, em TypeScript e em Kotlin, com as mesmas proporções e cores. O histórico mudou de chave ao trocar a escala, para não misturar notas de 0 a 10.
+
+**Leitura de todas as janelas do app monitorado.** Uma oferta pode abrir em outra janela ou em views marcadas como não importantes. Por isso o serviço usa `flagRetrieveInteractiveWindows` e `flagIncludeNotImportantViews`, e `monitoredRoots` descarta as janelas de qualquer outro app. Só o texto visível é lido.
+
+**Mock de ofertas só em debug.** `OfferMockReceiver` só é registrado quando o app é depurável, porque recebe comandos de fora do app. `scripts/mock-oferta.sh` envia o texto para o mesmo caminho da leitura real, mas não passa pela captura da tela das plataformas.
+
+**Dados de exemplo só pelo SQLite do app.** `devSeed` roda em `__DEV__`, na conexão do próprio app. O banco nunca deve ser aberto pelo SQLite do Android no mesmo processo: duas cópias da biblioteca corrompem o arquivo.
+
 **Cronômetro no lado nativo.** O botão flutuante e o app precisam ver o mesmo estado, mesmo com o app fechado. Por isso o estado fica em `ShiftTimer`, no Kotlin.
 
 **Internet só no build de desenvolvimento.** O Metro exige `INTERNET`. Com `APP_VARIANT=release`, a permissão é removida em `app.config.ts`.
@@ -124,3 +138,13 @@ app -> features -> data -> domain -> shared/utils
 - **Painel do botão flutuante:** `FloatingPanel` desenha o botão fechado e o painel aberto, e `FloatingTimerService` cuida da janela, do cronômetro e das ofertas.
 - **Mesma regra de oferta:** o botão flutuante usa as preferências do cartão como estão, sem forçar o formato resumido.
 - **Tempo do cartão:** o padrão é de 8 segundos, e um valor já salvo pelo usuário é mantido.
+
+## Decisões da versão 0.8.2
+
+- **Permissões conferidas no release:** `scripts/verificar-permissoes.sh` para o script de release se o APK pedir uma permissão fora da lista, como `INTERNET`.
+- **Relato sem conta:** `ReportScreen` monta o texto e usa o menu de compartilhar do Android, sem internet no app. O motorista vê o que será enviado antes.
+- **Aviso de versão antiga:** `extra.buildDate` guarda a data do build, e o início sugere verificar a atualização depois de 30 dias, sem consultar nada na internet.
+- **Restauração completa:** `applyRestoredState` volta os ajustes do Copiloto, as metas, o tema e reagenda as notificações. Uma falha nessa etapa não vira "restauração falhou", porque os dados já foram trocados. A cópia de segurança pode ser restaurada em Backup.
+- **Jornada esquecida no lado nativo:** `ForgottenShiftAlarm` agenda o aviso em `ShiftTimer`, porque a jornada também começa pelo botão flutuante, com o app fechado. Usa alarme inexato, que não exige permissão nova.
+- **Leituras de oferta preservadas:** `OfferDiagnostics` guarda em separado as telas com valor, para as outras não as apagarem antes de serem enviadas.
+
