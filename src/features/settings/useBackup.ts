@@ -36,10 +36,10 @@ export function useBackup() {
     const picked = await DocumentPicker.getDocumentAsync({ type: 'application/json', copyToCacheDirectory: true });
     if (picked.canceled) return;
 
-    const parsed = parseBackup(new File(picked.assets[0].uri).textSync());
-    if (!parsed.ok) return setMessage({ tone: 'negative', text: parsed.error });
-
     try {
+      const parsed = parseBackup(new File(picked.assets[0].uri).textSync());
+      if (!parsed.ok) return setMessage({ tone: 'negative', text: parsed.error });
+
       writeSafetyCopy(JSON.stringify(await createBackup()));
       await restoreBackup(parsed.backup);
       await settingsRepository.set(SETTING_KEYS.onboarded, '1');
