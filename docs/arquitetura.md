@@ -111,3 +111,10 @@ app -> features -> data -> domain -> shared/utils
 
 - **Meta e mínimos na mesma tela:** "meta" é o objetivo do mês e "mínimo" é o valor exigido por corrida. Os valores são editados só em `GoalScreen`; Copiloto e Calculadora mostram um resumo.
 - **Acompanhar a meta:** com `followGoal` ligado, `withGoalTargets` calcula os mínimos do modo normal ao carregar as configurações. Assim, eles não ficam desatualizados quando a meta muda. Sem meta ou veículo, valem os valores salvos.
+
+## Decisões da versão 0.8.0
+
+- **Identidade monocromática:** a interface usa branco, cinza e preto, e a cor fica reservada aos dados, como lucro, estados e nota da oferta. Os valores estão em `palette`, com contraste testado.
+- **Fonte embutida:** a Manrope vai dentro do APK pelo plugin `expo-font`, porque o app não usa internet. O código nativo a carrega em `AppFonts`.
+- **Separação sem borda:** cards se destacam pelo fundo e por uma sombra leve no tema claro. Avisos usam ícone e fundo neutro.
+- **Progresso em trechos:** `ProgressBar` desenha 12 trechos, como uma faixa de estrada.

@@ -11,10 +11,17 @@
 </div>
 
 <p align="center">
-  <img src="docs/imagens/inicio.png" width="200" alt="Tela inicial com o lucro do dia" />
+  <img src="docs/imagens/inicio.png" width="200" alt="Tela inicial com o lucro do dia, no tema claro" />
   <img src="docs/imagens/oferta.png" width="200" alt="Cartão de avaliação de uma oferta" />
   <img src="docs/imagens/calculadora.png" width="200" alt="Calculadora de corridas" />
   <img src="docs/imagens/relatorios.png" width="200" alt="Relatórios de lucro" />
+</p>
+
+<p align="center">
+  <img src="docs/imagens/inicio-escuro.png" width="200" alt="Tela inicial no tema escuro" />
+  <img src="docs/imagens/jornadas-escuro.png" width="200" alt="Jornadas no tema escuro" />
+  <img src="docs/imagens/calculadora-escuro.png" width="200" alt="Calculadora no tema escuro" />
+  <img src="docs/imagens/mais-escuro.png" width="200" alt="Menu Mais no tema escuro" />
 </p>
 
 ## Por que este projeto existe
@@ -31,7 +38,8 @@ O Motorista quer democratizar esse tipo de app. Ele é uma opção profissional 
 - **Calculadoras:** avaliação de ofertas e preço de corridas particulares.
 - **Meta e mínimos:** transforma o lucro que você quer em valor por dia e no mínimo que cada corrida deve pagar, por km e por hora.
 - **Copiloto de ofertas:** lê a oferta na tela e mostra uma nota de 0 a 10 por cartão, botão flutuante, notificação ou voz.
-- **Mais recursos:** relatórios, lembretes de manutenção, backup em arquivo e tema claro e escuro.
+- **Visual limpo:** preto, branco e cinza, com cor só onde ela informa, como no lucro e na nota da oferta. Tem tema claro e escuro.
+- **Mais recursos:** relatórios, lembretes de manutenção e backup em arquivo.
 
 ### Você sempre decide
 
@@ -99,5 +107,7 @@ O código é aberto para consulta, estudo e melhorias, mas **a comercialização
 - **Não pode:** vender ou alugar o app ou versões derivadas, cobrar por acesso, instalação, recursos ou suporte, exibir anúncios ou incluí-lo em produto ou serviço pago.
 
 Este resumo não substitui o texto do arquivo [LICENSE](LICENSE).
+
+A fonte Manrope, incluída no app, é distribuída sob a [SIL Open Font License](assets/fonts/OFL.txt). Os termos de uso e a política de privacidade ficam dentro do app, em Mais.
 
 Motorista é um projeto independente, sem vínculo com Uber, 99, inDrive ou outras plataformas. As marcas citadas pertencem aos seus donos.
