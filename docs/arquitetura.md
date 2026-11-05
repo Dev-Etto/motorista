@@ -118,3 +118,9 @@ app -> features -> data -> domain -> shared/utils
 - **Fonte embutida:** a Manrope vai dentro do APK pelo plugin `expo-font`, porque o app não usa internet. O código nativo a carrega em `AppFonts`.
 - **Separação sem borda:** cards se destacam pelo fundo e por uma sombra leve no tema claro. Avisos usam ícone e fundo neutro.
 - **Progresso em trechos:** `ProgressBar` desenha 12 trechos, como uma faixa de estrada.
+
+## Decisões da versão 0.8.1
+
+- **Painel do botão flutuante:** `FloatingPanel` desenha o botão fechado e o painel aberto, e `FloatingTimerService` cuida da janela, do cronômetro e das ofertas.
+- **Mesma regra de oferta:** o botão flutuante usa as preferências do cartão como estão, sem forçar o formato resumido.
+- **Tempo do cartão:** o padrão é de 8 segundos, e um valor já salvo pelo usuário é mantido.
