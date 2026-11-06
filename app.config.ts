@@ -29,13 +29,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   name: NAME,
   slug: 'motorista',
   scheme: 'motorista',
-  version: '0.9.3',
+  version: '0.9.4',
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'automatic',
   android: {
     package: PACKAGE,
-    versionCode: 15,
+    versionCode: 16,
     allowBackup: false,
     adaptiveIcon: {
       backgroundColor: '#171717',
