@@ -7,7 +7,6 @@ KEY_ALIAS="${MOTORISTA_KEY_ALIAS:-motorista}"
 SDK="${ANDROID_HOME:-$HOME/Library/Android/sdk}"
 APKSIGNER="$(ls -d "$SDK"/build-tools/* | sort -V | tail -1)/apksigner"
 UNSIGNED="$ROOT/android/app/build/outputs/apk/release/app-release.apk"
-OUTPUT="$ROOT/dist/motorista.apk"
 
 [ -f "$KEYSTORE" ] || { echo "Chave de assinatura não encontrada: $KEYSTORE" >&2; exit 1; }
 
@@ -23,17 +22,22 @@ APP_VARIANT=release npx expo prebuild --platform android --clean --no-install
 cd "$ROOT/android"
 ./gradlew :copilot:testDebugUnitTest --no-daemon
 
-NODE_ENV=production APP_VARIANT=release ./gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a,armeabi-v7a --no-daemon
-
 mkdir -p "$ROOT/dist"
-"$APKSIGNER" sign \
-  --ks "$KEYSTORE" \
-  --ks-key-alias "$KEY_ALIAS" \
-  --ks-pass env:MOTORISTA_KEYSTORE_PASSWORD \
-  --key-pass env:MOTORISTA_KEYSTORE_PASSWORD \
-  --out "$OUTPUT" \
-  "$UNSIGNED"
 
-bash "$ROOT/scripts/verificar-permissoes.sh" "$OUTPUT"
-"$APKSIGNER" verify --print-certs "$OUTPUT" | grep "SHA-256"
-shasum -a 256 "$OUTPUT"
+build_apk() {
+  local architecture="$1" output="$2"
+  NODE_ENV=production APP_VARIANT=release ./gradlew assembleRelease -PreactNativeArchitectures="$architecture" --no-daemon
+  "$APKSIGNER" sign \
+    --ks "$KEYSTORE" \
+    --ks-key-alias "$KEY_ALIAS" \
+    --ks-pass env:MOTORISTA_KEYSTORE_PASSWORD \
+    --key-pass env:MOTORISTA_KEYSTORE_PASSWORD \
+    --out "$output" \
+    "$UNSIGNED"
+  bash "$ROOT/scripts/verificar-permissoes.sh" "$output"
+  "$APKSIGNER" verify --print-certs "$output" | grep "SHA-256"
+  shasum -a 256 "$output"
+}
+
+build_apk arm64-v8a "$ROOT/dist/motorista.apk"
+build_apk armeabi-v7a "$ROOT/dist/motorista-32bits.apk"

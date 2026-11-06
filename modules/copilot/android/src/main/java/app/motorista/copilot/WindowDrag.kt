@@ -2,11 +2,14 @@ package app.motorista.copilot
 
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.WindowManager
 import kotlin.math.abs
 
 object WindowDrag {
-  private const val TAP_SLOP_PX = 24
+  private const val SLOP_FACTOR = 2
+  private const val OVER_ZONE_SCALE = 0.8f
+  private const val OVER_ZONE_MS = 120L
 
   fun attach(
     handle: View,
@@ -16,11 +19,29 @@ object WindowDrag {
     clamp: (x: Int, y: Int) -> Pair<Int, Int>,
     onEnd: (x: Int, y: Int) -> Unit = { _, _ -> },
     onTap: () -> Unit = {},
+    dismissZone: DismissZone? = null,
+    onDismiss: () -> Unit = {},
   ) {
     var downX = 0f
     var downY = 0f
     var startX = 0
     var startY = 0
+    var dragging = false
+    var overZone = false
+    val setOverZone = { over: Boolean ->
+      if (over != overZone) {
+        overZone = over
+        val scale = if (over) OVER_ZONE_SCALE else 1f
+        window.animate().scaleX(scale).scaleY(scale).setDuration(OVER_ZONE_MS)
+      }
+    }
+    val settle = {
+      overZone = false
+      window.animate().cancel()
+      window.scaleX = 1f
+      window.scaleY = 1f
+    }
+    val slop = ViewConfiguration.get(handle.context).scaledTouchSlop * SLOP_FACTOR
     handle.setOnTouchListener { _, event ->
       when (event.action) {
         MotionEvent.ACTION_DOWN -> {
@@ -28,16 +49,35 @@ object WindowDrag {
           downY = event.rawY
           startX = params.x
           startY = params.y
+          dragging = false
         }
         MotionEvent.ACTION_MOVE -> {
-          val (x, y) = clamp(startX + (event.rawX - downX).toInt(), startY + (event.rawY - downY).toInt())
-          params.x = x
-          params.y = y
-          windowManager.updateViewLayout(window, params)
+          val deltaX = event.rawX - downX
+          val deltaY = event.rawY - downY
+          if (!dragging && (abs(deltaX) >= slop || abs(deltaY) >= slop)) {
+            dragging = true
+            dismissZone?.show()
+          }
+          if (dragging) {
+            dismissZone?.let { setOverZone(it.hover(event.rawY)) }
+            val (x, y) = clamp(startX + deltaX.toInt(), startY + deltaY.toInt())
+            params.x = x
+            params.y = y
+            windowManager.updateViewLayout(window, params)
+          }
         }
         MotionEvent.ACTION_UP -> {
-          val moved = abs(event.rawX - downX) + abs(event.rawY - downY)
-          if (moved < TAP_SLOP_PX) onTap() else onEnd(params.x, params.y)
+          settle()
+          when {
+            !dragging -> onTap()
+            dismissZone?.release(event.rawY) == true -> onDismiss()
+            else -> onEnd(params.x, params.y)
+          }
+        }
+        MotionEvent.ACTION_CANCEL -> if (dragging) {
+          settle()
+          dismissZone?.hide()
+          onEnd(params.x, params.y)
         }
       }
       true

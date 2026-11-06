@@ -7,9 +7,14 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 
-class OfferCard(private val context: Context, private val store: CopilotStore) : OfferChannel {
+class OfferCard(
+  private val context: Context,
+  private val store: CopilotStore,
+  private val onDismiss: () -> Unit,
+) : OfferChannel {
   private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
   private val cardView = OfferCardView(context)
+  private val dismissZone = DismissZone(context, windowManager, WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, "Solte aqui para fechar")
   private var current: View? = null
 
   override fun show(evaluation: OfferEvaluation, preferences: CopilotPreferences) {
@@ -23,12 +28,16 @@ class OfferCard(private val context: Context, private val store: CopilotStore) :
       windowManager = windowManager,
       clamp = { x, y -> clampToScreen(x, y, view) },
       onEnd = { x, y -> store.cardPosition = x to y },
+      onTap = onDismiss,
+      dismissZone = dismissZone,
+      onDismiss = onDismiss,
     )
     windowManager.addView(view, params)
     current = view
   }
 
   override fun hide() {
+    dismissZone.hide()
     val view = current ?: return
     windowManager.removeView(view)
     current = null

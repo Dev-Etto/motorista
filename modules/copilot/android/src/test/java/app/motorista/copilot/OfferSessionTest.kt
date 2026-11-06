@@ -1,6 +1,7 @@
 package app.motorista.copilot
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -38,6 +39,8 @@ class OfferSessionTest {
   private val outcomes = mutableListOf<Pair<Long, OfferOutcome>>()
   private val targets = OfferTargets(100.0, 200.0, 3000.0)
   private val offer = ParsedOffer(2000, 10.0, 20)
+  private var presentationChanges = 0
+  private var clock = 1_000_000L
   private val session = OfferSession(
     channels = { listOf(channel) },
     preferences = { CopilotPreferences() },
@@ -48,7 +51,107 @@ class OfferSessionTest {
     },
     markOutcome = { offerId, outcome -> outcomes.add(offerId to outcome) },
     scheduler = scheduler,
+    onPresentationChange = { presentationChanges++ },
+    now = { clock },
   )
+
+  @Test
+  fun mesmoValorDepoisDeUmIntervaloSemLeituraEhOutraOferta() {
+    session.onScan(offer, "uber")
+    clock += 3100
+    session.onScan(offer, "uber")
+    assertEquals(2, channel.shown)
+    assertEquals(listOf("uber", "uber"), recorded)
+  }
+
+  @Test
+  fun leiturasSeguidasMantemAMesmaOferta() {
+    repeat(10) {
+      session.onScan(offer, "uber")
+      clock += 900
+    }
+    assertEquals(1, channel.shown)
+    assertEquals(listOf("uber"), recorded)
+  }
+
+  @Test
+  fun motoristaFechaOCartaoEEleNaoVolta() {
+    session.onScan(offer, "uber")
+    session.dismiss()
+    assertEquals(1, channel.hidden)
+    assertFalse(session.presenting)
+    repeat(5) {
+      clock += 900
+      session.onScan(offer, "uber")
+    }
+    assertEquals(1, channel.shown)
+    assertEquals(listOf("uber"), recorded)
+  }
+
+  @Test
+  fun depoisDeFecharOToqueEmAceitarContinuaRegistrando() {
+    session.onScan(offer, "uber")
+    session.dismiss()
+    session.onTap("Aceitar", "uber")
+    assertEquals(OfferStatus.ACCEPTED, outcomes.single().second.status)
+  }
+
+  @Test
+  fun semToqueOCartaoFechaSozinho() {
+    session.onScan(offer, "uber")
+    scheduler.fire("expire")
+    assertEquals(1, channel.hidden)
+    assertFalse(session.presenting)
+  }
+
+  @Test
+  fun avisaQuandoOCartaoAbreEFecha() {
+    session.onScan(offer, "uber")
+    assertEquals(1, presentationChanges)
+    scheduler.fire("expire")
+    assertEquals(2, presentationChanges)
+  }
+
+  @Test
+  fun sairDoAppLiberaAOfertaLidaPorImagem() {
+    session.onImageScan(offer, "uber")
+    session.onSourceGone()
+    session.onImageScan(offer, "uber")
+    assertEquals(2, channel.shown)
+    assertEquals(listOf("uber", "uber"), recorded)
+  }
+
+  @Test
+  fun sairDoAppSemImagemNaoFechaAOferta() {
+    session.onScan(offer, "uber")
+    session.onSourceGone()
+    assertEquals(0, channel.hidden)
+  }
+
+  @Test
+  fun textoDoLucroNaoMostraANota() {
+    val rated = OfferEvaluator.evaluate(offer.copy(passengerRating = 4.7), targets, "Uber")
+    val line = OfferFormat.profitLine(rated)
+    assertTrue(line.startsWith("Lucro"))
+    assertFalse(line.contains("★"))
+  }
+
+  @Test
+  fun maisPernasAtualizaAOferta() {
+    session.onScan(offer.copy(km = 2.0, legs = 1), "uber")
+    session.onScan(offer.copy(km = 8.0, legs = 2), "uber")
+    assertEquals(2, channel.shown)
+    assertEquals(listOf("uber"), recorded)
+  }
+
+  @Test
+  fun ofertaLidaPorImagemNaoFechaComLeituraVazia() {
+    session.onImageScan(offer, "uber")
+    session.onScan(null, "uber")
+    assertFalse(scheduler.pending.containsKey("gone"))
+    scheduler.fire("image_hold")
+    assertEquals(1, channel.hidden)
+  }
 
   @Test
   fun mesmaOfertaNaoRepete() {
@@ -261,10 +364,10 @@ class OfferSessionTest {
   }
 
   @Test
-  fun notificacaoMostraOrigemENota() {
+  fun notificacaoMostraOrigemENossaNotaSemADoPassageiro() {
     val result = OfferEvaluator.evaluate(ParsedOffer(1840, 8.5, 19, 4.92), targets, "99")
     assertEquals("99 • Nota 4,1 • R$ 18,40", OfferFormat.notificationTitle(result).replace('\u00a0', ' '))
-    assertTrue(OfferFormat.notificationDetails(result).contains("★ 4,92"))
+    assertFalse(OfferFormat.notificationDetails(result).contains("★"))
     assertTrue(OfferFormat.notificationDetails(result).contains("8% acima do mínimo"))
   }
 

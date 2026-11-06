@@ -19,7 +19,17 @@ class FloatingPanel(
   onOpenApp: () -> Unit,
   onHide: () -> Unit,
 ) {
-  private val palette = OfferCardView(context)
+  private data class PanelState(
+    val open: Boolean,
+    val running: Boolean,
+    val started: Boolean,
+    val lastOffer: OfferEvaluation?,
+    val theme: ThemeMode,
+    val night: Boolean,
+  )
+
+  private var rendered: PanelState? = null
+  private val cardTheme = CardTheme(context)
   private val logo = icon(R.drawable.ic_stat_motorista, LOGO_DP)
   private val title = text(TITLE_SP, bold = true)
   private val status = text(CAPTION_SP, bold = false)
@@ -35,11 +45,12 @@ class FloatingPanel(
     setOnClickListener { onToggle() }
   }
   private val lastOfferDetail = text(CAPTION_SP, bold = false)
+  private val hideDetail = text(CAPTION_SP, bold = false).apply { text = "Volta quando você abrir e sair do app" }
   private val rowIcons = mutableListOf<ImageView>()
   private val rowLabels = mutableListOf<TextView>()
   private val lastOfferBadge = ImageView(context)
   private val lastOfferRow = row(R.drawable.ic_panel_offer, "Última oferta", lastOfferDetail, lastOfferBadge, onLastOffer)
-  private val rows = listOf(lastOfferRow, row(R.drawable.ic_panel_open, "Abrir o app", null, null, onOpenApp), row(R.drawable.ic_panel_hide, "Ocultar o botão", null, null, onHide))
+  private val rows = listOf(lastOfferRow, row(R.drawable.ic_panel_open, "Abrir o app", null, null, onOpenApp), row(R.drawable.ic_panel_hide, "Ocultar o botão", hideDetail, null, onHide))
   private val titles = LinearLayout(context).apply {
     orientation = LinearLayout.VERTICAL
     addView(title)
@@ -67,31 +78,36 @@ class FloatingPanel(
   }
 
   fun render(timer: TimerState, lastOffer: OfferEvaluation?, open: Boolean, theme: ThemeMode) {
-    val colors = palette.palette(theme)
     val clock = OfferFormat.clock(timer.elapsedMs)
+    if (title.text.toString() != clock) title.text = clock
+
+    val night = cardTheme.isNight(theme)
+    val next = PanelState(open, timer.running, timer.started, lastOffer, theme, night)
+    if (next == rendered) return
+
+    rendered = next
     menu.visibility = if (open) View.VISIBLE else View.GONE
-    if (open) renderOpen(timer, lastOffer, clock, colors, palette.isNight(theme)) else renderClosed(timer, clock)
+    if (open) renderOpen(timer, lastOffer, cardTheme.palette(theme), night) else renderClosed()
   }
 
-  private fun renderClosed(timer: TimerState, clock: String) {
+  private fun renderClosed() {
     view.background = rounded(PILL_COLOR, CLOSED_CORNER_DP).apply { setStroke(dp(1), PILL_STROKE) }
     view.elevation = dp(ELEVATION_DP).toFloat()
     view.setPadding(0, 0, 0, 0)
     view.minimumWidth = 0
     handle.gravity = Gravity.CENTER
-    handle.setPadding(if (timer.started) dp(SPACE_M_DP) else 0, 0, if (timer.started) dp(SPACE_L_DP) else 0, 0)
+    handle.setPadding(dp(SPACE_M_DP), 0, dp(SPACE_L_DP), 0)
     logo.visibility = View.VISIBLE
-    logo.layoutParams = LinearLayout.LayoutParams(dp(if (timer.started) LOGO_WITH_CLOCK_DP else LOGO_DP), dp(if (timer.started) LOGO_WITH_CLOCK_DP else LOGO_DP)).apply { marginEnd = if (timer.started) dp(SPACE_S_DP) else 0 }
+    logo.layoutParams = LinearLayout.LayoutParams(dp(LOGO_WITH_CLOCK_DP), dp(LOGO_WITH_CLOCK_DP)).apply { marginEnd = dp(SPACE_S_DP) }
     logo.imageTintList = ColorStateList.valueOf(Color.WHITE)
-    titles.visibility = if (timer.started) View.VISIBLE else View.GONE
+    titles.visibility = View.VISIBLE
     titles.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-    title.text = clock
     title.setTextColor(Color.WHITE)
     status.visibility = View.GONE
     close.visibility = View.GONE
   }
 
-  private fun renderOpen(timer: TimerState, lastOffer: OfferEvaluation?, clock: String, colors: CardPalette, night: Boolean) {
+  private fun renderOpen(timer: TimerState, lastOffer: OfferEvaluation?, colors: CardPalette, night: Boolean) {
     view.background = rounded(colors.surface, OPEN_CORNER_DP)
     view.elevation = dp(ELEVATION_DP).toFloat()
     view.setPadding(dp(SPACE_M_DP), dp(SPACE_S_DP), dp(SPACE_M_DP), dp(SPACE_M_DP))
@@ -103,7 +119,6 @@ class FloatingPanel(
     logo.imageTintList = ColorStateList.valueOf(colors.text)
     titles.visibility = View.VISIBLE
     titles.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-    title.text = if (timer.started) clock else "Motorista"
     title.setTextColor(colors.text)
     status.visibility = View.VISIBLE
     status.text = statusText(timer)
@@ -136,6 +151,7 @@ class FloatingPanel(
       lastOfferBadge.contentDescription = OfferFormat.scoreDescription(it)
     }
     lastOfferDetail.setTextColor(colors.muted)
+    hideDetail.setTextColor(colors.muted)
     rowIcons.forEach { it.imageTintList = ColorStateList.valueOf(colors.text) }
     rowLabels.forEach { it.setTextColor(colors.text) }
     rows.forEach { it.background = pressable(Color.TRANSPARENT, colors.text) }

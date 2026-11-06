@@ -73,7 +73,8 @@ O Motorista quer democratizar esse tipo de app. Ele é uma opção profissional 
 ### Avaliar ofertas com o Copiloto
 
 - **Nota de 0 a 5:** lê a oferta na tela da Uber, da 99 ou do inDrive e avalia com base no seu custo e nos seus mínimos.
-- **Do seu jeito:** por voz, cartão na tela, botão flutuante ou notificação.
+- **Do seu jeito:** por voz, cartão na tela, botão flutuante ou notificação. O botão com o cronômetro já vem ligado e só aparece se você permitir a sobreposição. Dá para desligá-lo nas configurações.
+- **Leitura da imagem da tela:** opcional e desligada de início. É um reforço na Uber e na 99 para quando o texto da oferta não está disponível. A imagem é lida no celular e descartada na hora.
 - **Faturamento estimado:** soma as corridas que você aceitou, por app, como sugestão para conferir ao registrar a jornada. As ofertas ficam guardadas por até 12 meses, com filtros de período, app e resultado.
 
 ### No dia a dia
@@ -84,7 +85,7 @@ O Motorista quer democratizar esse tipo de app. Ele é uma opção profissional 
 
 ### Você sempre decide
 
-O Copiloto só lê e informa. Ele nunca toca na tela, nunca aceita nem recusa corridas e não envia mensagens. Cada plataforma tem suas próprias regras sobre apps de apoio, e vale conhecê-las.
+O Copiloto só lê e informa. Ele nunca toca na tela, nunca aceita nem recusa corridas e não envia mensagens. Cada plataforma tem suas próprias regras sobre apps de apoio, e vale conhecê-las: elas podem identificar apps que usam acessibilidade ou sobreposição, e o uso pode ter consequências na sua conta.
 
 **Dirigindo, use a voz e não mexa no celular.** Configure e consulte o app só com o carro parado.
 
@@ -132,7 +133,7 @@ Quando a oferta não mostra o tempo da corrida, a nota usa só o valor por km e 
 
 ## Como instalar
 
-Funciona em celulares com **Android 8 ou mais novo**.
+Funciona em celulares com **Android 8 ou mais novo**. O `motorista.apk` é para aparelhos de 64 bits, a grande maioria. Se o Android disser que o app não é compatível, baixe o `motorista-32bits.apk` em [Todas as versões](https://github.com/Dev-Etto/motorista/releases).
 
 1. Toque em [**Baixar o APK**](https://github.com/Dev-Etto/motorista/releases/latest/download/motorista.apk) no celular Android.
 2. Abra o arquivo baixado e permita a instalação quando o Android pedir.
@@ -170,7 +171,7 @@ O que o app pode pedir ao Android, e para quê:
 
 | Permissão | Para que serve |
 | --- | --- |
-| Acessibilidade | Ler as ofertas e perceber o toque em aceitar ou recusar, só na Uber, na 99 e no inDrive. Não executa toques |
+| Acessibilidade | Ler as ofertas e perceber o toque em aceitar ou recusar, só na Uber, na 99 e no inDrive. Se você ligar a opção, também pode ler a imagem da tela na Uber e na 99, no próprio celular e sem salvar. Não executa toques |
 | Sobrepor outros apps | Mostrar o cartão da oferta e o botão flutuante |
 | Localização | Medir os km por GPS, só com a medição ligada. O app não pede localização em segundo plano |
 | Notificações | Enviar lembretes e, se você escolher, mostrar as ofertas |
@@ -255,9 +256,9 @@ npx expo prebuild --platform android --no-install
 cd android && ./gradlew :copilot:testDebugUnitTest
 ```
 
-Para testar o Copiloto sem uma oferta real, use `npm run android`, depois `npm run mock -- setup` e `npm run mock -- uber`. O comando `npm run mock` lista as outras opções. As ofertas são simuladas e funcionam só em build de debug.
+Para testar o Copiloto sem uma oferta real, use `npm run android`, depois `npm run mock -- setup` e `npm run mock -- uber`. O comando `npm run mock` lista as outras opções. Para o fluxo completo no emulador, com uma tela de oferta de teste, use `bash scripts/teste-leitura.sh emulator-5556` com o build de debug instalado. As ofertas são simuladas e funcionam só em build de debug.
 
-`npm run build:apk` roda as verificações, gera o APK assinado em `dist/motorista.apk` e confere as permissões dele. Ele exige uma chave de assinatura própria, indicada pelas variáveis `MOTORISTA_KEYSTORE` e `MOTORISTA_KEYSTORE_PASSWORD`.
+`npm run build:apk` roda as verificações, gera os APKs assinados em `dist/motorista.apk` e `dist/motorista-32bits.apk` e confere as permissões deles. Ele exige uma chave de assinatura própria, indicada pelas variáveis `MOTORISTA_KEYSTORE` e `MOTORISTA_KEYSTORE_PASSWORD`.
 
 ## Licença
 

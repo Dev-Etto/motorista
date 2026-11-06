@@ -27,6 +27,8 @@ export interface CopilotPreferences {
   durationSeconds: number;
   monitoredPackages: string[];
   estimateEarnings: boolean;
+  imageReading: boolean;
+  floatingButton: boolean;
 }
 
 export interface TimerState {

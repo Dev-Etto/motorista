@@ -1,4 +1,5 @@
 import { CardLayout, CardSize, copilot as nativeCopilot, PrimaryMetric } from '@modules/copilot';
+import { PLATFORM_PACKAGES } from '@modules/copilot/platforms';
 import { useRouter } from 'expo-router';
 import { OfferRow } from '@/features/offers/OfferRow';
 import { AppText, Button, ButtonRow, Card, Collapsible, Notice, Segmented, ToggleRow } from '@/shared/ui/primitives';
@@ -23,17 +24,24 @@ const DURATIONS: { value: string; label: string }[] = [
   { value: '15', label: '15 s' },
 ];
 const APPS = [
-  { packageName: 'com.ubercab.driver', label: 'Uber' },
-  { packageName: 'com.app99.driver', label: '99' },
-  { packageName: 'sinet.startup.inDriver', label: 'inDrive' },
+  { packageName: PLATFORM_PACKAGES.uber, label: 'Uber' },
+  { packageName: PLATFORM_PACKAGES.ninetyNine, label: '99' },
+  { packageName: PLATFORM_PACKAGES.inDrive, label: 'inDrive' },
 ];
 
 export function CopilotStatusCard({ copilot }: { copilot: CopilotState }) {
-  const { status } = copilot;
+  const { status, preferences } = copilot;
 
   return (
     <Card title="Copiloto">
       <ToggleRow label="Ler ofertas" hint="Avalia cada oferta reconhecida." value={status.enabled} onChange={copilot.setEnabled} />
+      <ToggleRow
+        label="Ler a imagem da tela"
+        hint="Reforço na Uber e na 99, para quando o texto da oferta não está disponível. A imagem é lida no celular e descartada na hora."
+        value={preferences.imageReading}
+        onChange={(imageReading) => copilot.updatePreferences({ imageReading })}
+      />
+      <Notice tone="accent" message="As plataformas podem identificar apps que usam acessibilidade ou sobreposição, e as regras delas podem prever punições na conta. Usar o Copiloto é decisão sua, e a leitura pode não funcionar em todos os aparelhos." />
       <AppText bold tone={status.accessibilityGranted ? 'positive' : 'warning'}>
         {status.accessibilityGranted ? 'Acessibilidade ativa' : 'Acessibilidade desativada'}
       </AppText>
@@ -68,7 +76,7 @@ export function CopilotChannelsCard({ copilot }: { copilot: CopilotState }) {
         </>
       ) : null}
       <ToggleRow label="Cartão na tela" hint="Com o carro parado, arraste para onde preferir. O app guarda a posição." value={preferences.card} onChange={(card) => copilot.updatePreferences({ card })} />
-      <ToggleRow label="Botão flutuante" hint="Fica sobre os outros apps, com o cronômetro. A oferta abre dentro dele." value={status.floatingRunning} onChange={copilot.setFloating} />
+      <ToggleRow label="Botão flutuante" hint="Fica sobre os outros apps, com o cronômetro. A oferta abre dentro dele. Só esta opção desliga o botão de vez. A plataforma pode escondê-lo durante a oferta, então deixe a voz ligada." value={status.floatingRunning} onChange={copilot.setFloating} />
       <ToggleRow label="Notificação" hint="Fica no painel do Android para consultar depois." value={preferences.notification} onChange={copilot.setNotification} />
       <Button label="Ver exemplo da notificação" variant="secondary" onPress={copilot.testNotification} />
       <ButtonRow>

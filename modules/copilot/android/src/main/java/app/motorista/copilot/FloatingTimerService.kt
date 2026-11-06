@@ -19,6 +19,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 
 class FloatingTimerService : Service() {
@@ -35,9 +37,15 @@ class FloatingTimerService : Service() {
   private var lastOffer: OfferEvaluation? = null
   private var showingOffer = false
   private var menuOpen = false
+  private var offerDismiss: () -> Unit = {}
+  private lateinit var dismissZone: DismissZone
+  private lateinit var hideZone: DismissZone
+  private var motionStart: CardMotionStart? = null
+  private var pillWidth = 0
+  private var pillHeight = 0
 
   val visibleOutsideApp: Boolean
-    get() = !appInForeground && Settings.canDrawOverlays(this)
+    get() = visibility.visible && Settings.canDrawOverlays(this)
 
   private val tick = object : Runnable {
     override fun run() {
@@ -52,25 +60,29 @@ class FloatingTimerService : Service() {
     super.onCreate()
     windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
     timer = ShiftTimer(this)
-    store = CopilotStore(this)
+    store = CopilotStore.get(this)
     cardView = OfferCardView(this)
+    dismissZone = DismissZone(this, windowManager, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, "Solte aqui para fechar")
+    hideZone = DismissZone(this, windowManager, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, "Solte aqui para ocultar")
     goForeground()
     if (!Settings.canDrawOverlays(this)) return stopSelf()
 
     addWindow()
-    handler.post(tick)
     instance = this
   }
 
   override fun onDestroy() {
     instance = null
     handler.removeCallbacksAndMessages(null)
+    if (::dismissZone.isInitialized) dismissZone.hide()
+    if (::hideZone.isInitialized) hideZone.hide()
     if (::root.isInitialized && root.isAttachedToWindow) windowManager.removeView(root)
     super.onDestroy()
   }
 
-  fun showOffer(evaluation: OfferEvaluation, preferences: CopilotPreferences) {
+  fun showOffer(evaluation: OfferEvaluation, preferences: CopilotPreferences, onDismiss: () -> Unit) {
     lastOffer = evaluation
+    offerDismiss = onDismiss
     handler.removeCallbacks(closeOffer)
     renderCard(evaluation, preferences)
   }
@@ -79,8 +91,23 @@ class FloatingTimerService : Service() {
     handler.removeCallbacks(closeOffer)
     if (!showingOffer) return
 
+    dismissZone.hide()
     showingOffer = false
+    val card = root.getChildAt(0)
+    val start = motionStart ?: return showPill()
+    card.setOnTouchListener(null)
+    card.animate()
+      .scaleX(start.scaleX)
+      .scaleY(start.scaleY)
+      .alpha(0f)
+      .setDuration(OfferCardMotion.CLOSE_MS)
+      .setInterpolator(AccelerateInterpolator())
+      .withEndAction { if (!showingOffer && root.isAttachedToWindow) showPill() }
+  }
+
+  private fun showPill() {
     root.removeAllViews()
+    root.setPadding(0, 0, 0, 0)
     root.addView(panel.view)
     restorePillPosition()
     refresh()
@@ -88,11 +115,20 @@ class FloatingTimerService : Service() {
 
   private fun renderCard(evaluation: OfferEvaluation, preferences: CopilotPreferences) {
     setMenuOpen(false)
+    val cameFromPill = !showingOffer
+    rememberPillSize()
+    root.getChildAt(0)?.animate()?.cancel()
     root.removeAllViews()
+    val margin = dp(SHADOW_MARGIN_DP)
+    root.setPadding(margin, margin, margin, margin)
     val card = cardView.build(evaluation, preferences)
     root.addView(card, FrameLayout.LayoutParams(cardView.width(), ViewGroup.LayoutParams.WRAP_CONTENT))
     showingOffer = true
-    placeCard()
+    card.measure(
+      View.MeasureSpec.makeMeasureSpec(cardView.width(), View.MeasureSpec.EXACTLY),
+      View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+    )
+    placeCard(card.measuredHeight + margin * 2)
     WindowDrag.attach(
       handle = card,
       window = root,
@@ -100,15 +136,53 @@ class FloatingTimerService : Service() {
       windowManager = windowManager,
       clamp = { x, y -> clampToScreen(x, y) },
       onEnd = { x, y -> store.cardPosition = x to y },
+      onTap = { offerDismiss() },
+      dismissZone = dismissZone,
+      onDismiss = { offerDismiss() },
     )
     root.alpha = 1f
     root.background = null
     windowManager.updateViewLayout(root, params)
+    if (cameFromPill) animateOpening(card, margin)
   }
 
-  private fun placeCard() {
+  private fun rememberPillSize() {
+    if (root.getChildAt(0) !== panel.view || root.width == 0) return
+
+    pillWidth = root.width
+    pillHeight = root.height
+  }
+
+  private fun animateOpening(card: View, margin: Int) {
+    val saved = getSharedPreferences(FILE, Context.MODE_PRIVATE)
+    val pill = ScreenRect(
+      saved.getInt(KEY_X, dp(INITIAL_OFFSET_DP)),
+      clampPillY(saved.getInt(KEY_Y, dp(INITIAL_OFFSET_DP) * 4)),
+      pillWidth.coerceAtLeast(1),
+      pillHeight.coerceAtLeast(1),
+    )
+    val start = OfferCardMotion.from(pill, ScreenRect(params.x + margin, params.y + margin, card.measuredWidth, card.measuredHeight))
+    motionStart = start
+    card.pivotX = start.pivotX
+    card.pivotY = start.pivotY
+    card.scaleX = start.scaleX
+    card.scaleY = start.scaleY
+    card.alpha = 0f
+    card.animate()
+      .scaleX(1f)
+      .scaleY(1f)
+      .alpha(1f)
+      .setDuration(OfferCardMotion.OPEN_MS)
+      .setInterpolator(DecelerateInterpolator())
+  }
+
+  private fun placeCard(height: Int) {
     val saved = store.cardPosition
-    val (x, y) = clampToScreen(saved?.first ?: params.x, saved?.second ?: params.y, cardView.width())
+    val metrics = resources.displayMetrics
+    val width = cardView.width() + dp(SHADOW_MARGIN_DP) * 2
+    val x = (saved?.first ?: params.x).coerceIn(0, maxOf(0, metrics.widthPixels - width))
+    val preferredY = saved?.second ?: OfferCardMotion.defaultCardY(params.y, height, metrics.heightPixels)
+    val y = preferredY.coerceIn(0, maxOf(0, metrics.heightPixels - height))
     params.x = x
     params.y = y
   }
@@ -151,9 +225,12 @@ class FloatingTimerService : Service() {
       onToggle = { toggleTimer() },
       onLastOffer = { showLastOffer() },
       onOpenApp = { openApp() },
-      onHide = { stopSelf() },
+      onHide = { hideButton() },
     )
-    root = FrameLayout(this)
+    root = FrameLayout(this).apply {
+      clipToPadding = false
+      clipChildren = false
+    }
     root.addView(panel.view)
     root.setOnTouchListener { _, event ->
       if (event.action == MotionEvent.ACTION_OUTSIDE) setMenuOpen(false)
@@ -165,17 +242,28 @@ class FloatingTimerService : Service() {
       window = root,
       params = params,
       windowManager = windowManager,
-      clamp = { x, y -> clampToScreen(x, y).first to if (menuOpen) clampToScreen(x, y).second else clampPillY(y) },
-      onEnd = { x, y -> getSharedPreferences(FILE, Context.MODE_PRIVATE).edit().putInt(KEY_X, x).putInt(KEY_Y, y).apply() },
+      clamp = { x, y -> clampToScreen(x, y) },
+      onEnd = { x, y -> settlePill(x, y) },
       onTap = { setMenuOpen(!menuOpen) },
+      dismissZone = hideZone,
+      onDismiss = { hideButton() },
     )
     windowManager.addView(root, params)
     refresh()
     applyVisibility()
   }
 
+  private fun settlePill(x: Int, y: Int) {
+    val settledY = if (menuOpen) y else clampPillY(y)
+    getSharedPreferences(FILE, Context.MODE_PRIVATE).edit().putInt(KEY_X, x).putInt(KEY_Y, settledY).apply()
+    params.y = settledY
+    windowManager.updateViewLayout(root, params)
+  }
+
   private fun applyVisibility() {
-    root.visibility = if (appInForeground) View.GONE else View.VISIBLE
+    root.visibility = if (visibility.visible) View.VISIBLE else View.GONE
+    handler.removeCallbacks(tick)
+    if (visibility.visible) handler.post(tick)
   }
 
   private fun windowParams(): WindowManager.LayoutParams {
@@ -221,8 +309,16 @@ class FloatingTimerService : Service() {
 
   private fun showLastOffer() {
     val evaluation = lastOffer ?: return
+    offerDismiss = ::clearOffer
     renderCard(evaluation, store.preferences)
     handler.postDelayed(closeOffer, store.preferences.durationSeconds * MS_PER_SECOND)
+  }
+
+  private fun hideButton() {
+    setMenuOpen(false)
+    visibility.hideForNow()
+    applyVisibility()
+    restorePillPosition()
   }
 
   private fun openApp() {
@@ -258,16 +354,16 @@ class FloatingTimerService : Service() {
     private const val INITIAL_OFFSET_DP = 24
     private const val TOUCH_TARGET_DP = 64
     private const val SCREEN_BOTTOM_DP = 48
+    private const val SHADOW_MARGIN_DP = 20
 
     @Volatile
     var instance: FloatingTimerService? = null
       private set
 
-    @Volatile
-    private var appInForeground = false
+    private val visibility = FloatingVisibility()
 
     fun setAppInForeground(value: Boolean) {
-      appInForeground = value
+      visibility.onAppForeground(value)
       instance?.applyVisibility()
     }
   }

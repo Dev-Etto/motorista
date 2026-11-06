@@ -118,7 +118,7 @@ app -> features -> data -> domain -> shared/utils
 
 - **Uma jornada por vez:** existe um único cronômetro, salvo em `ShiftTimer`. `useShiftTimer` consulta esse estado a cada segundo, então o app reconhece uma jornada iniciada pelo botão flutuante.
 - **Km em pausa:** `gpsTask` ignora os pontos recebidos com o cronômetro pausado e descarta o último ponto, evitando somar o trecho percorrido durante a pausa.
-- **Distribuição:** o APK é publicado nas Releases do GitHub, com o nome fixo `motorista.apk`, para manter um link estável sem aumentar o histórico do git.
+- **Distribuição:** os APKs são publicados nas Releases do GitHub. `motorista.apk` é o de 64 bits, com nome fixo para manter um link estável sem aumentar o histórico do git, e `motorista-32bits.apk` atende aparelhos antigos. Separar por arquitetura reduz o download, porque o ML Kit traz bibliotecas nativas.
 - **Assinatura:** `scripts/release-apk.sh` assina o APK com uma chave mantida fora do repositório. Toda versão precisa usar a mesma chave para instalar por cima da anterior.
 
 ## Decisões da versão 0.7.1
@@ -174,3 +174,20 @@ app -> features -> data -> domain -> shared/utils
 - **Jornada esquecida no lado nativo:** `ForgottenShiftAlarm` agenda o aviso em `ShiftTimer`, porque a jornada também começa pelo botão flutuante, com o app fechado. Usa alarme inexato, que não exige permissão nova.
 - **Leituras de oferta preservadas:** `OfferDiagnostics` guarda em separado as telas com valor, para as outras não as apagarem antes de serem enviadas.
 
+## Leitura de ofertas
+
+- **Ritmo da leitura:** `ScanPacer` usa intervalo fixo em vez de debounce, porque telas com contador geram eventos sem parar e adiariam a leitura para sempre. Mudança de janela e notificação abrem uma rajada de 8 segundos, que para ao achar a oferta.
+- **Fora da thread principal:** a coleta e o parse rodam em `HandlerThread`. Texto igual ao da leitura anterior não passa pelo parser. A sessão e as janelas seguem na thread principal.
+- **Todos os pacotes no XML:** o filtro `packageNames` descartaria mudanças de janela, que podem vir sem pacote. O filtro fica em `onAccessibilityEvent`, e só a Uber, a 99 e o inDrive são lidos.
+- **Cartão da Uber sem botão:** produto e duas pernas de rota já contam como oferta. Só o trecho até o passageiro é leitura incompleta, para não mostrar um R$/km inflado.
+- **Texto da tela:** `ScreenText` ordena por posição e só une repetições quando um texto está dentro do outro, então dois trechos iguais em pontos diferentes continuam contando. Na Uber, os 15% de cima são ignorados, por causa dos ganhos do dia, e não mais que isso, porque o cartão pode ser alto.
+- **Imagem como reforço opcional:** com `imageReading` ligado, na Uber e na 99, sem oferta no texto, `OfferImageReader` lê a imagem da tela com ML Kit embutido, no máximo uma vez por segundo. `OfferReadPolicy` decide quando: nunca em viagem nem com o cartão aberto, para não ler o próprio cartão. Por isso, oferta lida por imagem fecha pelo tempo do cartão, não por leitura vazia.
+- **Sem internet:** o ML Kit traz `INTERNET` e `ACCESS_NETWORK_STATE`, bloqueadas no release por `blockedPermissions`. O modelo é embutido e funciona sem rede.
+- **Botão flutuante:** o cronômetro aparece sempre, mesmo zerado. `FloatingPanel` só refaz o visual quando o estado muda, e `WindowDrag` usa a tolerância de toque do Android.
+- **Decisões separadas do Android:** `OfferReadPolicy`, `OfferTextTracker`, `WindowEventGate` e `ScanPacer` não dependem do Android e têm teste. `OfferTreeReader` e `OfferImageReader` só coletam. A spec fica em `docs/specs/leitura-de-ofertas.md`.
+- **Gravar fora da thread principal:** a oferta é gravada na thread de leitura. Como é uma fila única, gravação e atualização mantêm a ordem.
+- **Botão flutuante ligado por padrão:** `floatingButton` nasce ligado, e `useFloatingVisibility` inicia o botão ao abrir o app ou voltar a ele, se houver permissão de sobreposição. Desligar nas configurações fica salvo. "Ocultar o botão", ou arrastar o botão até a `DismissZone`, é temporário: `FloatingVisibility` esconde até o motorista entrar no app e sair dele, com o serviço ativo e as ofertas no cartão avulso. Sem a permissão, o app não insiste: ela segue sendo pedida só quando o motorista liga a opção.
+- **Selo da plataforma:** nome e cor, em tamanho fixo, para Uber, 99 e inDrive ficarem na mesma proporção. Nenhuma imagem de marca entra no repositório.
+- **Nota do passageiro:** não aparece no cartão, no botão nem na notificação. O parser só a reconhece com estrela ou contagem de avaliações.
+- **Idade do pedido não é tempo de viagem:** no inDrive, `N min.` com ponto e `Agora mesmo` dizem há quanto tempo o pedido existe, e `~N km` é a distância até o passageiro. Sem os dois trechos, "Por hora" fica vazio, sem estimativa.
+- **Cartão no botão flutuante:** o cartão cresce a partir do botão e encolhe de volta. `OfferCardMotion` calcula o ponto de partida e não depende do Android. Um toque em qualquer ponto, ou arrastar até a `DismissZone`, fecha o cartão e a voz, via `OfferSession.dismiss`. A sessão guarda a oferta, para ela não reabrir enquanto seguir na tela.

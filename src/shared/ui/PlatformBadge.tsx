@@ -19,6 +19,6 @@ export function PlatformBadge({ name }: { name: string }) {
 }
 
 const styles = StyleSheet.create({
-  badge: { alignSelf: 'flex-start', borderRadius: radius.sm, paddingHorizontal: spacing.sm, paddingVertical: 2 },
+  badge: { alignSelf: 'flex-start', alignItems: 'center', minWidth: 64, borderRadius: radius.sm, paddingHorizontal: spacing.sm, paddingVertical: 2 },
   label: { fontSize: 13, fontFamily: fonts.bold },
 });

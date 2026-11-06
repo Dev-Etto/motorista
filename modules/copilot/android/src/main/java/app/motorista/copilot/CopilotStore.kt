@@ -5,10 +5,11 @@ import android.content.SharedPreferences
 import org.json.JSONArray
 import org.json.JSONObject
 
-class CopilotStore(context: Context) {
+class CopilotStore private constructor(context: Context) {
   private val prefs: SharedPreferences = context.applicationContext.getSharedPreferences(FILE, Context.MODE_PRIVATE)
 
   private val log = OfferLogDatabase.get(context)
+  @Volatile
   private var cachedPreferences: Pair<String?, CopilotPreferences>? = null
 
   init {
@@ -90,35 +91,48 @@ class CopilotStore(context: Context) {
     if (outcome.counterCents == null) entry.remove("counterCents") else entry.put("counterCents", outcome.counterCents)
   }
 
+  fun refine(offerId: Long, evaluation: OfferEvaluation) = log.update(offerId) { entry -> putEvaluation(entry, evaluation) }
+
   private fun toJson(evaluation: OfferEvaluation, source: String, timestamp: Long): JSONObject {
     val json = JSONObject()
       .put("timestamp", timestamp)
       .put("source", evaluation.sourceLabel)
-      .put("reason", evaluation.reason)
+      .put("status", OfferStatus.UNANSWERED.id)
+    return putEvaluation(json, evaluation)
+  }
+
+  private fun putEvaluation(json: JSONObject, evaluation: OfferEvaluation): JSONObject {
+    json.put("reason", evaluation.reason)
       .put("valueCents", evaluation.offer.valueCents)
       .put("km", evaluation.offer.km)
       .put("minutes", evaluation.offer.minutes)
       .put("perKmCents", evaluation.perKmCents)
       .put("perHourCents", evaluation.perHourCents)
       .put("color", evaluation.color.id)
-      .put("status", OfferStatus.UNANSWERED.id)
     evaluation.score?.let { json.put("score", it) }
     val profit = evaluation.profitCents ?: return json
     return json.put("profitCents", profit)
   }
 
-  private companion object {
-    const val FILE = "copilot"
-    const val KEY_ENABLED = "enabled"
-    const val KEY_PREFERENCES = "preferences"
-    const val KEY_COST = "cost_per_km"
-    const val KEY_TARGET_KM = "target_per_km"
-    const val KEY_TARGET_HOUR = "target_per_hour"
-    const val KEY_HISTORY = "history_v2"
-    const val KEY_LEGACY_HISTORY = "history"
-    const val KEY_FAILED_READS = "failed_reads"
-    const val KEY_CARD_X = "card_x"
-    const val KEY_CARD_Y = "card_y"
-    const val RETENTION_MS = 365L * 24 * 60 * 60 * 1000
+  companion object {
+    @Volatile
+    private var instance: CopilotStore? = null
+
+    fun get(context: Context): CopilotStore = instance ?: synchronized(this) {
+      instance ?: CopilotStore(context.applicationContext).also { instance = it }
+    }
+
+    private const val FILE = "copilot"
+    private const val KEY_ENABLED = "enabled"
+    private const val KEY_PREFERENCES = "preferences"
+    private const val KEY_COST = "cost_per_km"
+    private const val KEY_TARGET_KM = "target_per_km"
+    private const val KEY_TARGET_HOUR = "target_per_hour"
+    private const val KEY_HISTORY = "history_v2"
+    private const val KEY_LEGACY_HISTORY = "history"
+    private const val KEY_FAILED_READS = "failed_reads"
+    private const val KEY_CARD_X = "card_x"
+    private const val KEY_CARD_Y = "card_y"
+    private const val RETENTION_MS = 365L * 24 * 60 * 60 * 1000
   }
 }

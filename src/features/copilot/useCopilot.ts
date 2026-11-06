@@ -1,4 +1,5 @@
 import { copilot, CopilotPreferences, CopilotStatus, OfferHistoryEntry } from '@modules/copilot';
+import { PLATFORM_PACKAGES } from '@modules/copilot/platforms';
 import * as Notifications from 'expo-notifications';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -10,9 +11,9 @@ const RECENT_OFFERS = 5;
 const DIAGNOSTICS_REFRESH_MS = 2000;
 const OUTSIDE_TEST_DELAY_MS = 5000;
 const SAMPLES = [
-  { source: 'com.ubercab.driver', text: 'R$ 18,40 | ★ 4,92 | 5 min (2,1 km) | Viagem de 14 min (6,4 km) | Aceitar' },
-  { source: 'com.app99.driver', text: 'R$ 11,20 | ★ 4,75 | 4 min (1,5 km) | Viagem de 18 min (6,5 km) | Aceitar' },
-  { source: 'sinet.startup.inDriver', text: 'R$ 7,00 | 6 min (3,0 km) | Viagem de 22 min (9,0 km) | Aceitar' },
+  { source: PLATFORM_PACKAGES.uber, text: 'R$ 18,40 | ★ 4,92 | 5 min (2,1 km) | Viagem de 14 min (6,4 km) | Aceitar' },
+  { source: PLATFORM_PACKAGES.ninetyNine, text: 'R$ 11,20 | ★ 4,75 | 4 min (1,5 km) | Viagem de 18 min (6,5 km) | Aceitar' },
+  { source: PLATFORM_PACKAGES.inDrive, text: 'R$ 7,00 | 6 min (3,0 km) | Viagem de 22 min (9,0 km) | Aceitar' },
 ];
 
 export function useCopilot() {
@@ -60,6 +61,7 @@ export function useCopilot() {
   };
 
   const setFloating = (value: boolean) => {
+    updatePreferences({ floatingButton: value });
     if (!value) {
       copilot.stopFloating();
       return setTimeout(refresh, 300);

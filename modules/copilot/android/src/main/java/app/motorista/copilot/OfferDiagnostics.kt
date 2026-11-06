@@ -4,6 +4,7 @@ object OfferDiagnostics {
   private const val MAX_ENTRIES = 10
   private const val MAX_OTHER_ENTRIES = 5
   private const val TAP_PREFIX = "Toque: "
+  private const val IMAGE_PREFIX = "Imagem: "
   private val keptWords = Regex("""(?i)^(r\$|km|m|min|h|aceitar|selecionar|corresponder|confirmar|accept|match|recusar|rejeitar|pular|ignorar|dispensar|decline|reject|skip|\+)$""")
   private val token = Regex("""\S+""")
   private val letters = Regex("""\p{L}""")
@@ -29,6 +30,12 @@ object OfferDiagnostics {
     if (!enabled) return
     val masked = mask(text)
     if (moneyMark.containsMatchIn(masked)) add(entries, masked, MAX_ENTRIES) else add(otherEntries, masked, MAX_OTHER_ENTRIES)
+  }
+
+  @Synchronized
+  fun captureImage(text: String) {
+    if (!enabled) return
+    add(entries, "$IMAGE_PREFIX${mask(text)}", MAX_ENTRIES)
   }
 
   @Synchronized

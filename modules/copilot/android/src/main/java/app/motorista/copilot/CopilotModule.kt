@@ -20,7 +20,7 @@ class CopilotModule : Module() {
     Name("Copilot")
 
     Function("getStatus") {
-      val store = CopilotStore(context)
+      val store = CopilotStore.get(context)
       mapOf(
         "enabled" to store.enabled,
         "accessibilityGranted" to isAccessibilityGranted(),
@@ -33,18 +33,18 @@ class CopilotModule : Module() {
       )
     }
 
-    Function("setEnabled") { value: Boolean -> CopilotStore(context).enabled = value }
-    Function("getPreferences") { CopilotStore(context).preferences.toJson() }
-    Function("setPreferences") { json: String -> CopilotStore(context).preferences = CopilotPreferences.fromJson(json) }
+    Function("setEnabled") { value: Boolean -> CopilotStore.get(context).enabled = value }
+    Function("getPreferences") { CopilotStore.get(context).preferences.toJson() }
+    Function("setPreferences") { json: String -> CopilotStore.get(context).preferences = CopilotPreferences.fromJson(json) }
     Function("setTargets") { costPerKm: Double, targetPerKmCents: Double, targetPerHourCents: Double ->
-      CopilotStore(context).targets = OfferTargets(costPerKm, targetPerKmCents, targetPerHourCents)
+      CopilotStore.get(context).targets = OfferTargets(costPerKm, targetPerKmCents, targetPerHourCents)
     }
-    Function("resetCardPosition") { CopilotStore(context).cardPosition = null }
-    Function("getHistory") { CopilotStore(context).history() }
-    Function("getOffers") { from: Double, to: Double -> CopilotStore(context).offers(from.toLong(), to.toLong()) }
-    Function("getRecentOffers") { limit: Int -> CopilotStore(context).recentOffers(limit) }
-    Function("setHistory") { json: String -> CopilotStore(context).replaceHistory(json) }
-    Function("clearHistory") { CopilotStore(context).clearHistory() }
+    Function("resetCardPosition") { CopilotStore.get(context).cardPosition = null }
+    Function("getHistory") { CopilotStore.get(context).history() }
+    Function("getOffers") { from: Double, to: Double -> CopilotStore.get(context).offers(from.toLong(), to.toLong()) }
+    Function("getRecentOffers") { limit: Int -> CopilotStore.get(context).recentOffers(limit) }
+    Function("setHistory") { json: String -> CopilotStore.get(context).replaceHistory(json) }
+    Function("clearHistory") { CopilotStore.get(context).clearHistory() }
 
     Function("openAccessibilitySettings") { openIntent(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
     Function("openAppSettings") {
@@ -68,7 +68,7 @@ class CopilotModule : Module() {
       val offer = OfferParser.parse(text) ?: return@Function false
       val notifier = OfferNotifier(context)
       if (!notifier.enabled) return@Function false
-      val store = CopilotStore(context)
+      val store = CopilotStore.get(context)
       notifier.show(OfferEvaluator.evaluate(offer, store.targets, OfferSources.label(source)), store.preferences)
       true
     }

@@ -52,6 +52,8 @@ data class CopilotPreferences(
   val durationSeconds: Int = DEFAULT_DURATION_SECONDS,
   val monitoredPackages: Set<String> = DEFAULT_PACKAGES,
   val estimateEarnings: Boolean = true,
+  val imageReading: Boolean = false,
+  val floatingButton: Boolean = true,
 ) {
   fun toJson(): String = JSONObject()
     .put("voice", voice)
@@ -64,13 +66,15 @@ data class CopilotPreferences(
     .put("durationSeconds", durationSeconds)
     .put("monitoredPackages", JSONArray(monitoredPackages.toList()))
     .put("estimateEarnings", estimateEarnings)
+    .put("imageReading", imageReading)
+    .put("floatingButton", floatingButton)
     .toString()
 
   companion object {
     const val DEFAULT_DURATION_SECONDS = 8
     private const val MAX_DURATION_SECONDS = 15
     private const val MIN_DURATION_SECONDS = 5
-    val DEFAULT_PACKAGES = setOf("com.ubercab.driver", "com.app99.driver", "sinet.startup.inDriver")
+    val DEFAULT_PACKAGES = OfferSources.packages
 
     fun fromJson(raw: String?): CopilotPreferences {
       if (raw.isNullOrBlank()) return CopilotPreferences()
@@ -88,6 +92,8 @@ data class CopilotPreferences(
         durationSeconds = json.optInt("durationSeconds", DEFAULT_DURATION_SECONDS).coerceIn(MIN_DURATION_SECONDS, MAX_DURATION_SECONDS),
         monitoredPackages = if (packages == null) DEFAULT_PACKAGES else (0 until packages.length()).map { packages.getString(it) }.toSet(),
         estimateEarnings = json.optBoolean("estimateEarnings", true),
+        imageReading = json.optBoolean("imageReading", false),
+        floatingButton = json.optBoolean("floatingButton", true),
       )
     }
   }

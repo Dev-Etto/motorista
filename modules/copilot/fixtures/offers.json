@@ -84,7 +84,7 @@
       "valueCents": 1300,
       "km": 4.3,
       "minutes": 0,
-      "rating": null
+      "rating": 5.0
     },
     {
       "text": "R$ 2,3/km | ~3,3 km | R$ 10 | 4,96 (9) | Agora mesmo | Aceitar por R$ 10 | R$ 11 | R$ 12 | Pular",
@@ -145,7 +145,7 @@
       "valueCents": 1200,
       "km": 3,
       "minutes": 10,
-      "rating": 4.87
+      "rating": null
     },
     {
       "text": "R$ 12,00 | 1,50x | 3 km | 10 min | Aceitar",
@@ -245,6 +245,173 @@
     {
       "text": "R$ 20,00 | 5 km | 12 min | Aceitar automaticamente",
       "none": true
+    },
+    {
+      "text": "UberX | Exclusivo | R$ 18,40 | 4,92 | 5 min (2,1 km) de distância | Viagem de 14 min (6,4 km)",
+      "valueCents": 1840,
+      "km": 8.5,
+      "minutes": 19,
+      "rating": null
+    },
+    {
+      "text": "Comfort | R$ 22,00 | 8 minutos (3 km) | 20 minutos (9 km) | Selecionar",
+      "valueCents": 2200,
+      "km": 12.0,
+      "minutes": 28,
+      "rating": null
+    },
+    {
+      "text": "UberX | R$ 30,00 | 5 min (2 km) | 15 min (8 km) | 20 min (10 km) | Aceitar",
+      "valueCents": 3000,
+      "km": 10.0,
+      "minutes": 20,
+      "rating": null
+    },
+    {
+      "text": "R$ 20,00 | 5 min | 2 km | 5 min | 6 km | Aceitar",
+      "valueCents": 2000,
+      "km": 8.0,
+      "minutes": 10,
+      "rating": null
+    },
+    {
+      "text": "UberX | R$ 18,40 | 5 min (2,1 km) de distância | Aceitar",
+      "none": true
+    },
+    {
+      "text": "UberX | R$ 25,00 | 14 min | 6 km | Hoje às 14h",
+      "none": true
+    },
+    {
+      "text": "R$ 11,20 | 4,75 | 4 min (1,5 km) | 18 min (6,5 km) | Aceitar",
+      "valueCents": 1120,
+      "km": 8.0,
+      "minutes": 22,
+      "rating": null
+    },
+    {
+      "text": "R$ | 11,20 | 12 | min | 3 | km | 8 | min | 5 | km | Aceitar",
+      "valueCents": 1120,
+      "km": 8.0,
+      "minutes": 20,
+      "rating": null
+    },
+    {
+      "text": "UberX | R$ 20,00 | 5 | min | 2 | km | 14 | min | 6 | km",
+      "valueCents": 2000,
+      "km": 8.0,
+      "minutes": 19,
+      "rating": null
+    },
+    {
+      "text": "R$ 20,00 | 4.9 | 5 km | 12 min | Aceitar",
+      "valueCents": 2000,
+      "km": 5.0,
+      "minutes": 12,
+      "rating": null
+    },
+    {
+      "text": "R$ 20,00 | 5 km | 12 min | Reservar",
+      "valueCents": 2000,
+      "km": 5.0,
+      "minutes": 12,
+      "rating": null
+    },
+    {
+      "text": "Opção de viagem exclusiva | R$ 25,00 | 5 min (2 km) | 15 min (8 km)",
+      "valueCents": 2500,
+      "km": 10.0,
+      "minutes": 20,
+      "rating": null
+    },
+    {
+      "text": "Reservar | 5 km | 12 min",
+      "none": true
+    },
+    {
+      "text": "R$ 13 | 5 | 6 | Aceitar",
+      "none": true
+    },
+    {
+      "text": "Ganhos de hoje | R$ 120,00 | UberX | R$ 18,40 | 5 min (2,1 km) | Viagem de 14 min (6,4 km) | Aceitar",
+      "valueCents": 1840,
+      "km": 8.5,
+      "minutes": 19,
+      "rating": null
+    },
+    {
+      "text": "Saldo | R$ 55,00 | R$ 11,20 | 4 min (1,5 km) | 18 min (6,5 km) | Aceitar",
+      "valueCents": 1120,
+      "km": 8.0,
+      "minutes": 22,
+      "rating": null
+    },
+    {
+      "text": "R$ 20,00 | ⭐ 4,9 | 5 km | 12 min | Aceitar",
+      "valueCents": 2000,
+      "km": 5.0,
+      "minutes": 12,
+      "rating": 4.9
+    },
+    {
+      "text": "R$ 20,00 | 4,7 (120) | 5 km | 12 min | Aceitar",
+      "valueCents": 2000,
+      "km": 5.0,
+      "minutes": 12,
+      "rating": 4.7
+    },
+    {
+      "text": "R$ 20,00 | 3,5 | 5 km | 12 min | Aceitar",
+      "valueCents": 2000,
+      "km": 5.0,
+      "minutes": 12,
+      "rating": null
+    },
+    {
+      "text": "R$ 3/km | ~2,2 km | R$ 13 | 1 h 5 min. | Aceitar por R$ 13",
+      "valueCents": 1300,
+      "km": 4.3,
+      "minutes": 0,
+      "rating": null
+    },
+    {
+      "text": "8 min | 3,3 km | R$ 2,3/km | ~3,3 km | R$ 10 | Aceitar por R$ 10",
+      "valueCents": 1000,
+      "km": 4.3,
+      "minutes": 0,
+      "rating": null
+    },
+    {
+      "text": "0 min | 1 km | 5 min | 2 km | R$ 2/km | R$ 10 | Aceitar por R$ 10",
+      "valueCents": 1000,
+      "km": 5.0,
+      "minutes": 0,
+      "rating": null
+    },
+    {
+      "text": "~3,3 km | 8 min | 3,3 km | 5 min | 1,1 km | R$ 10 | Aceitar por R$ 10",
+      "valueCents": 1000,
+      "km": 4.4,
+      "minutes": 13,
+      "rating": null
+    },
+    {
+      "text": "~2,2 km | R$ 13 | Aceitar por R$ 13",
+      "none": true
+    },
+    {
+      "text": "R$ 3/km | R$ 13 | Aceitar por R$ 13\n+ R$ 2",
+      "valueCents": 1300,
+      "km": 4.3,
+      "minutes": 0,
+      "rating": null
+    },
+    {
+      "text": "R$ 3/km | R$ 13 | Aumentar para R$ 15",
+      "valueCents": 1300,
+      "km": 4.3,
+      "minutes": 0,
+      "rating": null
     }
   ]
 }

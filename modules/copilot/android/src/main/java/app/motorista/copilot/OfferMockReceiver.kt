@@ -18,8 +18,9 @@ class OfferMockReceiver(private val service: OfferAccessibilityService) : Broadc
   }
 
   private fun setup(context: Context, intent: Intent) {
-    val store = CopilotStore(context)
+    val store = CopilotStore.get(context)
     store.enabled = true
+    store.preferences = store.preferences.copy(imageReading = intent.getStringExtra(EXTRA_IMAGE) == "true")
     store.targets = OfferTargets(
       intent.getStringExtra(EXTRA_COST)?.toDoubleOrNull() ?: DEFAULT_COST,
       intent.getStringExtra(EXTRA_TARGET_KM)?.toDoubleOrNull() ?: DEFAULT_TARGET_KM,
@@ -48,6 +49,7 @@ class OfferMockReceiver(private val service: OfferAccessibilityService) : Broadc
     private const val ACTION_TAP = "app.motorista.copilot.MOCK_TAP"
     private const val EXTRA_TEXT = "text"
     private const val EXTRA_SOURCE = "source"
+    private const val EXTRA_IMAGE = "image"
     private const val EXTRA_COST = "cost"
     private const val EXTRA_TARGET_KM = "targetKm"
     private const val EXTRA_TARGET_HOUR = "targetHour"

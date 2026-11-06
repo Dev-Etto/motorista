@@ -34,12 +34,7 @@ object OfferFormat {
     return if (evaluation.offer.minutes > 0) "$perKm • ${wholeMoney(evaluation.perHourCents)}/h" else perKm
   }
 
-  fun profitAndRating(evaluation: OfferEvaluation): String {
-    val parts = mutableListOf<String>()
-    evaluation.profitCents?.let { parts.add("Lucro ${signedMoney(it)}") }
-    evaluation.offer.passengerRating?.let { parts.add("★ ${decimal(it, 2)}") }
-    return parts.joinToString("   ")
-  }
+  fun profitLine(evaluation: OfferEvaluation): String = evaluation.profitCents?.let { "Lucro ${signedMoney(it)}" }.orEmpty()
 
   fun spokenPhrase(evaluation: OfferEvaluation, metric: PrimaryMetric): String {
     val intro = spokenIntro(evaluation)
@@ -74,7 +69,7 @@ object OfferFormat {
     "${distanceAndTime(evaluation)} • ${rates(evaluation)}"
 
   fun notificationDetails(evaluation: OfferEvaluation) =
-    listOf(notificationText(evaluation), profitAndRating(evaluation), evaluation.reason)
+    listOf(notificationText(evaluation), profitLine(evaluation), evaluation.reason)
       .filter { it.isNotEmpty() }
       .joinToString("\n")
 }

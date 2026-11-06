@@ -1,7 +1,6 @@
 package app.motorista.copilot
 
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
@@ -12,30 +11,13 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 
-data class CardPalette(
-  val surface: Int,
-  val text: Int,
-  val muted: Int,
-  val positive: Int,
-  val negative: Int,
-)
-
-private val DAY_PALETTE = CardPalette(Color.WHITE, 0xFF171717.toInt(), 0xFF5E5E5E.toInt(), 0xFF0B6E3E.toInt(), 0xFFB3261E.toInt())
-private val NIGHT_PALETTE = CardPalette(0xFF1C1C1C.toInt(), 0xFFF5F5F5.toInt(), 0xFFA8A8A8.toInt(), 0xFF4FD08D.toInt(), 0xFFFF8A80.toInt())
-
 class OfferCardView(private val context: Context) {
+  private val cardTheme = CardTheme(context)
+
   fun width(): Int = minOf(context.resources.displayMetrics.widthPixels - dp(SCREEN_MARGIN_DP) * 2, dp(MAX_WIDTH_DP))
 
-  fun isNight(theme: ThemeMode): Boolean {
-    if (theme != ThemeMode.SYSTEM) return theme == ThemeMode.DARK
-    val mode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-    return mode == Configuration.UI_MODE_NIGHT_YES
-  }
-
-  fun palette(theme: ThemeMode) = if (isNight(theme)) NIGHT_PALETTE else DAY_PALETTE
-
   fun build(evaluation: OfferEvaluation, preferences: CopilotPreferences): View {
-    val palette = palette(preferences.theme)
+    val palette = cardTheme.palette(preferences.theme)
     val scale = preferences.cardSize.scale
     val body = LinearLayout(context).apply {
       orientation = LinearLayout.VERTICAL
@@ -50,36 +32,34 @@ class OfferCardView(private val context: Context) {
       }
       clipToOutline = true
       elevation = dp(ELEVATION_DP).toFloat()
-      addView(header(evaluation, preferences.theme, palette, scale))
+      addView(header(evaluation, preferences.theme, scale))
       addView(body)
     }
   }
 
-  private fun header(evaluation: OfferEvaluation, theme: ThemeMode, palette: CardPalette, scale: Float) = LinearLayout(context).apply {
+  private fun header(evaluation: OfferEvaluation, theme: ThemeMode, scale: Float) = LinearLayout(context).apply {
     orientation = LinearLayout.HORIZONTAL
     gravity = Gravity.CENTER_VERTICAL
     setPadding(dp(PADDING_DP), dp(PADDING_DP), dp(PADDING_DP), 0)
-    addView(sourceColumn(evaluation, palette, scale), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+    addView(sourceColumn(evaluation, scale), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
     addView(scoreBadge(evaluation, theme, scale))
   }
 
   private fun scoreBadge(evaluation: OfferEvaluation, theme: ThemeMode, scale: Float) = ImageView(context).apply {
-    setImageBitmap(ScoreBadge.bitmap(context, evaluation, dp((BADGE_DP * scale).toInt()), isNight(theme)))
+    setImageBitmap(ScoreBadge.bitmap(context, evaluation, dp((BADGE_DP * scale).toInt()), cardTheme.isNight(theme)))
     contentDescription = OfferFormat.scoreDescription(evaluation)
   }
 
-  private fun sourceColumn(evaluation: OfferEvaluation, palette: CardPalette, scale: Float) = LinearLayout(context).apply {
+  private fun sourceColumn(evaluation: OfferEvaluation, scale: Float) = LinearLayout(context).apply {
     orientation = LinearLayout.VERTICAL
-    addView(sourceChip(evaluation.sourceLabel, scale), LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT))
-    evaluation.offer.passengerRating?.let {
-      addView(label("★ ${OfferFormat.decimal(it, 2)}", CAPTION_SP * scale, palette.muted, AppFonts.regular(context)))
-    }
+    addView(sourceChip(evaluation.sourceLabel, scale))
   }
 
   private fun sourceChip(sourceLabel: String, scale: Float): TextView {
     val style = OfferSources.style(sourceLabel)
     return label(sourceLabel, SOURCE_SP * scale, style.text).apply {
-      setPadding(dp(CHIP_PADDING_H_DP), dp(CHIP_PADDING_V_DP), dp(CHIP_PADDING_H_DP), dp(CHIP_PADDING_V_DP))
+      layoutParams = LinearLayout.LayoutParams(dp((SOURCE_WIDTH_DP * scale).toInt()), dp((SOURCE_HEIGHT_DP * scale).toInt()))
+      gravity = Gravity.CENTER
       background = GradientDrawable().apply {
         setColor(style.background)
         cornerRadius = dp(CHIP_CORNER_DP).toFloat()
@@ -146,10 +126,10 @@ class OfferCardView(private val context: Context) {
     const val METRICS_TOP_DP = 12
     const val CORNER_DP = 20
     const val ELEVATION_DP = 8
-    const val CHIP_PADDING_H_DP = 10
-    const val CHIP_PADDING_V_DP = 3
     const val CHIP_CORNER_DP = 8
     const val SOURCE_SP = 18f
+    const val SOURCE_WIDTH_DP = 84
+    const val SOURCE_HEIGHT_DP = 36
     const val BADGE_DP = 48
     const val VALUE_SP = 28f
     const val DETAIL_SP = 17f
