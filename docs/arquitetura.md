@@ -290,3 +290,4 @@ app -> features -> application -> data -> domain -> shared/utils
 - **Pendências do Início:** lembretes, backup e atualização viram linhas de um card só, montadas por `pendingItems`.
 - **Erro no campo:** `fieldOfError` liga cada erro da jornada ao campo que precisa de correção. Só o que não tem campo próprio, como a falta de ganhos, fica no aviso geral. `Collapsible` com `forceOpen` abre a seção que tem um campo com erro.
 - **Rádios acessíveis:** opções de `Segmented` e linhas de `ListRow` com `selected` usam o papel `radio` com o estado `checked`, e cada opção tem a altura mínima de toque.
+- **Perfil regional só depois de carregar:** `regionalStore.refresh` não faz nada antes de `load`. Na primeira abertura, o app pode voltar ao primeiro plano antes de a migração criar as tabelas, e aplicar o perfil nesse momento renomearia plataformas que ainda não existem.

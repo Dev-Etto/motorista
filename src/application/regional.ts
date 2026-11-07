@@ -31,6 +31,7 @@ export function createRegionalStore(deps: RegionalStoreDeps) {
   let saved = EMPTY_SAVED_REGIONAL;
   let profile: RegionalProfile | null = null;
   let initial: RegionalProfile | null = null;
+  let loaded = false;
 
   const resolve = () => resolveRegionalProfile(deps.readDevice(), saved);
 
@@ -67,11 +68,14 @@ export function createRegionalStore(deps: RegionalStoreDeps) {
 
     async load(): Promise<void> {
       saved = await deps.load();
+      loaded = true;
       await adoptAppLanguage();
       await publish(resolve());
     },
 
     async refresh(): Promise<void> {
+      if (!loaded) return;
+
       await adoptAppLanguage();
       await publish(resolve());
     },
