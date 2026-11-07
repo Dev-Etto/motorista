@@ -1,6 +1,7 @@
 import { getDb, runInTransaction, SqlExecutor } from '@data/database/connection';
 import { countsAgainstProfit, ExpenseCategory } from '@domain/expense/expense';
 import { ShiftFact } from '@domain/insights/types';
+import { KmTotals } from '@domain/reminder/reminder';
 import { ExpenseRow } from './expenseRepository';
 import { vehicleRepository } from './vehicleRepository';
 
@@ -53,6 +54,7 @@ const toShiftRecord = (row: ShiftRow): ShiftRecord => ({
 
 export interface ShiftInput {
   id?: number;
+  vehicleId: number | null;
   date: string;
   startHour: number | null;
   minutes: number;
@@ -76,16 +78,16 @@ async function resolveSnapshot(tx: SqlExecutor, input: ShiftInput, fresh: CostSn
   if (!input.id) return fresh;
 
   const existing = await tx.getFirstAsync<ShiftRow>('SELECT * FROM shifts WHERE id = ?', input.id);
-  if (!existing || existing.cost_per_km <= 0 || existing.date !== input.date) return fresh;
+  if (!existing || existing.cost_per_km <= 0 || existing.date !== input.date || existing.vehicle_id !== input.vehicleId) return fresh;
 
   return { costPerKm: existing.cost_per_km, variablePerKm: existing.variable_per_km };
 }
 
-async function insertShift(tx: SqlExecutor, input: ShiftInput, vehicleId: number | null, snapshot: CostSnapshot) {
+async function insertShift(tx: SqlExecutor, input: ShiftInput, snapshot: CostSnapshot) {
   const result = await tx.runAsync(
     `INSERT INTO shifts (vehicle_id, date, start_hour, minutes, km, km_source, odometer_end, trips, cost_per_km,
      variable_per_km, note, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    vehicleId,
+    input.vehicleId,
     input.date,
     input.startHour,
     input.minutes,
@@ -103,8 +105,9 @@ async function insertShift(tx: SqlExecutor, input: ShiftInput, vehicleId: number
 
 async function updateShift(tx: SqlExecutor, id: number, input: ShiftInput, snapshot: CostSnapshot) {
   await tx.runAsync(
-    `UPDATE shifts SET date = ?, start_hour = ?, minutes = ?, km = ?, km_source = ?, odometer_end = ?, trips = ?,
+    `UPDATE shifts SET vehicle_id = ?, date = ?, start_hour = ?, minutes = ?, km = ?, km_source = ?, odometer_end = ?, trips = ?,
      note = ?, cost_per_km = ?, variable_per_km = ? WHERE id = ?`,
+    input.vehicleId,
     input.date,
     input.startHour,
     input.minutes,
@@ -133,15 +136,16 @@ async function insertChildren(tx: SqlExecutor, shiftId: number, input: ShiftInpu
 export function createShiftRepository(connection: () => SqlExecutor = getDb, vehicles = vehicleRepository) {
   return {
     async save(input: ShiftInput): Promise<number> {
-      const { vehicle, costs } = await vehicles.getCostsAt(input.date);
+      const { vehicle, costs } = await vehicles.getCostsAt(input.date, input.vehicleId);
       const fresh = { costPerKm: costs?.fullPerKm ?? 0, variablePerKm: costs?.variablePerKm ?? 0 };
+      const withVehicle = { ...input, vehicleId: vehicle?.id ?? null };
       let shiftId = input.id ?? 0;
 
       await runInTransaction(async (tx) => {
-        const snapshot = await resolveSnapshot(tx, input, fresh);
-        if (input.id) await updateShift(tx, input.id, input, snapshot);
-        if (!input.id) shiftId = await insertShift(tx, input, vehicle?.id ?? null, snapshot);
-        await insertChildren(tx, shiftId, input);
+        const snapshot = await resolveSnapshot(tx, withVehicle, fresh);
+        if (input.id) await updateShift(tx, input.id, withVehicle, snapshot);
+        if (!input.id) shiftId = await insertShift(tx, withVehicle, snapshot);
+        await insertChildren(tx, shiftId, withVehicle);
       });
 
       return shiftId;
@@ -208,9 +212,14 @@ export function createShiftRepository(connection: () => SqlExecutor = getDb, veh
       return { total: row?.total ?? 0, days: row?.days ?? 0, first: row?.first ?? null, last: row?.last ?? null };
     },
 
-    async totalKmEver(): Promise<number> {
-      const row = await connection().getFirstAsync<{ value: number | null }>('SELECT SUM(km) AS value FROM shifts');
-      return row?.value ?? 0;
+    async kmTotals(): Promise<KmTotals> {
+      const rows = await connection().getAllAsync<{ vehicleId: number | null; value: number | null }>(
+        'SELECT vehicle_id AS vehicleId, SUM(km) AS value FROM shifts GROUP BY vehicle_id',
+      );
+      return {
+        all: rows.reduce((total, row) => total + (row.value ?? 0), 0),
+        byVehicle: Object.fromEntries(rows.filter((row) => row.vehicleId !== null).map((row) => [row.vehicleId, row.value ?? 0])),
+      };
     },
 
     async totalKm(start: string, end: string): Promise<number> {

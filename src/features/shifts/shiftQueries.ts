@@ -1,5 +1,6 @@
 import { expenseRepository } from '@data/repositories/expenseRepository';
 import { shiftRepository } from '@data/repositories/shiftRepository';
+import { vehicleRepository } from '@data/repositories/vehicleRepository';
 import { copilot } from '@modules/copilot';
 import { dayRange, monthBounds } from '@shared/utils/dates';
 
@@ -14,7 +15,13 @@ export async function loadShiftDetail(shiftId: number) {
   if (!detail) return null;
 
   const { from, to } = dayRange(detail.shift.date);
-  return { ...detail, dayOffers: await copilot.getOffers(from, to) };
+  const vehicleId = detail.shift.vehicleId;
+  const [dayOffers, vehicles, vehicle] = await Promise.all([
+    copilot.getOffers(from, to),
+    vehicleRepository.list(),
+    vehicleId ? vehicleRepository.find(vehicleId) : Promise.resolve(null),
+  ]);
+  return { ...detail, dayOffers, vehicleName: vehicles.length > 1 ? (vehicle?.name ?? null) : null };
 }
 
 export type ShiftDetail = NonNullable<Awaited<ReturnType<typeof loadShiftDetail>>>;

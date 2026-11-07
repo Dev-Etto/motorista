@@ -11,7 +11,7 @@ import { shiftRepository } from '@data/repositories/shiftRepository';
 import { vehicleRepository } from '@data/repositories/vehicleRepository';
 import { isBackupDue, isUpdateDue } from '@domain/maintenance/notices';
 import { estimateEarnings } from '@domain/offer/offerLog';
-import { isDueByKm } from '@domain/reminder/reminder';
+import { isDueByKm, kmFor } from '@domain/reminder/reminder';
 import { summarizeShifts, withLooseExpenses } from '@domain/shift/summary';
 import { copilot } from '@modules/copilot';
 import { useAsyncData } from '@shared/hooks/useAsyncData';
@@ -23,27 +23,30 @@ async function loadDashboard(firstWeekday: number) {
   const date = today();
   const week = weekBounds(date, firstWeekday);
   const month = monthBounds(date);
-  const [monthFacts, weekFacts, { costs }, goal, insights, lastBackupAt, reminders, totalKm, looseToday, looseWeek, looseMonth] = await Promise.all([
-    shiftRepository.listFacts(month.start, month.end),
-    shiftRepository.listFacts(week.start, week.end),
-    vehicleRepository.getCostsAt(date),
-    loadGoalProgress(date),
-    loadInsights(date),
-    settingsRepository.get(SETTING_KEYS.lastBackupAt),
-    reminderRepository.list(),
-    shiftRepository.totalKmEver(),
-    expenseRepository.totalLooseCountable(date, date),
-    expenseRepository.totalLooseCountable(week.start, week.end),
-    expenseRepository.totalLooseCountable(month.start, month.end),
-  ]);
+  const [monthFacts, weekFacts, { vehicle, costs }, vehicles, goal, insights, lastBackupAt, reminders, kmTotals, looseToday, looseWeek, looseMonth] =
+    await Promise.all([
+      shiftRepository.listFacts(month.start, month.end),
+      shiftRepository.listFacts(week.start, week.end),
+      vehicleRepository.getCostsAt(date),
+      vehicleRepository.list(),
+      loadGoalProgress(date),
+      loadInsights(date),
+      settingsRepository.get(SETTING_KEYS.lastBackupAt),
+      reminderRepository.list(),
+      shiftRepository.kmTotals(),
+      expenseRepository.totalLooseCountable(date, date),
+      expenseRepository.totalLooseCountable(week.start, week.end),
+      expenseRepository.totalLooseCountable(month.start, month.end),
+    ]);
   const [nextStep, gpsSession] = await Promise.all([loadNextStep(), gpsSessionRepository.get()]);
   const copilotStatus = copilot.getStatus();
   const measuring = gpsSession.running && copilot.getTimer().running;
   const gpsProblem = measuring ? await readGpsProblem() : null;
-  const dueKmReminders = reminders.filter((reminder) => isDueByKm({ dueKm: reminder.dueKm, done: reminder.done }, totalKm));
+  const dueKmReminders = reminders.filter((reminder) => isDueByKm({ dueKm: reminder.dueKm, done: reminder.done }, kmFor(reminder.vehicleId, kmTotals)));
 
   return {
     costs,
+    currentVehicle: vehicles.length > 1 ? vehicle : null,
     missingFixedCosts: costs !== null && costs.fixedMonthly === 0,
     goal,
     today: withLooseExpenses(summarizeShifts(monthFacts.filter((fact) => fact.date === date)), looseToday),

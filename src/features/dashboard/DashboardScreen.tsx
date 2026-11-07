@@ -25,7 +25,7 @@ export default function DashboardScreen() {
 
 function DashboardContent({ data, onReload }: { data: DashboardData; onReload: () => Promise<void> }) {
   const router = useRouter();
-  const { t } = useTranslation('dashboard');
+  const { t } = useTranslation(['dashboard', 'vehicle']);
   const format = useFormat();
   const unit = { context: format.distanceUnit };
 
@@ -41,6 +41,16 @@ function DashboardContent({ data, onReload }: { data: DashboardData; onReload: (
       {data.gpsRunning ? <Notice tone="accent" message={t('gpsRunning', unit)} /> : null}
       {data.gpsProblem ? <Notice tone="negative" message={t('gpsProblem', { ...unit, problem: data.gpsProblem })} /> : null}
       <ActiveShiftCard />
+      {data.currentVehicle ? (
+        <Card>
+          <ListRow
+            icon={data.currentVehicle.kind === 'motorcycle' ? 'motorcycle' : 'vehicle'}
+            title={t('vehicle:manage.currentRow')}
+            value={data.currentVehicle.name}
+            onPress={() => router.push('/vehicles')}
+          />
+        </Card>
+      ) : null}
       <NextStepCard step={data.nextStep} onDismiss={onReload} />
       <ProfitCard title={t('todayTitle')} summary={data.today} hero />
       {data.estimatedToday && data.estimatedToday.trips > 0 ? (

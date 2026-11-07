@@ -2,6 +2,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { BackupFile, backupMarket, createBackup, parseBackup, restoreBackup } from '@data/backup/backup';
 import { CATALOG_PLATFORMS_SCHEMA_VERSION, migrate, MIGRATIONS, SCHEMA_VERSION } from '@data/database/connection';
 import { seedSampleData } from '@data/database/devSeed';
+import { vehicleRepository } from '@data/repositories/vehicleRepository';
 import { openTestDatabase } from './sqliteHarness';
 
 let mockDb: DatabaseSync;
@@ -79,6 +80,17 @@ describe('migrações', () => {
     mockDb.exec("DELETE FROM platforms WHERE name = 'inDrive'");
     await migrate();
     expect(mockDb.prepare("SELECT active FROM platforms WHERE system_key = 'inDrive'").get()).toEqual({ active: 0 });
+  });
+
+  it('atualização com um veículo continua com ele, as jornadas e os lembretes', async () => {
+    openAtVersion(SCHEMA_VERSION - 1);
+    seed();
+    mockDb.exec("INSERT INTO reminders (title, due_km) VALUES ('Óleo', 10000)");
+    await migrate();
+
+    expect(await vehicleRepository.getCurrent()).toMatchObject({ id: 1, name: 'Carro' });
+    expect(mockDb.prepare('SELECT vehicle_id AS vehicleId FROM shifts').get()).toEqual({ vehicleId: 1 });
+    expect(mockDb.prepare('SELECT due_km AS dueKm, vehicle_id AS vehicleId FROM reminders').get()).toEqual({ dueKm: 10000, vehicleId: null });
   });
 
   it('instalação nova segue o aparelho', async () => {
@@ -189,6 +201,18 @@ describe('backup de ponta a ponta', () => {
     await restoreBackup(file.backup);
 
     expect(mockDb.prepare('SELECT hours_per_day FROM goals').get()).toEqual({ hours_per_day: 8 });
+  });
+
+  it('backup de antes dos veículos volta com os lembretes sem veículo', async () => {
+    mockDb.exec("INSERT INTO reminders (title, due_km) VALUES ('Óleo', 10000)");
+    const backup = await createBackup();
+    const reminders = backup.tables.reminders.map(({ vehicle_id: _removed, ...reminder }) => reminder);
+    const file = parseBackup(JSON.stringify({ ...backup, schemaVersion: SCHEMA_VERSION - 1, tables: { ...backup.tables, reminders } }));
+
+    if (!file.ok) throw new Error(file.error);
+    await restoreBackup(file.backup);
+
+    expect(mockDb.prepare('SELECT title, vehicle_id AS vehicleId FROM reminders').get()).toEqual({ title: 'Óleo', vehicleId: null });
   });
 
   it('backup de antes do perfil regional volta em português, real e quilômetro', async () => {

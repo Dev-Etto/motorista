@@ -6,6 +6,7 @@ export interface Reminder {
   dueDate: string | null;
   dueKm: number | null;
   notificationId: string | null;
+  vehicleId: number | null;
   done: boolean;
 }
 
@@ -15,6 +16,7 @@ interface ReminderRow {
   due_date: string | null;
   due_km: number | null;
   notification_id: string | null;
+  vehicle_id: number | null;
   done: number;
 }
 
@@ -24,6 +26,7 @@ const toReminder = (row: ReminderRow): Reminder => ({
   dueDate: row.due_date,
   dueKm: row.due_km,
   notificationId: row.notification_id,
+  vehicleId: row.vehicle_id,
   done: row.done === 1,
 });
 
@@ -34,13 +37,14 @@ export function createReminderRepository(connection: () => SqlExecutor = getDb) 
       return rows.map(toReminder);
     },
 
-    async add(input: Pick<Reminder, 'title' | 'dueDate' | 'dueKm' | 'notificationId'>): Promise<void> {
+    async add(input: Pick<Reminder, 'title' | 'dueDate' | 'dueKm' | 'notificationId' | 'vehicleId'>): Promise<void> {
       await connection().runAsync(
-        'INSERT INTO reminders (title, due_date, due_km, notification_id) VALUES (?, ?, ?, ?)',
+        'INSERT INTO reminders (title, due_date, due_km, notification_id, vehicle_id) VALUES (?, ?, ?, ?, ?)',
         input.title,
         input.dueDate,
         input.dueKm,
         input.notificationId,
+        input.vehicleId,
       );
     },
 

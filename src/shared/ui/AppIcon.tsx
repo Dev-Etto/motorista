@@ -8,6 +8,7 @@ const ICON_PATHS = {
   reports: 'M5 20v-8M12 20V4M19 20v-5',
   more: 'M5 12h.01M12 12h.01M19 12h.01',
   vehicle: 'M5 16v-4l2-5h10l2 5v4M3 16h18v3H3zM7 12h10',
+  motorcycle: 'M5 13a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM19 13a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM5 16l4-6h5l5 6M14 10l-2-4h3M9 10H6',
   goal: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z',
   copilot: 'M4 10v4h3l5 4V6l-5 4zM16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11',
   apps: 'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z',

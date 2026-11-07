@@ -30,14 +30,22 @@ export function describeFormError(error: ShiftFormError, t: TFunction<['shifts',
   return messages[error];
 }
 
-async function loadFormData(shiftId: number | undefined, date: string) {
-  const [platforms, costs, existing] = await Promise.all([
+async function loadFormData(shiftId: number | undefined) {
+  const [platforms, vehicles, current, existing] = await Promise.all([
     platformRepository.list(),
-    vehicleRepository.getCostsAt(date),
+    vehicleRepository.list(),
+    vehicleRepository.getCurrent(),
     shiftId ? shiftRepository.findById(shiftId) : Promise.resolve(null),
   ]);
   const inactive = (existing?.earnings ?? []).filter((earning) => !platforms.some((platform) => platform.id === earning.platformId));
-  return { platforms: [...platforms, ...inactive.map((earning) => ({ id: earning.platformId, name: earning.name }))], costs: costs.costs, existing };
+  const shiftVehicle = existing?.shift.vehicleId ? await vehicleRepository.find(existing.shift.vehicleId) : null;
+  const archived = shiftVehicle && !vehicles.some((vehicle) => vehicle.id === shiftVehicle.id) ? [shiftVehicle] : [];
+  return {
+    platforms: [...platforms, ...inactive.map((earning) => ({ id: earning.platformId, name: earning.name }))],
+    vehicles: [...vehicles, ...archived],
+    currentVehicleId: current?.id ?? null,
+    existing,
+  };
 }
 
 const EMPTY_FIELDS = { hours: '', startHour: '', km: '', odometerStart: '', odometerEnd: '', trips: '' };
@@ -67,12 +75,15 @@ export function useShiftForm(shiftId?: number) {
   const [expenses, setExpenses] = useState<Partial<Record<ExpenseCategory, string>>>({});
   const [error, setError] = useState<string | null>(null);
 
-  const { data } = useAsyncData(() => loadFormData(shiftId, today()), [shiftId]);
+  const [chosenVehicleId, setVehicleId] = useState<number | null>(null);
+  const { data } = useAsyncData(() => loadFormData(shiftId), [shiftId]);
+  const vehicleId = chosenVehicleId ?? data?.currentVehicleId ?? null;
 
   useFormHydration(
     data?.existing,
     ({ shift, earnings: savedEarnings, expenses: savedExpenses }) => {
       setDate(shift.date);
+      setVehicleId(shift.vehicleId);
       setFields(fieldsFrom(shift, format));
       setKmMode(shift.kmSource === 'odometer' ? 'odometer' : 'manual');
       setKmMeasured(shift.kmSource === 'gps');
@@ -95,9 +106,10 @@ export function useShiftForm(shiftId?: number) {
     0,
   );
 
-  const { data: costsAtDate } = useAsyncData(() => vehicleRepository.getCostsAt(date), [date]);
+  const { data: costsAtDate } = useAsyncData(() => vehicleRepository.getCostsAt(date, vehicleId), [date, vehicleId]);
   const savedShift = data?.existing?.shift;
-  const costPerKm = savedShift?.date === date ? savedShift.costPerKm : (costsAtDate?.costs?.fullPerKm ?? 0);
+  const keepsSavedCost = savedShift?.date === date && savedShift.vehicleId === vehicleId && savedShift.costPerKm > 0;
+  const costPerKm = keepsSavedCost ? savedShift.costPerKm : (costsAtDate?.costs?.fullPerKm ?? 0);
 
   const preview = useMemo(() => computeShift({ grossCents, km, minutes, expensesCents, costPerKm }), [grossCents, km, minutes, expensesCents, costPerKm]);
 
@@ -149,6 +161,7 @@ export function useShiftForm(shiftId?: number) {
 
     await shiftRepository.save({
       id: shiftId,
+      vehicleId,
       date,
       startHour: format.parseInt(fields.startHour),
       minutes,
@@ -167,6 +180,9 @@ export function useShiftForm(shiftId?: number) {
 
   return {
     platforms: data?.platforms ?? [],
+    vehicles: data?.vehicles ?? [],
+    vehicleId,
+    setVehicleId,
     date,
     setDate,
     bind,

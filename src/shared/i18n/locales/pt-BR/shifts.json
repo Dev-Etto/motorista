@@ -34,7 +34,8 @@
       "tooLong": "Uma jornada tem no máximo 24 horas. Confira as horas trabalhadas.",
       "noEarnings": "Informe o ganho de pelo menos uma plataforma.",
       "odometerOrder": "O odômetro final precisa ser maior que o inicial."
-    }
+    },
+    "vehicleLabel": "Veículo"
   },
   "result": {
     "title": "Resultado",

@@ -1,5 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { shiftRepository } from '@data/repositories/shiftRepository';
+import { vehicleRepository } from '@data/repositories/vehicleRepository';
 import { describeFormError, useShiftForm } from '@features/shifts/useShiftForm';
 import { i18n } from '@shared/i18n';
 import { currentFormat } from '@shared/i18n/format';
@@ -15,7 +16,12 @@ jest.mock('expo-router', () => ({
 }));
 jest.mock('@data/repositories/platformRepository', () => ({ platformRepository: { list: jest.fn().mockResolvedValue([{ id: 1, name: 'Uber' }]) } }));
 jest.mock('@data/repositories/vehicleRepository', () => ({
-  vehicleRepository: { getCostsAt: jest.fn().mockResolvedValue({ vehicle: null, profile: null, costs: null }) },
+  vehicleRepository: {
+    getCostsAt: jest.fn().mockResolvedValue({ vehicle: null, profile: null, costs: null }),
+    list: jest.fn().mockResolvedValue([]),
+    getCurrent: jest.fn().mockResolvedValue(null),
+    find: jest.fn().mockResolvedValue(null),
+  },
 }));
 jest.mock('@data/repositories/shiftRepository', () => ({ shiftRepository: { findById: jest.fn(), save: jest.fn() } }));
 jest.mock('@shared/utils/reportError', () => ({ reportError: jest.fn() }));
@@ -86,5 +92,44 @@ describe('mensagens de erro do formulário da jornada', () => {
     expect(describeFormError('too-long', t, format)).toBe('Uma jornada tem no máximo 24 horas. Confira as horas trabalhadas.');
     expect(describeFormError('no-earnings', t, format)).toBe('Informe o ganho de pelo menos uma plataforma.');
     expect(describeFormError('odometer-order', t, format)).toBe('O odômetro final precisa ser maior que o inicial.');
+  });
+
+  describe('veículo da jornada', () => {
+    const CAR = { id: 1, name: 'Carro', kind: 'car', fuel: 'gasoline' };
+    const MOTO = { id: 2, name: 'Moto', kind: 'motorcycle', fuel: 'gasoline' };
+    const costsOf = (fullPerKm: number) => ({ vehicle: null, profile: null, costs: { fullPerKm, variablePerKm: 0 } });
+
+    beforeEach(() => {
+      jest.mocked(vehicleRepository.list).mockResolvedValue([CAR, MOTO] as never);
+      jest.mocked(vehicleRepository.getCurrent).mockResolvedValue(MOTO as never);
+      jest.mocked(vehicleRepository.getCostsAt).mockImplementation(async (_date, vehicleId) => costsOf(vehicleId === 1 ? 100 : 40) as never);
+    });
+
+    it('jornada nova começa com o veículo atual e usa o custo dele', async () => {
+      const { result } = await renderHook(() => useShiftForm());
+      await waitFor(() => expect(result.current.vehicleId).toBe(2));
+      await act(async () => result.current.kmField.onChangeText('10'));
+
+      await waitFor(() => expect(result.current.preview.vehicleCostCents).toBe(400));
+    });
+
+    it('trocar o veículo troca o custo da prévia e o que é salvo', async () => {
+      const { result } = await renderHook(() => useShiftForm());
+      await waitFor(() => expect(result.current.vehicles).toHaveLength(2));
+      await act(async () => result.current.setVehicleId(1));
+      await act(async () => result.current.kmField.onChangeText('10'));
+      await act(async () => result.current.setEarning(1, '100'));
+
+      await waitFor(() => expect(result.current.preview.vehicleCostCents).toBe(1000));
+      await act(async () => result.current.save());
+      expect(shiftRepository.save).toHaveBeenLastCalledWith(expect.objectContaining({ vehicleId: 1 }));
+    });
+
+    it('a edição abre com o veículo da jornada', async () => {
+      jest.mocked(shiftRepository.findById).mockResolvedValue({ ...SAVED, shift: { ...SAVED.shift, vehicleId: 1 } } as never);
+      const { result } = await renderHook(() => useShiftForm(7));
+
+      await waitFor(() => expect(result.current.vehicleId).toBe(1));
+    });
   });
 });

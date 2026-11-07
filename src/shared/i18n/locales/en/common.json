@@ -39,6 +39,7 @@
     "mi": "mi"
   },
   "screens": {
+    "vehicles": "Vehicles",
     "vehicle": "Vehicle and costs",
     "goal": "Goal and minimums",
     "copilot": "Offer Copilot",

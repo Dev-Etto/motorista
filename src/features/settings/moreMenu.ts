@@ -29,7 +29,7 @@ export const MORE_SECTIONS: { id: MoreSectionId; items: MoreMenuItem[] }[] = [
   {
     id: 'work',
     items: [
-      { id: 'vehicle', icon: 'vehicle', href: '/vehicle' },
+      { id: 'vehicle', icon: 'vehicle', href: '/vehicles' },
       { id: 'goal', icon: 'goal', href: '/goal' },
       { id: 'offers', icon: 'layers', href: '/offers' },
       { id: 'platforms', icon: 'apps', href: '/platforms' },

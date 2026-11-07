@@ -8,7 +8,7 @@
     },
     "item": {
       "vehicle": {
-        "title": "Vehículo y costos",
+        "title": "Vehículos y costos",
         "subtitle": "Tu costo por {{unit}}"
       },
       "goal": {

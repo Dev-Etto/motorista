@@ -87,5 +87,19 @@
     "depreciationHintFinanced": "Off by default, so it doesn't add up with the loan payment.",
     "vehicleValue": "Vehicle value",
     "depreciationPerYear": "Depreciation per year"
+  },
+  "manage": {
+    "intro": "The current vehicle sets the cost per distance for the Copilot, the calculator and the goal. On each shift, you pick the vehicle used.",
+    "currentName": "{{name}} · current",
+    "add": "Add vehicle",
+    "useNow": "Use now",
+    "archive": "Archive",
+    "emptyTitle": "No vehicles",
+    "emptyMessage": "Add your car or motorcycle so the app can work out your cost per distance.",
+    "archiveConfirm": {
+      "title": "Archive {{name}}?",
+      "message": "It leaves the choices, but past shifts keep its cost."
+    },
+    "currentRow": "Current vehicle"
   }
 }

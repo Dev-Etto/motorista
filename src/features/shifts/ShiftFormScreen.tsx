@@ -11,6 +11,7 @@ import { useFormat } from '@shared/i18n/format';
 import { spacing } from '@shared/theme/theme';
 import { DateField } from '@shared/ui/DateField';
 import { DurationField, IntegerField, MoneyField, NumberField } from '@shared/ui/fields';
+import { FilterChips } from '@shared/ui/FilterChips';
 import { PlatformBadge } from '@shared/ui/PlatformBadge';
 import { Button, Card, Collapsible, Notice, Screen, Segmented } from '@shared/ui/primitives';
 import { dayRange } from '@shared/utils/dates';
@@ -61,6 +62,18 @@ export default function ShiftFormScreen() {
       <TipBanner id="shift" message={t('form.tip', { context: format.distanceUnit })} />
       {id ? null : <LiveTrackingCard live={live} />}
 
+      <Card>
+        <DateField label={t('form.dateLabel')} value={form.date} onChange={(date) => date && form.setDate(date)} maximumDate={new Date()} />
+        {form.vehicles.length > 1 ? (
+          <FilterChips
+            label={t('form.vehicleLabel')}
+            value={String(form.vehicleId)}
+            options={form.vehicles.map((vehicle) => ({ value: String(vehicle.id), label: vehicle.name }))}
+            onChange={(vehicleId) => form.setVehicleId(Number(vehicleId))}
+          />
+        ) : null}
+      </Card>
+
       <Card title={t('form.timeAndDistance')}>
         <DurationField label={t('form.hoursLabel')} {...form.bind('hours')} hint={t('form.hoursHint')} />
         <Segmented value={form.kmMode} options={kmOptions} onChange={form.setKmMode} />
@@ -88,10 +101,6 @@ export default function ShiftFormScreen() {
             <MoneyField label={platform.name} hideLabel value={form.earnings[platform.id] ?? ''} onChangeText={(text) => form.setEarning(platform.id, text)} />
           </View>
         ))}
-      </Card>
-
-      <Card>
-        <DateField label={t('form.dateLabel')} value={form.date} onChange={(date) => date && form.setDate(date)} maximumDate={new Date()} />
       </Card>
 
       <Collapsible title={t('form.expensesTitle')}>

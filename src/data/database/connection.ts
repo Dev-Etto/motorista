@@ -172,6 +172,9 @@ export const MIGRATIONS: string[] = [
   ${SYSTEM_PLATFORMS_SQL}
   `,
   CATALOG_PLATFORMS_SQL,
+  `
+  ALTER TABLE reminders ADD COLUMN vehicle_id INTEGER REFERENCES vehicles(id) ON DELETE SET NULL;
+  `,
 ];
 
 export const SCHEMA_VERSION = MIGRATIONS.length;

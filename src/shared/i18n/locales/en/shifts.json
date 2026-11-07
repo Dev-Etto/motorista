@@ -34,7 +34,8 @@
       "tooLong": "A shift can be 24 hours at most. Check the hours worked.",
       "noEarnings": "Enter earnings for at least one platform.",
       "odometerOrder": "The ending odometer must be greater than the starting one."
-    }
+    },
+    "vehicleLabel": "Vehicle"
   },
   "result": {
     "title": "Result",

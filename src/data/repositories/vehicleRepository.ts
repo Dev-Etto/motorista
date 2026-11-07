@@ -1,6 +1,7 @@
 import { getDb, type SqlExecutor } from '@data/database/connection';
 import { parseJsonColumn } from '@data/database/jsonColumn';
 import { computeCosts, type CostBreakdown, type CostProfile, costProfileSchema, type FuelType, type VehicleKind } from '@domain/vehicle/costs';
+import { SETTING_KEYS } from './settingsRepository';
 
 export interface Vehicle {
   id: number;
@@ -24,10 +25,45 @@ async function findProfileRow(db: SqlExecutor, vehicleId: number, date: string) 
   return db.getFirstAsync<{ data: string }>(`${PROFILE_COLUMNS} ORDER BY valid_from ASC LIMIT 1`, vehicleId);
 }
 
+const VEHICLE_COLUMNS = 'SELECT id, name, kind, fuel FROM vehicles';
+
+export class OnlyVehicleError extends Error {
+  constructor() {
+    super('only-vehicle');
+  }
+}
+
 export function createVehicleRepository(connection: () => SqlExecutor = getDb) {
   return {
-    getActive(): Promise<Vehicle | null> {
-      return connection().getFirstAsync<Vehicle>('SELECT id, name, kind, fuel FROM vehicles WHERE active = 1 ORDER BY id DESC LIMIT 1');
+    list(): Promise<Vehicle[]> {
+      return connection().getAllAsync<Vehicle>(`${VEHICLE_COLUMNS} WHERE active = 1 ORDER BY id`);
+    },
+
+    find(id: number): Promise<Vehicle | null> {
+      return connection().getFirstAsync<Vehicle>(`${VEHICLE_COLUMNS} WHERE id = ?`, id);
+    },
+
+    getCurrent(): Promise<Vehicle | null> {
+      return connection().getFirstAsync<Vehicle>(
+        `${VEHICLE_COLUMNS} WHERE active = 1
+         ORDER BY id = (SELECT CAST(value AS INTEGER) FROM settings WHERE key = '${SETTING_KEYS.currentVehicle}') DESC, id DESC LIMIT 1`,
+      );
+    },
+
+    async setCurrent(id: number): Promise<void> {
+      await connection().runAsync(
+        'INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value',
+        SETTING_KEYS.currentVehicle,
+        String(id),
+      );
+    },
+
+    async archive(id: number): Promise<void> {
+      const db = connection();
+      const others = await db.getFirstAsync<{ total: number }>('SELECT COUNT(*) AS total FROM vehicles WHERE active = 1 AND id != ?', id);
+      if (!others?.total) throw new OnlyVehicleError();
+
+      await db.runAsync('UPDATE vehicles SET active = 0 WHERE id = ?', id);
     },
 
     async save(input: Omit<Vehicle, 'id'> & { id?: number }): Promise<number> {
@@ -62,8 +98,8 @@ export function createVehicleRepository(connection: () => SqlExecutor = getDb) {
       return row ? parseJsonColumn(row.data, costProfileSchema) : null;
     },
 
-    async getCostsAt(date: string): Promise<VehicleCosts> {
-      const vehicle = await this.getActive();
+    async getCostsAt(date: string, vehicleId?: number | null): Promise<VehicleCosts> {
+      const vehicle = vehicleId ? await this.find(vehicleId) : await this.getCurrent();
       if (!vehicle) return { vehicle: null, profile: null, costs: null };
 
       const profile = await this.getCostProfile(vehicle.id, date);
