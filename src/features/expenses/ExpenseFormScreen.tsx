@@ -52,7 +52,7 @@ export default function ExpenseFormScreen() {
         <Notice tone="accent" message={t('alreadyInCost', { context: format.distanceUnit, category: t(`category.${category}`) })} />
       )}
       <Card>
-        <DateField label={t('form.dateLabel')} value={date} onChange={(next) => next && setDate(next)} />
+        <DateField label={t('form.dateLabel')} value={date} onChange={(next) => next && setDate(next)} maximumDate={new Date()} />
         <MoneyField label={t('form.valueLabel')} value={value} onChangeText={setValue} error={error} />
         {category === 'fuel' ? <NumberField label={t('form.litersLabel', { context: format.volumeUnit })} value={liters} onChangeText={setLiters} /> : null}
         <NumberField label={t('form.odometerLabel')} value={odometer} onChangeText={setOdometer} suffix={format.distanceUnit} />

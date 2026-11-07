@@ -67,7 +67,10 @@
     "resetPosition": "Volver la tarjeta a la parte superior"
   },
   "apps": {
-    "title": "Apps monitoreadas"
+    "title": "Apps monitoreadas",
+    "none": "Ninguna app activa",
+    "hint": "El Copiloto lee las apps activas en Plataformas.",
+    "manage": "Gestionar plataformas"
   },
   "history": {
     "title": "Últimas ofertas",

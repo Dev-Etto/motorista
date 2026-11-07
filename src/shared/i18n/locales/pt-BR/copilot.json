@@ -67,7 +67,10 @@
     "resetPosition": "Voltar o cartão para o topo"
   },
   "apps": {
-    "title": "Apps monitorados"
+    "title": "Apps monitorados",
+    "none": "Nenhum app ativo",
+    "hint": "Os apps lidos são os ativos em Plataformas.",
+    "manage": "Gerenciar plataformas"
   },
   "history": {
     "title": "Últimas ofertas",

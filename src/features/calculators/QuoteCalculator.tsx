@@ -7,7 +7,7 @@ import { useSubmit } from '@shared/hooks/useSubmit';
 import { Formatter, useFormat } from '@shared/i18n/format';
 import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
 import { confirmAction } from '@shared/ui/dialog';
-import { MoneyField, NumberField, TextField } from '@shared/ui/fields';
+import { IntegerField, MoneyField, NumberField, TextField } from '@shared/ui/fields';
 import { AppText, Button, ButtonRow, Card, Collapsible, ListRow, Notice } from '@shared/ui/primitives';
 import { profitTone } from '@shared/utils/format';
 import { useSavedQuotes } from './useSavedQuotes';
@@ -79,7 +79,7 @@ export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
         <AppText tone="muted">{t('quote.intro')}</AppText>
         <NumberField label={t('quote.toPassenger')} suffix={format.distanceUnit} {...bind('kmToPassenger')} />
         <NumberField label={t('quote.trip')} suffix={format.distanceUnit} {...bind('kmTrip')} />
-        <NumberField label={t('quote.time')} suffix="min" hint={t('quote.timeHint')} {...bind('minutes')} />
+        <IntegerField label={t('quote.time')} suffix="min" hint={t('quote.timeHint')} {...bind('minutes')} />
       </Card>
       <Collapsible title={t('quote.moreOptions')}>
         <NumberField label={t('quote.return')} suffix={format.distanceUnit} hint={t('quote.returnHint')} {...bind('kmReturn')} />

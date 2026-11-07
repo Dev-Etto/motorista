@@ -10,7 +10,7 @@ import { useSubmit } from '@shared/hooks/useSubmit';
 import { useFormat } from '@shared/i18n/format';
 import { spacing } from '@shared/theme/theme';
 import { DateField } from '@shared/ui/DateField';
-import { MoneyField, NumberField } from '@shared/ui/fields';
+import { DurationField, IntegerField, MoneyField, NumberField } from '@shared/ui/fields';
 import { PlatformBadge } from '@shared/ui/PlatformBadge';
 import { Button, Card, Collapsible, Notice, Screen, Segmented } from '@shared/ui/primitives';
 import { dayRange } from '@shared/utils/dates';
@@ -20,7 +20,6 @@ import { useLiveTracking } from './useLiveTracking';
 import { JOURNEY_EXPENSES, useShiftForm } from './useShiftForm';
 
 const KM_MODES: KmEntryMode[] = ['manual', 'odometer'];
-const EXAMPLE_HOURS = 8.5;
 
 export default function ShiftFormScreen() {
   const router = useRouter();
@@ -63,7 +62,7 @@ export default function ShiftFormScreen() {
       {id ? null : <LiveTrackingCard live={live} />}
 
       <Card title={t('form.timeAndDistance')}>
-        <NumberField label={t('form.hoursLabel')} {...form.bind('hours')} suffix={t('form.hoursSuffix')} placeholder={format.decimalInput(EXAMPLE_HOURS)} />
+        <DurationField label={t('form.hoursLabel')} {...form.bind('hours')} hint={t('form.hoursHint')} />
         <Segmented value={form.kmMode} options={kmOptions} onChange={form.setKmMode} />
         {form.kmMode === 'manual' ? (
           <NumberField
@@ -107,8 +106,8 @@ export default function ShiftFormScreen() {
       </Collapsible>
 
       <Collapsible title={t('form.moreDetails')}>
-        <NumberField label={t('form.startHourLabel')} {...form.bind('startHour')} placeholder="8" hint={t('form.startHourHint')} />
-        <NumberField label={t('form.tripsLabel')} {...form.bind('trips')} />
+        <IntegerField label={t('form.startHourLabel')} {...form.bind('startHour')} maxDigits={2} placeholder="8" hint={t('form.startHourHint')} />
+        <IntegerField label={t('form.tripsLabel')} {...form.bind('trips')} />
       </Collapsible>
 
       <ShiftResultCard result={form.preview} />

@@ -188,22 +188,22 @@ describe('veículo e custos', () => {
 
 describe('plataformas', () => {
   it('traduz só as plataformas padrão e não briga com um nome já usado', async () => {
-    await platformRepository.add('Private');
+    await getDb().runAsync("INSERT INTO platforms (name, sort) VALUES ('Private', 9)");
     await platformRepository.localizeSystemNames({ private: 'Private', other: 'Other' });
     const names = (await platformRepository.list()).map((platform) => platform.name);
     expect(names).toEqual(expect.arrayContaining(['Uber', 'Particular', 'Other', 'Private']));
     expect(names).not.toContain('Outros');
   });
 
-  it('remover esconde e adicionar de novo reativa, sem perder o histórico', async () => {
+  it('desativar esconde e ativar de novo mostra, sem perder o histórico', async () => {
     await createVehicle();
     const id = await shiftRepository.save(shiftInput());
-    await platformRepository.deactivate(1);
+    await platformRepository.setActive(1, false);
 
     expect((await platformRepository.list()).map((platform) => platform.name)).not.toContain('Uber');
     expect((await shiftRepository.findById(id))?.earnings.map((earning) => earning.name)).toContain('Uber');
 
-    await platformRepository.add('Uber');
+    await platformRepository.setActive(1, true);
     expect((await platformRepository.list()).map((platform) => platform.name)).toContain('Uber');
   });
 });

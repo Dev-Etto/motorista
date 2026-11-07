@@ -11,7 +11,7 @@ const PAGE_SIZE = 30;
 export function useOffers() {
   const [period, setPeriodState] = useState<OfferPeriod>('today');
   const [custom, setCustom] = useState<CustomDates>(() => defaultCustomDates(today()));
-  const [outcome, setOutcomeState] = useState<OutcomeFilter>('all');
+  const [outcome, setOutcomeState] = useState<OutcomeFilter>('accepted');
   const [selectedSource, setSourceState] = useState(ALL_SOURCES);
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [estimating, setEstimating] = useState(() => copilot.getPreferences().estimateEarnings);

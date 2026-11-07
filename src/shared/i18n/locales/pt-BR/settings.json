@@ -140,15 +140,16 @@
     "shareMessage": "Resumo do app {{appName}}\nVersão: {{version}}\nJornadas: {{total}}\nDias com jornada: {{days}}\nPrimeira: {{first}}\nÚltima: {{last}}"
   },
   "platforms": {
-    "intro": "Estas plataformas aparecem no registro da jornada e nos relatórios.",
-    "newTitle": "Nova plataforma",
-    "nameLabel": "Nome",
-    "namePlaceholder": "iFood, Lalamove…",
-    "keepOne": "Mantenha pelo menos uma plataforma para registrar seus ganhos.",
-    "listTitle": "Suas plataformas",
-    "removeConfirm": {
-      "title": "Remover {{name}}?",
-      "message": "Jornadas antigas continuam com este nome."
+    "intro": "Ative as plataformas em que você trabalha. Só as ativas aparecem na jornada, nos relatórios e no Copiloto.",
+    "keepOne": "Mantenha pelo menos uma plataforma ativa para registrar seus ganhos.",
+    "appsTitle": "Apps com Copiloto",
+    "ownTitle": "Outros ganhos",
+    "legacyTitle": "Adicionadas por você",
+    "hint": {
+      "copilot": "O Copiloto lê as ofertas deste app",
+      "private": "Corridas combinadas direto com o passageiro",
+      "other": "Outro app de corrida ou entrega. Sem Copiloto",
+      "legacy": "Desativada, sai da lista. Jornadas antigas mantêm o nome"
     }
   },
   "privacy": {

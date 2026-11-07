@@ -1,18 +1,14 @@
+import { setPlatformActive } from '@application/platforms';
 import { platformRepository } from '@data/repositories/platformRepository';
 import { useAsyncData } from '@shared/hooks/useAsyncData';
 
 export function usePlatforms() {
-  const state = useAsyncData(() => platformRepository.list());
+  const state = useAsyncData(() => platformRepository.listAll());
 
-  const add = async (name: string) => {
-    await platformRepository.add(name);
+  const toggle = async (id: number, active: boolean) => {
+    await setPlatformActive(id, active);
     await state.reload();
   };
 
-  const deactivate = async (id: number) => {
-    await platformRepository.deactivate(id);
-    await state.reload();
-  };
-
-  return { state, add, deactivate };
+  return { state, toggle };
 }

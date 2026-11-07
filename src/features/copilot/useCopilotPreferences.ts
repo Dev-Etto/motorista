@@ -35,12 +35,7 @@ export function useCopilotPreferences(refresh: () => void, notify: (message: str
     setTimeout(refresh, FLOATING_REFRESH_DELAY_MS);
   };
 
-  const toggleMonitored = (packageName: string) => {
-    const monitored = current.monitoredPackages;
-    update({ monitoredPackages: monitored.includes(packageName) ? monitored.filter((item) => item !== packageName) : [...monitored, packageName] });
-  };
-
-  return { current, update, setNotification, setFloating, toggleMonitored, resetCardPosition: copilot.resetCardPosition };
+  return { current, update, setNotification, setFloating, resetCardPosition: copilot.resetCardPosition };
 }
 
 export type CopilotPreferencesState = ReturnType<typeof useCopilotPreferences>;

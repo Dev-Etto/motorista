@@ -5,7 +5,7 @@ import { classifyOffer } from '@domain/offer/offer';
 import { OfferTargetsSummary, useOfferTargets } from '@features/copilot';
 import { useFormFields } from '@shared/hooks/useFormFields';
 import { useFormat } from '@shared/i18n/format';
-import { MoneyField, NumberField } from '@shared/ui/fields';
+import { IntegerField, MoneyField, NumberField } from '@shared/ui/fields';
 import { LearnMore } from '@shared/ui/LearnMore';
 import { AppText, Card, Stat, StatGrid } from '@shared/ui/primitives';
 import { ScoreBadge } from '@shared/ui/ScoreBadge';
@@ -36,7 +36,7 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
         <AppText tone="muted">{t('offer.intro')}</AppText>
         <MoneyField label={t('offer.value')} {...bind('value')} />
         <NumberField label={t('offer.distance')} suffix={format.distanceUnit} hint={t('offer.distanceHint')} {...bind('km')} />
-        <NumberField label={t('offer.time')} suffix="min" {...bind('minutes')} />
+        <IntegerField label={t('offer.time')} suffix="min" {...bind('minutes')} />
       </Card>
       {ready ? (
         <Card>

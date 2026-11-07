@@ -45,7 +45,7 @@ describe('formulário da jornada', () => {
   it('preenche a jornada salva com horas em H:MM e decimais com vírgula', async () => {
     const { result } = await renderHook(() => useShiftForm(7));
 
-    await waitFor(() => expect(result.current.bind('hours').value).toBe('2:05'));
+    await waitFor(() => expect(result.current.bind('hours').value).toBe('02:05'));
     expect(result.current.kmField.value).toBe('45,2');
     expect(result.current.bind('trips').value).toBe('9');
     expect(result.current.earnings[1]).toBe('150,00');
@@ -53,7 +53,7 @@ describe('formulário da jornada', () => {
 
   it('voltar à tela não apaga o que foi editado', async () => {
     const { result } = await renderHook(() => useShiftForm(7));
-    await waitFor(() => expect(result.current.bind('hours').value).toBe('2:05'));
+    await waitFor(() => expect(result.current.bind('hours').value).toBe('02:05'));
 
     await act(async () => result.current.bind('hours').onChangeText('3'));
     await act(async () => mockFocus.callbacks.at(-1)?.());

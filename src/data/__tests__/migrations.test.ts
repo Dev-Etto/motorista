@@ -1,6 +1,6 @@
 import { DatabaseSync } from 'node:sqlite';
 import { BackupFile, backupMarket, createBackup, parseBackup, restoreBackup } from '@data/backup/backup';
-import { migrate, MIGRATIONS, SCHEMA_VERSION } from '@data/database/connection';
+import { CATALOG_PLATFORMS_SCHEMA_VERSION, migrate, MIGRATIONS, SCHEMA_VERSION } from '@data/database/connection';
 import { seedSampleData } from '@data/database/devSeed';
 import { openTestDatabase } from './sqliteHarness';
 
@@ -61,14 +61,24 @@ describe('migrações', () => {
     expect(setting('first_weekday')).toBe('1');
   });
 
-  it('marca as plataformas padrão para o nome seguir o idioma', async () => {
+  it('marca as plataformas do catálogo', async () => {
     openAtVersion(0);
     await migrate();
-    const rows = mockDb.prepare('SELECT name, system_key AS systemKey FROM platforms WHERE system_key IS NOT NULL ORDER BY name').all();
+    const rows = mockDb.prepare('SELECT name, system_key AS systemKey FROM platforms WHERE system_key IS NOT NULL ORDER BY sort').all();
     expect(rows).toEqual([
-      { name: 'Outros', systemKey: 'other' },
+      { name: 'Uber', systemKey: 'uber' },
+      { name: '99', systemKey: 'ninetyNine' },
+      { name: 'inDrive', systemKey: 'inDrive' },
       { name: 'Particular', systemKey: 'private' },
+      { name: 'Outros', systemKey: 'other' },
     ]);
+  });
+
+  it('recria desligada uma plataforma do catálogo que não existe mais', async () => {
+    openAtVersion(CATALOG_PLATFORMS_SCHEMA_VERSION - 1);
+    mockDb.exec("DELETE FROM platforms WHERE name = 'inDrive'");
+    await migrate();
+    expect(mockDb.prepare("SELECT active FROM platforms WHERE system_key = 'inDrive'").get()).toEqual({ active: 0 });
   });
 
   it('instalação nova segue o aparelho', async () => {

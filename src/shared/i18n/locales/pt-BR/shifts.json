@@ -10,7 +10,7 @@
     "measurePending_mi": "Você tem uma medição em andamento. Toque em Usar no registro para levar o tempo e as milhas, ou descarte a medição.",
     "timeAndDistance": "Tempo e distância",
     "hoursLabel": "Horas trabalhadas",
-    "hoursSuffix": "h",
+    "hoursHint": "Horas e minutos, como 08:30",
     "kmMode": {
       "manual": "Total",
       "odometer": "Odômetro"

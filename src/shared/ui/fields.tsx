@@ -1,6 +1,7 @@
 import { KeyboardTypeOptions, StyleSheet, TextInput, View } from 'react-native';
 import { useFormat } from '@shared/i18n/format';
 import { fonts, fontSize, MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@shared/theme/theme';
+import { completeDecimals, maskDecimal, maskDuration, maskInteger } from '@shared/utils/inputMask';
 import { AppText } from './primitives';
 
 interface TextFieldProps {
@@ -16,6 +17,7 @@ interface TextFieldProps {
   suffix?: string;
   hideLabel?: boolean;
   multiline?: boolean;
+  maxLength?: number;
 }
 
 export function TextField({
@@ -31,6 +33,7 @@ export function TextField({
   suffix,
   hideLabel,
   multiline,
+  maxLength,
 }: TextFieldProps) {
   const colors = useTheme();
   const borderColor = error ? colors.negative : colors.border;
@@ -55,6 +58,7 @@ export function TextField({
           selectionColor={colors.textMuted}
           keyboardType={keyboardType}
           multiline={multiline}
+          maxLength={maxLength}
           style={[styles.textInput, { color: colors.text }]}
         />
         {suffix ? <AppText tone="muted">{suffix}</AppText> : null}
@@ -73,15 +77,52 @@ export function TextField({
   );
 }
 
-type NumericFieldProps = Omit<TextFieldProps, 'keyboardType'>;
+const DEFAULT_DECIMALS = 2;
+const DURATION_LENGTH = 5;
+const DURATION_PLACEHOLDER = '08:00';
 
-export function NumberField(props: NumericFieldProps) {
-  return <TextField keyboardType="decimal-pad" {...props} />;
+type NumericFieldProps = Omit<TextFieldProps, 'keyboardType' | 'maxLength'>;
+
+export function NumberField({ decimals = DEFAULT_DECIMALS, onChangeText, ...props }: NumericFieldProps & { decimals?: number }) {
+  const format = useFormat();
+  return <TextField keyboardType="decimal-pad" onChangeText={(text) => onChangeText(maskDecimal(text, format.profile.locale, decimals))} {...props} />;
 }
 
-export function MoneyField(props: Omit<NumericFieldProps, 'prefix'>) {
+export function IntegerField({ maxDigits, onChangeText, ...props }: NumericFieldProps & { maxDigits?: number }) {
+  return <TextField keyboardType="number-pad" maxLength={maxDigits} onChangeText={(text) => onChangeText(maskInteger(text, maxDigits))} {...props} />;
+}
+
+export function DurationField({ onChangeText, ...props }: NumericFieldProps) {
+  return (
+    <TextField
+      keyboardType="number-pad"
+      maxLength={DURATION_LENGTH}
+      placeholder={DURATION_PLACEHOLDER}
+      onChangeText={(text) => onChangeText(maskDuration(text))}
+      {...props}
+    />
+  );
+}
+
+export function MoneyField({ onChangeText, onBlur, ...props }: Omit<NumericFieldProps, 'prefix'>) {
   const format = useFormat();
-  return <TextField keyboardType="decimal-pad" prefix={format.currencySymbol} placeholder={format.moneyInput(0)} {...props} />;
+  const { locale } = format.profile;
+
+  const complete = () => {
+    if (props.value.trim()) onChangeText(completeDecimals(props.value, locale, format.moneyDigits));
+    onBlur?.();
+  };
+
+  return (
+    <TextField
+      keyboardType="decimal-pad"
+      prefix={format.currencySymbol}
+      placeholder={format.moneyInput(0)}
+      onChangeText={(text) => onChangeText(maskDecimal(text, locale, format.moneyDigits))}
+      onBlur={complete}
+      {...props}
+    />
+  );
 }
 
 const styles = StyleSheet.create({

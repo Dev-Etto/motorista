@@ -140,15 +140,16 @@
     "shareMessage": "{{appName}} app summary\nVersion: {{version}}\nShifts: {{total}}\nDays with shifts: {{days}}\nFirst: {{first}}\nLast: {{last}}"
   },
   "platforms": {
-    "intro": "These platforms appear when you log a shift and in reports.",
-    "newTitle": "New platform",
-    "nameLabel": "Name",
-    "namePlaceholder": "DoorDash, Lyft…",
-    "keepOne": "Keep at least one platform to log your earnings.",
-    "listTitle": "Your platforms",
-    "removeConfirm": {
-      "title": "Remove {{name}}?",
-      "message": "Past shifts keep this name."
+    "intro": "Turn on the platforms you work with. Only active ones show up in shifts, reports and the Copilot.",
+    "keepOne": "Keep at least one platform active to record your earnings.",
+    "appsTitle": "Apps with Copilot",
+    "ownTitle": "Other earnings",
+    "legacyTitle": "Added by you",
+    "hint": {
+      "copilot": "The Copilot reads offers from this app",
+      "private": "Rides arranged directly with the passenger",
+      "other": "Another ride or delivery app. No Copilot",
+      "legacy": "Once off, it leaves the list. Past shifts keep the name"
     }
   },
   "privacy": {
