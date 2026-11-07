@@ -10,19 +10,21 @@ export interface ExpenseRow {
   liters: number | null;
   odometer: number | null;
   note: string | null;
+  vehicle_id?: number | null;
 }
 
 export function createExpenseRepository(connection: () => SqlExecutor = getDb) {
   return {
     async add(input: Omit<ExpenseRow, 'id' | 'shift_id'>): Promise<void> {
       await connection().runAsync(
-        'INSERT INTO expenses (shift_id, date, category, cents, liters, odometer, note) VALUES (NULL, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO expenses (shift_id, date, category, cents, liters, odometer, note, vehicle_id) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)',
         input.date,
         input.category,
         input.cents,
         input.liters,
         input.odometer,
         input.note,
+        input.vehicle_id ?? null,
       );
     },
 
@@ -32,13 +34,14 @@ export function createExpenseRepository(connection: () => SqlExecutor = getDb) {
 
     async update(id: number, input: Omit<ExpenseRow, 'id' | 'shift_id'>): Promise<void> {
       await connection().runAsync(
-        'UPDATE expenses SET date = ?, category = ?, cents = ?, liters = ?, odometer = ?, note = ? WHERE id = ?',
+        'UPDATE expenses SET date = ?, category = ?, cents = ?, liters = ?, odometer = ?, note = ?, vehicle_id = ? WHERE id = ?',
         input.date,
         input.category,
         input.cents,
         input.liters,
         input.odometer,
         input.note,
+        input.vehicle_id ?? null,
         id,
       );
     },

@@ -25,8 +25,15 @@
     "deleteConfirm": {
       "title": "¿Eliminar {{label}}?",
       "message": "El registro de {{amount}} sale de tus resultados."
-    }
+    },
+    "vehicleLabel": "Vehículo"
   },
   "alreadyInCost_km": "{{category}} ya está en el costo por km. El valor sirve para comparar lo previsto con lo pagado.",
-  "alreadyInCost_mi": "{{category}} ya está en el costo por milla. El valor sirve para comparar lo previsto con lo pagado."
+  "alreadyInCost_mi": "{{category}} ya está en el costo por milla. El valor sirve para comparar lo previsto con lo pagado.",
+  "fuelPrice": {
+    "title": "¿Actualizar el precio del combustible de {{name}}?",
+    "message": "En esta carga pagaste {{price}} por {{unit}}. El costo por km usa este precio desde hoy.",
+    "keep": "Ahora no",
+    "update": "Actualizar"
+  }
 }

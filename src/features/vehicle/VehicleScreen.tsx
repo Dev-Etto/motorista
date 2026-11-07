@@ -54,7 +54,9 @@ export default function VehicleScreen() {
 
     confirmAction({
       title: t('manage.archiveConfirm.title', { name: form.name }),
-      message: t('manage.archiveConfirm.message'),
+      message: status?.nextCurrent
+        ? `${t('manage.archiveConfirm.message')} ${t('manage.archiveConfirm.nextCurrent', { name: status.nextCurrent.name })}`
+        : t('manage.archiveConfirm.message'),
       actionLabel: t('manage.archive'),
       onConfirm: async () => {
         await archiveVehicle(vehicleId);
@@ -67,6 +69,7 @@ export default function VehicleScreen() {
     <Screen>
       <VehicleCostForm form={form} />
       <CostSummaryCard costs={form.costs} detailed />
+      <Notice tone="accent" message={t('manage.validFromToday')} />
       {form.error ? <Notice tone="negative" message={form.error} /> : null}
       {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
       <Button label={t('common:actions.save')} busy={saving.busy} onPress={saving.submit} />

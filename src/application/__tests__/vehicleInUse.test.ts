@@ -1,6 +1,7 @@
+import { planVehicleName } from '@application/goalProgress';
 import { syncCopilotTargets } from '@application/offerSettings';
 import { releaseShiftVehicle, shiftVehicle, vehicleInUse } from '@application/vehicleInUse';
-import { archiveVehicle, shiftVehicleOtherThan, VehicleInShiftError } from '@application/vehicles';
+import { archiveVehicle, fuelPriceSuggestion, nextCurrentIfArchived, shiftVehicleOtherThan, updateFuelPrice, VehicleInShiftError } from '@application/vehicles';
 import { settingsRepository } from '@data/repositories/settingsRepository';
 import { vehicleRepository } from '@data/repositories/vehicleRepository';
 import { copilot } from '@modules/copilot';
@@ -10,7 +11,10 @@ const CAR = { id: 1, name: 'Carro', kind: 'car', fuel: 'gasoline' };
 const MOTO = { id: 2, name: 'Moto', kind: 'motorcycle', fuel: 'gasoline' };
 
 jest.mock('@modules/copilot', () => ({ copilot: { getTimer: jest.fn(), setTargets: jest.fn() } }));
-jest.mock('@application/goalProgress', () => ({ loadGoalProgress: jest.fn().mockResolvedValue(null) }));
+jest.mock('@application/goalProgress', () => ({
+  loadGoalProgress: jest.fn().mockResolvedValue(null),
+  planVehicleName: jest.requireActual('@application/goalProgress').planVehicleName,
+}));
 jest.mock('@data/repositories/settingsRepository', () => ({
   SETTING_KEYS: { shiftVehicle: 'shift_vehicle' },
   settingsRepository: {
@@ -27,7 +31,14 @@ jest.mock('@data/repositories/vehicleRepository', () => ({
     find: jest.fn(),
     archive: jest.fn(),
     setCurrent: jest.fn(),
-    getCostsAt: jest.fn(async (_date: string, id?: number) => ({ costs: { fullPerKm: id === 2 ? 40 : 100 } })),
+    list: jest.fn(),
+    getCostProfile: jest.fn(),
+    saveCostProfile: jest.fn(),
+    getCostsAt: jest.fn(async (_date: string, id?: number) => ({
+      vehicle: id === 2 ? MOTO : CAR,
+      profile: { fuelPriceCents: 600 },
+      costs: { fullPerKm: id === 2 ? 40 : 100 },
+    })),
   },
 }));
 
@@ -88,5 +99,36 @@ describe('veículo da jornada', () => {
 
     await expect(archiveVehicle(1)).rejects.toBeInstanceOf(VehicleInShiftError);
     expect(vehicles.archive).not.toHaveBeenCalled();
+  });
+
+  it('arquivar o atual diz quem passa a ser o atual', async () => {
+    vehicles.list.mockResolvedValue([CAR, MOTO] as never);
+
+    expect(await nextCurrentIfArchived(1)).toEqual(MOTO);
+    expect(await nextCurrentIfArchived(2)).toBeNull();
+  });
+
+  it('abastecimento com preço diferente sugere atualizar só combustível líquido', async () => {
+    expect(await fuelPriceSuggestion(1, 19500, 30)).toEqual({ vehicle: CAR, priceCents: 650 });
+    expect(await fuelPriceSuggestion(1, 18000, 30)).toBeNull();
+    expect(await fuelPriceSuggestion(1, 19500, null)).toBeNull();
+    expect(await fuelPriceSuggestion(null, 19500, 30)).toBeNull();
+  });
+
+  it('atualizar o preço grava um perfil novo a partir de hoje', async () => {
+    startedTimer(false);
+    vehicles.getCostProfile.mockResolvedValue({ fuelPriceCents: 600, consumptionKmPerUnit: 11 } as never);
+
+    await updateFuelPrice(1, 650);
+
+    expect(vehicles.saveCostProfile).toHaveBeenCalledWith(1, expect.any(String), expect.objectContaining({ fuelPriceCents: 650, consumptionKmPerUnit: 11 }));
+  });
+
+  it('a meta avisa qual veículo usa só quando há mais de um', async () => {
+    vehicles.list.mockResolvedValue([CAR, MOTO] as never);
+    expect(await planVehicleName()).toBe('Carro');
+
+    vehicles.list.mockResolvedValue([CAR] as never);
+    expect(await planVehicleName()).toBeNull();
   });
 });

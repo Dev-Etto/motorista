@@ -53,5 +53,6 @@
     "noDescription": "No description",
     "tapToRemove": "Tap to remove",
     "removeTitle": "Remove quote?"
-  }
+  },
+  "costOf": "{{name}} cost: {{cost}}"
 }

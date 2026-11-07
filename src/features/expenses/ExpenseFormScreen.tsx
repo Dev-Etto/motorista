@@ -1,17 +1,20 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { fuelPriceSuggestion, updateFuelPrice } from '@application/vehicles';
 import { countsAgainstProfit } from '@domain/expense/expense';
 import { useSubmit } from '@shared/hooks/useSubmit';
 import { useFormat } from '@shared/i18n/format';
 import { DateField } from '@shared/ui/DateField';
-import { confirmAction } from '@shared/ui/dialog';
+import { confirmAction, showDialog } from '@shared/ui/dialog';
 import { MoneyField, NumberField, TextField } from '@shared/ui/fields';
+import { FilterChips } from '@shared/ui/FilterChips';
 import { Button, Card, Notice, Screen, Segmented } from '@shared/ui/primitives';
 import { today } from '@shared/utils/dates';
 import { reportError } from '@shared/utils/reportError';
 import { ExpenseField, ExpenseFieldError, expenseFormErrors } from './expenseFormErrors';
 import { findExpense, removeExpense, saveExpense } from './saveExpense';
+import { useExpenseVehicles } from './useExpenseVehicles';
 
 type LooseCategory = 'fuel' | 'maintenance' | 'other';
 
@@ -34,6 +37,9 @@ export default function ExpenseFormScreen() {
   const [odometer, setOdometer] = useState('');
   const [note, setNote] = useState('');
   const [errors, setErrors] = useState<Partial<Record<ExpenseField, ExpenseFieldError>>>({});
+  const [chosenVehicleId, setVehicleId] = useState<number | null>(null);
+  const { vehicles, inUseId } = useExpenseVehicles();
+  const vehicleId = chosenVehicleId ?? inUseId;
 
   useEffect(() => {
     if (!expenseId) return;
@@ -46,6 +52,7 @@ export default function ExpenseFormScreen() {
       setLiters(expense.liters === null ? '' : format.volumeInput(expense.liters));
       setOdometer(expense.odometer === null ? '' : format.distanceInput(expense.odometer, 0));
       setNote(expense.note ?? '');
+      if (expense.vehicle_id) setVehicleId(expense.vehicle_id);
     }, reportError);
   }, [expenseId, format]);
 
@@ -73,18 +80,31 @@ export default function ExpenseFormScreen() {
     setErrors(found);
     if (!cents || Object.keys(found).length > 0) return;
 
+    const savedLiters = category === 'fuel' ? format.parseVolume(liters) : null;
     await saveExpense(
       {
         date,
         category,
         cents,
-        liters: category === 'fuel' ? format.parseVolume(liters) : null,
+        liters: savedLiters,
         odometer: format.parseDistance(odometer),
         note: note.trim() || null,
+        vehicle_id: vehicleId,
       },
       expenseId,
     );
+    const suggestion = category === 'fuel' ? await fuelPriceSuggestion(vehicleId, cents, savedLiters) : null;
     router.back();
+    if (!suggestion) return;
+
+    showDialog({
+      title: t('fuelPrice.title', { name: suggestion.vehicle.name }),
+      message: t('fuelPrice.message', { price: `${format.currencySymbol} ${format.perVolumeInput(suggestion.priceCents)}`, unit: format.volumeUnit }),
+      actions: [
+        { label: t('fuelPrice.keep'), tone: 'secondary' },
+        { label: t('fuelPrice.update'), tone: 'primary', onPress: () => updateFuelPrice(suggestion.vehicle.id, suggestion.priceCents) },
+      ],
+    });
   });
 
   const messageOf = (field: ExpenseField) => {
@@ -101,6 +121,14 @@ export default function ExpenseFormScreen() {
         <Notice tone="accent" message={t('alreadyInCost', { context: format.distanceUnit, category: t(`category.${category}`) })} />
       )}
       <Card>
+        {vehicles.length > 1 ? (
+          <FilterChips
+            label={t('form.vehicleLabel')}
+            value={String(vehicleId)}
+            options={vehicles.map((vehicle) => ({ value: String(vehicle.id), label: vehicle.name }))}
+            onChange={(id) => setVehicleId(Number(id))}
+          />
+        ) : null}
         <DateField label={t('form.dateLabel')} value={date} onChange={(next) => next && setDate(next)} maximumDate={new Date()} />
         <MoneyField label={t('form.valueLabel')} value={value} onChangeText={setValue} error={messageOf('value')} />
         {category === 'fuel' ? (

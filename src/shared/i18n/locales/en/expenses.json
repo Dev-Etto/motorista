@@ -25,8 +25,15 @@
     "deleteConfirm": {
       "title": "Delete {{label}}?",
       "message": "The {{amount}} entry will be removed from your results."
-    }
+    },
+    "vehicleLabel": "Vehicle"
   },
   "alreadyInCost_km": "{{category}} is already included in the cost per km. The amount is used to compare the estimate with what you paid.",
-  "alreadyInCost_mi": "{{category}} is already included in the cost per mile. The amount is used to compare the estimate with what you paid."
+  "alreadyInCost_mi": "{{category}} is already included in the cost per mile. The amount is used to compare the estimate with what you paid.",
+  "fuelPrice": {
+    "title": "Update the fuel price for {{name}}?",
+    "message": "On this refuel you paid {{price}} per {{unit}}. The cost per km uses this price from today on.",
+    "keep": "Not now",
+    "update": "Update"
+  }
 }

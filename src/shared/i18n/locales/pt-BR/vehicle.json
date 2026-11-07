@@ -98,7 +98,8 @@
     "emptyMessage": "Cadastre seu carro ou moto para o app calcular o custo por km.",
     "archiveConfirm": {
       "title": "Arquivar {{name}}?",
-      "message": "Ele sai das escolhas, mas as jornadas antigas continuam com o custo dele."
+      "message": "Ele sai das escolhas, mas as jornadas antigas continuam com o custo dele.",
+      "nextCurrent": "{{name}} passa a ser o veículo atual."
     },
     "currentRow": "Veículo atual",
     "switchInShift": {
@@ -106,6 +107,14 @@
       "message": "Esta jornada continua com {{shift}}. {{next}} vale a partir da próxima jornada.",
       "action": "Trocar"
     },
-    "inShift": "Este veículo está numa jornada em andamento. Para arquivar, encerre a jornada."
+    "inShift": "Este veículo está numa jornada em andamento. Para arquivar, encerre a jornada.",
+    "validFromToday": "O custo salvo vale a partir de hoje. Jornadas anteriores mantêm o custo delas.",
+    "archivedTitle": "Arquivados",
+    "reactivateHint": "Toque para reativar",
+    "reactivate": "Reativar",
+    "reactivateConfirm": {
+      "title": "Reativar {{name}}?",
+      "message": "Ele volta para as escolhas de jornada e despesa."
+    }
   }
 }

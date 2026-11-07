@@ -21,7 +21,7 @@ export default function ShiftsScreen() {
   const format = useFormat();
   const cursor = useMonthCursor();
   const month = useAsyncData(() => loadMonth(cursor.date), [cursor.date]);
-  const { data, reload } = month;
+  const { data } = month;
   const [pickedDate, setSelectedDate] = useState<string | null>(null);
   const selectedDate = pickedDate?.startsWith(monthKey(cursor.date)) ? pickedDate : null;
   const allShifts = useMemo(() => data?.shifts ?? [], [data?.shifts]);

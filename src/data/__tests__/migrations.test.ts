@@ -154,6 +154,18 @@ describe('backup de ponta a ponta', () => {
     expect(mockDb.prepare("SELECT value FROM settings WHERE key = 'novo'").get()).toBeUndefined();
   });
 
+  it('backup antigo, com despesas sem veículo, restaura', async () => {
+    mockDb.exec("INSERT INTO expenses (shift_id, date, category, cents) VALUES (NULL, '2026-11-02', 'fuel', 20000)");
+    const backup = await createBackup();
+    const legacy = { ...backup, tables: { ...backup.tables, expenses: backup.tables.expenses.map(({ vehicle_id: _vehicle, ...expense }) => expense) } };
+    const file = parseBackup(JSON.stringify(legacy));
+
+    if (!file.ok) throw new Error(file.error);
+    await restoreBackup(file.backup);
+
+    expect(mockDb.prepare("SELECT vehicle_id FROM expenses WHERE date = '2026-11-02'").get()).toEqual({ vehicle_id: null });
+  });
+
   it('mantém os dados atuais quando a restauração falha', async () => {
     const backup = await createBackup();
     const broken: BackupFile = { ...backup, tables: { ...backup.tables, shifts: [{ coluna_que_nao_existe: 1 }] } };

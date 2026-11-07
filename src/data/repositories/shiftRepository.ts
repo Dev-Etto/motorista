@@ -67,7 +67,7 @@ export interface ShiftInput {
   expenses: { category: ExpenseCategory; cents: number }[];
 }
 
-export type ShiftListItem = ShiftFact & { id: number; partial: boolean };
+export type ShiftListItem = ShiftFact & { id: number; partial: boolean; vehicleId: number | null };
 
 interface CostSnapshot {
   costPerKm: number;
@@ -191,6 +191,7 @@ export function createShiftRepository(connection: () => SqlExecutor = getDb, veh
 
         return {
           id: shift.id,
+          vehicleId: shift.vehicle_id,
           date: shift.date,
           startHour: shift.start_hour,
           minutes: shift.minutes,

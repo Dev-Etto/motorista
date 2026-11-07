@@ -223,6 +223,28 @@ describe('mais de um veículo', () => {
     expect((await vehicleRepository.list()).map((vehicle) => vehicle.id)).toEqual([moto]);
   });
 
+  it('arquivados aparecem à parte e podem voltar', async () => {
+    const car = await createVehicle();
+    const moto = await createVehicle(CHEAP, 'motorcycle');
+    await vehicleRepository.archive(car);
+
+    expect((await vehicleRepository.listArchived()).map((vehicle) => vehicle.id)).toEqual([car]);
+    await vehicleRepository.reactivate(car);
+    expect((await vehicleRepository.list()).map((vehicle) => vehicle.id)).toEqual([car, moto]);
+    expect(await vehicleRepository.listArchived()).toEqual([]);
+  });
+
+  it('despesa guarda e edita o veículo', async () => {
+    const car = await createVehicle();
+    await expenseRepository.add({ date: '2026-11-05', category: 'fuel', cents: 20000, liters: 30, odometer: null, note: null, vehicle_id: car });
+    const [saved] = await expenseRepository.listLoose('2026-11-01', '2026-11-30');
+    if (!saved) throw new Error('despesa não encontrada');
+
+    expect(saved.vehicle_id).toBe(car);
+    await expenseRepository.update(saved.id, { ...saved, vehicle_id: null });
+    expect((await expenseRepository.find(saved.id))?.vehicle_id).toBeNull();
+  });
+
   it('não arquiva o único veículo', async () => {
     const car = await createVehicle();
     await expect(vehicleRepository.archive(car)).rejects.toBeInstanceOf(OnlyVehicleError);

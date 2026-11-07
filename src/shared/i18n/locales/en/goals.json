@@ -59,6 +59,7 @@
       "hours": "Enter the hours per day, from {{min}} to {{max}}.",
       "dayTarget": "Check today's profit. Use numbers only, like {{example}}."
     },
-    "carried": "Repeating the goal from {{month}}. Save to use it this month or change the values."
+    "carried": "Repeating the goal from {{month}}. Save to use it this month or change the values.",
+    "planVehicle": "The plan uses the cost of {{name}}, the current vehicle. Month close, in Reports, adds up the cost of each vehicle used."
   }
 }
