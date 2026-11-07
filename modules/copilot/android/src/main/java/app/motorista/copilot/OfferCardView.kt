@@ -79,7 +79,7 @@ class OfferCardView(private val context: Context) {
       orientation = LinearLayout.HORIZONTAL
       setPadding(0, context.dp(METRICS_TOP_DP), 0, 0)
       addView(metric(format.perDistanceLabel(), format.perDistance(evaluation.perKmCents), evaluation.kmOnTarget, palette, scale), columnParams())
-      addView(metric(format.text(R.string.card_per_hour), if (evaluation.offer.minutes > 0) format.wholeMoney(evaluation.perHourCents) else "—", evaluation.hourOnTarget, palette, scale), columnParams())
+      addView(metric(format.text(R.string.card_per_hour), format.perHour(evaluation), evaluation.hourOnTarget, palette, scale), columnParams())
       evaluation.profitCents?.let { addView(metric(format.text(R.string.card_profit), format.money(it), it >= 0, palette, scale, false), columnParams()) }
     }
     body.addView(offerRow)

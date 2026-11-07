@@ -118,9 +118,13 @@ Com a opção ligada, a captura só acontece se todas estas condições valerem:
 | ID | Critério de aceite | Teste |
 | --- | --- | --- |
 | R13.1 | `N min.`, `N h M min.` e `Agora mesmo` são a idade do pedido e nunca contam como tempo de viagem | Fixtures |
-| R13.2 | Em oferta com R$/km e tempos em pares `min` e `km`, o tempo só vale com os dois trechos, sem trecho zerado. Sem isso, "Por hora" fica vazio, sem estimativa. Tempo fora desse formato continua valendo | Fixtures |
+| R13.2 | Em oferta com R$/km e tempos em pares `min` e `km`, o tempo só vale com os dois trechos, sem trecho zerado. Sem isso, o tempo vem da estimativa de R13.6. Tempo fora desse formato continua valendo | Fixtures |
 | R13.3 | `~N km` é a distância até o passageiro e não conta como distância da viagem. Se for a única distância, a leitura é incompleta | Fixtures, Kotlin |
 | R13.4 | O botão com bônus em outra linha e `Aumentar para R$ X` contam como ação de aceite, e o valor continua sendo o preço da oferta | Fixtures |
+| R13.5 | `~N min` e `~N h M min` sem ponto são o tempo da viagem e contam como tempo lido | Fixtures |
+| R13.6 | Oferta sem tempo na tela recebe um tempo estimado pela distância e pela velocidade mediana das últimas ofertas com tempo lido, entre 10 e 60 km/h. Com menos de 5 ofertas, a velocidade é 25 km/h. Ofertas com tempo estimado não entram na conta da velocidade | Kotlin |
+| R13.7 | O tempo estimado e o "Por hora" que sai dele aparecem com `~` no cartão, na notificação e no histórico, e o registro guarda `minutesEstimated` | Kotlin, Jest |
+| R13.8 | Se a mesma oferta aparecer depois com tempo lido, o cartão e o registro passam a usar esse tempo | Kotlin |
 
 ## R14. Cartão no botão flutuante
 

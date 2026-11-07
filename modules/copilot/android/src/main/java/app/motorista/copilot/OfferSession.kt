@@ -62,12 +62,17 @@ class OfferSession(
   }
 
   private fun refineWithMoreLegs(offer: ParsedOffer, source: String) {
-    if (offer.legs <= (lastOffer?.legs ?: 0)) return
+    if (!addsDetail(offer, lastOffer)) return
 
     lastOffer = offer
     val evaluation = evaluate(offer, source)
     present(evaluation)
     currentOfferId?.let { refine(it, evaluation) }
+  }
+
+  private fun addsDetail(offer: ParsedOffer, last: ParsedOffer?): Boolean {
+    if (last == null) return true
+    return offer.legs > last.legs || (last.minutes == 0 && offer.minutes > 0)
   }
 
   private fun releaseImageHold() {

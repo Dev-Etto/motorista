@@ -10,6 +10,7 @@ import { AppText } from '@shared/ui/primitives';
 import { ScoreBadge } from '@shared/ui/ScoreBadge';
 
 const REASON_SEPARATOR = ' · ';
+const ESTIMATE_MARK = '~';
 
 function describeStatus(entry: OfferHistoryEntry, t: TFunction<'offers'>, format: Formatter): string {
   const labels: Record<OfferStatus, string> = {
@@ -19,6 +20,20 @@ function describeStatus(entry: OfferHistoryEntry, t: TFunction<'offers'>, format
     unanswered: t('status.unanswered'),
   };
   return labels[statusOf(entry)];
+}
+
+function describeDistance(entry: OfferHistoryEntry, t: TFunction<'offers'>, format: Formatter): string {
+  const distance = format.distance(entry.km);
+  if (entry.minutes <= 0) return distance;
+  const key = entry.minutesEstimated ? 'row.distanceWithEstimatedTime' : 'row.distanceWithTime';
+  return t(key, { distance, minutes: entry.minutes });
+}
+
+function describeRates(entry: OfferHistoryEntry, format: Formatter): string {
+  const perDistance = format.perDistance(entry.perKmCents);
+  if (entry.minutes <= 0) return perDistance;
+  const mark = entry.minutesEstimated ? ESTIMATE_MARK : '';
+  return `${perDistance} • ${mark}${format.perHour(entry.perHourCents)}`;
 }
 
 export function OfferRow({ entry }: { entry: OfferHistoryEntry }) {
@@ -37,11 +52,9 @@ export function OfferRow({ entry }: { entry: OfferHistoryEntry }) {
         </AppText>
         <ScoreBadge score={entry.score} color={entry.color} />
       </View>
-      <AppText>
-        {entry.minutes > 0 ? t('row.distanceWithTime', { distance: format.distance(entry.km), minutes: entry.minutes }) : format.distance(entry.km)}
-      </AppText>
+      <AppText>{describeDistance(entry, t, format)}</AppText>
       <AppText variant="caption" tone="muted">
-        {entry.minutes > 0 ? `${format.perDistance(entry.perKmCents)} • ${format.perHour(entry.perHourCents)}` : format.perDistance(entry.perKmCents)}
+        {describeRates(entry, format)}
       </AppText>
       {entry.reason ? (
         <AppText variant="caption" tone="muted">

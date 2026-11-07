@@ -146,6 +146,15 @@ class OfferSessionTest {
   }
 
   @Test
+  fun tempoQueApareceDepoisAtualizaAOferta() {
+    session.onScan(offer.copy(minutes = 0), "indrive")
+    session.onScan(offer.copy(minutes = 13), "indrive")
+    session.onScan(offer.copy(minutes = 13), "indrive")
+    assertEquals(2, channel.shown)
+    assertEquals(listOf("indrive"), recorded)
+  }
+
+  @Test
   fun ofertaLidaPorImagemNaoFechaComLeituraVazia() {
     session.onImageScan(offer, "uber")
     session.onScan(null, "uber")

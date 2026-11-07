@@ -29,13 +29,20 @@ class OfferFormat(private val regional: RegionalSettings, private val texts: Off
 
   fun distanceAndTime(evaluation: OfferEvaluation): String {
     val distance = "${decimal(evaluation.offer.km / unit.kmPerUnit)} ${unit.id}"
-    return if (evaluation.offer.minutes > 0) "$distance • ${evaluation.offer.minutes} min" else distance
+    return if (evaluation.offer.minutes > 0) "$distance • ${estimated(evaluation)}${evaluation.offer.minutes} min" else distance
   }
 
   fun rates(evaluation: OfferEvaluation): String {
     val perDistance = "${perDistance(evaluation.perKmCents)}/${unit.id}"
-    return if (evaluation.offer.minutes > 0) "$perDistance • ${wholeMoney(evaluation.perHourCents)}/h" else perDistance
+    return if (evaluation.offer.minutes > 0) "$perDistance • ${perHour(evaluation)}/h" else perDistance
   }
+
+  fun perHour(evaluation: OfferEvaluation): String {
+    if (evaluation.offer.minutes <= 0) return NO_VALUE
+    return "${estimated(evaluation)}${wholeMoney(evaluation.perHourCents)}"
+  }
+
+  private fun estimated(evaluation: OfferEvaluation) = if (evaluation.offer.minutesEstimated) ESTIMATE_MARK else ""
 
   fun summary(evaluation: OfferEvaluation, metric: PrimaryMetric): String {
     val profit = evaluation.profitCents
@@ -118,6 +125,8 @@ class OfferFormat(private val regional: RegionalSettings, private val texts: Off
 
   companion object {
     private const val CENTS_PER_UNIT = 100.0
+    private const val NO_VALUE = "—"
+    private const val ESTIMATE_MARK = "~"
     private const val CENT_DIGITS = 2
     private const val SHORT_MINOR_FROM = 10
     private const val MS_PER_SECOND = 1000

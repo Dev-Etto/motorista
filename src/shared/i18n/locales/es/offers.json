@@ -16,7 +16,8 @@
     "unanswered": "Sin respuesta"
   },
   "row": {
-    "distanceWithTime": "{{distance}} • {{minutes}} min"
+    "distanceWithTime": "{{distance}} • {{minutes}} min",
+    "distanceWithEstimatedTime": "{{distance}} • ~{{minutes}} min"
   },
   "estimate": {
     "title": "Ingresos estimados",
