@@ -1,11 +1,11 @@
 import { File, Paths } from 'expo-file-system';
+import { addDays, toISODate } from '@/shared/utils/dates';
 import { runInTransaction } from './connection';
 
 const REQUEST_FILE = 'mock-seed';
 const SAMPLE_DAYS = 6;
 const SAMPLE_EARNINGS_CENTS = 28000;
 const SAMPLE_EARNINGS_STEP = 1500;
-const MS_PER_DAY = 86400000;
 const SAMPLE_PROFILE = {
   ownership: 'owned',
   fuelPriceCents: 600,
@@ -33,7 +33,7 @@ export async function seedSampleData(now = Date.now()): Promise<void> {
     await tx.runAsync("INSERT INTO cost_profiles (vehicle_id, valid_from, data) VALUES (1, '2020-01-01', ?)", JSON.stringify(SAMPLE_PROFILE));
     await tx.runAsync("INSERT INTO settings (key, value) VALUES ('onboarded', '1') ON CONFLICT(key) DO UPDATE SET value = excluded.value");
     for (let day = 0; day < SAMPLE_DAYS; day++) {
-      const date = new Date(now - day * MS_PER_DAY).toISOString().slice(0, 10);
+      const date = addDays(toISODate(new Date(now)), -day);
       await tx.runAsync(
         'INSERT INTO shifts (id, vehicle_id, date, start_hour, minutes, km, cost_per_km, variable_per_km, created_at) VALUES (?, 1, ?, 8, 480, 140, 95, 60, ?)',
         day + 1,

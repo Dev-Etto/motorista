@@ -4,6 +4,7 @@ import { shiftRepository } from '@/data/repositories/shiftRepository';
 import { vehicleRepository } from '@/data/repositories/vehicleRepository';
 import { countsAgainstProfit, type ExpenseCategory } from '@/domain/expense/expense';
 import { computeShift } from '@/domain/shift/shift';
+import { KmEntryMode, kmFromEntry, ShiftFormError, validateShiftForm } from '@/domain/shift/shiftForm';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { toISODate, today } from '@/shared/utils/dates';
 import { centsToInput } from '@/shared/utils/money';
@@ -18,18 +19,14 @@ export const JOURNEY_EXPENSES: { category: ExpenseCategory; label: string }[] = 
 ];
 
 const MINUTES_PER_HOUR = 60;
-const MAX_SHIFT_MINUTES = 24 * MINUTES_PER_HOUR;
 
-export type KmEntryMode = 'manual' | 'odometer';
-
-function resolveKm(mode: KmEntryMode, kmText: string, startText: string, endText: string): number | null {
-  if (mode === 'manual') return decimalOrNull(kmText);
-
-  const start = decimalOrNull(startText);
-  const end = decimalOrNull(endText);
-  if (start === null || end === null || end < start) return null;
-  return end - start;
-}
+const FORM_ERRORS: Record<ShiftFormError, string> = {
+  'invalid-number': 'Confira os números digitados. Use só números, como 150,50.',
+  'invalid-start-hour': 'A hora de início vai de 0 a 23.',
+  'too-long': 'Uma jornada tem no máximo 24 horas. Confira as horas trabalhadas.',
+  'no-earnings': 'Informe o ganho de pelo menos uma plataforma.',
+  'odometer-order': 'O odômetro final precisa ser maior que o inicial.',
+};
 
 async function loadFormData(shiftId: number | undefined, date: string) {
   const [platforms, costs, existing] = await Promise.all([
@@ -76,7 +73,7 @@ export function useShiftForm(shiftId?: number) {
     return loaded;
   }, [shiftId]);
 
-  const km = resolveKm(kmMode, kmText, odometerStart, odometerEnd);
+  const km = kmFromEntry({ mode: kmMode, km: decimalOrNull(kmText), odometerStart: decimalOrNull(odometerStart), odometerEnd: decimalOrNull(odometerEnd) });
   const minutes = Math.round((parseHours(hours) ?? 0) * MINUTES_PER_HOUR);
   const grossCents = Object.values(earnings).reduce((total, text) => total + centsOrZero(text), 0);
   const expensesCents = JOURNEY_EXPENSES.filter(({ category }) => countsAgainstProfit(category)).reduce(
@@ -114,24 +111,17 @@ export function useShiftForm(shiftId?: number) {
   const typedNumbers = [kmMode === 'manual' ? kmText : '', odometerStart, odometerEnd, trips, startHour, ...Object.values(earnings), ...Object.values(expenses).map((text) => text ?? '')];
 
   const save = async (): Promise<boolean> => {
-    if (typedNumbers.some(hasInvalidNumber) || (hours.trim() !== '' && parseHours(hours) === null)) {
-      setError('Confira os números digitados. Use só números, como 150,50.');
-      return false;
-    }
-    if (hasInvalidHour(startHour)) {
-      setError('A hora de início vai de 0 a 23.');
-      return false;
-    }
-    if (minutes > MAX_SHIFT_MINUTES) {
-      setError('Uma jornada tem no máximo 24 horas. Confira as horas trabalhadas.');
-      return false;
-    }
-    if (grossCents <= 0) {
-      setError('Informe o ganho de pelo menos uma plataforma.');
-      return false;
-    }
-    if (kmMode === 'odometer' && km === null && (odometerStart || odometerEnd)) {
-      setError('O odômetro final precisa ser maior que o inicial.');
+    const problem = validateShiftForm({
+      hasInvalidNumber: typedNumbers.some(hasInvalidNumber) || (hours.trim() !== '' && parseHours(hours) === null),
+      hasInvalidHour: hasInvalidHour(startHour),
+      minutes,
+      grossCents,
+      kmMode,
+      km,
+      odometerTyped: Boolean(odometerStart || odometerEnd),
+    });
+    if (problem) {
+      setError(FORM_ERRORS[problem]);
       return false;
     }
 

@@ -1,6 +1,5 @@
+import { ReportPeriod } from '@/domain/report/report';
 import { addDays, addMonths, formatDate, formatMonth, monthBounds, weekBounds } from '@/shared/utils/dates';
-
-export type ReportPeriod = 'week' | 'month' | 'year';
 
 const DAYS_IN_WEEK = 7;
 const MONTHS_IN_YEAR = 12;

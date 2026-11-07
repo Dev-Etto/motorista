@@ -1,3 +1,5 @@
+import { computeShift } from '@/domain/shift/shift';
+import { totalsByPlatform } from '@/domain/shift/summary';
 import { addDays, dayPeriod, fromISODate, monthBounds, weekdayName } from '@/shared/utils/dates';
 import { formatBRL, formatNumber } from '@/shared/utils/money';
 import { InsightRule, ShiftFact } from './types';
@@ -7,9 +9,10 @@ const MIN_PERIOD_GAP_CENTS = 100;
 const MIN_FUEL_GAP_PCT = 10;
 const MIN_MONTH_SHIFTS = 3;
 const EXTRA_KM_SCENARIO = 1000;
+const RECENT_DAYS = 28;
 const MS_PER_DAY = 86400000;
 
-const profitOf = (shift: ShiftFact) => shift.grossCents - (shift.km ?? 0) * shift.costPerKm - shift.expensesCents;
+const profitOf = (shift: ShiftFact) => computeShift(shift).profitCents;
 
 const sumBy = <T,>(items: T[], selector: (item: T) => number) => items.reduce((total, item) => total + selector(item), 0);
 
@@ -49,8 +52,8 @@ export const realProfitRule: InsightRule = ({ shifts, looseExpenses = [] }) => {
 };
 
 export const bestWeekdayRule: InsightRule = ({ shifts, today }) => {
-  const cutoff = addDays(today, -28);
-  const recent = shifts.filter((shift) => shift.date >= cutoff);
+  const cutoff = addDays(today, -(RECENT_DAYS - 1));
+  const recent = shifts.filter((shift) => shift.date >= cutoff && shift.date <= today);
   const ranked = rankByProfitPerHour(recent, (shift) => String(fromISODate(shift.date).getDay()));
   if (ranked.length < 2) return null;
 
@@ -81,16 +84,13 @@ export const bestPeriodRule: InsightRule = ({ shifts }) => {
 };
 
 export const platformRule: InsightRule = ({ shifts }) => {
-  const totals = new Map<string, number>();
-  for (const earning of shifts.flatMap((shift) => shift.earnings)) {
-    totals.set(earning.platform, (totals.get(earning.platform) ?? 0) + earning.cents);
-  }
-  if (totals.size < 2) return null;
+  const totals = totalsByPlatform(shifts);
+  if (totals.length < 2) return null;
 
-  const gross = sumBy([...totals.values()], (cents) => cents);
+  const gross = sumBy(totals, (total) => total.cents);
   if (gross <= 0) return null;
 
-  const [name, cents] = [...totals.entries()].sort((a, b) => b[1] - a[1])[0];
+  const [{ platform: name, cents }] = totals;
   return {
     id: 'platform',
     title: 'Plataforma',

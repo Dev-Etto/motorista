@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Alert } from 'react-native';
 import { ReminderRow } from '@/data/repositories/reminderRepository';
+import { kmRemaining } from '@/domain/reminder/reminder';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { useSubmit } from '@/shared/hooks/useSubmit';
 import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
@@ -16,7 +17,7 @@ import { useReminders } from './useReminders';
 const INITIAL = { title: '', km: '' };
 
 function describeKm(dueKm: number, totalKm: number) {
-  const remaining = dueKm - totalKm;
+  const remaining = kmRemaining(dueKm, totalKm);
   return remaining > 0 ? `faltam ${formatKm(remaining)}` : 'já chegou a hora';
 }
 

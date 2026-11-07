@@ -13,15 +13,18 @@ export function parseBRL(input: string): number | null {
   return value === null ? null : Math.round(value * 100);
 }
 
+const THOUSANDS_ONLY = /^-?\d{1,3}(\.\d{3})+$/;
+
+function normalizeDecimal(clean: string): string {
+  if (clean.includes(',')) return clean.replace(/\./g, '').replace(',', '.');
+  if (THOUSANDS_ONLY.test(clean)) return clean.replace(/\./g, '');
+  return clean;
+}
+
 export function parseDecimal(input: string): number | null {
   const clean = input.replace(/R\$|\s/g, '').replace(/[.,]$/, '');
   if (!clean) return null;
-  let normalized = clean;
-  if (clean.includes(',')) {
-    normalized = clean.replace(/\./g, '').replace(',', '.');
-  } else if (/^\d{1,3}(\.\d{3})+$/.test(clean)) {
-    normalized = clean.replace(/\./g, '');
-  }
+  const normalized = normalizeDecimal(clean);
   if (!/^-?\d*\.?\d+$/.test(normalized)) return null;
   const value = Number(normalized);
   return Number.isFinite(value) ? value : null;

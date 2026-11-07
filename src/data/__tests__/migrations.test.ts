@@ -68,6 +68,13 @@ describe('dados de exemplo', () => {
     expect(count('shift_earnings')).toBe(6);
     expect(mockDb.prepare("SELECT value FROM settings WHERE key = 'onboarded'").get()).toEqual({ value: '1' });
   });
+
+  it('usa a data local, mesmo à noite', async () => {
+    openAtVersion(SCHEMA_VERSION);
+    await seedSampleData(new Date(2026, 10, 5, 23, 30).getTime());
+
+    expect(mockDb.prepare('SELECT MAX(date) AS last FROM shifts').get()).toEqual({ last: '2026-11-05' });
+  });
 });
 
 describe('backup de ponta a ponta', () => {
@@ -117,6 +124,13 @@ describe('backup de ponta a ponta', () => {
     await restoreBackup(withoutSettings);
 
     expect(mockDb.prepare("SELECT value FROM settings WHERE key = 'onboarded'").get()).toEqual({ value: '1' });
+  });
+
+  it('usa a data local, mesmo à noite', async () => {
+    openAtVersion(SCHEMA_VERSION);
+    await seedSampleData(new Date(2026, 10, 5, 23, 30).getTime());
+
+    expect(mockDb.prepare('SELECT MAX(date) AS last FROM shifts').get()).toEqual({ last: '2026-11-05' });
   });
 
   it('aceita backup de uma versão antiga, sem as colunas e tabelas novas', async () => {

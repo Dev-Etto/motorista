@@ -38,8 +38,12 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
       </Card>
       {ready ? (
         <Card>
-          <AppText variant="caption" tone="muted" center>Sobra para você</AppText>
-          <AppText variant="display" bold center tone={profitTone(result.profitCents)}>{formatBRL(result.profitCents)}</AppText>
+          {result.profitCents === null ? null : (
+            <>
+              <AppText variant="caption" tone="muted" center>Sobra para você</AppText>
+              <AppText variant="display" bold center tone={profitTone(result.profitCents)}>{formatBRL(result.profitCents)}</AppText>
+            </>
+          )}
           {result.score === null ? null : (
             <View style={styles.score}>
               <ScoreBadge score={result.score} color={result.color} height={SCORE_BADGE_HEIGHT} />

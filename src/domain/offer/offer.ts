@@ -96,9 +96,9 @@ function resolveReason(offer: OfferInput, color: OfferColor, perKm: number, perH
 export function classifyOffer(offer: OfferInput) {
   const perKm = offer.km > 0 ? offer.valueCents / offer.km : 0;
   const perHour = offer.minutes > 0 ? (offer.valueCents / offer.minutes) * 60 : 0;
-  const profitCents = offer.valueCents - offer.km * offer.costPerKm;
-
-  const color = resolveColor(offer, profitCents, perKm, perHour);
+  const profit = offer.valueCents - offer.km * offer.costPerKm;
+  const color = resolveColor(offer, profit, perKm, perHour);
+  const profitCents = color === 'neutral' ? null : profit;
 
   return {
     perKm,

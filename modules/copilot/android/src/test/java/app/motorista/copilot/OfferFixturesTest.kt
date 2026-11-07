@@ -21,6 +21,9 @@ class OfferFixturesTest {
       assertEquals(case.getString("color"), result.color.id)
       assertEquals(case.getString("reason"), result.reason)
       if (case.isNull("score")) assertNull(result.score) else assertEquals(case.getDouble("score"), result.score!!, 0.001)
+      assertEquals(case.getDouble("perKm"), result.perKmCents, 0.001)
+      assertEquals(case.getDouble("perHour"), result.perHourCents, 0.001)
+      if (case.isNull("profitCents")) assertNull(result.profitCents) else assertEquals(case.getDouble("profitCents"), result.profitCents!!, 0.001)
     }
   }
 

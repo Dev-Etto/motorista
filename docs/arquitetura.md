@@ -211,4 +211,8 @@ app -> features -> data -> domain -> shared/utils
 - **Histórico de ofertas assíncrono:** `getHistory`, `getOffers`, `getRecentOffers` e `setHistory` são `AsyncFunction`, porque leem SQLite e o histórico pode ter um ano de ofertas.
 - **Ciclo da sessão de GPS:** o `gpsTask` grava com `WHERE cycle = ? AND running = 1`. Descartar incrementa o ciclo e pausar desliga `running`, então um lote atrasado não volta com metros antigos. Iniciar e pausar não regravam os metros.
 - **Valores ao editar:** horas aparecem como `H:MM` e decimais por `decimalToInput`, sem resíduo de ponto flutuante.
+- **Regras de tela no domínio:** `kmFromEntry` e `validateShiftForm` ficam em `domain/shift/shiftForm`, o custo do mês fechado e o gráfico em `domain/report`, e o lembrete por km em `domain/reminder`. A validação devolve um código, e a tela traduz o código em texto, para o domínio não ter texto de interface.
+- **Uma conta de lucro:** as regras de insight usam `computeShift` e `totalsByPlatform`, as mesmas funções da jornada e do relatório.
+- **Janela das últimas 4 semanas:** 28 dias até hoje, inclusive.
+- **Sem custo, sem lucro:** sem custo por km, a oferta é neutra e `profitCents` é nulo nos dois lados. As fixtures conferem `perKm`, `perHour` e `profitCents`.
 

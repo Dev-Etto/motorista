@@ -3,6 +3,7 @@ import { ProfitCard } from '@/features/dashboard/ProfitCard';
 import { InsightCard } from '@/features/insights/InsightCard';
 import { TipBanner } from '@/features/tips/TipBanner';
 import { MIN_SHIFTS_FOR_INSIGHTS } from '@/domain/insights/buildInsights';
+import { ReportPeriod } from '@/domain/report/report';
 import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { BarChart } from '@/shared/ui/BarChart';
 import { PeriodSwitcher } from '@/shared/ui/MonthSwitcher';
@@ -12,7 +13,7 @@ import { today } from '@/shared/utils/dates';
 import { formatPerKm, profitTone } from '@/shared/utils/format';
 import { formatBRL } from '@/shared/utils/money';
 import { shareReportCsv, shareReportPdf } from './reportExport';
-import { PERIOD_NOUNS, periodLabel, ReportPeriod, stepPeriod } from './reportPeriod';
+import { PERIOD_NOUNS, periodLabel, stepPeriod } from './reportPeriod';
 import { useReport } from './useReport';
 
 const PERIODS: { value: ReportPeriod; label: string }[] = [

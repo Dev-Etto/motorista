@@ -9,7 +9,10 @@
       "targetPerHourCents": 3000,
       "color": "green",
       "score": 3.9,
-      "reason": "km: no mínimo · hora: 100% acima do mínimo"
+      "reason": "km: no mínimo · hora: 100% acima do mínimo",
+      "perKm": 200.0,
+      "perHour": 6000.0,
+      "profitCents": 1000
     },
     {
       "valueCents": 1500,
@@ -20,7 +23,10 @@
       "targetPerHourCents": 3000,
       "color": "yellow",
       "score": 3.2,
-      "reason": "km: 25% abaixo do mínimo · hora: 50% acima do mínimo"
+      "reason": "km: 25% abaixo do mínimo · hora: 50% acima do mínimo",
+      "perKm": 150.0,
+      "perHour": 4500.0,
+      "profitCents": 500
     },
     {
       "valueCents": 2000,
@@ -31,7 +37,10 @@
       "targetPerHourCents": 3000,
       "color": "yellow",
       "score": 2.6,
-      "reason": "km: no mínimo · hora: 33% abaixo do mínimo"
+      "reason": "km: no mínimo · hora: 33% abaixo do mínimo",
+      "perKm": 200.0,
+      "perHour": 2000.0,
+      "profitCents": 1000
     },
     {
       "valueCents": 900,
@@ -42,7 +51,10 @@
       "targetPerHourCents": 3000,
       "color": "red",
       "score": 1.9,
-      "reason": "Não cobre seu custo por km"
+      "reason": "Não cobre seu custo por km",
+      "perKm": 90.0,
+      "perHour": 2700.0,
+      "profitCents": -100
     },
     {
       "valueCents": 2000,
@@ -53,7 +65,10 @@
       "targetPerHourCents": 3000,
       "color": "green",
       "score": 3.5,
-      "reason": "km: no mínimo · hora: sem tempo na oferta"
+      "reason": "km: no mínimo · hora: sem tempo na oferta",
+      "perKm": 200.0,
+      "perHour": 0,
+      "profitCents": 1000
     },
     {
       "valueCents": 1300,
@@ -64,7 +79,10 @@
       "targetPerHourCents": 3000,
       "color": "green",
       "score": 4,
-      "reason": "km: 51% acima do mínimo · hora: sem tempo na oferta"
+      "reason": "km: 51% acima do mínimo · hora: sem tempo na oferta",
+      "perKm": 302.3256,
+      "perHour": 0,
+      "profitCents": 913.0
     },
     {
       "valueCents": 2000,
@@ -75,7 +93,24 @@
       "targetPerHourCents": 3000,
       "color": "neutral",
       "score": null,
-      "reason": "Cadastre seus custos para ver a nota"
+      "reason": "Cadastre seus custos para ver a nota",
+      "perKm": 200.0,
+      "perHour": 6000.0,
+      "profitCents": null
+    },
+    {
+      "valueCents": 1500,
+      "km": 6,
+      "minutes": 0,
+      "costPerKm": 0,
+      "targetPerKmCents": 200,
+      "targetPerHourCents": 3000,
+      "color": "neutral",
+      "score": null,
+      "reason": "Cadastre seus custos para ver a nota",
+      "perKm": 250.0,
+      "perHour": 0,
+      "profitCents": null
     }
   ],
   "parsing": [

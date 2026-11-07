@@ -14,6 +14,11 @@ describe('leitura de números', () => {
     expect(parseDecimal('8,5')).toBe(8.5);
   });
 
+  it('lê milhar com sinal', () => {
+    expect(parseDecimal('-1.234')).toBe(-1234);
+    expect(parseDecimal('-1.234,5')).toBe(-1234.5);
+  });
+
   it('marca como inválido o que está preenchido e não é número', () => {
     expect(hasInvalidNumber('abc')).toBe(true);
     expect(hasInvalidNumber('1,2,3')).toBe(true);

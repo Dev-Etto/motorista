@@ -1,19 +1,20 @@
-import { readGpsProblem } from '@/features/shifts/gpsStatus';
+import { copilot } from '@modules/copilot';
+import Constants from 'expo-constants';
+import { BACKUP_REMINDER_DAYS, UPDATE_REMINDER_DAYS } from '@/config/app';
 import { expenseRepository } from '@/data/repositories/expenseRepository';
+import { gpsSessionRepository } from '@/data/repositories/gpsSessionRepository';
 import { reminderRepository } from '@/data/repositories/reminderRepository';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
 import { shiftRepository } from '@/data/repositories/shiftRepository';
 import { vehicleRepository } from '@/data/repositories/vehicleRepository';
-import { copilot } from '@modules/copilot';
-import { gpsSessionRepository } from '@/data/repositories/gpsSessionRepository';
-import { summarizeShifts, withLooseExpenses } from '@/domain/shift/summary';
-import Constants from 'expo-constants';
-import { BACKUP_REMINDER_DAYS, UPDATE_REMINDER_DAYS } from '@/config/app';
 import { isBackupDue, isUpdateDue } from '@/domain/maintenance/notices';
 import { estimateEarnings } from '@/domain/offer/offerLog';
+import { isDueByKm } from '@/domain/reminder/reminder';
+import { summarizeShifts, withLooseExpenses } from '@/domain/shift/summary';
 import { loadGoalProgress } from '@/features/goals/goalProgress';
 import { loadInsights } from '@/features/insights/loadInsights';
 import { loadNextStep } from '@/features/onboarding/nextStep';
+import { readGpsProblem } from '@/features/shifts/gpsStatus';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { dayRange, monthBounds, today, weekBounds } from '@/shared/utils/dates';
 
@@ -38,7 +39,7 @@ async function loadDashboard() {
   const copilotStatus = copilot.getStatus();
   const measuring = gpsSession.running && copilot.getTimer().running;
   const gpsProblem = measuring ? await readGpsProblem() : null;
-  const dueKmReminders = reminders.filter((reminder) => !reminder.done && reminder.due_km !== null && totalKm >= reminder.due_km);
+  const dueKmReminders = reminders.filter((reminder) => isDueByKm({ dueKm: reminder.due_km, done: reminder.done === 1 }, totalKm));
 
   return {
     costs,

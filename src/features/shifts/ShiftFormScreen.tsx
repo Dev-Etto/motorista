@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { KmEntryMode } from '@/domain/shift/shiftForm';
 import { spacing } from '@/shared/theme/theme';
 import { DateField } from '@/shared/ui/DateField';
 import { MoneyField, NumberField } from '@/shared/ui/fields';
@@ -13,7 +14,7 @@ import { Button, Card, Collapsible, Notice, Screen, Segmented } from '@/shared/u
 import { LiveTrackingCard } from './LiveTrackingCard';
 import { useLiveTracking } from './useLiveTracking';
 import { ShiftResultCard } from './ShiftResultCard';
-import { JOURNEY_EXPENSES, KmEntryMode, useShiftForm } from './useShiftForm';
+import { JOURNEY_EXPENSES, useShiftForm } from './useShiftForm';
 
 const KM_OPTIONS: { value: KmEntryMode; label: string }[] = [
   { value: 'manual', label: 'Total' },
