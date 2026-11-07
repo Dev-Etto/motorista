@@ -3,7 +3,7 @@ import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRe
 import { vehicleRepository } from '@/data/repositories/vehicleRepository';
 import { z } from 'zod';
 import { activeTargets, DEFAULT_LOW_DEMAND_TARGETS, DEFAULT_OFFER_TARGETS, OFFER_MODES, type OfferMode, type OfferSettings, type OfferTargets, offerTargetsSchema, withGoalTargets } from '@/domain/offer/offer';
-import { loadGoalProgress } from '@/features/goals/goalProgress';
+import { loadGoalProgress } from '@/application/goalProgress';
 import { today } from '@/shared/utils/dates';
 
 export async function loadOfferSettings(): Promise<OfferSettings> {

@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { AppText, Button, ButtonRow, Card } from '@/shared/ui/primitives';
-import { dismissNextStep, NextStep } from './nextStep';
+import { dismissNextStep, NextStep } from '@/application/nextStep';
 
 export function NextStepCard({ step, onDismiss }: { step: NextStep | null; onDismiss: () => void }) {
   const router = useRouter();

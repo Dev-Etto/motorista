@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-native';
 import { DEFAULT_LOW_DEMAND_TARGETS } from '@/domain/offer/offer';
-import { loadOfferSettings, saveModeTargets } from '../syncTargets';
+import { loadOfferSettings, saveModeTargets } from '@/application/offerSettings';
 import { useOfferTargets } from '../useOfferTargets';
 
 const mockFocus: { callback: (() => void) | null } = { callback: null };
@@ -10,7 +10,7 @@ jest.mock('expo-router', () => ({
     mockFocus.callback = callback;
   },
 }));
-jest.mock('../syncTargets', () => ({
+jest.mock('@/application/offerSettings', () => ({
   loadOfferSettings: jest.fn(),
   saveModeTargets: jest.fn().mockResolvedValue(undefined),
   saveOfferMode: jest.fn().mockResolvedValue(undefined),

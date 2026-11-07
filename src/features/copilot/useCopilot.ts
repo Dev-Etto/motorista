@@ -1,12 +1,12 @@
 import { copilot, CopilotPreferences, CopilotStatus, OfferHistoryEntry } from '@modules/copilot';
 import { PLATFORM_PACKAGES } from '@modules/copilot/platforms';
-import * as Notifications from 'expo-notifications';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { useInterval } from '@/shared/hooks/useInterval';
+import { ensureNotifications } from '@/shared/platform/notifications';
 import { reportError } from '@/shared/utils/reportError';
-import { syncCopilotTargets } from './syncTargets';
+import { syncCopilotTargets } from '@/application/offerSettings';
 
 const RECENT_OFFERS = 5;
 const DIAGNOSTICS_REFRESH_MS = 2000;
@@ -55,8 +55,7 @@ export function useCopilot() {
   const setNotification = async (value: boolean) => {
     if (!value) return updatePreferences({ notification: false });
 
-    const { granted } = await Notifications.requestPermissionsAsync();
-    if (!granted) return setMessage('Permita as notificações do app para usar este canal.');
+    if (!(await ensureNotifications())) return setMessage('Permita as notificações do app para usar este canal.');
 
     updatePreferences({ notification: true });
   };
@@ -99,8 +98,7 @@ export function useCopilot() {
   };
 
   const testNotification = async () => {
-    const { granted } = await Notifications.requestPermissionsAsync();
-    if (!granted) return setMessage('Permita as notificações do app para ver o exemplo.');
+    if (!(await ensureNotifications())) return setMessage('Permita as notificações do app para ver o exemplo.');
 
     const shown = copilot.testNotification(...nextSample());
     setMessage(shown ? 'Exemplo enviado. Veja no topo da tela ou deslize o painel de notificações.' : 'Permita as notificações do app para ver o exemplo.');

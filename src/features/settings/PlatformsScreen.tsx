@@ -1,23 +1,20 @@
 import { useState } from 'react';
-import { platformRepository } from '@/data/repositories/platformRepository';
-import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useSubmit } from '@/shared/hooks/useSubmit';
 import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { TextField } from '@/shared/ui/fields';
 import { PlatformBadge } from '@/shared/ui/PlatformBadge';
 import { AppText, Button, Card, ListRow, Notice, Screen } from '@/shared/ui/primitives';
-import { confirmAction } from '@/shared/utils/confirm';
+import { confirmAction } from '@/shared/platform/confirm';
+import { usePlatforms } from './usePlatforms';
 
 export default function PlatformsScreen() {
-  const platforms = useAsyncData(() => platformRepository.list());
-  const { reload } = platforms;
+  const { state: platforms, add, deactivate } = usePlatforms();
   const [name, setName] = useState('');
 
   const adding = useSubmit(async () => {
     if (!name.trim()) return;
-    await platformRepository.add(name);
+    await add(name);
     setName('');
-    await reload();
   });
 
   const remove = (id: number, platformName: string) => {
@@ -26,8 +23,7 @@ export default function PlatformsScreen() {
       message: 'Jornadas antigas continuam com este nome.',
       actionLabel: 'Remover',
       onConfirm: async () => {
-        await platformRepository.deactivate(id);
-        await reload();
+        await deactivate(id);
       },
     });
   };

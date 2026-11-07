@@ -1,28 +1,17 @@
-import { copilot } from '@modules/copilot';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { shiftRepository } from '@/data/repositories/shiftRepository';
 import { countsAgainstProfit, EXPENSE_LABELS } from '@/domain/expense/expense';
 import { summarizeOutcomes } from '@/domain/offer/offerLog';
 import { computeShift } from '@/domain/shift/shift';
-import { OutcomeSummaryCard } from '@/features/offers/OutcomeSummaryCard';
+import { OutcomeSummaryCard } from '@/features/offers';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { AppText, Button, Card, EmptyState, ListRow, Screen } from '@/shared/ui/primitives';
-import { dayRange, formatDate, formatDuration } from '@/shared/utils/dates';
-import { confirmAction } from '@/shared/utils/confirm';
+import { formatDate, formatDuration } from '@/shared/utils/dates';
+import { confirmAction } from '@/shared/platform/confirm';
 import { formatKm } from '@/shared/utils/format';
 import { formatBRL } from '@/shared/utils/money';
 import { ShiftResultCard } from './ShiftResultCard';
-
-async function loadShiftDetail(shiftId: number) {
-  const detail = await shiftRepository.findById(shiftId);
-  if (!detail) return null;
-
-  const { from, to } = dayRange(detail.shift.date);
-  return { ...detail, dayOffers: await copilot.getOffers(from, to) };
-}
-
-type ShiftDetail = NonNullable<Awaited<ReturnType<typeof loadShiftDetail>>>;
+import { loadShiftDetail, removeShift, ShiftDetail } from './shiftQueries';
 
 export default function ShiftDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -55,7 +44,7 @@ function ShiftDetailContent({ shiftId, detail }: { shiftId: number; detail: Shif
       message: 'Essa ação não pode ser desfeita.',
       actionLabel: 'Excluir',
       onConfirm: async () => {
-        await shiftRepository.remove(shiftId);
+        await removeShift(shiftId);
         router.back();
       },
     });

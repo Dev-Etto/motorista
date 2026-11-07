@@ -1,8 +1,7 @@
-import * as Location from 'expo-location';
 import { useCallback, useEffect, useState } from 'react';
 import { gpsSessionRepository } from '@/data/repositories/gpsSessionRepository';
 import { useInterval } from '@/shared/hooks/useInterval';
-import { readGpsProblem } from './gpsStatus';
+import { ensureLocation, isTrackingInBackground, LOCATION_PERMISSION_MESSAGE, readGpsProblem, startBackgroundTracking, stopBackgroundTracking } from '@/shared/platform/location';
 import { GPS_TASK } from './gpsTask';
 
 const METERS_PER_KM = 1000;
@@ -22,7 +21,7 @@ export function useGpsTracking() {
     setMeters(session.meters);
     if (!session.running) return setRunning(false);
 
-    const problem = (await readGpsProblem()) ?? ((await Location.hasStartedLocationUpdatesAsync(GPS_TASK)) ? null : STOPPED_ERROR);
+    const problem = (await readGpsProblem()) ?? ((await isTrackingInBackground(GPS_TASK)) ? null : STOPPED_ERROR);
     setRunning(problem === null);
     if (problem === null) return;
 
@@ -38,20 +37,15 @@ export function useGpsTracking() {
   const start = async () => {
     setError(null);
     try {
-      const { granted } = await Location.requestForegroundPermissionsAsync();
-      if (!granted) return setError('Permita a localização para medir os km por GPS.');
+      if (!(await ensureLocation())) return setError(LOCATION_PERMISSION_MESSAGE);
 
       const problem = await readGpsProblem();
       if (problem) return setError(problem);
 
-      await Location.startLocationUpdatesAsync(GPS_TASK, {
-        accuracy: Location.Accuracy.High,
+      await startBackgroundTracking(GPS_TASK, {
         distanceInterval: DISTANCE_INTERVAL_M,
         timeInterval: TIME_INTERVAL_MS,
-        foregroundService: {
-          notificationTitle: 'Medindo os km da jornada',
-          notificationBody: 'A posição fica só no aparelho. Pause em deslocamentos pessoais.',
-        },
+        notification: { title: 'Medindo os km da jornada', body: 'A posição fica só no aparelho. Pause em deslocamentos pessoais.' },
       });
     } catch {
       return setError(START_ERROR);
@@ -60,13 +54,8 @@ export function useGpsTracking() {
     await refresh();
   };
 
-  const stopUpdates = async () => {
-    const active = await Location.hasStartedLocationUpdatesAsync(GPS_TASK);
-    if (active) await Location.stopLocationUpdatesAsync(GPS_TASK);
-  };
-
   const pause = async () => {
-    await stopUpdates();
+    await stopBackgroundTracking(GPS_TASK);
     await gpsSessionRepository.stop();
     const session = await gpsSessionRepository.get();
     await refresh();
@@ -74,7 +63,7 @@ export function useGpsTracking() {
   };
 
   const reset = async () => {
-    await stopUpdates();
+    await stopBackgroundTracking(GPS_TASK);
     await gpsSessionRepository.reset();
     await refresh();
   };

@@ -1,17 +1,16 @@
 import { Share } from 'react-native';
 import { useMemo } from 'react';
-import { quoteRepository } from '@/data/repositories/quoteRepository';
 import { computeQuote } from '@/domain/quote/quote';
-import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { useSubmit } from '@/shared/hooks/useSubmit';
 import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { MoneyField, NumberField, TextField } from '@/shared/ui/fields';
 import { AppText, Button, ButtonRow, Card, Collapsible, ListRow, Notice } from '@/shared/ui/primitives';
-import { confirmAction } from '@/shared/utils/confirm';
+import { confirmAction } from '@/shared/platform/confirm';
 import { profitTone } from '@/shared/utils/format';
 import { formatBRL, formatNumber } from '@/shared/utils/money';
 import { centsOrZero, decimalOrZero } from '@/shared/utils/parse';
+import { useSavedQuotes } from './useSavedQuotes';
 
 const INITIAL = { label: '', kmToPassenger: '', kmTrip: '', kmReturn: '', minutes: '', profitPerHour: '30,00', toll: '', extras: '', minimum: '' };
 
@@ -22,7 +21,7 @@ function buildShareMessage(label: string, priceCents: number) {
 
 export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
   const { bind, values } = useFormFields(INITIAL);
-  const saved = useAsyncData(() => quoteRepository.list());
+  const { state: saved, save, remove: removeQuote } = useSavedQuotes();
 
   const quote = useMemo(
     () =>
@@ -42,8 +41,7 @@ export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
   const ready = quote.totalKm > 0;
 
   const saving = useSubmit(async () => {
-    await quoteRepository.save(values.label.trim() || null, quote.priceCents, values);
-    await saved.reload();
+    await save(values.label.trim() || null, quote.priceCents, values);
   });
 
   const share = () => Share.share({ message: buildShareMessage(values.label, quote.priceCents) });
@@ -54,8 +52,7 @@ export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
       message: 'Essa ação não pode ser desfeita.',
       actionLabel: 'Remover',
       onConfirm: async () => {
-        await quoteRepository.remove(id);
-        await saved.reload();
+        await removeQuote(id);
       },
     });
   };

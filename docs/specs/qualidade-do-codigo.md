@@ -115,15 +115,15 @@ Tipos de teste:
 
 | ID | Critério de aceite | Teste |
 | --- | --- | --- |
-| R9.1 | Nenhum arquivo `*Screen.tsx`, `*Card.tsx` ou `*Banner.tsx` importa `@/data`. Cada tela usa o hook da própria funcionalidade | Lint |
+| R9.1 | Nenhum componente `.tsx` de `features` importa `@/data`. Cada tela usa um hook ou serviço `.ts` da própria funcionalidade | Lint |
 | R9.2 | Orquestradores usados por mais de uma funcionalidade ficam em `src/application`: progresso da meta, sincronização dos mínimos do Copiloto, insights e próximo passo | Revisão |
-| R9.3 | Uma funcionalidade não importa arquivo interno de outra. Não há ciclo entre funcionalidades | Lint |
-| R9.4 | Componentes usados por mais de uma funcionalidade ficam em `shared/ui`, como `ProfitCard` e `InsightCard` | Lint |
+| R9.3 | Uma funcionalidade só importa outra pelo `index.ts` dela. Não há ciclo entre funcionalidades | Lint |
+| R9.4 | Componentes usados por mais de uma funcionalidade são expostos pelo `index.ts` da funcionalidade dona. Os que não dependem do domínio podem ir para `shared/ui` | Lint |
 | R9.5 | `expo-notifications` e `expo-location` são usados só em `shared/platform`, que oferece `ensureNotifications` e `ensureLocation` | Lint |
 | R9.6 | `shared/utils` não importa `react-native` nem `expo-*`. `confirm` e `share` vão para `shared/platform` | Lint |
 | R9.7 | Os repositórios são criados por fábrica, como `createShiftRepository(db, deps)`, e exportam uma instância padrão. Métodos que escrevem aceitam uma transação opcional | Jest |
 | R9.8 | `domain` não importa `data`, `features`, `application`, React nem Expo | Lint |
-| R9.9 | `OfferAccessibilityService` fala com o botão flutuante por uma interface `FloatingHost`, testável sem Android | Kotlin |
+| R9.9 | `OfferAccessibilityService` fala com o botão flutuante pela interface `FloatingHost`, e a escolha de canais fica em `OfferChannels`, testável sem Android | Kotlin |
 
 ## R10. Estrutura do módulo nativo
 

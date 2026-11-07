@@ -1,7 +1,7 @@
 import { CardLayout, CardSize, copilot as nativeCopilot, PrimaryMetric } from '@modules/copilot';
 import { PLATFORM_PACKAGES } from '@modules/copilot/platforms';
 import { useRouter } from 'expo-router';
-import { OfferRow } from '@/features/offers/OfferRow';
+import { OfferRow } from '@/features/offers';
 import { AppText, Button, ButtonRow, Card, Collapsible, Notice, Segmented, ToggleRow } from '@/shared/ui/primitives';
 import { CopilotState } from './useCopilot';
 

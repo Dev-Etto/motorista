@@ -1,6 +1,6 @@
 import { copilot } from '@modules/copilot';
 import { BackupFile } from '@/data/backup/backup';
-import { syncCopilotTargets } from '@/features/copilot/syncTargets';
+import { syncCopilotTargets } from '@/application/offerSettings';
 import { rescheduleAllNotifications } from './reminderNotifications';
 import { restoreThemeMode } from './themePreference';
 

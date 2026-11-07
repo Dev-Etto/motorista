@@ -1,10 +1,10 @@
 import { copilot, CopilotStatus } from '@modules/copilot';
-import * as Location from 'expo-location';
-import * as Notifications from 'expo-notifications';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'react-native';
-import { syncCopilotTargets } from '@/features/copilot/syncTargets';
+import { syncCopilotTargets } from '@/application/offerSettings';
+import { ensureLocation, hasLocationPermission } from '@/shared/platform/location';
+import { ensureNotifications, hasNotificationPermission } from '@/shared/platform/notifications';
 
 export interface PermissionsState {
   notifications: boolean;
@@ -21,8 +21,8 @@ const toState = (notifications: boolean, location: boolean, status: CopilotStatu
 });
 
 async function readPermissions(): Promise<PermissionsState> {
-  const [notifications, location] = await Promise.all([Notifications.getPermissionsAsync(), Location.getForegroundPermissionsAsync()]);
-  return toState(notifications.granted, location.granted, copilot.getStatus());
+  const [notifications, location] = await Promise.all([hasNotificationPermission(), hasLocationPermission()]);
+  return toState(notifications, location, copilot.getStatus());
 }
 
 export async function enableCopilotIfGranted(): Promise<void> {
@@ -53,12 +53,12 @@ export function usePermissions() {
   }, [refresh]);
 
   const requestNotifications = async () => {
-    await Notifications.requestPermissionsAsync();
+    await ensureNotifications();
     await refresh();
   };
 
   const requestLocation = async () => {
-    await Location.requestForegroundPermissionsAsync();
+    await ensureLocation();
     await refresh();
   };
 

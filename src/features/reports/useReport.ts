@@ -5,7 +5,7 @@ import { vehicleRepository } from '@/data/repositories/vehicleRepository';
 import { buildChart, closedMonthVariableCents, ReportPeriod } from '@/domain/report/report';
 import { computeMonthClose } from '@/domain/shift/shift';
 import { summarizeShifts, totalsByPlatform, withLooseExpenses } from '@/domain/shift/summary';
-import { loadInsights } from '@/features/insights/loadInsights';
+import { loadInsights } from '@/application/insights';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { today } from '@/shared/utils/dates';
 import { periodBounds } from './reportPeriod';

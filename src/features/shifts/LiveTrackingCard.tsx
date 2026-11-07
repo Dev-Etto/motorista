@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { spacing } from '@/shared/theme/theme';
 import { AppText, Button, ButtonRow, Card, Notice, ToggleRow } from '@/shared/ui/primitives';
-import { confirmAction } from '@/shared/utils/confirm';
+import { confirmAction } from '@/shared/platform/confirm';
 import { formatClock } from '@/shared/utils/dates';
 import { formatNumber } from '@/shared/utils/money';
 import { LiveTrackingState } from './useLiveTracking';

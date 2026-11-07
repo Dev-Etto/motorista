@@ -6,7 +6,7 @@ import { centsToCsv, toCsv } from '@/shared/utils/csv';
 import { formatDate, formatDuration } from '@/shared/utils/dates';
 import { formatKm, formatPerHour, formatPerKm } from '@/shared/utils/format';
 import { formatBRL } from '@/shared/utils/money';
-import { shareTextFile } from '@/shared/utils/share';
+import { shareTextFile } from '@/shared/platform/share';
 import { ReportData } from './useReport';
 
 const escapeHtml = (text: string) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

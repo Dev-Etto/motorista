@@ -4,7 +4,7 @@ import { activeTargets, DEFAULT_LOW_DEMAND_TARGETS, DEFAULT_OFFER_TARGETS, type 
 import { useSubmit } from '@/shared/hooks/useSubmit';
 import { centsToInput } from '@/shared/utils/money';
 import { centsOrZero } from '@/shared/utils/parse';
-import { loadOfferSettings, saveFollowGoal, saveModeTargets, saveOfferMode } from './syncTargets';
+import { loadOfferSettings, saveFollowGoal, saveModeTargets, saveOfferMode } from '@/application/offerSettings';
 
 const INITIAL: OfferSettings = { mode: 'normal', normal: DEFAULT_OFFER_TARGETS, low: DEFAULT_LOW_DEMAND_TARGETS, followGoal: false };
 

@@ -1,4 +1,4 @@
-import { getDb } from '@/data/database/connection';
+import { getDb, SqlExecutor } from '@/data/database/connection';
 
 export interface QuoteRow {
   id: number;
@@ -10,22 +10,26 @@ export interface QuoteRow {
 
 const MAX_LISTED_QUOTES = 50;
 
-export const quoteRepository = {
-  async save(label: string | null, priceCents: number, data: unknown): Promise<void> {
-    await getDb().runAsync(
-      'INSERT INTO quotes (created_at, label, price_cents, data) VALUES (?, ?, ?, ?)',
-      Date.now(),
-      label,
-      priceCents,
-      JSON.stringify(data),
-    );
-  },
+export function createQuoteRepository(connection: () => SqlExecutor = getDb) {
+  return {
+    async save(label: string | null, priceCents: number, data: unknown): Promise<void> {
+      await connection().runAsync(
+        'INSERT INTO quotes (created_at, label, price_cents, data) VALUES (?, ?, ?, ?)',
+        Date.now(),
+        label,
+        priceCents,
+        JSON.stringify(data),
+      );
+    },
 
-  list(): Promise<QuoteRow[]> {
-    return getDb().getAllAsync<QuoteRow>('SELECT * FROM quotes ORDER BY created_at DESC LIMIT ?', MAX_LISTED_QUOTES);
-  },
+    list(): Promise<QuoteRow[]> {
+      return connection().getAllAsync<QuoteRow>('SELECT * FROM quotes ORDER BY created_at DESC LIMIT ?', MAX_LISTED_QUOTES);
+    },
 
-  async remove(id: number): Promise<void> {
-    await getDb().runAsync('DELETE FROM quotes WHERE id = ?', id);
-  },
-};
+    async remove(id: number): Promise<void> {
+      await connection().runAsync('DELETE FROM quotes WHERE id = ?', id);
+    },
+  };
+}
+
+export const quoteRepository = createQuoteRepository();

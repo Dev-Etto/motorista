@@ -7,7 +7,7 @@ import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRe
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useSubmit } from '@/shared/hooks/useSubmit';
 import { today } from '@/shared/utils/dates';
-import { shareTextFile } from '@/shared/utils/share';
+import { shareTextFile } from '@/shared/platform/share';
 import { applyRestoredState } from './afterRestore';
 
 const SAFETY_COPY_NAME = 'antes-de-restaurar.json';

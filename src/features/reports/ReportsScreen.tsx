@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { ProfitCard } from '@/features/dashboard/ProfitCard';
-import { InsightCard } from '@/features/insights/InsightCard';
-import { TipBanner } from '@/features/tips/TipBanner';
+import { ProfitCard } from '@/features/dashboard';
+import { InsightCard } from '@/features/insights';
+import { TipBanner } from '@/features/tips';
 import { MIN_SHIFTS_FOR_INSIGHTS } from '@/domain/insights/buildInsights';
 import { ReportPeriod } from '@/domain/report/report';
 import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';

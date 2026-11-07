@@ -4,7 +4,7 @@ const DATABASE_NAME = 'motorista.db';
 
 let instance: SQLite.SQLiteDatabase | null = null;
 
-export type Transaction = Pick<SQLite.SQLiteDatabase, 'execAsync' | 'runAsync' | 'getFirstAsync' | 'getAllAsync'>;
+export type SqlExecutor = Pick<SQLite.SQLiteDatabase, 'execAsync' | 'runAsync' | 'getFirstAsync' | 'getAllAsync'>;
 
 type TransactionOptions = { enforceForeignKeys?: boolean };
 
@@ -13,7 +13,7 @@ export function getDb(): SQLite.SQLiteDatabase {
   return instance;
 }
 
-export async function runInTransaction(work: (tx: Transaction) => Promise<void>, options: TransactionOptions = {}): Promise<void> {
+export async function runInTransaction(work: (tx: SqlExecutor) => Promise<void>, options: TransactionOptions = {}): Promise<void> {
   const connection = await SQLite.openDatabaseAsync(DATABASE_NAME, { useNewConnection: true });
   try {
     const enforce = options.enforceForeignKeys ?? true;
@@ -24,7 +24,7 @@ export async function runInTransaction(work: (tx: Transaction) => Promise<void>,
   }
 }
 
-export async function assertForeignKeys(tx: Transaction): Promise<void> {
+export async function assertForeignKeys(tx: SqlExecutor): Promise<void> {
   const broken = await tx.getAllAsync('PRAGMA foreign_key_check');
   if (broken.length > 0) throw new Error('foreign_key_check');
 }

@@ -1,6 +1,6 @@
 import { AppText, Card, ListRow, Notice } from '@/shared/ui/primitives';
 import { formatNumber, formatBRL } from '@/shared/utils/money';
-import { loadGoalProgress } from './goalProgress';
+import { loadGoalProgress } from '@/application/goalProgress';
 
 type GoalProgress = NonNullable<Awaited<ReturnType<typeof loadGoalProgress>>>;
 

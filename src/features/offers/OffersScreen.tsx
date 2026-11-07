@@ -2,7 +2,7 @@ import { OutcomeFilter } from '@/domain/offer/offerLog';
 import { DateField } from '@/shared/ui/DateField';
 import { FilterChips } from '@/shared/ui/FilterChips';
 import { Button, Card, EmptyState, Notice, Screen, ToggleRow } from '@/shared/ui/primitives';
-import { confirmAction } from '@/shared/utils/confirm';
+import { confirmAction } from '@/shared/platform/confirm';
 import { EstimateCard } from './EstimateCard';
 import { PERIOD_OPTIONS } from './offerPeriod';
 import { OfferRow } from './OfferRow';

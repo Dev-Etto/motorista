@@ -1,15 +1,15 @@
-import { MIGRATIONS } from '@/data/database/connection';
+import { getDb, MIGRATIONS } from '@/data/database/connection';
 import { expenseRepository } from '@/data/repositories/expenseRepository';
 import { goalRepository } from '@/data/repositories/goalRepository';
 import { gpsSessionRepository } from '@/data/repositories/gpsSessionRepository';
 import { platformRepository } from '@/data/repositories/platformRepository';
 import { reminderRepository } from '@/data/repositories/reminderRepository';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
-import { shiftRepository } from '@/data/repositories/shiftRepository';
+import { createShiftRepository, shiftRepository } from '@/data/repositories/shiftRepository';
 import { vehicleRepository } from '@/data/repositories/vehicleRepository';
 import { summarizeShifts, withLooseExpenses } from '@/domain/shift/summary';
 import { computeCosts, CostProfile } from '@/domain/vehicle/costs';
-import { loadGoalProgress } from '@/features/goals/goalProgress';
+import { loadGoalProgress } from '@/application/goalProgress';
 import { z } from 'zod';
 import { openTestDatabase } from './sqliteHarness';
 
@@ -57,6 +57,28 @@ async function createVehicle(profile = PROFILE) {
 
 beforeEach(() => {
   openTestDatabase(MIGRATIONS);
+});
+
+describe('repositórios criados por fábrica', () => {
+  it('a jornada usa o repositório de veículo recebido', async () => {
+    const costs = computeCosts(PROFILE);
+    const vehicles = { getCostsAt: jest.fn().mockResolvedValue({ vehicle: null, profile: PROFILE, costs }) };
+    const shifts = createShiftRepository(getDb, vehicles as never);
+
+    const id = await shifts.save(shiftInput());
+
+    expect(vehicles.getCostsAt).toHaveBeenCalledWith('2026-11-05');
+    expect((await shifts.findById(id))?.shift.cost_per_km).toBeCloseTo(costs.fullPerKm);
+  });
+
+  it('a jornada lê pela conexão recebida', async () => {
+    const connection = jest.fn(getDb);
+    const shifts = createShiftRepository(connection);
+
+    await shifts.usageStats();
+
+    expect(connection).toHaveBeenCalled();
+  });
 });
 
 describe('jornadas', () => {

@@ -23,7 +23,7 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 
-class FloatingTimerService : Service() {
+class FloatingTimerService : Service(), FloatingHost {
   private val handler = Handler(Looper.getMainLooper())
   private val closeMenu = Runnable { setMenuOpen(false) }
   private val closeOffer = Runnable { clearOffer() }
@@ -44,7 +44,7 @@ class FloatingTimerService : Service() {
   private var pillWidth = 0
   private var pillHeight = 0
 
-  val visibleOutsideApp: Boolean
+  override val visibleOutsideApp: Boolean
     get() = visibility.visible && Settings.canDrawOverlays(this)
 
   private val tick = object : Runnable {
@@ -80,14 +80,14 @@ class FloatingTimerService : Service() {
     super.onDestroy()
   }
 
-  fun showOffer(evaluation: OfferEvaluation, preferences: CopilotPreferences, onDismiss: () -> Unit) {
+  override fun showOffer(evaluation: OfferEvaluation, preferences: CopilotPreferences, onDismiss: () -> Unit) {
     lastOffer = evaluation
     offerDismiss = onDismiss
     handler.removeCallbacks(closeOffer)
     renderCard(evaluation, preferences)
   }
 
-  fun clearOffer() {
+  override fun clearOffer() {
     handler.removeCallbacks(closeOffer)
     if (!showingOffer) return
 

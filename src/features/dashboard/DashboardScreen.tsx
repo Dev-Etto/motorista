@@ -1,10 +1,10 @@
 import { useRouter } from 'expo-router';
 import { Linking } from 'react-native';
 import { RELEASES_URL } from '@/config/app';
-import { NextStepCard } from '@/features/onboarding/NextStepCard';
-import { GoalProgressCard } from '@/features/goals/GoalProgressCard';
-import { InsightCard } from '@/features/insights/InsightCard';
-import { ActiveShiftCard, NewShiftButton } from '@/features/shifts/ActiveShift';
+import { NextStepCard } from '@/features/onboarding';
+import { GoalProgressCard } from '@/features/goals';
+import { InsightCard } from '@/features/insights';
+import { ActiveShiftCard, NewShiftButton } from '@/features/shifts';
 import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { LearnMore } from '@/shared/ui/LearnMore';
 import { AppText, Button, Card, EmptyState, ListRow, Notice, Screen } from '@/shared/ui/primitives';

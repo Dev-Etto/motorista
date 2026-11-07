@@ -1,18 +1,15 @@
 import Constants from 'expo-constants';
 import { Share } from 'react-native';
-import { shiftRepository } from '@/data/repositories/shiftRepository';
-import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { AppText, Button, Card, ListRow, Screen } from '@/shared/ui/primitives';
 import { formatDate } from '@/shared/utils/dates';
+import { UsageStats, useUsageStats } from './useUsageStats';
 
 const version = () => Constants.expoConfig?.version ?? '—';
 const displayDate = (date: string | null) => (date ? formatDate(date) : '—');
 
-type UsageStats = Awaited<ReturnType<typeof shiftRepository.usageStats>>;
-
 export default function MySummaryScreen() {
-  const stats = useAsyncData(() => shiftRepository.usageStats());
+  const stats = useUsageStats();
 
   return (
     <Screen>

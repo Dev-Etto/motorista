@@ -1,10 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { goalRepository } from '@/data/repositories/goalRepository';
 import { DEFAULT_HOURS_PER_DAY, DEFAULT_WORK_WEEKDAYS } from '@/domain/goal/goal';
-import { OfferTargetsEditor } from '@/features/copilot/OfferTargetsCard';
-import { syncCopilotTargets } from '@/features/copilot/syncTargets';
-import { useOfferTargets } from '@/features/copilot/useOfferTargets';
+import { OfferTargetsEditor, useOfferTargets } from '@/features/copilot';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useFormHydration } from '@/shared/hooks/useFormHydration';
 import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
@@ -17,7 +14,8 @@ import { centsToInput } from '@/shared/utils/money';
 import { centsOrNull, decimalOrNull, decimalToInput, hasInvalidNumber } from '@/shared/utils/parse';
 import { GoalPlanCard } from './GoalPlanCard';
 import { GoalProgressCard } from './GoalProgressCard';
-import { loadGoalProgress } from './goalProgress';
+import { saveGoal } from './saveGoal';
+import { loadGoalProgress } from '@/application/goalProgress';
 
 export default function GoalScreen() {
   const router = useRouter();
@@ -55,9 +53,7 @@ export default function GoalScreen() {
     if (hasInvalidNumber(dayTarget)) return setError('Confira o lucro de hoje. Use só números, como 150,50.');
 
     setError(null);
-    await goalRepository.save({ month: monthKey(date), desiredProfitCents: cents, workWeekdays: weekdays, hoursPerDay: hours });
-    await goalRepository.saveDayOverride(date, centsOrNull(dayTarget));
-    await syncCopilotTargets();
+    await saveGoal({ month: monthKey(date), desiredProfitCents: cents, workWeekdays: weekdays, hoursPerDay: hours }, date, centsOrNull(dayTarget));
     await Promise.all([reload(), targets.reload()]);
   });
 

@@ -1,8 +1,8 @@
 import * as TaskManager from 'expo-task-manager';
-import type { LocationObject } from 'expo-location';
 import { copilot } from '@modules/copilot';
 import { gpsSessionRepository } from '@/data/repositories/gpsSessionRepository';
 import { accumulateGps, GpsPoint } from '@/domain/gps/gps';
+import type { LocationObject } from '@/shared/platform/location';
 
 export const GPS_TASK = 'shift-km-tracking';
 

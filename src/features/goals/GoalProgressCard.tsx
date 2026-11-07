@@ -3,7 +3,7 @@ import { AppText, Button, Card, Notice, ProgressBar, Stat, StatGrid } from '@/sh
 import { profitTone } from '@/shared/utils/format';
 import { formatBRL } from '@/shared/utils/money';
 import { describeGoalDay, describePartialShifts } from './goalMessages';
-import { loadGoalProgress } from './goalProgress';
+import { loadGoalProgress } from '@/application/goalProgress';
 
 type GoalProgress = NonNullable<Awaited<ReturnType<typeof loadGoalProgress>>>;
 

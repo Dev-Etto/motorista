@@ -1,7 +1,5 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { shiftRepository } from '@/data/repositories/shiftRepository';
-import { expenseRepository } from '@/data/repositories/expenseRepository';
 import { buildCalendar } from '@/domain/calendar/calendar';
 import { computeShift } from '@/domain/shift/shift';
 import { EXPENSE_LABELS } from '@/domain/expense/expense';
@@ -11,17 +9,12 @@ import { useMonthCursor } from '@/shared/hooks/useMonthCursor';
 import { MonthCalendar } from '@/shared/ui/MonthCalendar';
 import { MonthSwitcher } from '@/shared/ui/MonthSwitcher';
 import { ActiveShiftCard, NewShiftButton } from './ActiveShift';
+import { loadMonth, removeLooseExpense } from './shiftQueries';
 import { AppText, Button, Card, EmptyState, ListRow, Screen } from '@/shared/ui/primitives';
-import { formatDate, formatDuration, monthBounds, monthKey } from '@/shared/utils/dates';
-import { confirmAction } from '@/shared/utils/confirm';
+import { formatDate, formatDuration, monthKey } from '@/shared/utils/dates';
+import { confirmAction } from '@/shared/platform/confirm';
 import { profitTone } from '@/shared/utils/format';
 import { formatBRL } from '@/shared/utils/money';
-
-async function loadMonth(date: string) {
-  const { start, end } = monthBounds(date);
-  const [shifts, expenses] = await Promise.all([shiftRepository.listFacts(start, end), expenseRepository.listLoose(start, end)]);
-  return { shifts, expenses };
-}
 
 export default function ShiftsScreen() {
   const router = useRouter();
@@ -44,7 +37,7 @@ export default function ShiftsScreen() {
       message: `O lançamento de ${formatBRL(cents)} sai dos seus resultados.`,
       actionLabel: 'Excluir',
       onConfirm: async () => {
-        await expenseRepository.remove(id);
+        await removeLooseExpense(id);
         await reload();
       },
     });

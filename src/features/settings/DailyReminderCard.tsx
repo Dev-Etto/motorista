@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
-import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useSubmit } from '@/shared/hooks/useSubmit';
 import { Card, Notice, Segmented, ToggleRow } from '@/shared/ui/primitives';
 import { cancelDailyReminder, scheduleDailyReminder } from './reminderNotifications';
+import { useDailyReminderHour } from './useDailyReminderHour';
 
 const DEFAULT_HOUR = '20';
 const HOUR_OPTIONS = [
@@ -13,7 +12,7 @@ const HOUR_OPTIONS = [
 ];
 
 export function DailyReminderCard() {
-  const { data: hour, reload } = useAsyncData(() => settingsRepository.get(SETTING_KEYS.dailyReminderHour));
+  const { data: hour, reload } = useDailyReminderHour();
   const [denied, setDenied] = useState(false);
 
   const schedule = async (value: string) => {

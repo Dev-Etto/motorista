@@ -3,16 +3,13 @@ import { useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { MIN_TOUCH_TARGET } from '@/shared/theme/theme';
 import { APP_NAME } from '@/config/app';
-import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
-import { PermissionsList } from '@/features/permissions/PermissionsList';
-import { enableCopilotIfGranted } from '@/features/permissions/usePermissions';
-import { CostExample } from '@/features/vehicle/CostExample';
-import { useVehicleForm } from '@/features/vehicle/useVehicleForm';
-import { VehicleQuickForm } from '@/features/vehicle/VehicleQuickForm';
+import { enableCopilotIfGranted, PermissionsList } from '@/features/permissions';
+import { CostExample, useVehicleForm, VehicleQuickForm } from '@/features/vehicle';
 import { useSubmit } from '@/shared/hooks/useSubmit';
 import { Illustration } from '@/shared/ui/illustrations/Illustration';
 import { AppText, Button, Card, Notice, Screen, StepDots } from '@/shared/ui/primitives';
 import { formatPerKm } from '@/shared/utils/format';
+import { markOnboarded } from './finishOnboarding';
 
 type Step = 'welcome' | 'register' | 'offers' | 'setup' | 'result' | 'permissions' | 'done';
 
@@ -36,7 +33,7 @@ export default function OnboardingScreen() {
   const [step, setStep] = useState<Step>('welcome');
 
   const finish = async (nextRoute: '/' | '/vehicle' | '/shift/new') => {
-    await settingsRepository.set(SETTING_KEYS.onboarded, '1');
+    await markOnboarded();
     router.replace('/');
     if (nextRoute !== '/') router.push(nextRoute);
   };

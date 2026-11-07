@@ -11,10 +11,10 @@ import { isBackupDue, isUpdateDue } from '@/domain/maintenance/notices';
 import { estimateEarnings } from '@/domain/offer/offerLog';
 import { isDueByKm } from '@/domain/reminder/reminder';
 import { summarizeShifts, withLooseExpenses } from '@/domain/shift/summary';
-import { loadGoalProgress } from '@/features/goals/goalProgress';
-import { loadInsights } from '@/features/insights/loadInsights';
-import { loadNextStep } from '@/features/onboarding/nextStep';
-import { readGpsProblem } from '@/features/shifts/gpsStatus';
+import { loadGoalProgress } from '@/application/goalProgress';
+import { loadInsights } from '@/application/insights';
+import { loadNextStep } from '@/application/nextStep';
+import { readGpsProblem } from '@/shared/platform/location';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { dayRange, monthBounds, today, weekBounds } from '@/shared/utils/dates';
 

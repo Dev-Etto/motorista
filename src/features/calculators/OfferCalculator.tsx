@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { classifyOffer } from '@/domain/offer/offer';
-import { OfferTargetsSummary } from '@/features/copilot/OfferTargetsCard';
-import { useOfferTargets } from '@/features/copilot/useOfferTargets';
+import { OfferTargetsSummary, useOfferTargets } from '@/features/copilot';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { MoneyField, NumberField } from '@/shared/ui/fields';
 import { LearnMore } from '@/shared/ui/LearnMore';

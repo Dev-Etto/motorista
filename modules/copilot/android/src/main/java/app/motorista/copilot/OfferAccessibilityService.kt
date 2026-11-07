@@ -25,7 +25,7 @@ class OfferAccessibilityService : AccessibilityService() {
   private lateinit var session: OfferSession
   private lateinit var pacer: ScanPacer
   private lateinit var imageReader: OfferImageReader
-  private val floating = FloatingOfferChannel { session.dismiss() }
+  private val floating = FloatingOfferChannel({ FloatingTimerService.instance }) { session.dismiss() }
   private var mockReceiver: OfferMockReceiver? = null
   private var inTrip = false
   private var offerOnScreen = false
@@ -119,18 +119,12 @@ class OfferAccessibilityService : AccessibilityService() {
     if (windowGate.allowsBurst()) pacer.startBurst()
   }
 
-  private fun allChannels(): List<OfferChannel> = listOf(card, voice, notifier, floating)
+  private val channels by lazy { OfferChannels(card, voice, notifier, floating) }
 
-  private fun activeChannels(): List<OfferChannel> {
-    val preferences = store.preferences
-    return buildList {
-      val floatingVisible = FloatingTimerService.instance?.visibleOutsideApp == true
-      if (preferences.card && !floatingVisible) add(card)
-      if (preferences.voice) add(voice)
-      if (preferences.notification) add(notifier)
-      if (floatingVisible) add(floating)
-    }
-  }
+  private fun allChannels(): List<OfferChannel> = channels.all()
+
+  private fun activeChannels(): List<OfferChannel> =
+    channels.active(store.preferences, FloatingTimerService.instance?.visibleOutsideApp == true)
 
   private fun recordOffer(evaluation: OfferEvaluation, source: String): Long {
     val timestamp = System.currentTimeMillis()

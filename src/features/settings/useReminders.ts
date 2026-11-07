@@ -5,6 +5,8 @@ import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { today } from '@/shared/utils/dates';
 import { cancelReminderNotification, scheduleDateReminder } from './reminderNotifications';
 
+export type Reminder = ReminderRow;
+
 async function loadReminders() {
   const [reminders, totalKm, { profile }] = await Promise.all([reminderRepository.list(), shiftRepository.totalKmEver(), vehicleRepository.getCostsAt(today())]);
   return { reminders, totalKm, profile };

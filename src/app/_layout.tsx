@@ -1,10 +1,7 @@
 import { Stack, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { migrate } from '@/data/database/connection';
-import { applyRequestedSeed } from '@/data/database/devSeed';
-import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
-import { syncCopilotTargets } from '@/features/copilot/syncTargets';
+import { prepareApp } from '@/application/startup';
 import { useFloatingVisibility } from '@/features/copilot/useFloatingVisibility';
 import { restoreThemeMode } from '@/features/settings/themePreference';
 import '@/features/shifts/gpsTask';
@@ -41,10 +38,7 @@ function useAppBootstrap() {
 
     async function bootstrap() {
       try {
-        await migrate();
-        if (__DEV__) await applyRequestedSeed();
-        await Promise.allSettled([syncCopilotTargets(), restoreThemeMode()]);
-        const onboarded = await settingsRepository.get(SETTING_KEYS.onboarded);
+        const { onboarded } = await prepareApp(restoreThemeMode);
         setState('ready');
         if (!onboarded) setTimeout(() => router.replace('/onboarding'));
       } catch {

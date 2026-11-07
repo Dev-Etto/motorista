@@ -1,6 +1,5 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { expenseRepository } from '@/data/repositories/expenseRepository';
 import { countsAgainstProfit, EXPENSE_LABELS, type ExpenseCategory } from '@/domain/expense/expense';
 import { useSubmit } from '@/shared/hooks/useSubmit';
 import { DateField } from '@/shared/ui/DateField';
@@ -8,6 +7,7 @@ import { MoneyField, NumberField, TextField } from '@/shared/ui/fields';
 import { Button, Card, Notice, Screen, Segmented } from '@/shared/ui/primitives';
 import { today } from '@/shared/utils/dates';
 import { centsOrNull, decimalOrNull, hasInvalidNumber } from '@/shared/utils/parse';
+import { saveExpense } from './saveExpense';
 
 type LooseCategory = 'fuel' | 'maintenance' | 'other';
 
@@ -32,7 +32,7 @@ export default function ExpenseFormScreen() {
     if (!cents) return setError('Informe um valor maior que zero.');
     if (hasInvalidNumber(liters) || hasInvalidNumber(odometer)) return setError('Confira os números digitados. Use só números, como 45,5.');
 
-    await expenseRepository.add({
+    await saveExpense({
       date,
       category,
       cents,

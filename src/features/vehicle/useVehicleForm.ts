@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { vehicleRepository } from '@/data/repositories/vehicleRepository';
 import { computeCosts, FuelType, Ownership, VehicleKind } from '@/domain/vehicle/costs';
-import { syncCopilotTargets } from '@/features/copilot/syncTargets';
+import { syncCopilotTargets } from '@/application/offerSettings';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { today } from '@/shared/utils/dates';
 import { CostFields, defaultDepreciationEnabled, fieldsToProfile, validateProfile, profileToFields, suggestedProfile } from './vehicleForm';

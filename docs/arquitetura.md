@@ -6,27 +6,32 @@ Regras de código e organização do projeto. Como o código não tem comentári
 
 ```text
 src/
-  app/        Rotas do Expo Router. Só reexportam telas
-  features/   Telas, hooks e componentes de cada funcionalidade
-  domain/     Regras de negócio puras, sem React, banco ou Expo
-  data/       SQLite, migrações, repositórios e backup
-  shared/     Tema, componentes, hooks e utilitários genéricos
-  config/     Constantes do app
+  app/          Rotas do Expo Router. Só reexportam telas
+  features/     Telas, hooks e componentes de cada funcionalidade
+  application/  Orquestração usada por mais de uma funcionalidade e a inicialização do app
+  domain/       Regras de negócio puras, sem React, banco ou Expo
+  data/         SQLite, migrações, repositórios e backup
+  shared/       Tema, componentes, hooks, utilitários e efeitos de plataforma
+  config/       Constantes do app
 modules/
-  copilot/    Módulo nativo em Kotlin: acessibilidade, cartão, voz e botão flutuante
+  copilot/      Módulo nativo em Kotlin: acessibilidade, cartão, voz e botão flutuante
 ```
 
 **Sentido das dependências**
 
 ```text
-app -> features -> data -> domain -> shared/utils
+app -> features -> application -> data -> domain -> shared/utils
+                -> data
                 -> domain
                 -> shared
 ```
 
-- `domain` não conhece `features`, `data` nem React.
-- `shared` não conhece `features`, `data` nem `domain`.
-- Uma tela nunca escreve SQL: ela chama um hook, e o hook chama um repositório.
+- `domain` não conhece `features`, `application`, `data` nem React.
+- `shared` não conhece `features`, `application`, `data` nem `domain`.
+- `shared/utils` e `domain` são funções puras. Efeitos do Expo ficam em `shared/platform`: notificações, localização, confirmação e compartilhamento.
+- Um componente `.tsx` de `features` nunca importa `@/data`: ele chama um hook ou serviço `.ts` da funcionalidade.
+- Uma funcionalidade só importa outra pelo `index.ts` dela, que lista o que é público.
+- Essas regras são conferidas pelo `npm run lint`, em `eslint.config.js`.
 
 ## Princípios
 
@@ -215,4 +220,8 @@ app -> features -> data -> domain -> shared/utils
 - **Uma conta de lucro:** as regras de insight usam `computeShift` e `totalsByPlatform`, as mesmas funções da jornada e do relatório.
 - **Janela das últimas 4 semanas:** 28 dias até hoje, inclusive.
 - **Sem custo, sem lucro:** sem custo por km, a oferta é neutra e `profitCents` é nulo nos dois lados. As fixtures conferem `perKm`, `perHour` e `profitCents`.
+- **Camada `application`:** progresso da meta, ajustes de oferta, insights, próximo passo e inicialização. Antes eles ficavam dentro de uma funcionalidade e criavam ciclos, como `goals -> copilot -> goals`.
+- **API pública por `index.ts`:** componentes que dependem de tipos do domínio não podem ir para `shared/ui`, então ficam na funcionalidade dona e são expostos pelo `index.ts` dela.
+- **Repositórios por fábrica:** `createXRepository(connection = getDb)` devolve o repositório, e o módulo exporta uma instância padrão. `createShiftRepository` também recebe o repositório de veículo. `SqlExecutor` serve tanto para a conexão quanto para a transação.
+- **Canais do Copiloto testáveis:** `OfferChannels` escolhe os canais sem Android, e o botão flutuante é acessado pela interface `FloatingHost`.
 

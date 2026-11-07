@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Alert } from 'react-native';
-import { ReminderRow } from '@/data/repositories/reminderRepository';
 import { kmRemaining } from '@/domain/reminder/reminder';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { useSubmit } from '@/shared/hooks/useSubmit';
@@ -12,7 +11,7 @@ import { formatDate } from '@/shared/utils/dates';
 import { formatKm } from '@/shared/utils/format';
 import { decimalOrNull, hasInvalidNumber } from '@/shared/utils/parse';
 import { DailyReminderCard } from './DailyReminderCard';
-import { useReminders } from './useReminders';
+import { Reminder, useReminders } from './useReminders';
 
 const INITIAL = { title: '', km: '' };
 
@@ -21,7 +20,7 @@ function describeKm(dueKm: number, totalKm: number) {
   return remaining > 0 ? `faltam ${formatKm(remaining)}` : 'já chegou a hora';
 }
 
-const describeDue = (reminder: ReminderRow, totalKm: number) =>
+const describeDue = (reminder: Reminder, totalKm: number) =>
   [reminder.due_date ? formatDate(reminder.due_date) : null, reminder.due_km ? describeKm(reminder.due_km, totalKm) : null].filter(Boolean).join(' ou ');
 
 export default function RemindersScreen() {
@@ -46,7 +45,7 @@ export default function RemindersScreen() {
 
   const failure = error ?? saving.error;
 
-  const chooseAction = (reminder: ReminderRow) => {
+  const chooseAction = (reminder: Reminder) => {
     Alert.alert(reminder.title, describeDue(reminder, totalKm), [
       { text: 'Cancelar', style: 'cancel' },
       { text: 'Excluir', style: 'destructive', onPress: () => remove(reminder) },
