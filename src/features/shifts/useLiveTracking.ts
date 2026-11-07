@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
+import { syncCopilotTargets } from '@application/offerSettings';
+import { releaseShiftVehicle, shiftVehicle } from '@application/vehicleInUse';
 import { SETTING_KEYS, settingsRepository } from '@data/repositories/settingsRepository';
 import { reportError } from '@shared/utils/reportError';
 import { useGpsTracking } from './useGpsTracking';
@@ -18,6 +20,7 @@ export function useLiveTracking(onApply: (minutes: number, startedAt: number, km
   const start = async () => {
     setApplied(false);
     timer.start();
+    await shiftVehicle();
     if (measureKm) await gps.start();
   };
 
@@ -45,6 +48,8 @@ export function useLiveTracking(onApply: (minutes: number, startedAt: number, km
   const discard = async () => {
     timer.reset();
     await gps.reset();
+    await releaseShiftVehicle();
+    await syncCopilotTargets();
     setApplied(false);
   };
 

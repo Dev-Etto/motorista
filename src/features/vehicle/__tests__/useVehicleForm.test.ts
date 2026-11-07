@@ -35,6 +35,29 @@ describe('formulário do veículo', () => {
     expect(vehicleRepository.find).toHaveBeenCalledWith(2);
   });
 
+  it('num veículo novo, o combustível troca só o preço e o consumo sugeridos', async () => {
+    const { result } = await renderHook(() => useVehicleForm('new'));
+    await act(async () => result.current.bind('plannedKm').onChangeText('5000'));
+    const price = result.current.bind('fuelPrice').value;
+    const consumption = result.current.bind('consumption').value;
+
+    await act(async () => result.current.setFuel('electric'));
+
+    expect(result.current.bind('plannedKm').value).toBe('5000');
+    expect(result.current.bind('fuelPrice').value).not.toBe(price);
+    expect(result.current.bind('consumption').value).not.toBe(consumption);
+  });
+
+  it('num veículo salvo, trocar o combustível não mexe nos valores', async () => {
+    const { result } = await renderHook(() => useVehicleForm(2));
+    await waitFor(() => expect(result.current.vehicleId).toBe(2));
+    const price = result.current.bind('fuelPrice').value;
+
+    await act(async () => result.current.setFuel('ethanol'));
+
+    expect(result.current.bind('fuelPrice').value).toBe(price);
+  });
+
   it('um veículo novo vira o atual ao salvar', async () => {
     const { result } = await renderHook(() => useVehicleForm('new'));
     await act(async () => result.current.setKind('motorcycle'));

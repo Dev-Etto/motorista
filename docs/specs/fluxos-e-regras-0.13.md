@@ -1,0 +1,69 @@
+# Spec: fluxos e regras 0.13.0
+
+Revisão de regras de negócio, navegação, telas e acessibilidade, em fases. Cada fase é entregue num PR próprio, com os critérios abaixo e os testes que os confirmam.
+
+- **Jest:** `src/**/__tests__`.
+- **Kotlin:** `modules/copilot/android/src/test`.
+- **Manual:** o que só o aparelho confirma.
+
+## Fase 1. Regras que dão número errado
+
+Hoje a jornada não sabe com qual veículo começou. Trocar o veículo no meio da jornada muda o custo do Copiloto na hora, e a jornada inteira é salva com o custo do veículo novo. Além disso, o backup é marcado como feito mesmo quando o compartilhamento é cancelado, a meta some na virada do mês e o combustível escolhido no cadastro não muda os valores sugeridos.
+
+### Conceitos
+
+| Conceito | O que é |
+| --- | --- |
+| Veículo da jornada | O veículo atual no momento em que a jornada foi iniciada. Fica em `shift_vehicle` enquanto o cronômetro estiver iniciado |
+| Veículo em uso | O veículo da jornada, se houver jornada iniciada. Senão, o veículo atual |
+| Meta vigente | A meta do mês ou, sem ela, a meta mais recente de um mês anterior |
+
+### F1.1 Veículo da jornada
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F1.1.1 | Com o cronômetro iniciado e sem `shift_vehicle`, a primeira consulta ao veículo em uso grava o veículo atual como veículo da jornada. Isso cobre o início pelo app e pelo botão flutuante | Jest |
+| F1.1.2 | Com o cronômetro parado, a consulta apaga `shift_vehicle` e devolve o veículo atual | Jest |
+| F1.1.3 | O Copiloto e a calculadora usam o custo do veículo em uso | Jest |
+| F1.1.4 | "Usar agora" com jornada iniciada noutro veículo pede confirmação: a jornada continua com o veículo dela, e o novo vale a partir da próxima. Confirmar troca o atual sem mudar o custo do Copiloto | Jest, Manual |
+| F1.1.5 | O formulário de encerramento abre com o veículo da jornada marcado | Jest |
+| F1.1.6 | Salvar a jornada com a medição ou descartar a medição apaga `shift_vehicle`, e o Copiloto volta ao custo do veículo atual | Jest |
+| F1.1.7 | O veículo de uma jornada iniciada não pode ser arquivado. A tela explica o motivo | Jest |
+
+### F1.2 Sugestão de custo por combustível
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F1.2.1 | `suggestedProfile(kind, ownership, fuel)` sugere preço e consumo do combustível escolhido, conforme a tabela abaixo | Jest |
+| F1.2.2 | Num veículo novo, trocar o combustível troca só o preço e o consumo sugeridos. Os outros campos ficam como estão | Jest |
+| F1.2.3 | Num veículo já salvo, trocar o combustível não mexe nos valores | Jest |
+
+| Combustível | Preço | Carro | Moto |
+| --- | --- | --- | --- |
+| Gasolina | R$ 6,00/L | 11 km/L | 30 km/L |
+| Etanol | R$ 4,20/L | 8 km/L | 21 km/L |
+| Diesel | R$ 6,20/L | 13 km/L | 30 km/L |
+| GNV | R$ 4,80/m³ | 13 km/m³ | 30 km/m³ |
+| Elétrico | R$ 0,95/kWh | 6,5 km/kWh | 25 km/kWh |
+
+### F1.3 Backup confirmado
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F1.3.1 | Depois de compartilhar o backup, o app pergunta se o arquivo foi salvo. Só "Salvei" grava `last_backup_at` e mostra "Backup salvo" | Jest |
+| F1.3.2 | "Não salvei" não grava a data e mostra como tentar de novo | Jest |
+
+### F1.4 Meta contínua
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F1.4.1 | `goalRepository.findInEffect(month)` devolve a meta do mês ou, sem ela, a mais recente de um mês anterior | Jest |
+| F1.4.2 | Progresso, plano, Início e mínimos pela meta usam a meta vigente. A virada do mês não desliga "Calcular pela minha meta" | Jest |
+| F1.4.3 | A tela da Meta avisa "Repetindo a meta de outubro" quando a meta vem de outro mês. Salvar grava a meta no mês atual | Jest, Manual |
+
+### F1.5 Tela da Meta
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F1.5.1 | Cada erro aparece embaixo do próprio campo: lucro desejado, horas por dia, dias de trabalho e meta de hoje | Jest |
+| F1.5.2 | "Concluir" salva quando o lucro desejado está preenchido e volta só se salvar. Sem lucro preenchido, só volta | Jest |

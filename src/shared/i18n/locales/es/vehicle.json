@@ -100,6 +100,12 @@
       "title": "¿Archivar {{name}}?",
       "message": "Sale de las opciones, pero las jornadas anteriores mantienen su costo."
     },
-    "currentRow": "Vehículo actual"
+    "currentRow": "Vehículo actual",
+    "switchInShift": {
+      "title": "Jornada en curso",
+      "message": "Esta jornada sigue con {{shift}}. {{next}} vale a partir de la próxima jornada.",
+      "action": "Cambiar"
+    },
+    "inShift": "Este vehículo está en una jornada en curso. Para archivarlo, termina la jornada."
   }
 }

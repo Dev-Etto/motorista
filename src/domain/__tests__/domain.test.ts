@@ -68,6 +68,14 @@ describe('custo por km', () => {
     expect(c.fullPerKm).toBeCloseTo(87.25);
   });
 
+  it('a sugestão segue o combustível', () => {
+    expect(suggestedProfile('car', 'owned')).toMatchObject({ fuelPriceCents: 600, consumptionKmPerUnit: 11 });
+    expect(suggestedProfile('car', 'owned', 'ethanol')).toMatchObject({ fuelPriceCents: 420, consumptionKmPerUnit: 8 });
+    expect(suggestedProfile('car', 'owned', 'electric')).toMatchObject({ fuelPriceCents: 95, consumptionKmPerUnit: 6.5 });
+    expect(suggestedProfile('motorcycle', 'owned', 'electric')).toMatchObject({ fuelPriceCents: 95, consumptionKmPerUnit: 25 });
+    expect(suggestedProfile('car', 'owned', 'cng')).toMatchObject({ fuelPriceCents: 480, consumptionKmPerUnit: 13 });
+  });
+
   it('financiado soma parcela, sem depreciação por padrão', () => {
     const base = suggestedProfile('car', 'financed');
     expect(base.depreciationEnabled).toBe(false);

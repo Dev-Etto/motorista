@@ -100,6 +100,12 @@
       "title": "Arquivar {{name}}?",
       "message": "Ele sai das escolhas, mas as jornadas antigas continuam com o custo dele."
     },
-    "currentRow": "Veículo atual"
+    "currentRow": "Veículo atual",
+    "switchInShift": {
+      "title": "Jornada em andamento",
+      "message": "Esta jornada continua com {{shift}}. {{next}} vale a partir da próxima jornada.",
+      "action": "Trocar"
+    },
+    "inShift": "Este veículo está numa jornada em andamento. Para arquivar, encerre a jornada."
   }
 }

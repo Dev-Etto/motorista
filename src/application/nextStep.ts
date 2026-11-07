@@ -28,7 +28,7 @@ export async function loadNextStep(): Promise<NextStep | null> {
   const [{ costs }, stats, goal, lastBackup, dismissed] = await Promise.all([
     vehicleRepository.getCostsAt(date),
     shiftRepository.usageStats(),
-    goalRepository.find(monthKey(date)),
+    goalRepository.findInEffect(monthKey(date)),
     settingsRepository.get(SETTING_KEYS.lastBackupAt),
     settingsRepository.getJson(SETTING_KEYS.nextStepsDismissed, dismissedSchema, []),
   ]);

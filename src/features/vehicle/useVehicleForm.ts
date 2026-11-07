@@ -25,7 +25,7 @@ export function useVehicleForm(target: VehicleTarget = 'current') {
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState(() => t('defaultName'));
   const [kind, setKindState] = useState<VehicleKind>('car');
-  const [fuel, setFuel] = useState<FuelType>('gasoline');
+  const [fuel, setFuelState] = useState<FuelType>('gasoline');
   const [ownership, setOwnershipState] = useState<Ownership>('owned');
   const [depreciationEnabled, setDepreciationEnabled] = useState(true);
   const form = useFormFields<keyof CostFields>(profileToFields(suggestedProfile('car', 'owned'), 'gasoline', format));
@@ -43,7 +43,7 @@ export function useVehicleForm(target: VehicleTarget = 'current') {
       setVehicleId(vehicle.id);
       setName(vehicle.name);
       setKindState(vehicle.kind);
-      setFuel(vehicle.fuel);
+      setFuelState(vehicle.fuel);
       if (!profile) return;
 
       setOwnershipState(profile.ownership);
@@ -55,7 +55,14 @@ export function useVehicleForm(target: VehicleTarget = 'current') {
   const setKind = (next: VehicleKind) => {
     setKindState(next);
     if (vehicleId) return;
-    form.setValues(profileToFields(suggestedProfile(next, ownership), fuel, format));
+    form.setValues(profileToFields(suggestedProfile(next, ownership, fuel), fuel, format));
+  };
+
+  const setFuel = (next: FuelType) => {
+    setFuelState(next);
+    if (vehicleId) return;
+    const suggestion = profileToFields(suggestedProfile(kind, ownership, next), next, format);
+    form.setValues((current) => ({ ...current, fuelPrice: suggestion.fuelPrice, consumption: suggestion.consumption }));
   };
 
   const setOwnership = (next: Ownership) => {

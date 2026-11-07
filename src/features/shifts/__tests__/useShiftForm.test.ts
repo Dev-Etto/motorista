@@ -1,4 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
+import { vehicleInUse } from '@application/vehicleInUse';
 import { shiftRepository } from '@data/repositories/shiftRepository';
 import { vehicleRepository } from '@data/repositories/vehicleRepository';
 import { describeFormError, useShiftForm } from '@features/shifts/useShiftForm';
@@ -22,6 +23,9 @@ jest.mock('@data/repositories/vehicleRepository', () => ({
     getCurrent: jest.fn().mockResolvedValue(null),
     find: jest.fn().mockResolvedValue(null),
   },
+}));
+jest.mock('@application/vehicleInUse', () => ({
+  vehicleInUse: jest.fn(() => jest.requireMock('@data/repositories/vehicleRepository').vehicleRepository.getCurrent()),
 }));
 jest.mock('@data/repositories/shiftRepository', () => ({ shiftRepository: { findById: jest.fn(), save: jest.fn() } }));
 jest.mock('@shared/utils/reportError', () => ({ reportError: jest.fn() }));
@@ -160,6 +164,13 @@ describe('mensagens de erro do formulário da jornada', () => {
       await waitFor(() => expect(result.current.preview.vehicleCostCents).toBe(1000));
       await act(async () => result.current.save());
       expect(shiftRepository.save).toHaveBeenLastCalledWith(expect.objectContaining({ vehicleId: 1 }));
+    });
+
+    it('com jornada iniciada, o encerramento abre com o veículo da jornada', async () => {
+      jest.mocked(vehicleInUse).mockResolvedValueOnce(CAR as never);
+      const { result } = await renderHook(() => useShiftForm());
+
+      await waitFor(() => expect(result.current.vehicleId).toBe(1));
     });
 
     it('a edição abre com o veículo da jornada', async () => {

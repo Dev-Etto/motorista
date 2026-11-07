@@ -345,6 +345,16 @@ describe('metas, lembretes e ajustes', () => {
     expect(await goalRepository.find('2026-11')).toMatchObject({ desiredProfitCents: 400000, workWeekdays: [1], hoursPerDay: 6 });
   });
 
+  it('sem meta no mês, vale a meta mais recente de um mês anterior', async () => {
+    await goalRepository.save({ month: '2026-09', desiredProfitCents: 200000, workWeekdays: [1], hoursPerDay: 8 });
+    await goalRepository.save({ month: '2026-10', desiredProfitCents: 250000, workWeekdays: [1], hoursPerDay: 8 });
+
+    expect(await goalRepository.find('2026-12')).toBeNull();
+    expect(await goalRepository.findInEffect('2026-12')).toMatchObject({ month: '2026-10' });
+    expect(await goalRepository.findInEffect('2026-10')).toMatchObject({ month: '2026-10', desiredProfitCents: 250000 });
+    expect(await goalRepository.findInEffect('2026-08')).toBeNull();
+  });
+
   it('guarda o aviso do lembrete e marca como feito', async () => {
     await reminderRepository.add({ title: 'Óleo', dueDate: '2026-12-01', dueKm: null, notificationId: null, vehicleId: null });
     const [reminder] = await reminderRepository.list();

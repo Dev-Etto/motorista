@@ -1,9 +1,9 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { archiveVehicle, chooseCurrentVehicle } from '@application/vehicles';
+import { archiveVehicle, chooseCurrentVehicle, shiftVehicleOtherThan } from '@application/vehicles';
 import { useAsyncData } from '@shared/hooks/useAsyncData';
 import { useSubmit } from '@shared/hooks/useSubmit';
-import { confirmAction } from '@shared/ui/dialog';
+import { confirmAction, showDialog } from '@shared/ui/dialog';
 import { Button, Notice, Screen } from '@shared/ui/primitives';
 import { CostSummaryCard } from './CostSummaryCard';
 import { useVehicleForm, VehicleTarget } from './useVehicleForm';
@@ -26,10 +26,26 @@ export default function VehicleScreen() {
     if (await form.save()) router.back();
   });
 
-  const useNow = useSubmit(async () => {
-    if (!form.vehicleId) return;
-    await chooseCurrentVehicle(form.vehicleId);
+  const switchTo = async (vehicleId: number) => {
+    await chooseCurrentVehicle(vehicleId);
     router.back();
+  };
+
+  const useNow = useSubmit(async () => {
+    const vehicleId = form.vehicleId;
+    if (!vehicleId) return;
+
+    const inShift = await shiftVehicleOtherThan(vehicleId);
+    if (!inShift) return switchTo(vehicleId);
+
+    showDialog({
+      title: t('manage.switchInShift.title'),
+      message: t('manage.switchInShift.message', { shift: inShift.name, next: form.name }),
+      actions: [
+        { label: t('common:actions.cancel'), tone: 'secondary' },
+        { label: t('manage.switchInShift.action'), tone: 'primary', onPress: () => switchTo(vehicleId) },
+      ],
+    });
   });
 
   const archive = () => {
@@ -55,6 +71,7 @@ export default function VehicleScreen() {
       {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
       <Button label={t('common:actions.save')} busy={saving.busy} onPress={saving.submit} />
       {status?.canUseNow ? <Button label={t('manage.useNow')} variant="secondary" busy={useNow.busy} onPress={useNow.submit} /> : null}
+      {status?.inShift ? <Notice tone="accent" message={t('manage.inShift')} /> : null}
       {status?.canArchive ? <Button label={t('manage.archive')} variant="danger" onPress={archive} /> : null}
     </Screen>
   );
