@@ -13,7 +13,9 @@
   "chart": {
     "byMonth": "Lucro por mês",
     "byDay": "Lucro por dia",
-    "accessibilityLabel": "Lucro no período: {{amount}}"
+    "accessibilityLabel": "Lucro no período: {{amount}}",
+    "showData": "Ver os dados do gráfico",
+    "dayRow": "Dia {{day}}"
   },
   "monthClose": {
     "title": "Mês fechado",

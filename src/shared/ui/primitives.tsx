@@ -76,7 +76,7 @@ export function Card({ children, title }: { children: ReactNode; title?: string 
   return (
     <View style={[styles.card, { backgroundColor: colors.surface, boxShadow: colors.cardShadow }]}>
       {title ? (
-        <AppText variant="subtitle" bold>
+        <AppText variant="subtitle" bold accessibilityRole="header">
           {title}
         </AppText>
       ) : null}
@@ -136,12 +136,13 @@ interface SegmentedProps<T extends string> {
   value: T;
   options: { value: T; label: string }[];
   onChange: (value: T) => void;
+  label?: string;
 }
 
-export function Segmented<T extends string>({ value, options, onChange }: SegmentedProps<T>) {
+export function Segmented<T extends string>({ value, options, onChange, label }: SegmentedProps<T>) {
   const colors = useTheme();
   return (
-    <View accessibilityRole="radiogroup" style={[styles.segmented, { backgroundColor: colors.surfaceAlt }]}>
+    <View accessibilityRole="radiogroup" accessibilityLabel={label} style={[styles.segmented, { backgroundColor: colors.surfaceAlt }]}>
       {options.map((option) => {
         const selected = option.value === value;
         return (
@@ -176,7 +177,7 @@ export function ToggleRow({ label, hint, value, onChange }: { label: string; hin
         accessibilityLabel={label}
         value={value}
         onValueChange={onChange}
-        trackColor={{ false: colors.border, true: colors.primary }}
+        trackColor={{ false: colors.borderStrong, true: colors.primary }}
         thumbColor={value ? colors.onPrimary : colors.textMuted}
       />
     </View>
@@ -202,11 +203,14 @@ function rowRole(selected: boolean | undefined, onPress: (() => void) | undefine
 
 export function ListRow({ icon, leading, title, subtitle, value, valueTone = 'default', selected, chevron, onPress }: ListRowProps) {
   const colors = useTheme();
+  const role = rowRole(selected, onPress);
+  const readOnlyLabel = role ? undefined : [title, subtitle, value].filter(Boolean).join(', ');
   return (
     <Pressable
-      accessibilityRole={rowRole(selected, onPress)}
+      accessible
+      accessibilityRole={role}
+      accessibilityLabel={readOnlyLabel}
       accessibilityState={selected === undefined ? undefined : { checked: selected }}
-      disabled={!onPress}
       onPress={onPress}
       style={[styles.listRow, { borderBottomColor: colors.border }]}
     >
@@ -250,10 +254,10 @@ export function Collapsible({ title, children, initiallyOpen = false, forceOpen 
   return (
     <View style={[styles.card, { backgroundColor: colors.surface, boxShadow: colors.cardShadow }]}>
       <Pressable accessibilityRole="button" accessibilityState={{ expanded: open }} onPress={() => setOpen((current) => !current)} style={styles.rowBetween}>
-        <AppText variant="subtitle" bold style={styles.flex}>
+        <AppText variant="subtitle" bold style={styles.flex} accessibilityRole="header">
           {title}
         </AppText>
-        <AppText variant="subtitle" tone="muted">
+        <AppText variant="subtitle" tone="muted" importantForAccessibility="no" accessibilityElementsHidden>
           {open ? '−' : '+'}
         </AppText>
       </Pressable>
@@ -298,7 +302,7 @@ export function EmptyState({ title, message, action, illustration }: { title: st
   return (
     <Card>
       {illustration ? <Illustration name={illustration} height={100} /> : null}
-      <AppText variant="subtitle" bold>
+      <AppText variant="subtitle" bold accessibilityRole="header">
         {title}
       </AppText>
       <AppText tone="muted">{message}</AppText>
@@ -311,7 +315,7 @@ export function StepDots({ total, current }: { total: number; current: number })
   const colors = useTheme();
   const { t } = useTranslation();
   return (
-    <View accessibilityLabel={t('stepDots.label', { current: current + 1, total })} style={styles.dots}>
+    <View accessible accessibilityLabel={t('stepDots.label', { current: current + 1, total })} style={styles.dots}>
       {Array.from({ length: total }, (_, index) => (
         <View
           key={index}
@@ -331,10 +335,18 @@ const NOTICE_ICONS: Record<Tone, AppIconName> = {
   negative: 'alert',
 };
 
+const NOTICE_LIVE_REGIONS: Partial<Record<Tone, 'polite' | 'assertive'>> = { negative: 'assertive', warning: 'polite' };
+
 export function Notice({ message, tone = 'warning' }: { message: string; tone?: Tone }) {
   const colors = useTheme();
+  const liveRegion = NOTICE_LIVE_REGIONS[tone];
   return (
-    <View style={[styles.notice, { backgroundColor: colors.surfaceAlt }]}>
+    <View
+      accessible
+      accessibilityRole={liveRegion ? 'alert' : undefined}
+      accessibilityLiveRegion={liveRegion ?? 'none'}
+      style={[styles.notice, { backgroundColor: colors.surfaceAlt }]}
+    >
       <AppIcon name={NOTICE_ICONS[tone]} color={colors[TONE_COLORS[tone]]} size={20} />
       <AppText variant="caption" style={styles.flex}>
         {message}
@@ -348,7 +360,14 @@ const styles = StyleSheet.create({
   screen: { padding: spacing.lg, gap: spacing.lg, flexGrow: 1 },
   centered: { justifyContent: 'center' },
   card: { borderRadius: radius.lg, padding: spacing.lg, gap: spacing.md },
-  button: { minHeight: MIN_TOUCH_TARGET, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center', paddingHorizontal: spacing.lg },
+  button: {
+    minHeight: MIN_TOUCH_TARGET,
+    minWidth: MIN_TOUCH_TARGET,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: spacing.lg,
+  },
   buttonRow: { flexDirection: 'row', gap: spacing.sm },
   segmented: { flexDirection: 'row', borderRadius: radius.md, padding: spacing.xs, gap: spacing.xs },
   segment: {

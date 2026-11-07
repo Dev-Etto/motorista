@@ -57,22 +57,24 @@ export function DateField({ label, value, onChange, placeholder, minimumDate, ma
       <AppText variant="caption" tone="muted">
         {label}
       </AppText>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={t('dateField.accessibilityLabel', { label, value: value ? format.date(value) : empty })}
-        onPress={openAndroid}
-        style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border }]}
-      >
-        <AppIcon name="calendar" color={colors.textMuted} size={22} />
-        <AppText tone={value ? 'default' : 'muted'} style={styles.value}>
-          {value ? format.date(value) : empty}
-        </AppText>
+      <View style={styles.row}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('dateField.accessibilityLabel', { label, value: value ? format.date(value) : empty })}
+          onPress={openAndroid}
+          style={[styles.input, styles.value, { backgroundColor: colors.surface, borderColor: colors.borderStrong }]}
+        >
+          <AppIcon name="calendar" color={colors.textMuted} size={22} />
+          <AppText tone={value ? 'default' : 'muted'} style={styles.value}>
+            {value ? format.date(value) : empty}
+          </AppText>
+        </Pressable>
         {clearable && value ? (
-          <Pressable accessibilityRole="button" accessibilityLabel={t('dateField.clearLabel', { label })} hitSlop={12} onPress={() => onChange(null)}>
+          <Pressable accessibilityRole="button" accessibilityLabel={t('dateField.clearLabel', { label })} onPress={() => onChange(null)} style={styles.clear}>
             <AppText tone="muted">{t('actions.clear')}</AppText>
           </Pressable>
         ) : null}
-      </Pressable>
+      </View>
     </View>
   );
 }
@@ -89,4 +91,6 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   value: { flex: 1 },
+  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  clear: { minHeight: MIN_TOUCH_TARGET, minWidth: MIN_TOUCH_TARGET, alignItems: 'center', justifyContent: 'center', paddingHorizontal: spacing.sm },
 });

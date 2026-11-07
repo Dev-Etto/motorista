@@ -81,6 +81,8 @@ class OfferFormat(private val regional: RegionalSettings, private val texts: Off
 
   fun notificationText(evaluation: OfferEvaluation) = "${distanceAndTime(evaluation)} • ${rates(evaluation)}"
 
+  fun cardDescription(evaluation: OfferEvaluation) = "${notificationTitle(evaluation)}. ${notificationDetails(evaluation).replace('\n', ' ')}"
+
   fun notificationDetails(evaluation: OfferEvaluation) =
     listOf(notificationText(evaluation), profitLine(evaluation), reason(evaluation))
       .filter { it.isNotEmpty() }

@@ -41,8 +41,19 @@ export function OfferRow({ entry }: { entry: OfferHistoryEntry }) {
   const colors = useTheme();
   const format = useFormat();
 
+  const spoken = [
+    entry.source,
+    format.money(entry.valueCents),
+    entry.score === undefined ? null : t('row.scoreSpoken', { score: format.number(entry.score) }),
+    describeDistance(entry, t, format),
+    describeRates(entry, format),
+    describeStatus(entry, t, format),
+  ]
+    .filter(Boolean)
+    .join(', ');
+
   return (
-    <View style={[styles.row, { borderBottomColor: colors.border }]}>
+    <View accessible accessibilityLabel={spoken} style={[styles.row, { borderBottomColor: colors.border }]}>
       <View style={styles.header}>
         <View>
           <PlatformBadge name={entry.source} />

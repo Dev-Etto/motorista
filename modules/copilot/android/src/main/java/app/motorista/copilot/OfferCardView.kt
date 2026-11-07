@@ -33,8 +33,11 @@ class OfferCardView(private val context: Context) {
       }
       clipToOutline = true
       elevation = context.dp(ELEVATION_DP).toFloat()
-      addView(header(evaluation, format, preferences.theme, scale))
-      addView(body)
+      contentDescription = format.cardDescription(evaluation)
+      importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+      accessibilityLiveRegion = View.ACCESSIBILITY_LIVE_REGION_POLITE
+      addView(header(evaluation, format, preferences.theme, scale).apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS })
+      addView(body.apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS })
     }
   }
 

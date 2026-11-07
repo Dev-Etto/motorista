@@ -42,6 +42,8 @@ object WindowDrag {
       window.scaleY = 1f
     }
     val slop = ViewConfiguration.get(handle.context).scaledTouchSlop * SLOP_FACTOR
+    handle.isClickable = true
+    handle.setOnClickListener { onTap() }
     handle.setOnTouchListener { _, event ->
       when (event.action) {
         MotionEvent.ACTION_DOWN -> {
@@ -69,7 +71,7 @@ object WindowDrag {
         MotionEvent.ACTION_UP -> {
           settle()
           when {
-            !dragging -> onTap()
+            !dragging -> handle.performClick()
             dismissZone?.release(event.rawY) == true -> onDismiss()
             else -> onEnd(params.x, params.y)
           }

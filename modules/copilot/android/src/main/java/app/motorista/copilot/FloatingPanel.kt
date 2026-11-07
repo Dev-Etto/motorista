@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.RippleDrawable
+import android.os.Build
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -30,10 +31,10 @@ class FloatingPanel(
 
   private var rendered: PanelState? = null
   private val cardTheme = CardTheme(context)
-  private val logo = icon(R.drawable.ic_stat_motorista, LOGO_DP)
+  private val logo = icon(R.drawable.ic_stat_motorista, LOGO_DP).apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
   private val title = text(TITLE_SP, bold = true)
   private val status = text(CAPTION_SP, bold = false)
-  private val close = icon(R.drawable.ic_panel_close, ICON_DP)
+  private val close = icon(R.drawable.ic_panel_close, ICON_DP).apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
   private val toggleIcon = icon(R.drawable.ic_panel_play, ICON_DP)
   private val toggleLabel = text(ROW_SP, bold = true)
   private val toggle = LinearLayout(context).apply {
@@ -80,6 +81,7 @@ class FloatingPanel(
   fun render(timer: TimerState, lastOffer: OfferEvaluation?, open: Boolean, theme: ThemeMode, format: OfferFormat) {
     val clock = OfferFormat.clock(timer.elapsedMs)
     if (title.text.toString() != clock) title.text = clock
+    describeHandle(clock, timer, open)
 
     val night = cardTheme.isNight(theme)
     val next = PanelState(open, timer.running, timer.started, lastOffer, theme, night)
@@ -88,6 +90,20 @@ class FloatingPanel(
     rendered = next
     menu.visibility = if (open) View.VISIBLE else View.GONE
     if (open) renderOpen(timer, lastOffer, cardTheme.palette(theme), night, format) else renderClosed()
+  }
+
+  private fun describeHandle(clock: String, timer: TimerState, open: Boolean) {
+    val shift = context.copilotText(
+      when {
+        timer.running -> R.string.panel_shift_running
+        timer.started -> R.string.panel_shift_paused
+        else -> R.string.panel_shift_idle
+      },
+    )
+    handle.contentDescription = context.copilotText(R.string.panel_handle_description).format(shift, clock)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      handle.stateDescription = context.copilotText(if (open) R.string.panel_state_open else R.string.panel_state_closed)
+    }
   }
 
   private fun renderClosed() {

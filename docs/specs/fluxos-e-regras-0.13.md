@@ -134,3 +134,54 @@ O Início repete o cronômetro que agora está na barra da jornada. Para começa
 | F3.3.1 | Com a jornada aberta há 14 h ou mais, a barra da jornada avisa, e o card de medição pergunta "Que horas você parou?", com a hora sugerida pelo início mais as horas por dia da meta, ou 8 h. "Usar no registro" usa as horas até esse horário e pede para conferir os km | Jest |
 | F3.3.2 | A notificação de jornada esquecida abre o encerramento da jornada | Manual |
 | F3.3.3 | Salvar uma jornada nova abre o detalhe dela | Jest |
+
+## Fase 4. Acessibilidade de base
+
+O texto do app passa no contraste AA, mas erros não são anunciados pelo leitor de tela, o contorno dos campos quase não aparece, há controles inalcançáveis e o gráfico não tem os dados em texto. Quase tudo se resolve nos componentes base.
+
+### F4.1 Anúncios
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F4.1.1 | `Notice` negativo ou de alerta tem papel `alert` e região viva: `assertive` no negativo e `polite` no alerta | Jest |
+| F4.1.2 | O erro do campo é região viva `polite` e vira a dica do campo para o leitor de tela | Jest |
+
+### F4.2 Rótulos e papéis
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F4.2.1 | Os títulos de `Card`, `EmptyState`, `Collapsible` e do diálogo têm papel `header` | Jest |
+| F4.2.2 | `ListRow` só informativo é lido como um item, com título, subtítulo e valor, e não como "desativado" | Jest |
+| F4.2.3 | O rótulo do campo inclui a unidade, como "Distância total, km" | Jest |
+| F4.2.4 | `Segmented` aceita `label`, lido no grupo de opções | Jest |
+| F4.2.5 | O sinal "+/−" do `Collapsible` não é lido, e `StepDots` é lido como um item | Jest |
+| F4.2.6 | Cada oferta do histórico é lida como um item só | Jest |
+
+### F4.3 Toque e contraste
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F4.3.1 | `Button` tem largura mínima de 48. `LearnMore` tem altura mínima de 48 | Jest |
+| F4.3.2 | O token `borderStrong` tem 3:1 ou mais contra `surface` nos dois temas e é usado no contorno de campos, datas e no trilho do interruptor desligado | Jest |
+| F4.3.3 | No calendário, o dia escolhido usa `primary` com texto `onPrimary`, e hoje tem contorno | Manual |
+
+### F4.4 Diálogo e campos
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F4.4.1 | O fundo do diálogo não recebe foco do leitor de tela. Ao abrir, o diálogo é anunciado com o título e a mensagem, e o título é `header` | Jest |
+| F4.4.2 | "Limpar" do `DateField` fica fora do botão da data e tem 48 de altura | Jest |
+
+### F4.5 Gráfico
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F4.5.1 | Abaixo do gráfico de Relatórios, "Ver os dados" lista cada barra com o rótulo e o valor | Jest |
+
+### F4.6 Copiloto nativo
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F4.6.1 | O botão flutuante abre e fecha por clique acessível, com descrição e estado aberto ou fechado | Manual |
+| F4.6.2 | O fechar e o logo do painel têm descrição ou ficam fora do leitor de tela | Manual |
+| F4.6.3 | O cartão da oferta tem uma descrição resumida e é região viva `polite`. "▲▼" não são lidos | Kotlin, Manual |

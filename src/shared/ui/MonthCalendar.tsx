@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Formatter, useFormat } from '@shared/i18n/format';
 import { spacing, radius, useTheme } from '@shared/theme/theme';
+import { today } from '@shared/utils/dates';
 import { AppText } from './primitives';
 
 interface CalendarDayView {
@@ -27,6 +28,7 @@ function dayLabel(cell: CalendarDayView, t: TFunction, format: Formatter) {
 export function MonthCalendar({ weeks, selectedDate, onSelect }: MonthCalendarProps) {
   const colors = useTheme();
   const format = useFormat();
+  const todayDate = today();
   const { t } = useTranslation();
 
   return (
@@ -54,9 +56,16 @@ export function MonthCalendar({ weeks, selectedDate, onSelect }: MonthCalendarPr
                 accessibilityLabel={dayLabel(cell, t, format)}
                 accessibilityState={{ selected }}
                 onPress={() => onSelect(cell.date)}
-                style={[styles.cell, styles.day, selected && { backgroundColor: colors.surfaceAlt }]}
+                style={[
+                  styles.cell,
+                  styles.day,
+                  cell.date === todayDate && { borderWidth: 1, borderColor: colors.borderStrong },
+                  selected && { backgroundColor: colors.primary },
+                ]}
               >
-                <AppText bold={hasShift}>{cell.day}</AppText>
+                <AppText bold={hasShift} style={selected ? { color: colors.onPrimary } : null}>
+                  {cell.day}
+                </AppText>
                 {hasShift ? <View style={[styles.marker, { backgroundColor: cell.profitCents! < 0 ? colors.negative : colors.positive }]} /> : null}
               </Pressable>
             );

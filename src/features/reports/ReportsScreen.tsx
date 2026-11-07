@@ -13,6 +13,7 @@ import { PlatformBadge } from '@shared/ui/PlatformBadge';
 import { Button, ButtonRow, Card, EmptyState, ListRow, Notice, Screen, Segmented } from '@shared/ui/primitives';
 import { today } from '@shared/utils/dates';
 import { profitTone } from '@shared/utils/format';
+import { ChartDataList } from './ChartDataList';
 import { shareReportCsv, shareReportPdf } from './reportExport';
 import { periodLabel, periodNoun, stepPeriod } from './reportPeriod';
 import { useReport } from './useReport';
@@ -57,6 +58,7 @@ export default function ReportsScreen() {
                 <ProfitCard title={t('periodProfit')} summary={data.summary} />
                 <Card title={period === 'year' ? t('chart.byMonth') : t('chart.byDay')}>
                   <BarChart data={report.chart} accessibilityLabel={t('chart.accessibilityLabel', { amount: format.money(data.summary.profitCents) })} />
+                  <ChartDataList data={report.chart} period={period} />
                 </Card>
                 {data.monthClose ? (
                   <Card title={t('monthClose.title')}>
