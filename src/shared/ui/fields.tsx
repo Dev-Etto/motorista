@@ -6,6 +6,7 @@ interface TextFieldProps {
   label: string;
   value: string;
   onChangeText: (text: string) => void;
+  onBlur?: () => void;
   hint?: string;
   error?: string | null;
   placeholder?: string;
@@ -16,7 +17,7 @@ interface TextFieldProps {
   multiline?: boolean;
 }
 
-export function TextField({ label, value, onChangeText, hint, error, placeholder, keyboardType, prefix, suffix, hideLabel, multiline }: TextFieldProps) {
+export function TextField({ label, value, onChangeText, onBlur, hint, error, placeholder, keyboardType, prefix, suffix, hideLabel, multiline }: TextFieldProps) {
   const colors = useTheme();
   const borderColor = error ? colors.negative : colors.border;
 
@@ -29,6 +30,7 @@ export function TextField({ label, value, onChangeText, hint, error, placeholder
           accessibilityLabel={label}
           value={value}
           onChangeText={onChangeText}
+          onBlur={onBlur}
           placeholder={placeholder}
           placeholderTextColor={colors.textMuted}
           cursorColor={colors.primary}

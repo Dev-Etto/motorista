@@ -3,12 +3,13 @@ import { expenseRepository } from '@/data/repositories/expenseRepository';
 import { goalRepository } from '@/data/repositories/goalRepository';
 import { platformRepository } from '@/data/repositories/platformRepository';
 import { reminderRepository } from '@/data/repositories/reminderRepository';
-import { settingsRepository } from '@/data/repositories/settingsRepository';
+import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
 import { shiftRepository } from '@/data/repositories/shiftRepository';
 import { vehicleRepository } from '@/data/repositories/vehicleRepository';
 import { summarizeShifts, withLooseExpenses } from '@/domain/shift/summary';
 import { computeCosts, CostProfile } from '@/domain/vehicle/costs';
 import { loadGoalProgress } from '@/features/goals/goalProgress';
+import { z } from 'zod';
 import { openTestDatabase } from './sqliteHarness';
 
 jest.mock('expo-sqlite', () => jest.requireActual('./sqliteHarness').expoSqliteMock);
@@ -188,13 +189,36 @@ describe('metas, lembretes e ajustes', () => {
   });
 
   it('salva, atualiza e remove ajustes', async () => {
-    await settingsRepository.set('chave', '1');
-    await settingsRepository.set('chave', '2');
-    expect(await settingsRepository.get('chave')).toBe('2');
+    await settingsRepository.set(SETTING_KEYS.theme, 'light');
+    await settingsRepository.set(SETTING_KEYS.theme, 'dark');
+    expect(await settingsRepository.get(SETTING_KEYS.theme)).toBe('dark');
 
-    await settingsRepository.remove('chave');
-    expect(await settingsRepository.get('chave')).toBeNull();
-    expect(await settingsRepository.getJson('chave', 'padrão')).toBe('padrão');
+    await settingsRepository.remove(SETTING_KEYS.theme);
+    expect(await settingsRepository.get(SETTING_KEYS.theme)).toBeNull();
+    expect(await settingsRepository.getJson(SETTING_KEYS.tipsDismissed, z.array(z.string()), ['padrão'])).toEqual(['padrão']);
+  });
+
+  it('devolve o padrão para um ajuste ilegível ou fora do formato', async () => {
+    const schema = z.array(z.string());
+    await settingsRepository.set(SETTING_KEYS.tipsDismissed, '{quebrado');
+    expect(await settingsRepository.getJson(SETTING_KEYS.tipsDismissed, schema, [])).toEqual([]);
+
+    await settingsRepository.set(SETTING_KEYS.tipsDismissed, '"5"');
+    expect(await settingsRepository.getJson(SETTING_KEYS.tipsDismissed, schema, [])).toEqual([]);
+
+    await settingsRepository.setJson(SETTING_KEYS.tipsDismissed, ['meta']);
+    expect(await settingsRepository.getJson(SETTING_KEYS.tipsDismissed, schema, [])).toEqual(['meta']);
+  });
+
+  it('lê um ajuste de lista fechada e devolve o padrão para valor desconhecido', async () => {
+    const modes = ['system', 'light', 'dark'] as const;
+    expect(await settingsRepository.getEnum(SETTING_KEYS.theme, modes, 'system')).toBe('system');
+
+    await settingsRepository.set(SETTING_KEYS.theme, 'roxo');
+    expect(await settingsRepository.getEnum(SETTING_KEYS.theme, modes, 'system')).toBe('system');
+
+    await settingsRepository.set(SETTING_KEYS.theme, 'dark');
+    expect(await settingsRepository.getEnum(SETTING_KEYS.theme, modes, 'system')).toBe('dark');
   });
 });
 

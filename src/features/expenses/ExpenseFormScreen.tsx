@@ -1,14 +1,13 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { expenseRepository } from '@/data/repositories/expenseRepository';
-import { countsAgainstProfit, EXPENSE_LABELS, ExpenseCategory } from '@/domain/expense/expense';
+import { countsAgainstProfit, EXPENSE_LABELS, type ExpenseCategory } from '@/domain/expense/expense';
 import { useSubmit } from '@/shared/hooks/useSubmit';
 import { DateField } from '@/shared/ui/DateField';
 import { MoneyField, NumberField, TextField } from '@/shared/ui/fields';
 import { Button, Card, Notice, Screen, Segmented } from '@/shared/ui/primitives';
 import { today } from '@/shared/utils/dates';
-import { parseBRL } from '@/shared/utils/money';
-import { decimalOrNull, hasInvalidNumber } from '@/shared/utils/parse';
+import { centsOrNull, decimalOrNull, hasInvalidNumber } from '@/shared/utils/parse';
 
 type LooseCategory = 'fuel' | 'maintenance' | 'other';
 
@@ -29,7 +28,7 @@ export default function ExpenseFormScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const saving = useSubmit(async () => {
-    const cents = parseBRL(value);
+    const cents = centsOrNull(value);
     if (!cents) return setError('Informe um valor maior que zero.');
     if (hasInvalidNumber(liters) || hasInvalidNumber(odometer)) return setError('Confira os números digitados. Use só números, como 45,5.');
 

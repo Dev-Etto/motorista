@@ -1,26 +1,32 @@
+import { z } from 'zod';
+
 export type VehicleKind = 'car' | 'motorcycle';
-export type Ownership = 'owned' | 'financed' | 'rented';
 export type FuelType = 'gasoline' | 'ethanol' | 'diesel' | 'cng' | 'electric';
 
-export interface CostProfile {
-  ownership: Ownership;
-  fuelPriceCents: number;
-    consumptionKmPerUnit: number;
-  oilChangeCents: number;
-  oilIntervalKm: number;
-  tiresCents: number;
-  tiresLifeKm: number;
-  maintenanceMonthlyCents: number;
-  insuranceMonthlyCents: number;
-  ipvaYearlyCents: number;
-  licensingYearlyCents: number;
-    paymentMonthlyCents: number;
-  vehicleValueCents: number;
-  depreciationAnnualPct: number;
-  depreciationEnabled: boolean;
-  otherFixedMonthlyCents: number;
-  plannedKmMonth: number;
-}
+const amount = z.number().nonnegative();
+
+export const costProfileSchema = z.object({
+  ownership: z.enum(['owned', 'financed', 'rented']),
+  fuelPriceCents: amount,
+  consumptionKmPerUnit: amount,
+  oilChangeCents: amount,
+  oilIntervalKm: amount,
+  tiresCents: amount,
+  tiresLifeKm: amount,
+  maintenanceMonthlyCents: amount,
+  insuranceMonthlyCents: amount,
+  ipvaYearlyCents: amount,
+  licensingYearlyCents: amount,
+  paymentMonthlyCents: amount,
+  vehicleValueCents: amount,
+  depreciationAnnualPct: amount,
+  depreciationEnabled: z.boolean(),
+  otherFixedMonthlyCents: amount,
+  plannedKmMonth: amount,
+});
+
+export type CostProfile = z.infer<typeof costProfileSchema>;
+export type Ownership = CostProfile['ownership'];
 
 export interface CostBreakdown {
   fuelPerKm: number;
@@ -35,7 +41,7 @@ export interface CostBreakdown {
   otherFixedMonthly: number;
   fixedMonthly: number;
   fixedPerKm: number;
-    fullPerKm: number;
+  fullPerKm: number;
 }
 
 export function defaultDepreciationEnabled(ownership: Ownership): boolean {

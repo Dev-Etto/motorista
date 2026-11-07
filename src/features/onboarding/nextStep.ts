@@ -4,9 +4,13 @@ import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRe
 import { shiftRepository } from '@/data/repositories/shiftRepository';
 import { vehicleRepository } from '@/data/repositories/vehicleRepository';
 import { monthKey, today } from '@/shared/utils/dates';
+import { z } from 'zod';
+
+const STEP_IDS = ['vehicle', 'first-shift', 'goal', 'first-backup'] as const;
+const dismissedSchema = z.array(z.enum(STEP_IDS));
 
 export interface NextStep {
-  id: 'vehicle' | 'first-shift' | 'goal' | 'first-backup';
+  id: (typeof STEP_IDS)[number];
   title: string;
   message: string;
   actionLabel: string;
@@ -51,7 +55,7 @@ export async function loadNextStep(): Promise<NextStep | null> {
     shiftRepository.usageStats(),
     goalRepository.find(monthKey(date)),
     settingsRepository.get(SETTING_KEYS.lastBackupAt),
-    settingsRepository.getJson<NextStep['id'][]>(SETTING_KEYS.nextStepsDismissed, []),
+    settingsRepository.getJson(SETTING_KEYS.nextStepsDismissed, dismissedSchema, []),
   ]);
 
   const pending: (NextStep['id'] | null)[] = [
@@ -65,6 +69,6 @@ export async function loadNextStep(): Promise<NextStep | null> {
 }
 
 export async function dismissNextStep(id: NextStep['id']): Promise<void> {
-  const dismissed = await settingsRepository.getJson<NextStep['id'][]>(SETTING_KEYS.nextStepsDismissed, []);
+  const dismissed = await settingsRepository.getJson(SETTING_KEYS.nextStepsDismissed, dismissedSchema, []);
   await settingsRepository.setJson(SETTING_KEYS.nextStepsDismissed, [...dismissed, id]);
 }

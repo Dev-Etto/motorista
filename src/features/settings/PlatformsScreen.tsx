@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { platformRepository } from '@/data/repositories/platformRepository';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
+import { useSubmit } from '@/shared/hooks/useSubmit';
 import { TextField } from '@/shared/ui/fields';
 import { PlatformBadge } from '@/shared/ui/PlatformBadge';
 import { AppText, Button, Card, ListRow, Notice, Screen } from '@/shared/ui/primitives';
@@ -10,12 +11,12 @@ export default function PlatformsScreen() {
   const { data, reload } = useAsyncData(() => platformRepository.list());
   const [name, setName] = useState('');
 
-  const add = async () => {
+  const adding = useSubmit(async () => {
     if (!name.trim()) return;
     await platformRepository.add(name);
     setName('');
     await reload();
-  };
+  });
 
   const remove = (id: number, platformName: string) => {
     confirmAction({
@@ -34,7 +35,8 @@ export default function PlatformsScreen() {
       <AppText tone="muted">Estas plataformas aparecem no registro da jornada e nos relatórios.</AppText>
       <Card title="Nova plataforma">
         <TextField label="Nome" placeholder="iFood, Lalamove…" value={name} onChangeText={setName} />
-        <Button label="Adicionar" onPress={add} />
+        {adding.error ? <Notice tone="negative" message={adding.error} /> : null}
+        <Button label="Adicionar" busy={adding.busy} onPress={adding.submit} />
       </Card>
       {(data ?? []).length === 1 ? <Notice tone="accent" message="Mantenha pelo menos uma plataforma para registrar seus ganhos." /> : null}
       <Card title="Suas plataformas">

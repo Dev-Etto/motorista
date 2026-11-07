@@ -16,13 +16,13 @@ object OfferDiagnostics {
   private val entries = ArrayDeque<String>()
   private val otherEntries = ArrayDeque<String>()
 
+  @Volatile
   var enabled = false
-    set(value) {
+    set(value) = synchronized(this) {
       field = value
-      if (!value) {
-        entries.clear()
-        otherEntries.clear()
-      }
+      if (value) return
+      entries.clear()
+      otherEntries.clear()
     }
 
   @Synchronized

@@ -1,19 +1,20 @@
 import { copilot } from '@modules/copilot';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
 import { vehicleRepository } from '@/data/repositories/vehicleRepository';
-import { activeTargets, DEFAULT_LOW_DEMAND_TARGETS, DEFAULT_OFFER_TARGETS, OfferMode, OfferSettings, OfferTargets, withGoalTargets } from '@/domain/offer/offer';
+import { z } from 'zod';
+import { activeTargets, DEFAULT_LOW_DEMAND_TARGETS, DEFAULT_OFFER_TARGETS, OFFER_MODES, type OfferMode, type OfferSettings, type OfferTargets, offerTargetsSchema, withGoalTargets } from '@/domain/offer/offer';
 import { loadGoalProgress } from '@/features/goals/goalProgress';
 import { today } from '@/shared/utils/dates';
 
 export async function loadOfferSettings(): Promise<OfferSettings> {
   const [mode, normal, low, followGoal, progress] = await Promise.all([
-    settingsRepository.get(SETTING_KEYS.offerMode),
-    settingsRepository.getJson<OfferTargets>(SETTING_KEYS.offerTargets, DEFAULT_OFFER_TARGETS),
-    settingsRepository.getJson<OfferTargets>(SETTING_KEYS.offerLowTargets, DEFAULT_LOW_DEMAND_TARGETS),
-    settingsRepository.getJson<boolean>(SETTING_KEYS.offerFollowGoal, false),
+    settingsRepository.getEnum(SETTING_KEYS.offerMode, OFFER_MODES, 'normal'),
+    settingsRepository.getJson(SETTING_KEYS.offerTargets, offerTargetsSchema, DEFAULT_OFFER_TARGETS),
+    settingsRepository.getJson(SETTING_KEYS.offerLowTargets, offerTargetsSchema, DEFAULT_LOW_DEMAND_TARGETS),
+    settingsRepository.getJson(SETTING_KEYS.offerFollowGoal, z.boolean(), false),
     loadGoalProgress(today()),
   ]);
-  return withGoalTargets({ mode: (mode as OfferMode | null) ?? 'normal', normal, low, followGoal }, progress?.suggestion ?? null);
+  return withGoalTargets({ mode, normal, low, followGoal }, progress?.suggestion ?? null);
 }
 
 export async function saveOfferMode(mode: OfferMode): Promise<void> {

@@ -1,6 +1,7 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { activeTargets, DEFAULT_LOW_DEMAND_TARGETS, DEFAULT_OFFER_TARGETS, OfferMode, OfferSettings } from '@/domain/offer/offer';
+import { useSubmit } from '@/shared/hooks/useSubmit';
 import { centsToInput } from '@/shared/utils/money';
 import { centsOrZero } from '@/shared/utils/parse';
 import { loadOfferSettings, saveFollowGoal, saveModeTargets, saveOfferMode } from './syncTargets';
@@ -32,14 +33,19 @@ export function useOfferTargets() {
 
   const applyTargets = (nextPerKm: string, nextPerHour: string) => {
     editing.current = true;
-    const next = {
+    setSettings({
       ...settings,
       [settings.mode]: { targetPerKmCents: centsOrZero(nextPerKm), targetPerHourCents: centsOrZero(nextPerHour) },
-    };
-    setSettings(next);
-    const targets = next[settings.mode];
-    if (targets.targetPerKmCents > 0 && targets.targetPerHourCents > 0) void saveModeTargets(settings.mode, targets);
+    });
   };
+
+  const commit = useSubmit(async () => {
+    const targets = settings[settings.mode];
+    if (targets.targetPerKmCents <= 0 || targets.targetPerHourCents <= 0) return;
+
+    await saveModeTargets(settings.mode, targets);
+    editing.current = false;
+  });
 
   const setMode = (mode: OfferMode) => {
     loadFields({ ...settings, mode });
@@ -66,6 +72,7 @@ export function useOfferTargets() {
         setPerKm(text);
         applyTargets(text, perHour);
       },
+      onBlur: commit.submit,
     },
     perHour: {
       value: perHour,
@@ -73,7 +80,9 @@ export function useOfferTargets() {
         setPerHour(text);
         applyTargets(perKm, text);
       },
+      onBlur: commit.submit,
     },
+    saveError: commit.error,
   };
 }
 

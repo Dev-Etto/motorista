@@ -79,22 +79,29 @@ data class CopilotPreferences(
     fun fromJson(raw: String?): CopilotPreferences {
       if (raw.isNullOrBlank()) return CopilotPreferences()
 
-      val json = JSONObject(raw)
-      val packages = json.optJSONArray("monitoredPackages")
-      return CopilotPreferences(
-        voice = json.optBoolean("voice", true),
-        card = json.optBoolean("card", true),
-        notification = json.optBoolean("notification", false),
-        primaryMetric = PrimaryMetric.from(json.optString("primaryMetric")),
-        cardLayout = CardLayout.from(json.optString("cardLayout")),
-        cardSize = CardSize.from(json.optString("cardSize")),
-        theme = ThemeMode.from(json.optString("theme")),
-        durationSeconds = json.optInt("durationSeconds", DEFAULT_DURATION_SECONDS).coerceIn(MIN_DURATION_SECONDS, MAX_DURATION_SECONDS),
-        monitoredPackages = if (packages == null) DEFAULT_PACKAGES else (0 until packages.length()).map { packages.getString(it) }.toSet(),
-        estimateEarnings = json.optBoolean("estimateEarnings", true),
-        imageReading = json.optBoolean("imageReading", false),
-        floatingButton = json.optBoolean("floatingButton", true),
-      )
+      return runCatching { read(JSONObject(raw)) }.getOrDefault(CopilotPreferences())
     }
+
+    private fun packagesOf(json: JSONObject): Set<String> {
+      val packages = json.optJSONArray("monitoredPackages") ?: return DEFAULT_PACKAGES
+      val names = (0 until packages.length()).map { packages.opt(it) }.filterIsInstance<String>()
+      if (names.size != packages.length()) return DEFAULT_PACKAGES
+      return names.toSet()
+    }
+
+    private fun read(json: JSONObject) = CopilotPreferences(
+      voice = json.optBoolean("voice", true),
+      card = json.optBoolean("card", true),
+      notification = json.optBoolean("notification", false),
+      primaryMetric = PrimaryMetric.from(json.optString("primaryMetric")),
+      cardLayout = CardLayout.from(json.optString("cardLayout")),
+      cardSize = CardSize.from(json.optString("cardSize")),
+      theme = ThemeMode.from(json.optString("theme")),
+      durationSeconds = json.optInt("durationSeconds", DEFAULT_DURATION_SECONDS).coerceIn(MIN_DURATION_SECONDS, MAX_DURATION_SECONDS),
+      monitoredPackages = packagesOf(json),
+      estimateEarnings = json.optBoolean("estimateEarnings", true),
+      imageReading = json.optBoolean("imageReading", false),
+      floatingButton = json.optBoolean("floatingButton", true),
+    )
   }
 }

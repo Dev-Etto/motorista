@@ -1,4 +1,7 @@
 import { requireOptionalNativeModule } from 'expo-modules-core';
+import { type CopilotPreferences, parseHistory, parsePreferences } from './schemas';
+
+export type { CardLayout, CardSize, CopilotPreferences, OfferHistoryEntry, PrimaryMetric, ThemeMode } from './schemas';
 
 export interface CopilotStatus {
   enabled: boolean;
@@ -11,47 +14,11 @@ export interface CopilotStatus {
   batteryRestricted: boolean;
 }
 
-export type PrimaryMetric = 'perKm' | 'profit';
-export type CardLayout = 'complete' | 'summary';
-export type CardSize = 'compact' | 'large' | 'extra';
-export type ThemeMode = 'system' | 'light' | 'dark';
-
-export interface CopilotPreferences {
-  voice: boolean;
-  card: boolean;
-  notification: boolean;
-  primaryMetric: PrimaryMetric;
-  cardLayout: CardLayout;
-  cardSize: CardSize;
-  theme: ThemeMode;
-  durationSeconds: number;
-  monitoredPackages: string[];
-  estimateEarnings: boolean;
-  imageReading: boolean;
-  floatingButton: boolean;
-}
-
 export interface TimerState {
   running: boolean;
   started: boolean;
   elapsedMs: number;
   startedAt: number;
-}
-
-export interface OfferHistoryEntry {
-  timestamp: number;
-  source: string;
-  valueCents: number;
-  km: number;
-  minutes: number;
-  perKmCents: number;
-  perHourCents: number;
-  profitCents?: number;
-  score?: number;
-  reason?: string;
-  color: 'green' | 'yellow' | 'red' | 'neutral';
-  status?: 'accepted' | 'declined' | 'countered' | 'unanswered';
-  counterCents?: number;
 }
 
 interface CopilotNativeModule {
@@ -95,13 +62,13 @@ function requireModule(): CopilotNativeModule {
 export const copilot = {
   getStatus: () => requireModule().getStatus(),
   setEnabled: (value: boolean) => requireModule().setEnabled(value),
-  getPreferences: () => JSON.parse(requireModule().getPreferences()) as CopilotPreferences,
+  getPreferences: () => parsePreferences(requireModule().getPreferences()),
   setPreferences: (preferences: CopilotPreferences) => requireModule().setPreferences(JSON.stringify(preferences)),
   setTargets: (costPerKm: number, targetPerKmCents: number, targetPerHourCents: number) =>
     requireModule().setTargets(costPerKm, targetPerKmCents, targetPerHourCents),
   resetCardPosition: () => requireModule().resetCardPosition(),
-  getOffers: (from: number, to: number) => JSON.parse(requireModule().getOffers(from, Math.min(to, Number.MAX_SAFE_INTEGER))) as OfferHistoryEntry[],
-  getRecentOffers: (limit: number) => JSON.parse(requireModule().getRecentOffers(limit)) as OfferHistoryEntry[],
+  getOffers: (from: number, to: number) => parseHistory(requireModule().getOffers(from, Math.min(to, Number.MAX_SAFE_INTEGER))),
+  getRecentOffers: (limit: number) => parseHistory(requireModule().getRecentOffers(limit)),
   clearHistory: () => requireModule().clearHistory(),
   exportState: () => ({ preferences: requireModule().getPreferences(), history: requireModule().getHistory() }),
   importState: (state: { preferences: string; history: string }) => {

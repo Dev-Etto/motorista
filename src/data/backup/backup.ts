@@ -1,67 +1,57 @@
+import { isHistoryText, isPreferencesText, sanitizeHistoryText } from '@modules/copilot/schemas';
 import { z } from 'zod';
 import { assertForeignKeys, getDb, runInTransaction, SCHEMA_VERSION } from '@/data/database/connection';
+import { isJsonOf } from '@/data/database/jsonColumn';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
-
-const TABLES = [
-  'vehicles',
-  'cost_profiles',
-  'platforms',
-  'shifts',
-  'shift_earnings',
-  'expenses',
-  'goals',
-  'goal_day_overrides',
-  'quotes',
-  'reminders',
-  'settings',
-] as const;
+import { workWeekdaysSchema } from '@/domain/goal/goal';
+import { costProfileSchema } from '@/domain/vehicle/costs';
 
 const scalar = z.union([z.string(), z.number(), z.null()]);
 const row = z.record(z.string().regex(/^[a-z_]+$/), scalar);
+const cents = z.number().int();
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+const isoMonth = z.string().regex(/^\d{4}-\d{2}$/);
 
-const isJson = (value: unknown) => {
-  if (typeof value !== 'string') return false;
-  try {
-    JSON.parse(value);
-    return true;
-  } catch {
-    return false;
-  }
+const rowWith = (columns: z.ZodRawShape) => {
+  const shape = z.looseObject(columns);
+  return row.refine((record) => shape.safeParse(record).success);
 };
-const rowWithJson = (column: string) => row.refine((record) => isJson(record[column]));
 
 const tablesSchema = z.object({
   vehicles: z.array(row),
-  cost_profiles: z.array(rowWithJson('data')),
+  cost_profiles: z.array(rowWith({ valid_from: isoDate, data: z.string().refine(isJsonOf(costProfileSchema)) })),
   platforms: z.array(row),
-  shifts: z.array(row),
-  shift_earnings: z.array(row),
-  expenses: z.array(row),
-  goals: z.array(rowWithJson('work_weekdays')),
-  goal_day_overrides: z.array(row).default([]),
-  quotes: z.array(row),
-  reminders: z.array(row),
+  shifts: z.array(rowWith({ date: isoDate })),
+  shift_earnings: z.array(rowWith({ cents })),
+  expenses: z.array(rowWith({ date: isoDate, cents })),
+  goals: z.array(rowWith({ month: isoMonth, desired_profit_cents: cents, work_weekdays: z.string().refine(isJsonOf(workWeekdaysSchema)) })),
+  goal_day_overrides: z.array(rowWith({ date: isoDate, target_cents: cents })).default([]),
+  quotes: z.array(rowWith({ price_cents: cents })),
+  reminders: z.array(rowWith({ due_date: isoDate.nullable().optional() })),
   settings: z.array(row),
 });
 
-const jsonText = z.string().refine(isJson);
+const TABLES = tablesSchema.keyof().options;
+
+const copilotSchema = z.object({
+  preferences: z.string().refine(isPreferencesText),
+  history: z.string().refine(isHistoryText).transform(sanitizeHistoryText),
+});
 
 export const backupSchema = z.object({
   app: z.literal('motorista'),
   schemaVersion: z.number().int().positive(),
   exportedAt: z.string(),
   tables: tablesSchema,
-  copilot: z.object({ preferences: jsonText, history: jsonText }).optional(),
+  copilot: copilotSchema.optional(),
 });
 
 export type BackupFile = z.infer<typeof backupSchema>;
 
 export async function createBackup(): Promise<BackupFile> {
   const db = getDb();
-  const tables = {} as BackupFile['tables'];
-  for (const table of TABLES) {
-    tables[table] = await db.getAllAsync(`SELECT * FROM ${table}`);
-  }
+  const entries = await Promise.all(TABLES.map(async (table) => [table, await db.getAllAsync(`SELECT * FROM ${table}`)] as const));
+  const tables = tablesSchema.parse(Object.fromEntries(entries));
   return { app: 'motorista', schemaVersion: SCHEMA_VERSION, exportedAt: new Date().toISOString(), tables };
 }
 

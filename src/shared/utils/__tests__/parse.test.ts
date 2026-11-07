@@ -1,6 +1,6 @@
 import { csvField, toCsv } from '../csv';
 import { parseBRL, parseDecimal } from '../money';
-import { hasInvalidNumber, parseHours } from '../parse';
+import { centsOrNull, centsOrZero, decimalOrNull, hasInvalidHour, hasInvalidNumber, intOrNull, parseHours } from '../parse';
 
 describe('leitura de números', () => {
   it('aceita a vírgula no final, enquanto o motorista digita', () => {
@@ -26,6 +26,31 @@ describe('leitura de números', () => {
     expect(parseHours('8:30')).toBe(8.5);
     expect(parseHours('8:')).toBeNull();
     expect(parseHours('')).toBeNull();
+  });
+});
+
+describe('números digitados em formulário', () => {
+  it('recusa valores negativos', () => {
+    expect(hasInvalidNumber('-50')).toBe(true);
+    expect(centsOrNull('-50')).toBeNull();
+    expect(centsOrZero('-50')).toBe(0);
+    expect(decimalOrNull('-3')).toBeNull();
+    expect(intOrNull('-2')).toBeNull();
+    expect(parseHours('-1')).toBeNull();
+  });
+
+  it('continua aceitando zero e positivos', () => {
+    expect(centsOrNull('0')).toBe(0);
+    expect(centsOrNull('12,5')).toBe(1250);
+    expect(decimalOrNull('45,5')).toBe(45.5);
+  });
+
+  it('aceita a hora de início só de 0 a 23', () => {
+    expect(hasInvalidHour('')).toBe(false);
+    expect(hasInvalidHour('0')).toBe(false);
+    expect(hasInvalidHour('23')).toBe(false);
+    expect(hasInvalidHour('24')).toBe(true);
+    expect(hasInvalidHour('8,5')).toBe(true);
   });
 });
 

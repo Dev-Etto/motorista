@@ -2,9 +2,10 @@ import { copilot } from '@modules/copilot';
 import * as DocumentPicker from 'expo-document-picker';
 import { File, Paths } from 'expo-file-system';
 import { useState } from 'react';
-import { BackupFile, createBackup, parseBackup, restoreBackup } from '@/data/backup/backup';
+import { type BackupFile, createBackup, parseBackup, restoreBackup } from '@/data/backup/backup';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
+import { useSubmit } from '@/shared/hooks/useSubmit';
 import { today } from '@/shared/utils/dates';
 import { shareTextFile } from '@/shared/utils/share';
 import { applyRestoredState } from './afterRestore';
@@ -38,7 +39,7 @@ export function useBackup() {
     setMessage({ tone: 'positive', text: complete ? doneText : `${doneText} Confira os lembretes e o Copiloto.` });
   };
 
-  const exportBackup = async () => {
+  const exporting = useSubmit(async () => {
     try {
       await shareTextFile(`backup-${today()}.json`, JSON.stringify(await fullBackup()), 'application/json');
       await settingsRepository.set(SETTING_KEYS.lastBackupAt, String(Date.now()));
@@ -47,13 +48,13 @@ export function useBackup() {
     } catch {
       setMessage({ tone: 'negative', text: 'Não foi possível gerar o backup.' });
     }
-  };
+  });
 
-  const importBackup = async () => {
-    const picked = await DocumentPicker.getDocumentAsync({ type: 'application/json', copyToCacheDirectory: true });
-    if (picked.canceled) return;
-
+  const importing = useSubmit(async () => {
     try {
+      const picked = await DocumentPicker.getDocumentAsync({ type: 'application/json', copyToCacheDirectory: true });
+      if (picked.canceled) return;
+
       const parsed = parseBackup(new File(picked.assets[0].uri).textSync());
       if (!parsed.ok) return setMessage({ tone: 'negative', text: parsed.error });
 
@@ -61,9 +62,9 @@ export function useBackup() {
     } catch {
       setMessage({ tone: 'negative', text: RESTORE_FAILED });
     }
-  };
+  });
 
-  const undoRestore = async () => {
+  const undoing = useSubmit(async () => {
     try {
       const parsed = parseBackup(safetyCopy().textSync());
       if (!parsed.ok) return setMessage({ tone: 'negative', text: parsed.error });
@@ -72,7 +73,15 @@ export function useBackup() {
     } catch {
       setMessage({ tone: 'negative', text: RESTORE_FAILED });
     }
-  };
+  });
 
-  return { message, lastBackupAt: lastBackup.data, canUndo, exportBackup, importBackup, undoRestore };
+  return {
+    message,
+    lastBackupAt: lastBackup.data,
+    canUndo,
+    busy: exporting.busy || importing.busy || undoing.busy,
+    exportBackup: exporting.submit,
+    importBackup: importing.submit,
+    undoRestore: undoing.submit,
+  };
 }

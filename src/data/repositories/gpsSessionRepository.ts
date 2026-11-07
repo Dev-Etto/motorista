@@ -1,5 +1,6 @@
 import { getDb } from '@/data/database/connection';
-import { GpsPoint } from '@/domain/gps/gps';
+import { parseJsonColumnOr } from '@/data/database/jsonColumn';
+import { type GpsPoint, gpsPointSchema } from '@/domain/gps/gps';
 
 export interface GpsSession {
   meters: number;
@@ -20,7 +21,7 @@ export const gpsSessionRepository = {
 
     return {
       meters: row.meters,
-      lastPoint: row.last_point ? (JSON.parse(row.last_point) as GpsPoint) : null,
+      lastPoint: parseJsonColumnOr(row.last_point, gpsPointSchema, null),
       running: row.running === 1,
     };
   },

@@ -16,6 +16,10 @@ describe('aviso de backup', () => {
     expect(isBackupDue(String(NOW - 6 * DAY), true, NOW, 7)).toBe(false);
     expect(isBackupDue(String(NOW - 8 * DAY), true, NOW, 7)).toBe(true);
   });
+
+  it('trata data ilegível do último backup como vencida', () => {
+    expect(isBackupDue('ontem', true, NOW, 7)).toBe(true);
+  });
 });
 
 describe('aviso de atualização', () => {

@@ -2,12 +2,12 @@ import { useMemo, useState } from 'react';
 import { platformRepository } from '@/data/repositories/platformRepository';
 import { shiftRepository } from '@/data/repositories/shiftRepository';
 import { vehicleRepository } from '@/data/repositories/vehicleRepository';
-import { countsAgainstProfit, ExpenseCategory } from '@/domain/expense/expense';
+import { countsAgainstProfit, type ExpenseCategory } from '@/domain/expense/expense';
 import { computeShift } from '@/domain/shift/shift';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { toISODate, today } from '@/shared/utils/dates';
-import { centsToInput, parseBRL } from '@/shared/utils/money';
-import { centsOrZero, decimalOrNull, hasInvalidNumber, intOrNull, parseHours } from '@/shared/utils/parse';
+import { centsToInput } from '@/shared/utils/money';
+import { centsOrZero, decimalOrNull, hasInvalidHour, hasInvalidNumber, intOrNull, parseHours } from '@/shared/utils/parse';
 
 export const JOURNEY_EXPENSES: { category: ExpenseCategory; label: string }[] = [
   { category: 'toll', label: 'Pedágio' },
@@ -118,6 +118,10 @@ export function useShiftForm(shiftId?: number) {
       setError('Confira os números digitados. Use só números, como 150,50.');
       return false;
     }
+    if (hasInvalidHour(startHour)) {
+      setError('A hora de início vai de 0 a 23.');
+      return false;
+    }
     if (minutes > MAX_SHIFT_MINUTES) {
       setError('Uma jornada tem no máximo 24 horas. Confira as horas trabalhadas.');
       return false;
@@ -142,7 +146,7 @@ export function useShiftForm(shiftId?: number) {
       trips: intOrNull(trips),
       note: null,
       earnings: Object.entries(earnings)
-        .map(([platformId, text]) => ({ platformId: Number(platformId), cents: parseBRL(text) ?? 0 }))
+        .map(([platformId, text]) => ({ platformId: Number(platformId), cents: centsOrZero(text) }))
         .filter((earning) => earning.cents > 0),
       expenses: JOURNEY_EXPENSES.map(({ category }) => ({ category, cents: centsOrZero(expenses[category] ?? '') })).filter(
         (expense) => expense.cents > 0,

@@ -32,7 +32,7 @@ export default function BackupScreen() {
       <Notice tone="accent" message="Seus dados ficam só neste celular. Com um backup, você os leva para onde quiser, inclusive se trocar de aparelho ou reinstalar o app. O arquivo não tem senha: guarde em um lugar só seu." />
       <Card title="Backup">
         <ListRow title="Último backup" value={lastLabel} />
-        <Button label="Fazer backup" onPress={backup.exportBackup} />
+        <Button label="Fazer backup" busy={backup.busy} onPress={backup.exportBackup} />
         <Button label="Restaurar de um arquivo" variant="secondary" onPress={confirmRestore} />
         {backup.canUndo ? <Button label="Desfazer a última restauração" variant="secondary" onPress={confirmUndo} /> : null}
       </Card>

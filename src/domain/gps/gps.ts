@@ -1,9 +1,13 @@
-export interface GpsPoint {
-  lat: number;
-  lng: number;
-  accuracy: number | null;
-  time: number;
-}
+import { z } from 'zod';
+
+export const gpsPointSchema = z.object({
+  lat: z.number(),
+  lng: z.number(),
+  accuracy: z.number().nullable(),
+  time: z.number(),
+});
+
+export type GpsPoint = z.infer<typeof gpsPointSchema>;
 
 const EARTH_RADIUS_M = 6371000;
 const MAX_ACCURACY_M = 50;

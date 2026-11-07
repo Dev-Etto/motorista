@@ -16,6 +16,30 @@ jest.mock('@modules/copilot', () => ({ copilot: { exportState: jest.fn() } }));
 jest.mock('../afterRestore', () => ({ applyRestoredState: jest.fn().mockResolvedValue(undefined) }));
 
 describe('restaurar backup', () => {
+  it('mostra uma mensagem quando o seletor de arquivo falha', async () => {
+    jest.mocked(DocumentPicker.getDocumentAsync).mockRejectedValue(new Error('sem seletor'));
+    const { result } = await renderHook(() => useBackup());
+
+    await act(async () => result.current.importBackup());
+
+    expect(result.current.message?.tone).toBe('negative');
+  });
+
+  it('dois toques seguidos restauram uma vez só', async () => {
+    jest.mocked(restoreBackup).mockClear();
+    jest.mocked(DocumentPicker.getDocumentAsync).mockResolvedValue({ canceled: false, assets: [{ uri: 'file:///ok.json' }] } as never);
+    jest.mocked(File).mockImplementation(() => ({ textSync: () => '{}', exists: false, create: jest.fn(), write: jest.fn() }) as never);
+    jest.mocked(parseBackup).mockReturnValue({ ok: true, backup: { tables: {} } } as never);
+    const { result } = await renderHook(() => useBackup());
+
+    await act(async () => {
+      void result.current.importBackup();
+      void result.current.importBackup();
+    });
+
+    expect(restoreBackup).toHaveBeenCalledTimes(1);
+  });
+
   it('mostra uma mensagem quando o arquivo escolhido não pode ser lido', async () => {
     jest.mocked(DocumentPicker.getDocumentAsync).mockResolvedValue({ canceled: false, assets: [{ uri: 'file:///ruim.json' }] } as never);
     jest.mocked(File).mockImplementation(() => ({ textSync: () => { throw new Error('ilegível'); } }) as never);

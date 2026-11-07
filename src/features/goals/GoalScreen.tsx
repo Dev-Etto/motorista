@@ -12,7 +12,8 @@ import { MoneyField, NumberField } from '@/shared/ui/fields';
 import { AppText, Button, Card, Collapsible, Notice, Screen } from '@/shared/ui/primitives';
 import { WeekdayPicker } from '@/shared/ui/WeekdayPicker';
 import { formatMonth, monthKey, today } from '@/shared/utils/dates';
-import { centsToInput, parseBRL, parseDecimal } from '@/shared/utils/money';
+import { centsToInput } from '@/shared/utils/money';
+import { centsOrNull, decimalOrNull, hasInvalidNumber } from '@/shared/utils/parse';
 import { GoalPlanCard } from './GoalPlanCard';
 import { GoalProgressCard } from './GoalProgressCard';
 import { loadGoalProgress } from './goalProgress';
@@ -44,15 +45,16 @@ export default function GoalScreen() {
   };
 
   const saving = useSubmit(async () => {
-    const cents = parseBRL(desired);
-    const hours = parseDecimal(hoursPerDay);
+    const cents = centsOrNull(desired);
+    const hours = decimalOrNull(hoursPerDay);
     if (!cents) return setError('Informe quanto você quer lucrar.');
     if (weekdays.length === 0) return setError('Selecione pelo menos um dia de trabalho.');
     if (!hours || hours <= 0 || hours > 24) return setError('Informe as horas por dia, de 1 a 24.');
+    if (hasInvalidNumber(dayTarget)) return setError('Confira o lucro de hoje. Use só números, como 150,50.');
 
     setError(null);
     await goalRepository.save({ month: monthKey(date), desiredProfitCents: cents, workWeekdays: weekdays, hoursPerDay: hours });
-    await goalRepository.saveDayOverride(date, parseBRL(dayTarget));
+    await goalRepository.saveDayOverride(date, centsOrNull(dayTarget));
     await syncCopilotTargets();
     await Promise.all([reload(), targets.reload()]);
   });

@@ -199,3 +199,11 @@ app -> features -> data -> domain -> shared/utils
 - **Restauração atômica:** a restauração confere as chaves e marca o onboarding na mesma transação.
 - **Harness igual à produção:** os testes usam um arquivo temporário e abrem conexão nova por transação, para pegar diferenças de pragma.
 - **Formulário preenchido uma vez:** `useFormHydration` preenche os campos com o dado carregado só na primeira vez de cada chave. `useAsyncData` recarrega no foco, e isso não pode apagar o que o motorista digitou.
+- **Schemas no domínio:** os formatos que entram por JSON ficam em zod, junto do tipo que descrevem, como `costProfileSchema`, `workWeekdaysSchema`, `gpsPointSchema` e `offerTargetsSchema`. O zod é a única dependência externa permitida em `domain`, porque não tem efeito colateral.
+- **Validar na fronteira:** o backup valida cada tabela e cada coluna JSON. Os repositórios leem JSON por `parseJsonColumn`, e os ajustes por `getJson` com schema ou por `getEnum`, que devolvem o padrão quando o valor é inválido. A ponte com o Kotlin valida em `modules/copilot/schemas.ts`.
+- **Histórico tolerante:** uma oferta inválida no histórico é descartada sem esconder as outras, porque o histórico é informativo e pode vir de versões antigas.
+- **Números de formulário não negativos:** os helpers de `shared/utils/parse` recusam negativos. `parseBRL` e `parseDecimal` continuam aceitando sinal, porque também leem valores calculados.
+- **Toda escrita por botão usa `useSubmit`:** ele bloqueia o segundo toque e mostra o erro. Ele aceita argumentos, para ações como escolher um horário.
+- **Mínimos salvos ao sair do campo:** salvar a cada tecla enviava valores parciais, como `2,`, ao Copiloto.
+- **Concorrência no Kotlin:** `OfferDiagnostics` usa a mesma trava no setter e na captura, e `ShiftTimer` faz ler-modificar-gravar sob uma trava única, porque é chamado do JavaScript e do botão flutuante.
+

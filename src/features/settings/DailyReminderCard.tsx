@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
+import { useSubmit } from '@/shared/hooks/useSubmit';
 import { Card, Notice, Segmented, ToggleRow } from '@/shared/ui/primitives';
 import { cancelDailyReminder, scheduleDailyReminder } from './reminderNotifications';
 
@@ -20,18 +21,23 @@ export function DailyReminderCard() {
     await reload();
   };
 
-  const toggle = async (enabled: boolean) => {
+  const scheduling = useSubmit(schedule);
+
+  const toggling = useSubmit(async (enabled: boolean) => {
     if (enabled) return schedule(DEFAULT_HOUR);
 
     await cancelDailyReminder();
     setDenied(false);
     await reload();
-  };
+  });
+
+  const failure = toggling.error ?? scheduling.error;
 
   return (
     <Card title="Fim do dia">
-      <ToggleRow label="Lembrar de registrar a jornada" hint="Um aviso por dia, no horário que você escolher." value={Boolean(hour)} onChange={toggle} />
-      {hour ? <Segmented value={hour} options={HOUR_OPTIONS} onChange={schedule} /> : null}
+      <ToggleRow label="Lembrar de registrar a jornada" hint="Um aviso por dia, no horário que você escolher." value={Boolean(hour)} onChange={toggling.submit} />
+      {hour ? <Segmented value={hour} options={HOUR_OPTIONS} onChange={scheduling.submit} /> : null}
+      {failure ? <Notice tone="negative" message={failure} /> : null}
       {denied ? <Notice message="Permita as notificações do app para receber o lembrete." /> : null}
     </Card>
   );

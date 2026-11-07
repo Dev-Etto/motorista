@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-native';
 import { DEFAULT_LOW_DEMAND_TARGETS } from '@/domain/offer/offer';
-import { loadOfferSettings } from '../syncTargets';
+import { loadOfferSettings, saveModeTargets } from '../syncTargets';
 import { useOfferTargets } from '../useOfferTargets';
 
 const mockFocus: { callback: (() => void) | null } = { callback: null };
@@ -23,7 +23,10 @@ const saved = { mode: 'normal' as const, normal: { targetPerKmCents: 200, target
 const focus = async () => act(async () => mockFocus.callback?.());
 
 describe('useOfferTargets', () => {
-  beforeEach(() => load.mockResolvedValue(saved));
+  beforeEach(() => {
+    jest.clearAllMocks();
+    load.mockResolvedValue(saved);
+  });
 
   it('voltar à tela não apaga o que o motorista está digitando', async () => {
     const { result } = await renderHook(() => useOfferTargets());
@@ -44,5 +47,18 @@ describe('useOfferTargets', () => {
     await act(async () => result.current.reload());
 
     expect(result.current.perKm.value).toBe('2,00');
+  });
+
+  it('salva os mínimos ao sair do campo, não a cada tecla', async () => {
+    const { result } = await renderHook(() => useOfferTargets());
+    await focus();
+
+    await act(async () => result.current.perKm.onChangeText('2,'));
+    await act(async () => result.current.perKm.onChangeText('2,5'));
+    expect(saveModeTargets).not.toHaveBeenCalled();
+
+    await act(async () => result.current.perKm.onBlur());
+    expect(saveModeTargets).toHaveBeenCalledTimes(1);
+    expect(saveModeTargets).toHaveBeenCalledWith('normal', { targetPerKmCents: 250, targetPerHourCents: 4000 });
   });
 });

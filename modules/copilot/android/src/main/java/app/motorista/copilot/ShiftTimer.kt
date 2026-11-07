@@ -15,7 +15,7 @@ class ShiftTimer(private val context: Context) {
     return TimerState(running, prefs.getLong(KEY_STARTED_AT, 0) > 0, elapsed, prefs.getLong(KEY_STARTED_AT, 0))
   }
 
-  fun start(now: Long = System.currentTimeMillis()) {
+  fun start(now: Long = System.currentTimeMillis()) = synchronized(LOCK) {
     if (state(now).started) return resume(now)
     prefs.edit()
       .putLong(KEY_STARTED_AT, now)
@@ -26,14 +26,14 @@ class ShiftTimer(private val context: Context) {
     ForgottenShiftAlarm.schedule(context, 0, now)
   }
 
-  fun pause(now: Long = System.currentTimeMillis()) {
+  fun pause(now: Long = System.currentTimeMillis()) = synchronized(LOCK) {
     val current = state(now)
     if (!current.running) return
     prefs.edit().putLong(KEY_ACCUMULATED, current.elapsedMs).putBoolean(KEY_RUNNING, false).apply()
     ForgottenShiftAlarm.cancel(context)
   }
 
-  fun resume(now: Long = System.currentTimeMillis()) {
+  fun resume(now: Long = System.currentTimeMillis()) = synchronized(LOCK) {
     if (state(now).running) return
     prefs.edit().putLong(KEY_RESUMED_AT, now).putBoolean(KEY_RUNNING, true).apply()
     ForgottenShiftAlarm.schedule(context, prefs.getLong(KEY_ACCUMULATED, 0), now)
@@ -43,12 +43,13 @@ class ShiftTimer(private val context: Context) {
     if (state().running) ForgottenShiftAlarm.schedule(context, prefs.getLong(KEY_ACCUMULATED, 0), prefs.getLong(KEY_RESUMED_AT, 0))
   }
 
-  fun reset() {
+  fun reset() = synchronized(LOCK) {
     prefs.edit().clear().apply()
     ForgottenShiftAlarm.cancel(context)
   }
 
   private companion object {
+    val LOCK = Any()
     const val FILE = "shift_timer"
     const val KEY_RUNNING = "running"
     const val KEY_ACCUMULATED = "accumulated"

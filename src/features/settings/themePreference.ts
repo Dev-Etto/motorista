@@ -1,4 +1,5 @@
-import { copilot, ThemeMode } from '@modules/copilot';
+import { copilot, type ThemeMode } from '@modules/copilot';
+import { THEME_MODES } from '@modules/copilot/schemas';
 import { Appearance } from 'react-native';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
 
@@ -8,8 +9,7 @@ function applyThemeMode(mode: ThemeMode) {
 }
 
 export async function loadThemeMode(): Promise<ThemeMode> {
-  const saved = await settingsRepository.get(SETTING_KEYS.theme);
-  return (saved as ThemeMode | null) ?? 'system';
+  return settingsRepository.getEnum(SETTING_KEYS.theme, THEME_MODES, 'system');
 }
 
 export async function restoreThemeMode(): Promise<void> {

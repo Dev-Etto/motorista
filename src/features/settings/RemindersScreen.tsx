@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { Alert } from 'react-native';
 import { ReminderRow } from '@/data/repositories/reminderRepository';
 import { useFormFields } from '@/shared/hooks/useFormFields';
+import { useSubmit } from '@/shared/hooks/useSubmit';
 import { DateField } from '@/shared/ui/DateField';
 import { NumberField, TextField } from '@/shared/ui/fields';
 import { Button, ButtonRow, Card, EmptyState, ListRow, Notice, Screen } from '@/shared/ui/primitives';
 import { formatDate } from '@/shared/utils/dates';
 import { formatKm } from '@/shared/utils/format';
-import { decimalOrNull } from '@/shared/utils/parse';
+import { decimalOrNull, hasInvalidNumber } from '@/shared/utils/parse';
 import { DailyReminderCard } from './DailyReminderCard';
 import { useReminders } from './useReminders';
 
@@ -28,9 +29,10 @@ export default function RemindersScreen() {
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
 
-  const submit = async () => {
+  const saving = useSubmit(async () => {
     const dueKm = decimalOrNull(values.km);
     if (!values.title.trim()) return setError('Informe o que precisa ser feito.');
+    if (hasInvalidNumber(values.km)) return setError('Confira os km. Use só números, como 10000.');
     if (!dueDate && !dueKm) return setError('Informe uma data ou os km.');
 
     setError(null);
@@ -38,7 +40,9 @@ export default function RemindersScreen() {
     setWarning(notifies ? null : 'Lembrete salvo, mas sem aviso no celular. Permita as notificações do app ou escolha uma data futura.');
     setValues(INITIAL);
     setDueDate(null);
-  };
+  });
+
+  const failure = error ?? saving.error;
 
   const chooseAction = (reminder: ReminderRow) => {
     Alert.alert(reminder.title, describeDue(reminder, totalKm), [
@@ -63,8 +67,8 @@ export default function RemindersScreen() {
         <TextField label="O que fazer" placeholder="Trocar o óleo" {...bind('title')} />
         <DateField label="Data (opcional)" value={dueDate} onChange={setDueDate} minimumDate={new Date()} clearable />
         <NumberField label="Daqui a quantos km (opcional)" suffix="km" hint="O app soma os km das suas jornadas e avisa no início." {...bind('km')} />
-        {error ? <Notice tone="negative" message={error} /> : null}
-        <Button label="Adicionar" onPress={submit} />
+        {failure ? <Notice tone="negative" message={failure} /> : null}
+        <Button label="Adicionar" busy={saving.busy} onPress={saving.submit} />
       </Card>
       <DailyReminderCard />
       {pending.length === 0 ? (

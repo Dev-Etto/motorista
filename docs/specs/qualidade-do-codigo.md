@@ -36,7 +36,7 @@ Tipos de teste:
 | --- | --- | --- |
 | R2.1 | Schemas zod ficam junto dos tipos de domínio: perfil de custo, dias de trabalho, preferências do Copiloto, histórico de ofertas e uma linha por tabela do backup | Revisão |
 | R2.2 | O backup recusa `work_weekdays` fora de inteiros de 0 a 6, perfil de custo sem campos numéricos, centavos não inteiros e datas fora de `AAAA-MM-DD` | Jest |
-| R2.3 | O backup recusa histórico de ofertas com formato inválido antes de enviar ao módulo nativo | Jest |
+| R2.3 | O backup recusa histórico que não é lista e preferências que não são objeto. Ofertas com formato inválido são descartadas antes de chegar ao módulo nativo, e as outras são mantidas | Jest |
 | R2.4 | `settingsRepository.getJson` recebe schema e valor padrão. JSON inválido ou fora do formato devolve o padrão, sem lançar erro | Jest |
 | R2.5 | As chaves de configuração são um tipo `SettingKey`. Uma chave fora de `SETTING_KEYS` não compila | Typecheck |
 | R2.6 | `getEnum(key, values, fallback)` lê tema e modo de oferta. Valor desconhecido devolve o padrão | Jest |

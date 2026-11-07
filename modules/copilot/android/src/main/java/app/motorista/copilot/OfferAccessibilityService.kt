@@ -97,7 +97,7 @@ class OfferAccessibilityService : AccessibilityService() {
     mockReceiver?.let { unregisterReceiver(it) }
     handler.removeCallbacksAndMessages(null)
     scheduler.cancelAll()
-    allChannels().forEach { it.hide() }
+    allChannels().forEach { runCatching { it.hide() } }
     voice.release()
     imageReader.release()
     scanThread.quitSafely()

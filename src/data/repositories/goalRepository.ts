@@ -1,4 +1,6 @@
 import { getDb } from '@/data/database/connection';
+import { parseJsonColumn } from '@/data/database/jsonColumn';
+import { workWeekdaysSchema } from '@/domain/goal/goal';
 
 export interface MonthlyGoal {
   month: string;
@@ -22,7 +24,7 @@ export const goalRepository = {
     return {
       month: row.month,
       desiredProfitCents: row.desired_profit_cents,
-      workWeekdays: JSON.parse(row.work_weekdays) as number[],
+      workWeekdays: parseJsonColumn(row.work_weekdays, workWeekdaysSchema),
       hoursPerDay: row.hours_per_day,
     };
   },

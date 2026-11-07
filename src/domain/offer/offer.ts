@@ -1,5 +1,8 @@
+import { z } from 'zod';
+
 export type OfferColor = 'green' | 'yellow' | 'red' | 'neutral';
-export type OfferMode = 'normal' | 'low';
+export const OFFER_MODES = ['normal', 'low'] as const;
+export type OfferMode = (typeof OFFER_MODES)[number];
 
 export interface OfferInput {
   valueCents: number;
@@ -10,10 +13,12 @@ export interface OfferInput {
   targetPerHourCents: number;
 }
 
-export interface OfferTargets {
-  targetPerKmCents: number;
-  targetPerHourCents: number;
-}
+export const offerTargetsSchema = z.object({
+  targetPerKmCents: z.number().nonnegative(),
+  targetPerHourCents: z.number().nonnegative(),
+});
+
+export type OfferTargets = z.infer<typeof offerTargetsSchema>;
 
 export interface OfferSettings {
   mode: OfferMode;

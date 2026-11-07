@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import { OfferMode, OfferTargets } from '@/domain/offer/offer';
 import { MoneyField } from '@/shared/ui/fields';
-import { AppText, Button, Card, ListRow, Segmented, ToggleRow } from '@/shared/ui/primitives';
+import { AppText, Button, Card, ListRow, Notice, Segmented, ToggleRow } from '@/shared/ui/primitives';
 import { formatPerHour, formatPerKm } from '@/shared/utils/format';
 import { OfferTargetsState } from './useOfferTargets';
 
@@ -41,6 +41,7 @@ export function OfferTargetsEditor({ targets, suggestion }: { targets: OfferTarg
         <>
           <MoneyField label="Mínimo por km" hint="Oferta abaixo do seu custo fica vermelha em qualquer modo." {...targets.perKm} />
           <MoneyField label="Mínimo por hora" {...targets.perHour} />
+          {targets.saveError ? <Notice tone="negative" message={targets.saveError} /> : null}
         </>
       )}
     </Card>

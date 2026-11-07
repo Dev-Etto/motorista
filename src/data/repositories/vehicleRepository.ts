@@ -1,5 +1,6 @@
 import { getDb } from '@/data/database/connection';
-import { computeCosts, CostBreakdown, CostProfile, FuelType, VehicleKind } from '@/domain/vehicle/costs';
+import { parseJsonColumn } from '@/data/database/jsonColumn';
+import { computeCosts, type CostBreakdown, type CostProfile, costProfileSchema, type FuelType, type VehicleKind } from '@/domain/vehicle/costs';
 
 export interface Vehicle {
   id: number;
@@ -62,7 +63,7 @@ export const vehicleRepository = {
 
   async getCostProfile(vehicleId: number, date: string): Promise<CostProfile | null> {
     const row = await findProfileRow(vehicleId, date);
-    return row ? (JSON.parse(row.data) as CostProfile) : null;
+    return row ? parseJsonColumn(row.data, costProfileSchema) : null;
   },
 
   async getCostsAt(date: string): Promise<VehicleCosts> {

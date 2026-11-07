@@ -1,3 +1,7 @@
+import { z } from 'zod';
+
+export const workWeekdaysSchema = z.array(z.number().int().min(0).max(6));
+
 export interface GoalPlanInput {
   desiredProfitCents: number;
   fixedMonthlyCents: number;

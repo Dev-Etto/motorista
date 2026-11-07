@@ -4,8 +4,9 @@ import { quoteRepository } from '@/data/repositories/quoteRepository';
 import { computeQuote } from '@/domain/quote/quote';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useFormFields } from '@/shared/hooks/useFormFields';
+import { useSubmit } from '@/shared/hooks/useSubmit';
 import { MoneyField, NumberField, TextField } from '@/shared/ui/fields';
-import { AppText, Button, ButtonRow, Card, Collapsible, ListRow } from '@/shared/ui/primitives';
+import { AppText, Button, ButtonRow, Card, Collapsible, ListRow, Notice } from '@/shared/ui/primitives';
 import { confirmAction } from '@/shared/utils/confirm';
 import { profitTone } from '@/shared/utils/format';
 import { formatBRL, formatNumber } from '@/shared/utils/money';
@@ -39,10 +40,10 @@ export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
   );
   const ready = quote.totalKm > 0;
 
-  const save = async () => {
+  const saving = useSubmit(async () => {
     await quoteRepository.save(values.label.trim() || null, quote.priceCents, values);
     await saved.reload();
-  };
+  });
 
   const share = () => Share.share({ message: buildShareMessage(values.label, quote.priceCents) });
 
@@ -84,8 +85,9 @@ export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
           <TextField label="Descrição (opcional)" placeholder="Centro ao aeroporto" {...bind('label')} />
           <ButtonRow>
             <Button label="Compartilhar" onPress={share} />
-            <Button label="Salvar" variant="secondary" onPress={save} />
+            <Button label="Salvar" variant="secondary" busy={saving.busy} onPress={saving.submit} />
           </ButtonRow>
+          {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
         </Card>
       ) : null}
       {saved.data?.length ? (

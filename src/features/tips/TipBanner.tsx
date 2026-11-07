@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
+import { z } from 'zod';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
 import { AppText, Button, Card } from '@/shared/ui/primitives';
 
 async function isDismissed(id: string) {
-  const dismissed = await settingsRepository.getJson<string[]>(SETTING_KEYS.tipsDismissed, []);
+  const dismissed = await settingsRepository.getJson(SETTING_KEYS.tipsDismissed, z.array(z.string()), []);
   return dismissed.includes(id);
 }
 
 async function dismiss(id: string) {
-  const dismissed = await settingsRepository.getJson<string[]>(SETTING_KEYS.tipsDismissed, []);
+  const dismissed = await settingsRepository.getJson(SETTING_KEYS.tipsDismissed, z.array(z.string()), []);
   await settingsRepository.setJson(SETTING_KEYS.tipsDismissed, [...dismissed, id]);
 }
 
