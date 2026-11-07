@@ -1,5 +1,5 @@
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { activeTargets, DEFAULT_LOW_DEMAND_TARGETS, DEFAULT_OFFER_TARGETS, OfferMode, OfferSettings } from '@/domain/offer/offer';
 import { centsToInput } from '@/shared/utils/money';
 import { centsOrZero } from '@/shared/utils/parse';
@@ -11,9 +11,11 @@ export function useOfferTargets() {
   const [settings, setSettings] = useState<OfferSettings>(INITIAL);
   const [perKm, setPerKm] = useState('');
   const [perHour, setPerHour] = useState('');
+  const editing = useRef(false);
 
   const loadFields = useCallback((next: OfferSettings) => {
     const targets = activeTargets(next);
+    editing.current = false;
     setSettings(next);
     setPerKm(centsToInput(targets.targetPerKmCents));
     setPerHour(centsToInput(targets.targetPerHourCents));
@@ -23,11 +25,13 @@ export function useOfferTargets() {
 
   useFocusEffect(
     useCallback(() => {
+      if (editing.current) return;
       void reload();
     }, [reload]),
   );
 
   const applyTargets = (nextPerKm: string, nextPerHour: string) => {
+    editing.current = true;
     const next = {
       ...settings,
       [settings.mode]: { targetPerKmCents: centsOrZero(nextPerKm), targetPerHourCents: centsOrZero(nextPerHour) },

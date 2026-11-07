@@ -1,11 +1,12 @@
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { goalRepository } from '@/data/repositories/goalRepository';
 import { DEFAULT_HOURS_PER_DAY, DEFAULT_WORK_WEEKDAYS } from '@/domain/goal/goal';
 import { OfferTargetsEditor } from '@/features/copilot/OfferTargetsCard';
 import { syncCopilotTargets } from '@/features/copilot/syncTargets';
 import { useOfferTargets } from '@/features/copilot/useOfferTargets';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
+import { useFormHydration } from '@/shared/hooks/useFormHydration';
 import { useSubmit } from '@/shared/hooks/useSubmit';
 import { MoneyField, NumberField } from '@/shared/ui/fields';
 import { AppText, Button, Card, Collapsible, Notice, Screen } from '@/shared/ui/primitives';
@@ -27,13 +28,16 @@ export default function GoalScreen() {
   const [dayTarget, setDayTarget] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!progress) return;
-    setDesired(centsToInput(progress.goal.desiredProfitCents));
-    setWeekdays(progress.goal.workWeekdays);
-    setHoursPerDay(String(progress.goal.hoursPerDay).replace('.', ','));
-    setDayTarget(progress.dayOverride === null ? '' : centsToInput(progress.dayOverride));
-  }, [progress]);
+  useFormHydration(
+    progress,
+    (loaded) => {
+      setDesired(centsToInput(loaded.goal.desiredProfitCents));
+      setWeekdays(loaded.goal.workWeekdays);
+      setHoursPerDay(String(loaded.goal.hoursPerDay).replace('.', ','));
+      setDayTarget(loaded.dayOverride === null ? '' : centsToInput(loaded.dayOverride));
+    },
+    monthKey(date),
+  );
 
   const toggleWeekday = (weekday: number) => {
     setWeekdays((current) => (current.includes(weekday) ? current.filter((day) => day !== weekday) : [...current, weekday]));

@@ -2,35 +2,16 @@ import { DatabaseSync } from 'node:sqlite';
 import { BackupFile, createBackup, parseBackup, restoreBackup } from '@/data/backup/backup';
 import { migrate, MIGRATIONS, SCHEMA_VERSION } from '@/data/database/connection';
 import { seedSampleData } from '@/data/database/devSeed';
+import { openTestDatabase } from './sqliteHarness';
 
 let mockDb: DatabaseSync;
 
 jest.mock('expo-file-system', () => ({ File: jest.fn(), Paths: { document: 'doc' } }));
 
-jest.mock('expo-sqlite', () => {
-  const adapter = () => ({
-    execAsync: async (sql: string) => mockDb.exec(sql),
-    getFirstAsync: async (sql: string, ...params: never[]) => mockDb.prepare(sql).get(...params.flat()) ?? null,
-    getAllAsync: async (sql: string, ...params: never[]) => mockDb.prepare(sql).all(...params.flat()),
-    runAsync: async (sql: string, ...params: never[]) => mockDb.prepare(sql).run(...params.flat()),
-    withExclusiveTransactionAsync: async (work: (tx: unknown) => Promise<void>) => {
-      mockDb.exec('BEGIN EXCLUSIVE');
-      try {
-        await work(adapter());
-        mockDb.exec('COMMIT');
-      } catch (error) {
-        mockDb.exec('ROLLBACK');
-        throw error;
-      }
-    },
-  });
-  return { openDatabaseSync: adapter };
-});
+jest.mock('expo-sqlite', () => jest.requireActual('./sqliteHarness').expoSqliteMock);
 
 function openAtVersion(version: number) {
-  mockDb = new DatabaseSync(':memory:');
-  MIGRATIONS.slice(0, version).forEach((sql) => mockDb.exec(sql));
-  mockDb.exec(`PRAGMA user_version = ${version}`);
+  mockDb = openTestDatabase(MIGRATIONS.slice(0, version), { foreignKeys: false });
 }
 
 function seed() {
@@ -116,6 +97,26 @@ describe('backup de ponta a ponta', () => {
 
     expect(count('shifts')).toBe(1);
     expect(count('vehicles')).toBe(1);
+  });
+
+  it('recusa ganho de uma plataforma que não existe e mantém os dados atuais', async () => {
+    const backup = await createBackup();
+    const orphan = { ...backup.tables.shift_earnings[0], platform_id: 999 };
+    const broken: BackupFile = { ...backup, tables: { ...backup.tables, shift_earnings: [orphan] } };
+
+    await expect(restoreBackup(broken)).rejects.toThrow();
+
+    expect(count('shift_earnings')).toBe(1);
+    expect(mockDb.prepare('SELECT platform_id FROM shift_earnings').get()).toEqual({ platform_id: 1 });
+  });
+
+  it('marca o app como configurado na mesma restauração', async () => {
+    const backup = await createBackup();
+    const withoutSettings: BackupFile = { ...backup, tables: { ...backup.tables, settings: [] } };
+
+    await restoreBackup(withoutSettings);
+
+    expect(mockDb.prepare("SELECT value FROM settings WHERE key = 'onboarded'").get()).toEqual({ value: '1' });
   });
 
   it('aceita backup de uma versão antiga, sem as colunas e tabelas novas', async () => {

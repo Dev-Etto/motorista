@@ -95,9 +95,10 @@ object OfferParser {
   private fun isPickupOnly(text: String) =
     pickupOnlyMark.containsMatchIn(text) && !tripMark.containsMatchIn(text) && routeLegs(text).size < MAX_LEGS
 
-  private fun routeLegs(text: String): List<RouteLeg> = routeLeg.findAll(road.replace(text, " ")).map { match ->
+  private fun routeLegs(text: String): List<RouteLeg> = routeLeg.findAll(road.replace(text, " ")).mapNotNull { match ->
+    val minutes = match.groupValues[1].toIntOrNull() ?: return@mapNotNull null
     val distance = toDecimal(match.groupValues[2])
-    RouteLeg(match.groupValues[1].toInt(), if (match.groupValues[3].equals("m", ignoreCase = true)) distance / METERS_PER_KM else distance)
+    RouteLeg(minutes, if (match.groupValues[3].equals("m", ignoreCase = true)) distance / METERS_PER_KM else distance)
   }.toList()
 
   private fun totalLeg(text: String): RouteLeg? {
@@ -165,7 +166,7 @@ object OfferParser {
       hourMatch.groupValues[1].toInt() * 60 + extra
     }
     val remaining = hours.replace(text, " ")
-    val fromMinutes = minutes.findAll(remaining).take(MAX_LEGS).sumOf { it.groupValues[1].toInt() }
+    val fromMinutes = minutes.findAll(remaining).take(MAX_LEGS).sumOf { it.groupValues[1].toIntOrNull() ?: 0 }
     return fromHours + fromMinutes
   }
 

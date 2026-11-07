@@ -1,5 +1,5 @@
 import { File, Paths } from 'expo-file-system';
-import { getDb } from './connection';
+import { runInTransaction } from './connection';
 
 const REQUEST_FILE = 'mock-seed';
 const SAMPLE_DAYS = 6;
@@ -27,7 +27,7 @@ const SAMPLE_PROFILE = {
 };
 
 export async function seedSampleData(now = Date.now()): Promise<void> {
-  await getDb().withExclusiveTransactionAsync(async (tx) => {
+  await runInTransaction(async (tx) => {
     await tx.execAsync('DELETE FROM shift_earnings; DELETE FROM shifts; DELETE FROM cost_profiles; DELETE FROM vehicles;');
     await tx.runAsync("INSERT INTO vehicles (id, name, kind, fuel, active, created_at) VALUES (1, 'Carro de teste', 'car', 'gasoline', 1, ?)", now);
     await tx.runAsync("INSERT INTO cost_profiles (vehicle_id, valid_from, data) VALUES (1, '2020-01-01', ?)", JSON.stringify(SAMPLE_PROFILE));

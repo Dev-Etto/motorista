@@ -112,7 +112,7 @@ class OfferAccessibilityService : AccessibilityService() {
   fun mockScan(text: String, source: String) {
     currentPackage = source
     lastEventAt = System.currentTimeMillis()
-    scanHandler.post { readScan(ScreenScan(source, visible = true, text = text, simulated = true)) }
+    scanHandler.post { runCatching { readScan(ScreenScan(source, visible = true, text = text, simulated = true)) } }
   }
 
   private fun onWindowsChanged() {
@@ -202,7 +202,7 @@ class OfferAccessibilityService : AccessibilityService() {
     if (text.isEmpty()) return
 
     OfferDiagnostics.captureImage(text)
-    val read = imageTracker.read(text)
+    val read = runCatching { imageTracker.read(text) }.getOrNull() ?: return
     val source = imageSource
     handler.post { onImageRead(read, source) }
   }

@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { getDb, SCHEMA_VERSION } from '@/data/database/connection';
+import { assertForeignKeys, getDb, runInTransaction, SCHEMA_VERSION } from '@/data/database/connection';
+import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
 
 const TABLES = [
   'vehicles',
@@ -82,8 +83,7 @@ export function parseBackup(text: string): ParseResult {
 }
 
 export async function restoreBackup(backup: BackupFile): Promise<void> {
-  const db = getDb();
-  await db.withExclusiveTransactionAsync(async (tx) => {
+  await runInTransaction(async (tx) => {
     for (const table of [...TABLES].reverse()) {
       await tx.runAsync(`DELETE FROM ${table}`);
     }
@@ -98,5 +98,7 @@ export async function restoreBackup(backup: BackupFile): Promise<void> {
         );
       }
     }
+    await assertForeignKeys(tx);
+    await settingsRepository.set(SETTING_KEYS.onboarded, '1', tx);
   });
 }

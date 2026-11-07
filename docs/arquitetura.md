@@ -191,3 +191,11 @@ app -> features -> data -> domain -> shared/utils
 - **Nota do passageiro:** não aparece no cartão, no botão nem na notificação. O parser só a reconhece com estrela ou contagem de avaliações.
 - **Idade do pedido não é tempo de viagem:** no inDrive, `N min.` com ponto e `Agora mesmo` dizem há quanto tempo o pedido existe, e `~N km` é a distância até o passageiro. Sem os dois trechos, "Por hora" fica vazio, sem estimativa.
 - **Cartão no botão flutuante:** o cartão cresce a partir do botão e encolhe de volta. `OfferCardMotion` calcula o ponto de partida e não depende do Android. Um toque em qualquer ponto, ou arrastar até a `DismissZone`, fecha o cartão e a voz, via `OfferSession.dismiss`. A sessão guarda a oferta, para ela não reabrir enquanto seguir na tela.
+
+## Decisões da versão 0.10.0
+
+- **Transação em conexão própria:** `runInTransaction` abre uma conexão nova, liga `foreign_keys` antes do `BEGIN` e a fecha no fim. O `expo-sqlite` já usava conexão nova em `withExclusiveTransactionAsync`, mas sem a verificação de chave estrangeira, porque esse pragma vale por conexão e é ignorado dentro de uma transação.
+- **Migrações sem verificação de chave:** é o procedimento do SQLite para alterar tabelas. A migração confere `foreign_key_check` antes de concluir.
+- **Restauração atômica:** a restauração confere as chaves e marca o onboarding na mesma transação.
+- **Harness igual à produção:** os testes usam um arquivo temporário e abrem conexão nova por transação, para pegar diferenças de pragma.
+- **Formulário preenchido uma vez:** `useFormHydration` preenche os campos com o dado carregado só na primeira vez de cada chave. `useAsyncData` recarrega no foco, e isso não pode apagar o que o motorista digitou.

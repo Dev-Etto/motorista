@@ -1,5 +1,4 @@
-import type { SQLiteDatabase } from 'expo-sqlite';
-import { getDb } from '@/data/database/connection';
+import { getDb, runInTransaction, Transaction } from '@/data/database/connection';
 import { countsAgainstProfit, ExpenseCategory } from '@/domain/expense/expense';
 import { ShiftFact } from '@/domain/insights/types';
 import { vehicleRepository } from './vehicleRepository';
@@ -42,8 +41,6 @@ interface CostSnapshot {
   costPerKm: number;
   variablePerKm: number;
 }
-
-type Transaction = Pick<SQLiteDatabase, 'runAsync' | 'getFirstAsync'>;
 
 async function resolveSnapshot(tx: Transaction, input: ShiftInput, fresh: CostSnapshot): Promise<CostSnapshot> {
   if (!input.id) return fresh;
@@ -120,7 +117,7 @@ export const shiftRepository = {
     const fresh = { costPerKm: costs?.fullPerKm ?? 0, variablePerKm: costs?.variablePerKm ?? 0 };
     let shiftId = input.id ?? 0;
 
-    await getDb().withExclusiveTransactionAsync(async (tx) => {
+    await runInTransaction(async (tx) => {
       const snapshot = await resolveSnapshot(tx, input, fresh);
       if (input.id) await updateShift(tx, input.id, input, snapshot);
       if (!input.id) shiftId = await insertShift(tx, input, vehicle?.id ?? null, snapshot);

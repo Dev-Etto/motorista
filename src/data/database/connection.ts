@@ -1,10 +1,32 @@
 import * as SQLite from 'expo-sqlite';
 
+const DATABASE_NAME = 'motorista.db';
+
 let instance: SQLite.SQLiteDatabase | null = null;
 
+export type Transaction = Pick<SQLite.SQLiteDatabase, 'execAsync' | 'runAsync' | 'getFirstAsync' | 'getAllAsync'>;
+
+type TransactionOptions = { enforceForeignKeys?: boolean };
+
 export function getDb(): SQLite.SQLiteDatabase {
-  if (!instance) instance = SQLite.openDatabaseSync('motorista.db');
+  if (!instance) instance = SQLite.openDatabaseSync(DATABASE_NAME);
   return instance;
+}
+
+export async function runInTransaction(work: (tx: Transaction) => Promise<void>, options: TransactionOptions = {}): Promise<void> {
+  const connection = await SQLite.openDatabaseAsync(DATABASE_NAME, { useNewConnection: true });
+  try {
+    const enforce = options.enforceForeignKeys ?? true;
+    await connection.execAsync(`PRAGMA foreign_keys = ${enforce ? 'ON' : 'OFF'}`);
+    await connection.withTransactionAsync(() => work(connection));
+  } finally {
+    await connection.closeAsync();
+  }
+}
+
+export async function assertForeignKeys(tx: Transaction): Promise<void> {
+  const broken = await tx.getAllAsync('PRAGMA foreign_key_check');
+  if (broken.length > 0) throw new Error('foreign_key_check');
 }
 export const MIGRATIONS: string[] = [
   `
@@ -115,9 +137,13 @@ export async function migrate(): Promise<void> {
   const row = await db.getFirstAsync<{ user_version: number }>('PRAGMA user_version');
   const current = row?.user_version ?? 0;
   for (let version = current; version < MIGRATIONS.length; version++) {
-    await db.withExclusiveTransactionAsync(async (tx) => {
-      await tx.execAsync(MIGRATIONS[version]);
-      await tx.execAsync(`PRAGMA user_version = ${version + 1}`);
-    });
+    await runInTransaction(
+      async (tx) => {
+        await tx.execAsync(MIGRATIONS[version]);
+        await tx.execAsync(`PRAGMA user_version = ${version + 1}`);
+        await assertForeignKeys(tx);
+      },
+      { enforceForeignKeys: false },
+    );
   }
 }

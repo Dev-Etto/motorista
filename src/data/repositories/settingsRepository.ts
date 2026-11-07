@@ -1,4 +1,4 @@
-import { getDb } from '@/data/database/connection';
+import { getDb, Transaction } from '@/data/database/connection';
 
 export const settingsRepository = {
   async get(key: string): Promise<string | null> {
@@ -6,8 +6,8 @@ export const settingsRepository = {
     return row?.value ?? null;
   },
 
-  async set(key: string, value: string): Promise<void> {
-    await getDb().runAsync(
+  async set(key: string, value: string, executor: Transaction = getDb()): Promise<void> {
+    await executor.runAsync(
       'INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value',
       key,
       value,

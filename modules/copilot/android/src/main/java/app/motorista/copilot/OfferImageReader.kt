@@ -43,12 +43,16 @@ class OfferImageReader(
     screenshot.hardwareBuffer.close()
     if (image == null) return busy.set(false)
 
-    recognizer.process(InputImage.fromBitmap(image, 0))
-      .addOnSuccessListener(executor) { onText(textOf(it)) }
-      .addOnCompleteListener(executor) {
-        image.recycle()
-        busy.set(false)
-      }
+    runCatching {
+      recognizer.process(InputImage.fromBitmap(image, 0))
+        .addOnSuccessListener(executor) { runCatching { onText(textOf(it)) } }
+        .addOnCompleteListener(executor) { finish(image) }
+    }.onFailure { finish(image) }
+  }
+
+  private fun finish(image: Bitmap) {
+    image.recycle()
+    busy.set(false)
   }
 
   private fun offerArea(screenshot: AccessibilityService.ScreenshotResult): Bitmap {

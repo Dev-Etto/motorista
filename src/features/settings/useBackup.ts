@@ -33,7 +33,6 @@ export function useBackup() {
   const replaceData = async (backup: BackupFile, doneText: string) => {
     writeSafetyCopy(JSON.stringify(await fullBackup()));
     await restoreBackup(backup);
-    await settingsRepository.set(SETTING_KEYS.onboarded, '1');
     setCanUndo(true);
     const complete = await applyRestoredState(backup).then(() => true, () => false);
     setMessage({ tone: 'positive', text: complete ? doneText : `${doneText} Confira os lembretes e o Copiloto.` });
