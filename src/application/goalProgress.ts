@@ -6,6 +6,10 @@ import { computeGoalProgress, requiredGrossForGoal, suggestOfferTargets } from '
 import { summarizeShifts, withLooseExpenses } from '@domain/shift/summary';
 import { monthBounds, monthKey, weekdayOf, workDaysInMonth, workDaysLeft } from '@shared/utils/dates';
 
+export async function plannedHoursPerDay(date: string): Promise<number | null> {
+  return (await goalRepository.findInEffect(monthKey(date)))?.hoursPerDay ?? null;
+}
+
 export async function loadGoalProgress(date: string) {
   const goal = await goalRepository.findInEffect(monthKey(date));
   if (!goal) return null;

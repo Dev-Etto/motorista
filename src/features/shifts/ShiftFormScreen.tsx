@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import type { ExpenseCategory } from '@domain/expense/expense';
+import { isShiftForgotten } from '@domain/shift/forgotten';
 import { KmEntryMode } from '@domain/shift/shiftForm';
 import { ShiftEstimateCard } from '@features/offers';
 import { TipBanner } from '@features/tips';
@@ -40,7 +41,7 @@ export default function ShiftFormScreen() {
   );
 
   useEffect(() => {
-    if (!finish || finishApplied.current || !live.started) return;
+    if (!finish || finishApplied.current || !live.started || isShiftForgotten(live.started, live.elapsedMs)) return;
 
     finishApplied.current = true;
     void live.apply();
@@ -50,11 +51,12 @@ export default function ShiftFormScreen() {
     if (!id && live.pending) return setMeasureError(t('form.measurePending', { context: format.distanceUnit }));
 
     setMeasureError(null);
-    const saved = await form.save();
-    if (!saved) return;
+    const savedId = await form.save();
+    if (!savedId) return;
 
-    if (!id && live.started) await live.discard();
-    router.back();
+    if (id) return router.back();
+    if (live.started) await live.discard();
+    router.replace(`/shift/${savedId}`);
   });
 
   return (

@@ -8,11 +8,13 @@ import android.app.Notification
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 
 object ForgottenShiftAlarm {
   private const val FORGOTTEN_AFTER_MS = 14 * 60 * 60 * 1000L
   private const val CHANNEL_ID = "jornada"
   private const val NOTIFICATION_ID = 2002
+  private const val FINISH_SHIFT_URI = "motorista://shift/new?finish=1"
 
   fun triggerAt(accumulatedMs: Long, resumedAt: Long): Long? {
     if (accumulatedMs >= FORGOTTEN_AFTER_MS) return null
@@ -45,8 +47,8 @@ object ForgottenShiftAlarm {
     manager.notify(NOTIFICATION_ID, notification)
   }
 
-  private fun openAppIntent(context: Context): PendingIntent? {
-    val intent = context.packageManager.getLaunchIntentForPackage(context.packageName) ?: return null
+  private fun openAppIntent(context: Context): PendingIntent {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(FINISH_SHIFT_URI)).setPackage(context.packageName).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     return PendingIntent.getActivity(context, NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
   }
 

@@ -162,8 +162,13 @@ describe('mensagens de erro do formulário da jornada', () => {
       await act(async () => result.current.setEarning(1, '100'));
 
       await waitFor(() => expect(result.current.preview.vehicleCostCents).toBe(1000));
-      await act(async () => result.current.save());
+      jest.mocked(shiftRepository.save).mockResolvedValueOnce(42);
+      let savedId: number | null = null;
+      await act(async () => {
+        savedId = await result.current.save();
+      });
       expect(shiftRepository.save).toHaveBeenLastCalledWith(expect.objectContaining({ vehicleId: 1 }));
+      expect(savedId).toBe(42);
     });
 
     it('com jornada iniciada, o encerramento abre com o veículo da jornada', async () => {

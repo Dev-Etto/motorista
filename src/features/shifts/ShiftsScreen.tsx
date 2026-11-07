@@ -7,14 +7,13 @@ import { useAsyncData } from '@shared/hooks/useAsyncData';
 import { useMonthCursor } from '@shared/hooks/useMonthCursor';
 import { useFormat } from '@shared/i18n/format';
 import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
-import { confirmAction } from '@shared/ui/dialog';
+import { showDialog } from '@shared/ui/dialog';
 import { MonthCalendar } from '@shared/ui/MonthCalendar';
 import { MonthSwitcher } from '@shared/ui/MonthSwitcher';
 import { AppText, Button, Card, EmptyState, ListRow, Screen } from '@shared/ui/primitives';
 import { monthKey } from '@shared/utils/dates';
 import { profitTone } from '@shared/utils/format';
-import { ActiveShiftCard, NewShiftButton } from './ActiveShift';
-import { loadMonth, removeLooseExpense } from './shiftQueries';
+import { loadMonth } from './shiftQueries';
 
 export default function ShiftsScreen() {
   const router = useRouter();
@@ -36,26 +35,25 @@ export default function ShiftsScreen() {
       ),
     [cursor.date, allShifts, format.profile.firstWeekday],
   );
-  const expenses = data?.expenses ?? [];
+  const allExpenses = data?.expenses ?? [];
+  const expenses = selectedDate ? allExpenses.filter((expense) => expense.date === selectedDate) : allExpenses;
 
-  const confirmDeleteExpense = (id: number, label: string, cents: number) => {
-    confirmAction({
-      title: t('list.deleteExpense.title', { label }),
-      message: t('list.deleteExpense.message', { amount: format.money(cents) }),
-      actionLabel: t('common:actions.delete'),
-      onConfirm: async () => {
-        await removeLooseExpense(id);
-        await reload();
-      },
+  const chooseWhatToAdd = () => {
+    showDialog({
+      title: t('list.add.title'),
+      actions: [
+        { label: t('list.add.shift'), tone: 'primary', onPress: () => router.push('/shift/new') },
+        { label: t('list.add.fuel'), tone: 'secondary', onPress: () => router.push({ pathname: '/expense/new', params: { category: 'fuel' } }) },
+        { label: t('list.add.other'), tone: 'secondary', onPress: () => router.push({ pathname: '/expense/new', params: { category: 'other' } }) },
+        { label: t('common:actions.cancel'), tone: 'secondary' },
+      ],
     });
   };
 
   return (
     <Screen>
       <MonthSwitcher date={cursor.date} onPrevious={cursor.previous} onNext={cursor.next} />
-      <ActiveShiftCard />
-      <NewShiftButton />
-      <Button label={t('list.addExpense')} variant="secondary" onPress={() => router.push('/expense/new')} />
+      <Button label={t('list.add.button')} onPress={chooseWhatToAdd} />
 
       <Card>
         <MonthCalendar weeks={calendar} selectedDate={selectedDate} onSelect={(date) => setSelectedDate((current) => (current === date ? null : date))} />
@@ -96,7 +94,8 @@ export default function ShiftsScreen() {
                     title={t(`expenses:category.${expense.category}`)}
                     subtitle={format.date(expense.date)}
                     value={format.money(expense.cents)}
-                    onPress={() => confirmDeleteExpense(expense.id, t(`expenses:category.${expense.category}`), expense.cents)}
+                    chevron
+                    onPress={() => router.push({ pathname: '/expense/new', params: { id: String(expense.id) } })}
                   />
                 ))}
               </Card>

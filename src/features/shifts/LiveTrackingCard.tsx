@@ -1,11 +1,17 @@
 import type { TFunction } from 'i18next';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
+import { plannedHoursPerDay } from '@application/goalProgress';
+import { isShiftForgotten, suggestedStopAt } from '@domain/shift/forgotten';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
 import { useFormat } from '@shared/i18n/format';
 import { spacing } from '@shared/theme/theme';
 import { confirmAction } from '@shared/ui/dialog';
+import { DurationField } from '@shared/ui/fields';
 import { AppText, Button, ButtonRow, Card, Notice, ToggleRow } from '@shared/ui/primitives';
-import { formatClock } from '@shared/utils/dates';
+import { clockOfMillis, formatClock, nextClockTime, today } from '@shared/utils/dates';
+import { MINUTES_PER_HOUR } from '@shared/utils/time';
 import { LiveTrackingState } from './useLiveTracking';
 
 function cardTitle({ started, running }: LiveTrackingState, t: TFunction<'shifts'>) {
@@ -16,6 +22,19 @@ function cardTitle({ started, running }: LiveTrackingState, t: TFunction<'shifts
 export function LiveTrackingCard({ live }: { live: LiveTrackingState }) {
   const { t } = useTranslation('shifts');
   const format = useFormat();
+  const forgotten = isShiftForgotten(live.started, live.elapsedMs);
+  const { data: plannedHours } = useAsyncData(() => plannedHoursPerDay(today()), []);
+  const [stopText, setStopText] = useState<string | null>(null);
+  const stopValue = stopText ?? clockOfMillis(suggestedStopAt(live.startedAt, plannedHours ?? null));
+  const stopHours = format.parseHours(stopValue);
+  const stopInvalid = stopHours === null || stopHours >= HOURS_PER_DAY;
+
+  const applyMeasure = () => {
+    if (!forgotten) return live.apply();
+    if (stopInvalid) return;
+    return live.apply(nextClockTime(live.startedAt, stopHours * MINUTES_PER_HOUR));
+  };
+
   const confirmDiscard = () => {
     confirmAction({
       title: t('live.discard.title'),
@@ -54,19 +73,33 @@ export function LiveTrackingCard({ live }: { live: LiveTrackingState }) {
         />
       )}
       {live.gpsError ? <Notice message={live.gpsError} /> : null}
+      {forgotten && !live.applied ? (
+        <>
+          <Notice message={t('live.forgotten.message')} />
+          <DurationField
+            label={t('live.forgotten.stopLabel')}
+            value={stopValue}
+            onChangeText={setStopText}
+            error={stopInvalid ? t('live.forgotten.stopInvalid') : null}
+          />
+        </>
+      ) : null}
       {live.applied ? <Notice tone="positive" message={t('live.applied')} /> : null}
+      {live.applied && forgotten ? <Notice message={t('live.forgotten.checkKm', { context: format.distanceUnit })} /> : null}
       <ButtonRow>
         {live.running ? (
           <Button label={t('live.pause')} variant="secondary" onPress={live.pause} />
         ) : (
           <Button label={live.started ? t('live.resume') : t('live.start')} variant={live.started ? 'secondary' : 'primary'} onPress={live.start} />
         )}
-        {live.started ? <Button label={t('live.apply')} onPress={live.apply} /> : null}
+        {live.started ? <Button label={t('live.apply')} onPress={applyMeasure} /> : null}
       </ButtonRow>
       {live.started ? <Button label={t('live.discardButton')} variant="danger" onPress={confirmDiscard} /> : null}
     </Card>
   );
 }
+
+const HOURS_PER_DAY = 24;
 
 const styles = StyleSheet.create({
   measures: { flexDirection: 'row', gap: spacing.md },

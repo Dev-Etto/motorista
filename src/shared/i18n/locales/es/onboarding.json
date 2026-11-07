@@ -62,6 +62,11 @@
       "title": "Guarda una copia de tus datos",
       "message": "Tus datos quedan solo en este celular. Con una copia de seguridad, te los llevas si cambias de dispositivo.",
       "action": "Hacer copia de seguridad"
+    },
+    "copilot": {
+      "title": "Configura el Copiloto",
+      "message": "Lee las ofertas y muestra al instante si el viaje vale la pena. Son 2 pasos.",
+      "action": "Configurar"
     }
   }
 }

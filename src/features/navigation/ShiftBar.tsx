@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
+import { isShiftForgotten } from '@domain/shift/forgotten';
 import { useLiveTracking } from '@features/shifts';
 import { useFormat } from '@shared/i18n/format';
 import { MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@shared/theme/theme';
@@ -18,7 +19,9 @@ export function ShiftBar() {
   const live = useLiveTracking(ignoreApply);
   if (!live.started) return null;
 
-  const status = live.running ? t('bar.running') : t('bar.paused');
+  const forgotten = isShiftForgotten(live.started, live.elapsedMs);
+  const runningStatus = live.running ? t('bar.running') : t('bar.paused');
+  const status = forgotten ? t('bar.forgotten') : runningStatus;
   const details = [formatClock(live.elapsedMs), live.km > 0 ? format.distance(live.km) : null].filter(Boolean).join(' · ');
 
   return (
@@ -30,7 +33,7 @@ export function ShiftBar() {
         onPress={() => router.push('/shift/new')}
         style={styles.info}
       >
-        <View style={[styles.dot, { backgroundColor: live.running ? colors.positive : colors.warning }]} />
+        <View style={[styles.dot, { backgroundColor: live.running && !forgotten ? colors.positive : colors.warning }]} />
         <View>
           <AppText variant="caption" tone="muted">
             {status}

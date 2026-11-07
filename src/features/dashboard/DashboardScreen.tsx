@@ -3,13 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { GoalProgressCard } from '@features/goals';
 import { InsightCard } from '@features/insights';
 import { NextStepCard } from '@features/onboarding';
-import { ActiveShiftCard, NewShiftButton } from '@features/shifts';
+import { StartShiftActions } from '@features/shifts';
 import { useFormat } from '@shared/i18n/format';
 import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
 import { LearnMore } from '@shared/ui/LearnMore';
 import { AppText, Button, Card, ListRow, Notice, Screen } from '@shared/ui/primitives';
 import { PendingCard } from './PendingCard';
 import { pendingItems } from './pendingItems';
+import { PeriodsCard } from './PeriodsCard';
 import { ProfitCard } from './ProfitCard';
 import { DashboardData, useDashboard } from './useDashboard';
 
@@ -39,8 +40,7 @@ function DashboardContent({ data, onReload }: { data: DashboardData; onReload: (
       ) : null}
       {data.gpsRunning ? <Notice tone="accent" message={t('gpsRunning', unit)} /> : null}
       {data.gpsProblem ? <Notice tone="negative" message={t('gpsProblem', { ...unit, problem: data.gpsProblem })} /> : null}
-      <ActiveShiftCard />
-      <NewShiftButton />
+      <StartShiftActions />
       {data.currentVehicle ? (
         <Card>
           <ListRow
@@ -74,8 +74,7 @@ function DashboardContent({ data, onReload }: { data: DashboardData; onReload: (
       {data.goal ? <GoalProgressCard progress={data.goal} onOpenDetails={() => router.push('/goal')} /> : null}
       {data.topInsight ? <InsightCard insight={data.topInsight} /> : null}
       <PendingCard items={pendingItems(data)} />
-      <ProfitCard title={t('weekTitle')} summary={data.week} />
-      <ProfitCard title={t('monthTitle')} summary={data.month} />
+      <PeriodsCard week={data.week} month={data.month} />
     </>
   );
 }

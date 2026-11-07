@@ -44,5 +44,12 @@
     "reminder": "Lembrete: {{title}}",
     "backup": "Guarde seus dados também fora do celular.",
     "update": "Esta versão tem mais de um mês. Uma nova pode corrigir a leitura das ofertas."
+  },
+  "periodsTitle": "Semana e mês",
+  "periods": {
+    "week": "Nesta semana",
+    "month": "Neste mês",
+    "gross": "Faturou {{amount}}",
+    "time": "em {{duration}}"
   }
 }
