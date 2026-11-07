@@ -4,7 +4,7 @@ import { shiftRepository } from '@/data/repositories/shiftRepository';
 import { vehicleRepository } from '@/data/repositories/vehicleRepository';
 import { computeGoalProgress, requiredGrossForGoal, suggestOfferTargets } from '@/domain/goal/goal';
 import { summarizeShifts, withLooseExpenses } from '@/domain/shift/summary';
-import { fromISODate, monthBounds, monthKey, workDaysInMonth, workDaysLeft } from '@/shared/utils/dates';
+import { monthBounds, monthKey, weekdayOf, workDaysInMonth, workDaysLeft } from '@/shared/utils/dates';
 
 export async function loadGoalProgress(date: string) {
   const goal = await goalRepository.find(monthKey(date));
@@ -25,7 +25,7 @@ export async function loadGoalProgress(date: string) {
   const workDays = workDaysInMonth(date, goal.workWeekdays);
   const plannedKmPerDay = workDays > 0 ? plannedKm / workDays : 0;
   const daysLeft = workDaysLeft(date, goal.workWeekdays);
-  const todayIsWorkDay = goal.workWeekdays.includes(fromISODate(date).getDay());
+  const todayIsWorkDay = goal.workWeekdays.includes(weekdayOf(date));
   const requiredGrossCents = requiredGrossForGoal({
     desiredProfitCents: goal.desiredProfitCents,
     fixedMonthlyCents: costs?.fixedMonthly ?? 0,

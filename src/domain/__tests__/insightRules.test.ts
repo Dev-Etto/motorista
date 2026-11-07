@@ -1,4 +1,4 @@
-import { addDays, fromISODate, weekdayName } from '@/shared/utils/dates';
+import { addDays, weekdayName, weekdayOf } from '@/shared/utils/dates';
 import { bestWeekdayRule, realProfitRule } from '../insights/rules';
 import { ShiftFact } from '../insights/types';
 
@@ -21,7 +21,7 @@ const context = (shifts: ShiftFact[]) => ({ today: TODAY, shifts, costs: null, p
 describe('melhor dia nas últimas 4 semanas', () => {
   const weak = [shift(addDays(TODAY, -7), 2000), shift(addDays(TODAY, -14), 2000)];
   const strong = [shift(addDays(TODAY, -1), 9000), shift(addDays(TODAY, -8), 9000)];
-  const strongDay = weekdayName(fromISODate(addDays(TODAY, -1)).getDay());
+  const strongDay = weekdayName(weekdayOf(addDays(TODAY, -1)));
 
   it('considera só os 28 dias até hoje', () => {
     const outside = [shift(addDays(TODAY, -28), 900000), shift(addDays(TODAY, 7), 900000)];

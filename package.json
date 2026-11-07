@@ -7,6 +7,7 @@
   "main": "expo-router/entry",
   "dependencies": {
     "@react-native-community/datetimepicker": "9.2.1",
+    "currency.js": "2.0.4",
     "expo": "~58.0.23",
     "expo-asset": "~58.0.20",
     "expo-build-properties": "~58.0.12",
@@ -25,6 +26,7 @@
     "expo-status-bar": "~58.0.4",
     "expo-system-ui": "~58.0.7",
     "expo-task-manager": "~58.0.13",
+    "luxon": "3.7.2",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-native": "0.88.1",
@@ -37,6 +39,7 @@
   "devDependencies": {
     "@testing-library/react-native": "^14.1.0",
     "@types/jest": "30.0.0",
+    "@types/luxon": "3.7.1",
     "@types/node": "^26.6.6",
     "@types/react": "~19.3.0",
     "eslint": "^9.0.0",

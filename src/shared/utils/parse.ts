@@ -1,7 +1,6 @@
 import { MINUTES_PER_HOUR } from '@/shared/utils/time';
-import { parseDecimal } from './money';
+import { Money, parseDecimal } from './money';
 
-const CENTS_PER_REAL = 100;
 const LAST_HOUR = 23;
 
 const amountOrNull = (text: string) => {
@@ -10,8 +9,8 @@ const amountOrNull = (text: string) => {
 };
 
 export const centsOrNull = (text: string) => {
-  const value = amountOrNull(text);
-  return value === null ? null : Math.round(value * CENTS_PER_REAL);
+  const money = Money.parse(text);
+  return money === null || money.isNegative() ? null : money.wholeCents;
 };
 export const centsOrZero = (text: string) => centsOrNull(text) ?? 0;
 export const decimalOrZero = (text: string) => amountOrNull(text) ?? 0;

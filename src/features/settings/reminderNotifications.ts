@@ -1,15 +1,14 @@
 import { reminderRepository } from '@/data/repositories/reminderRepository';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
 import { cancelAllScheduled, cancelScheduled, ensureNotifications, scheduleAt, scheduleDaily } from '@/shared/platform/notifications';
-import { fromISODate } from '@/shared/utils/dates';
+import { toJsDate } from '@/shared/utils/dates';
 
 const REMINDER_HOUR = 8;
 
 export async function scheduleDateReminder(title: string, isoDate: string): Promise<string | null> {
   if (!(await ensureNotifications())) return null;
 
-  const date = fromISODate(isoDate);
-  date.setHours(REMINDER_HOUR, 0, 0, 0);
+  const date = toJsDate(isoDate, REMINDER_HOUR);
   if (date.getTime() <= Date.now()) return null;
 
   return scheduleAt({ title: 'Lembrete de manutenção', body: title }, date);

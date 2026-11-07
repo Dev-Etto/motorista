@@ -172,6 +172,27 @@ Tipos de teste:
 | R14.1 | `useShiftForm` usa `useFormFields` para os campos de texto e devolve só o que a tela usa | Jest |
 | R14.2 | `useCopilot` vira `useCopilotPreferences`, `useCopilotTests` e `useCopilotDiagnostics` | Jest |
 
+## R15. Dinheiro com biblioteca
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| R15.1 | `Money`, em `shared/utils/money.ts`, é uma classe imutável sobre o `currency.js` e a única implementação de aritmética, arredondamento, leitura e formatação de reais | Jest, Revisão |
+| R15.2 | `Money` aceita fração de centavo nas contas, como a taxa por km, e arredonda só ao formatar | Jest |
+| R15.3 | O formato continua `R$ 1.234,56`, com `-R$ 12,34` para negativo e `R$ 12` no valor inteiro | Jest |
+| R15.4 | A leitura de texto aceita `1.234,56`, `1.234`, `12,5`, `-1.234` e vírgula no final, como antes | Jest |
+| R15.5 | `formatBRL`, `centsToInput` e os helpers de formulário delegam para `Money`, sem conta própria | Revisão |
+| R15.6 | Banco, backup, fixtures e ponte com o Kotlin continuam em centavos | Jest |
+
+## R16. Datas com biblioteca
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| R16.1 | `shared/utils/dates.ts` usa o `DateTime` do Luxon, e nenhum outro arquivo faz conta com `Date` | Jest, Revisão |
+| R16.2 | A data guardada continua `AAAA-MM-DD`, no fuso do aparelho | Jest |
+| R16.3 | `fromISODate` sai. Quem precisava do dia da semana usa `weekdayOf`, quem precisava de intervalo usa `daysBetween`, e o seletor nativo usa `toJsDate` | Revisão |
+| R16.4 | Meses, semanas e o fim do mês continuam iguais, inclusive na troca de horário de verão | Jest |
+| R16.5 | `formatDate`, `formatMonth`, `formatDuration` e `formatClock` mantêm o texto de hoje | Jest |
+
 ## Plano
 
 Cada fase é um PR. Uma fase só começa com a anterior integrada e com `npm run typecheck`, `npm test`, `npm run lint` e os testes Kotlin passando.
@@ -259,11 +280,21 @@ Requisitos: R11, R12.1 a R12.3, R12.5, R13, R14.
 5. `copy.ts` por funcionalidade e constantes de tempo (R13).
 6. Dividir `useShiftForm` e `useCopilot` (R14).
 
+### Fase 8. Dinheiro e datas com biblioteca
+
+Requisitos: R15 e R16.
+
+1. Testes de `Money` e das datas com os formatos atuais, antes de trocar a implementação.
+2. `Money` sobre o `currency.js`, e os helpers passam a delegar para ela.
+3. `dates.ts` sobre o Luxon, com `weekdayOf`, `daysBetween` e `toJsDate`. `fromISODate` sai.
+4. Registrar em `docs/arquitetura.md`.
+
 ## Fora do escopo
 
 - Mudanças de comportamento visível, exceto mensagens de erro de carregamento e campos que deixam de ser apagados.
 - Novas funcionalidades.
 - Trocar `expo-sqlite` ou adotar ORM.
+- Trocar centavos por `Money` nos tipos do domínio e do banco. Isso mudaria o contrato com o backup e com o Kotlin, e fica para uma próxima versão.
 - Leitor de ofertas em TypeScript. O parser continua só no Kotlin.
 
 ## Pronto

@@ -1,26 +1,42 @@
-import { MINUTES_PER_HOUR, SECONDS_PER_HOUR, SECONDS_PER_MINUTE } from '@/shared/utils/time';
+import { DateTime, Duration } from 'luxon';
+import { MS_PER_SECOND } from '@/shared/utils/time';
 
-const pad = (n: number) => String(n).padStart(2, '0');
-
-export function toISODate(d: Date): string {
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-}
-
+const LOCALE = 'pt-BR';
+const ISO_DATE = 'yyyy-MM-dd';
 const NOON = 12;
+const DAYS_PER_WEEK = 7;
+const WEEKDAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
-function dateParts(iso: string): { year: number; month: number; day: number } {
-  const [year = 0, month = 1, day = 1] = iso.split('-').map(Number);
-  return { year, month, day };
+const dateOf = (iso: string) => DateTime.fromISO(iso, { locale: LOCALE }).set({ hour: NOON });
+const isoOf = (date: DateTime) => date.toFormat(ISO_DATE);
+
+export function toISODate(date: Date): string {
+  return isoOf(DateTime.fromJSDate(date));
 }
 
-export function fromISODate(iso: string): Date {
-  const { year, month, day } = dateParts(iso);
-  return new Date(year, month - 1, day, NOON);
+export function isoFromMillis(millis: number): string {
+  return isoOf(DateTime.fromMillis(millis));
+}
+
+export function hourOfMillis(millis: number): number {
+  return DateTime.fromMillis(millis).hour;
+}
+
+export function toJsDate(iso: string, hour = NOON): Date {
+  return dateOf(iso).set({ hour, minute: 0, second: 0, millisecond: 0 }).toJSDate();
+}
+
+export function weekdayOf(iso: string): number {
+  return dateOf(iso).weekday % DAYS_PER_WEEK;
+}
+
+export function daysBetween(from: string, to: string): number {
+  return Math.round(dateOf(to).diff(dateOf(from), 'days').days);
 }
 
 export function dayRange(iso: string): { from: number; to: number } {
-  const { year, month, day } = dateParts(iso);
-  return { from: new Date(year, month - 1, day).getTime(), to: new Date(year, month - 1, day + 1).getTime() };
+  const start = dateOf(iso).startOf('day');
+  return { from: start.toMillis(), to: start.plus({ days: 1 }).toMillis() };
 }
 
 export function monthKey(iso: string): string {
@@ -28,59 +44,43 @@ export function monthKey(iso: string): string {
 }
 
 export function monthBounds(iso: string): { start: string; end: string; days: number } {
-  const d = fromISODate(iso);
-  const days = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
-  const prefix = monthKey(iso);
-  return { start: `${prefix}-01`, end: `${prefix}-${pad(days)}`, days };
+  const date = dateOf(iso);
+  return { start: isoOf(date.startOf('month')), end: isoOf(date.endOf('month')), days: date.daysInMonth ?? 0 };
 }
 
 export function addDays(iso: string, delta: number): string {
-  const d = fromISODate(iso);
-  d.setDate(d.getDate() + delta);
-  return toISODate(d);
+  return isoOf(dateOf(iso).plus({ days: delta }));
 }
 
 export function addMonths(iso: string, delta: number): string {
-  const d = fromISODate(iso);
-  const target = new Date(d.getFullYear(), d.getMonth() + delta, 1, 12);
-  return toISODate(target);
+  return isoOf(dateOf(iso).startOf('month').plus({ months: delta }));
 }
 
 export function weekBounds(iso: string): { start: string; end: string } {
-  const day = fromISODate(iso).getDay();
-  const start = addDays(iso, -((day + 6) % 7));
-  return { start, end: addDays(start, 6) };
+  const start = dateOf(iso).startOf('week');
+  return { start: isoOf(start), end: isoOf(start.plus({ days: DAYS_PER_WEEK - 1 })) };
 }
-
-const WEEKDAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-const MONTHS = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 
 export function weekdayName(index: number): string {
   return WEEKDAYS[index] ?? '';
 }
 
 export function formatDate(iso: string): string {
-  const [y, m, d] = iso.split('-');
-  return `${d}/${m}/${y}`;
+  return dateOf(iso).toFormat('dd/MM/yyyy');
 }
 
 export function formatMonth(iso: string): string {
-  const d = fromISODate(iso);
-  return `${MONTHS[d.getMonth()]} de ${d.getFullYear()}`;
+  return dateOf(iso).toFormat("LLLL 'de' yyyy");
 }
 
 export function formatDuration(minutes: number): string {
-  const total = Math.max(0, Math.round(minutes));
-  const h = Math.floor(total / MINUTES_PER_HOUR);
-  const m = total % 60;
-  return h > 0 ? `${h}h${m > 0 ? ` ${pad(m)}min` : ''}` : `${m}min`;
+  const { hours, minutes: rest } = Duration.fromObject({ minutes: Math.max(0, Math.round(minutes)) }).shiftTo('hours', 'minutes');
+  if (hours === 0) return `${rest}min`;
+  return rest > 0 ? `${hours}h ${String(rest).padStart(2, '0')}min` : `${hours}h`;
 }
 
 export function formatClock(elapsedMs: number): string {
-  const totalSeconds = Math.max(0, Math.floor(elapsedMs / 1000));
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE);
-  return `${pad(hours)}:${pad(minutes)}:${pad(totalSeconds % 60)}`;
+  return Duration.fromMillis(Math.max(0, Math.floor(elapsedMs / MS_PER_SECOND) * MS_PER_SECOND)).toFormat('hh:mm:ss');
 }
 
 export type DayPeriod = 'madrugada' | 'manhã' | 'tarde' | 'noite';
@@ -92,23 +92,17 @@ export function dayPeriod(hour: number): DayPeriod {
   return 'noite';
 }
 
+export function datesInRange(start: string, end: string): string[] {
+  const count = daysBetween(start, end) + 1;
+  return Array.from({ length: Math.max(0, count) }, (_, index) => addDays(start, index));
+}
+
 export function workDaysLeft(todayISO: string, workWeekdays: number[]): number {
-  const { end } = monthBounds(todayISO);
-  let count = 0;
-  for (let cur = todayISO; cur <= end; cur = addDays(cur, 1)) {
-    if (workWeekdays.includes(fromISODate(cur).getDay())) count++;
-  }
-  return count;
+  return datesInRange(todayISO, monthBounds(todayISO).end).filter((date) => workWeekdays.includes(weekdayOf(date))).length;
 }
 
 export function workDaysInMonth(iso: string, workWeekdays: number[]): number {
   return workDaysLeft(monthBounds(iso).start, workWeekdays);
 }
 
-export function datesInRange(start: string, end: string): string[] {
-  const dates: string[] = [];
-  for (let cur = start; cur <= end; cur = addDays(cur, 1)) dates.push(cur);
-  return dates;
-}
-
-export const today = () => toISODate(new Date());
+export const today = () => isoOf(DateTime.local());

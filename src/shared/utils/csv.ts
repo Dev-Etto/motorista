@@ -1,3 +1,5 @@
+import { Money } from './money';
+
 const NUMERIC = /^-?\d+([.,]\d+)?$/;
 
 export function csvField(value: string | number | null | undefined): string {
@@ -11,6 +13,4 @@ export function toCsv(header: string[], rows: (string | number | null)[][]): str
   return '﻿' + [header, ...rows].map((row) => row.map(csvField).join(';')).join('\r\n');
 }
 
-export function centsToCsv(cents: number): string {
-  return (Math.round(cents) / 100).toFixed(2).replace('.', ',');
-}
+export const centsToCsv = (cents: number) => Money.fromCents(cents).toInput();

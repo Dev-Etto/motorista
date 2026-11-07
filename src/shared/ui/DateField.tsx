@@ -1,7 +1,7 @@
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import { MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@/shared/theme/theme';
-import { formatDate, fromISODate, toISODate } from '@/shared/utils/dates';
+import { formatDate, toISODate, toJsDate } from '@/shared/utils/dates';
 import { AppIcon } from './AppIcon';
 import { AppText } from './primitives';
 
@@ -17,7 +17,7 @@ interface DateFieldProps {
 
 export function DateField({ label, value, onChange, placeholder = 'Escolher data', minimumDate, maximumDate, clearable }: DateFieldProps) {
   const colors = useTheme();
-  const current = value ? fromISODate(value) : new Date();
+  const current = value ? toJsDate(value) : new Date();
 
   const openAndroid = () => {
     DateTimePickerAndroid.open({

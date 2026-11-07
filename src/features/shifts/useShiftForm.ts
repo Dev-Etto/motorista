@@ -8,7 +8,7 @@ import { KmEntryMode, kmFromEntry, ShiftFormError, validateShiftForm } from '@/d
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { useFormHydration } from '@/shared/hooks/useFormHydration';
-import { toISODate, today } from '@/shared/utils/dates';
+import { hourOfMillis, isoFromMillis, today } from '@/shared/utils/dates';
 import { centsToInput } from '@/shared/utils/money';
 import { centsOrZero, decimalOrNull, decimalToInput, hasInvalidHour, hasInvalidNumber, hoursToInput, intOrNull, parseHours } from '@/shared/utils/parse';
 import { MINUTES_PER_HOUR } from '@/shared/utils/time';
@@ -101,8 +101,8 @@ export function useShiftForm(shiftId?: number) {
   const applyLive = (timerMinutes: number, startedAt: number, measuredKm: number) => {
     setField('hours', hoursToInput(timerMinutes));
     if (startedAt > 0) {
-      setField('startHour', String(new Date(startedAt).getHours()));
-      setDate(toISODate(new Date(startedAt)));
+      setField('startHour', String(hourOfMillis(startedAt)));
+      setDate(isoFromMillis(startedAt));
     }
     if (measuredKm <= 0) return;
 

@@ -1,8 +1,8 @@
 import { computeShift } from '@/domain/shift/shift';
 import { totalsByPlatform } from '@/domain/shift/summary';
-import { addDays, dayPeriod, fromISODate, monthBounds, weekdayName } from '@/shared/utils/dates';
+import { addDays, dayPeriod, daysBetween, monthBounds, weekdayName, weekdayOf } from '@/shared/utils/dates';
 import { formatBRL, formatNumber } from '@/shared/utils/money';
-import { MINUTES_PER_HOUR, MS_PER_DAY } from '@/shared/utils/time';
+import { MINUTES_PER_HOUR } from '@/shared/utils/time';
 import { InsightRule, ShiftFact } from './types';
 
 const MIN_BUCKET_SHIFTS = 2;
@@ -57,7 +57,7 @@ export const realProfitRule: InsightRule = ({ shifts, looseExpenses = [] }) => {
 export const bestWeekdayRule: InsightRule = ({ shifts, today }) => {
   const cutoff = addDays(today, -(RECENT_DAYS - 1));
   const recent = shifts.filter((shift) => shift.date >= cutoff && shift.date <= today);
-  const ranked = rankByProfitPerHour(recent, (shift) => String(fromISODate(shift.date).getDay()));
+  const ranked = rankByProfitPerHour(recent, (shift) => String(weekdayOf(shift.date)));
   if (ranked.length < 2) return null;
 
   const [best] = ranked;
@@ -162,8 +162,7 @@ export const breakEvenRule: InsightRule = ({ shifts, costs, today }) => {
   const [firstDate] = shifts.map((shift) => shift.date).sort();
   if (!firstDate) return null;
 
-  const elapsedMs = fromISODate(today).getTime() - fromISODate(firstDate).getTime();
-  const spanDays = Math.max(1, Math.round(elapsedMs / MS_PER_DAY) + 1);
+  const spanDays = Math.max(1, daysBetween(firstDate, today) + 1);
   const daysPerMonth = Math.max(1, Math.round((workedDays / spanDays) * monthBounds(today).days));
   const kmPerDay = sumBy(shifts, (shift) => shift.km ?? 0) / workedDays;
   const breakEven = costs.fixedMonthly / daysPerMonth + kmPerDay * costs.variablePerKm;

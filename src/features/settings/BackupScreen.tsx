@@ -1,12 +1,12 @@
 import { TipBanner } from '@/features/tips';
 import { confirmAction } from '@/shared/platform/confirm';
 import { Button, Card, ListRow, Notice, Screen } from '@/shared/ui/primitives';
-import { formatDate, toISODate } from '@/shared/utils/dates';
+import { formatDate, isoFromMillis } from '@/shared/utils/dates';
 import { useBackup } from './useBackup';
 
 export default function BackupScreen() {
   const backup = useBackup();
-  const lastLabel = backup.lastBackupAt ? formatDate(toISODate(new Date(Number(backup.lastBackupAt)))) : 'Nunca';
+  const lastLabel = backup.lastBackupAt ? formatDate(isoFromMillis(Number(backup.lastBackupAt))) : 'Nunca';
 
   const confirmRestore = () => {
     confirmAction({

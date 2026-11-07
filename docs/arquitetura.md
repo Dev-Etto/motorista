@@ -62,7 +62,8 @@ app -> features -> application -> data -> domain -> shared/utils
 - Números com significado viram constantes nomeadas.
 - Telas usam componentes de `shared/ui`, nunca estilos de texto ou botão próprios.
 - Componente de tela não acessa o banco diretamente, salvo pelo hook da funcionalidade.
-- Dinheiro é guardado em centavos. Taxas por km podem ter fração de centavo.
+- Dinheiro é guardado em centavos. Taxas por km podem ter fração de centavo. Contas, leitura e formatação de reais passam pela classe `Money`.
+- Datas são guardadas como `AAAA-MM-DD`. Contas e formatação de datas ficam em `shared/utils/dates.ts`, sobre o Luxon.
 - Antes de concluir uma tarefa: `npm run typecheck`, `npm test` e `npm run lint`. `npm run format` aplica o Prettier.
 - O lint confere sem `any`, sem `else`, sem `if` dentro de `if`, profundidade máxima de 2 blocos, ordem dos imports e formatação.
 
@@ -237,4 +238,8 @@ app -> features -> application -> data -> domain -> shared/utils
 - **Constantes de tempo:** `shared/utils/time.ts` concentra `MS_PER_DAY`, `MINUTES_PER_HOUR`, `MONTHS_PER_YEAR` e as demais.
 - **Hooks do Copiloto separados:** `useCopilotStatus`, `useCopilotPreferences`, `useCopilotTests` e `useCopilotDiagnostics`. `useCopilot` só os compõe, e cada cartão recebe a parte que usa.
 - **Formulário da jornada:** os campos de texto ficam em `useFormFields`, e a jornada salva é preenchida por `useFormHydration`, sem efeito colateral dentro do loader.
+- **Dinheiro com `currency.js`:** `Money` é imutável e faz as contas com seis casas, para não perder a fração de centavo da taxa por km. Ela arredonda para centavos só ao formatar. `formatBRL`, `parseBRL`, `centsToInput` e `centsOrNull` são atalhos para `Money`.
+- **Centavos no contrato:** os tipos do domínio, o banco, o backup, as fixtures e a ponte com o Kotlin continuam em centavos inteiros. Trocar isso por `Money` mudaria o formato salvo e o contrato com o Kotlin.
+- **Datas com Luxon:** `DateTime` faz soma de dias e meses, início de semana e fim de mês no fuso do aparelho, inclusive na troca de horário de verão. `fromISODate` saiu: quem precisa do dia da semana usa `weekdayOf`, quem precisa de intervalo usa `daysBetween`, e o seletor nativo recebe `toJsDate`.
+- **Bibliotecas puras no domínio:** além do zod, `luxon` e `currency.js` podem ser usados em `domain` e `shared/utils`, porque não têm efeito colateral nem dependem de internet.
 
