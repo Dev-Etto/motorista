@@ -94,6 +94,43 @@ describe('mensagens de erro do formulário da jornada', () => {
     expect(describeFormError('odometer-order', t, format)).toBe('O odômetro final precisa ser maior que o inicial.');
   });
 
+  describe('erros no próprio campo', () => {
+    beforeEach(() => jest.mocked(shiftRepository.findById).mockResolvedValue(null as never));
+
+    it('horas inválidas aparecem no campo de horas, e não no aviso geral', async () => {
+      const { result } = await renderHook(() => useShiftForm());
+      await act(async () => result.current.bind('hours').onChangeText('08:75'));
+      await act(async () => result.current.setEarning(1, '100'));
+      await act(async () => {
+        await result.current.save();
+      });
+
+      expect(result.current.fieldError('hours')).toBe('Use horas e minutos, como 08:30.');
+      expect(result.current.error).toBeNull();
+    });
+
+    it('hora de início fora de 0 a 23 aparece no próprio campo', async () => {
+      const { result } = await renderHook(() => useShiftForm());
+      await act(async () => result.current.bind('startHour').onChangeText('25'));
+      await act(async () => result.current.setEarning(1, '100'));
+      await act(async () => {
+        await result.current.save();
+      });
+
+      expect(result.current.fieldError('startHour')).toBe('A hora de início vai de 0 a 23.');
+    });
+
+    it('jornada sem ganho fica no aviso geral', async () => {
+      const { result } = await renderHook(() => useShiftForm());
+      await act(async () => {
+        await result.current.save();
+      });
+
+      expect(result.current.error).toBe('Informe o ganho de pelo menos uma plataforma.');
+      expect(result.current.fieldError('hours')).toBeNull();
+    });
+  });
+
   describe('veículo da jornada', () => {
     const CAR = { id: 1, name: 'Carro', kind: 'car', fuel: 'gasoline' };
     const MOTO = { id: 2, name: 'Moto', kind: 'motorcycle', fuel: 'gasoline' };

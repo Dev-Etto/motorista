@@ -4,6 +4,8 @@
     "paused": "Jornada en pausa"
   },
   "form": {
+    "newTitle": "Nueva jornada",
+    "editTitle": "Editar jornada",
     "tip_km": "Regístrala con el carro detenido. Con las ganancias, los km y las horas ya basta para ver la ganancia.",
     "tip_mi": "Regístrala con el carro detenido. Con las ganancias, las millas y las horas ya basta para ver la ganancia.",
     "measurePending_km": "Tienes una medición en curso. Toca Usar en el registro para llevar el tiempo y los km, o descarta la medición.",
@@ -30,6 +32,7 @@
     "tripsLabel": "Viajes",
     "saveButton": "Guardar jornada",
     "errors": {
+      "invalidHours": "Usa horas y minutos, como 08:30.",
       "invalidStartHour": "La hora de inicio va de 0 a 23.",
       "tooLong": "Una jornada dura como máximo 24 horas. Revisa las horas trabajadas.",
       "noEarnings": "Indica la ganancia de al menos una plataforma.",
@@ -69,6 +72,7 @@
     "notFoundTitle": "Jornada no encontrada",
     "notFoundMessage": "Puede que se haya eliminado.",
     "deleteTitle": "¿Eliminar la jornada?",
+    "deleteMessage": "Se eliminará la jornada del {{date}}, con {{value}} de ganancias. Esta acción no se puede deshacer.",
     "title": "Detalles",
     "time": "Tiempo",
     "distance": "Distancia",

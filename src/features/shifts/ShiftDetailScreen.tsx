@@ -43,7 +43,7 @@ function ShiftDetailContent({ shiftId, detail }: { shiftId: number; detail: Shif
   const confirmDelete = () => {
     confirmAction({
       title: t('detail.deleteTitle'),
-      message: t('common:irreversible'),
+      message: t('detail.deleteMessage', { date: format.date(shift.date), value: format.money(result.grossCents) }),
       actionLabel: t('common:actions.delete'),
       onConfirm: async () => {
         await removeShift(shiftId);

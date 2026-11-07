@@ -79,7 +79,7 @@ export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
         <AppText tone="muted">{t('quote.intro')}</AppText>
         <NumberField label={t('quote.toPassenger')} suffix={format.distanceUnit} {...bind('kmToPassenger')} />
         <NumberField label={t('quote.trip')} suffix={format.distanceUnit} {...bind('kmTrip')} />
-        <IntegerField label={t('quote.time')} suffix="min" hint={t('quote.timeHint')} {...bind('minutes')} />
+        <IntegerField label={t('quote.time')} suffix={t('common:unit.minutes')} hint={t('quote.timeHint')} {...bind('minutes')} />
       </Card>
       <Collapsible title={t('quote.moreOptions')}>
         <NumberField label={t('quote.return')} suffix={format.distanceUnit} hint={t('quote.returnHint')} {...bind('kmReturn')} />

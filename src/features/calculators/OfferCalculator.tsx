@@ -19,7 +19,7 @@ const BELOW_COST_SCORE = 2;
 export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
   const { bind, values } = useFormFields({ value: '', km: '', minutes: '' });
   const targets = useOfferTargets();
-  const { t } = useTranslation('calculators');
+  const { t } = useTranslation(['calculators', 'common']);
   const { t: tOffers } = useTranslation('offers');
   const format = useFormat();
 
@@ -36,7 +36,7 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
         <AppText tone="muted">{t('offer.intro')}</AppText>
         <MoneyField label={t('offer.value')} {...bind('value')} />
         <NumberField label={t('offer.distance')} suffix={format.distanceUnit} hint={t('offer.distanceHint')} {...bind('km')} />
-        <IntegerField label={t('offer.time')} suffix="min" {...bind('minutes')} />
+        <IntegerField label={t('offer.time')} suffix={t('common:unit.minutes')} {...bind('minutes')} />
       </Card>
       {ready ? (
         <Card>

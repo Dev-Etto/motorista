@@ -6,7 +6,7 @@ import { shiftRepository } from '@data/repositories/shiftRepository';
 import { vehicleRepository } from '@data/repositories/vehicleRepository';
 import { countsAgainstProfit, type ExpenseCategory } from '@domain/expense/expense';
 import { computeShift } from '@domain/shift/shift';
-import { KmEntryMode, kmFromEntry, ShiftFormError, validateShiftForm } from '@domain/shift/shiftForm';
+import { fieldOfError, KmEntryMode, kmFromEntry, ShiftFormError, ShiftFormField, validateShiftForm } from '@domain/shift/shiftForm';
 import { useAsyncData } from '@shared/hooks/useAsyncData';
 import { useFormFields } from '@shared/hooks/useFormFields';
 import { useFormHydration } from '@shared/hooks/useFormHydration';
@@ -22,6 +22,7 @@ const EXAMPLE_CENTS = 15050;
 export function describeFormError(error: ShiftFormError, t: TFunction<['shifts', 'common']>, format: Formatter): string {
   const messages: Record<ShiftFormError, string> = {
     'invalid-number': t('common:invalidNumber', { example: format.moneyInput(EXAMPLE_CENTS) }),
+    'invalid-hours': t('form.errors.invalidHours'),
     'invalid-start-hour': t('form.errors.invalidStartHour'),
     'too-long': t('form.errors.tooLong'),
     'no-earnings': t('form.errors.noEarnings'),
@@ -73,7 +74,7 @@ export function useShiftForm(shiftId?: number) {
   const { values: fields, setValues: setFields, setField, bind } = useFormFields(EMPTY_FIELDS);
   const [earnings, setEarnings] = useState<Record<number, string>>({});
   const [expenses, setExpenses] = useState<Partial<Record<ExpenseCategory, string>>>({});
-  const [error, setError] = useState<string | null>(null);
+  const [problem, setProblem] = useState<ShiftFormError | null>(null);
 
   const [chosenVehicleId, setVehicleId] = useState<number | null>(null);
   const { data } = useAsyncData(() => loadFormData(shiftId), [shiftId]);
@@ -145,8 +146,9 @@ export function useShiftForm(shiftId?: number) {
   ];
 
   const save = async (): Promise<boolean> => {
-    const problem = validateShiftForm({
-      hasInvalidNumber: typedNumbers.some(format.hasInvalidNumber) || (fields.hours.trim() !== '' && format.parseHours(fields.hours) === null),
+    const found = validateShiftForm({
+      hasInvalidNumber: typedNumbers.some(format.hasInvalidNumber),
+      hasInvalidHours: fields.hours.trim() !== '' && format.parseHours(fields.hours) === null,
       hasInvalidHour: format.hasInvalidHour(fields.startHour),
       minutes,
       grossCents,
@@ -154,10 +156,8 @@ export function useShiftForm(shiftId?: number) {
       km,
       odometerTyped: Boolean(fields.odometerStart || fields.odometerEnd),
     });
-    if (problem) {
-      setError(describeFormError(problem, t, format));
-      return false;
-    }
+    setProblem(found);
+    if (found) return false;
 
     await shiftRepository.save({
       id: shiftId,
@@ -195,7 +195,8 @@ export function useShiftForm(shiftId?: number) {
     expenses,
     setExpense: (category: ExpenseCategory, text: string) => setExpenses((current) => ({ ...current, [category]: text })),
     preview,
-    error,
+    error: problem && !fieldOfError(problem) ? describeFormError(problem, t, format) : null,
+    fieldError: (field: ShiftFormField) => (problem && fieldOfError(problem) === field ? describeFormError(problem, t, format) : null),
     applyLive,
     save,
   };

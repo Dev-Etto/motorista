@@ -4,7 +4,18 @@ export const MAX_SHIFT_MINUTES = HOURS_PER_DAY * MINUTES_PER_HOUR;
 
 export type KmEntryMode = 'manual' | 'odometer';
 
-export type ShiftFormError = 'invalid-number' | 'invalid-start-hour' | 'too-long' | 'no-earnings' | 'odometer-order';
+export type ShiftFormError = 'invalid-number' | 'invalid-hours' | 'invalid-start-hour' | 'too-long' | 'no-earnings' | 'odometer-order';
+
+export type ShiftFormField = 'hours' | 'startHour' | 'odometerEnd';
+
+const FIELD_OF_ERROR: Partial<Record<ShiftFormError, ShiftFormField>> = {
+  'invalid-hours': 'hours',
+  'too-long': 'hours',
+  'invalid-start-hour': 'startHour',
+  'odometer-order': 'odometerEnd',
+};
+
+export const fieldOfError = (error: ShiftFormError): ShiftFormField | null => FIELD_OF_ERROR[error] ?? null;
 
 export interface KmEntry {
   mode: KmEntryMode;
@@ -15,6 +26,7 @@ export interface KmEntry {
 
 export interface ShiftFormCheck {
   hasInvalidNumber: boolean;
+  hasInvalidHours: boolean;
   hasInvalidHour: boolean;
   minutes: number;
   grossCents: number;
@@ -32,6 +44,7 @@ export function kmFromEntry(entry: KmEntry): number | null {
 }
 
 export function validateShiftForm(check: ShiftFormCheck): ShiftFormError | null {
+  if (check.hasInvalidHours) return 'invalid-hours';
   if (check.hasInvalidNumber) return 'invalid-number';
   if (check.hasInvalidHour) return 'invalid-start-hour';
   if (check.minutes > MAX_SHIFT_MINUTES) return 'too-long';

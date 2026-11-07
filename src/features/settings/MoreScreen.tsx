@@ -5,8 +5,8 @@ import { Linking } from 'react-native';
 import { DONATION_URL, RELEASES_URL, REPOSITORY_URL } from '@config/app';
 import { useFormat } from '@shared/i18n/format';
 import { Card, ListRow, Screen } from '@shared/ui/primitives';
-import { AppearanceCard } from './AppearanceCard';
 import { MORE_SECTIONS } from './moreMenu';
+import { ThemeChooser } from './ThemeChooser';
 
 export default function MoreScreen() {
   const router = useRouter();
@@ -15,9 +15,9 @@ export default function MoreScreen() {
 
   return (
     <Screen>
-      <AppearanceCard />
       {MORE_SECTIONS.map((section) => (
         <Card key={section.id} title={t(`more.section.${section.id}`)}>
+          {section.id === 'preferences' ? <ThemeChooser /> : null}
           {section.items.map((item) => (
             <ListRow
               key={item.id}

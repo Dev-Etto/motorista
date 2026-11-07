@@ -22,13 +22,10 @@
     "costToday_km": "Hoje, cada km custa cerca de {{cost}}.",
     "costToday_mi": "Hoje, cada milha custa cerca de {{cost}}."
   },
-  "reminder": "Lembrete: {{title}}",
   "backup": {
-    "message": "Que tal fazer um backup? Assim seus dados ficam guardados também fora do celular.",
     "action": "Fazer backup"
   },
   "update": {
-    "message": "Esta versão do app já tem mais de um mês. Uma versão nova pode corrigir a leitura das ofertas.",
     "action": "Verificar atualização"
   },
   "profitCard": {
@@ -41,5 +38,11 @@
     "partial_km_other": "{{count}} jornadas sem km ou sem custo: o custo do veículo não foi descontado delas.",
     "partial_mi_one": "{{count}} jornada sem milhas ou sem custo: o custo do veículo não foi descontado dela.",
     "partial_mi_other": "{{count}} jornadas sem milhas ou sem custo: o custo do veículo não foi descontado delas."
+  },
+  "pending": {
+    "title": "Pendências",
+    "reminder": "Lembrete: {{title}}",
+    "backup": "Guarde seus dados também fora do celular.",
+    "update": "Esta versão tem mais de um mês. Uma nova pode corrigir a leitura das ofertas."
   }
 }

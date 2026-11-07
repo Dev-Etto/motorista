@@ -36,7 +36,8 @@
   "invalidNumber": "Revisa los números que escribiste. Usa solo números, como {{example}}.",
   "unit": {
     "km": "km",
-    "mi": "mi"
+    "mi": "mi",
+    "minutes": "min"
   },
   "screens": {
     "vehicles": "Vehículos",

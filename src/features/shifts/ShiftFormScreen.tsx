@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
@@ -59,6 +59,7 @@ export default function ShiftFormScreen() {
 
   return (
     <Screen>
+      <Stack.Screen options={{ title: id ? t('form.editTitle') : t('form.newTitle') }} />
       <TipBanner id="shift" message={t('form.tip', { context: format.distanceUnit })} />
       {id ? null : <LiveTrackingCard live={live} />}
 
@@ -75,7 +76,7 @@ export default function ShiftFormScreen() {
       </Card>
 
       <Card title={t('form.timeAndDistance')}>
-        <DurationField label={t('form.hoursLabel')} {...form.bind('hours')} hint={t('form.hoursHint')} />
+        <DurationField label={t('form.hoursLabel')} {...form.bind('hours')} hint={t('form.hoursHint')} error={form.fieldError('hours')} />
         <Segmented value={form.kmMode} options={kmOptions} onChange={form.setKmMode} />
         {form.kmMode === 'manual' ? (
           <NumberField
@@ -87,7 +88,7 @@ export default function ShiftFormScreen() {
         ) : (
           <>
             <NumberField label={t('form.odometerStart')} {...form.bind('odometerStart')} suffix={format.distanceUnit} />
-            <NumberField label={t('form.odometerEnd')} {...form.bind('odometerEnd')} suffix={format.distanceUnit} />
+            <NumberField label={t('form.odometerEnd')} {...form.bind('odometerEnd')} suffix={format.distanceUnit} error={form.fieldError('odometerEnd')} />
           </>
         )}
       </Card>
@@ -114,8 +115,15 @@ export default function ShiftFormScreen() {
         ))}
       </Collapsible>
 
-      <Collapsible title={t('form.moreDetails')}>
-        <IntegerField label={t('form.startHourLabel')} {...form.bind('startHour')} maxDigits={2} placeholder="8" hint={t('form.startHourHint')} />
+      <Collapsible title={t('form.moreDetails')} forceOpen={form.fieldError('startHour') !== null}>
+        <IntegerField
+          label={t('form.startHourLabel')}
+          {...form.bind('startHour')}
+          maxDigits={2}
+          placeholder="8"
+          hint={t('form.startHourHint')}
+          error={form.fieldError('startHour')}
+        />
         <IntegerField label={t('form.tripsLabel')} {...form.bind('trips')} />
       </Collapsible>
 

@@ -93,10 +93,10 @@ A auditoria da 0.11.0 listou 25 problemas. Esta etapa resolve os que o motorista
 
 | ID | Critério de aceite | Teste |
 | --- | --- | --- |
-| C2.1 | A data fica no primeiro card, antes de horas e distância | Manual |
+| C2.1 | A data fica no primeiro card, antes de horas e distância, junto da escolha do veículo | Manual |
 | C2.2 | Na edição, o título é "Editar jornada" | Manual |
-| C2.3 | Erros de hora de início, horas trabalhadas e odômetro aparecem embaixo do próprio campo | Jest |
-| C2.4 | A confirmação de excluir uma jornada diz a data e o valor dela | Jest |
+| C2.3 | Erros de hora de início, horas trabalhadas e odômetro aparecem embaixo do próprio campo. A seção recolhida que tem o campo com erro se abre sozinha | Jest |
+| C2.4 | A confirmação de excluir uma jornada diz a data e o valor dela | Revisão |
 
 ### C3. Formulário de despesa
 
