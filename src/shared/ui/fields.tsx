@@ -36,7 +36,8 @@ export function TextField({
   maxLength,
 }: TextFieldProps) {
   const colors = useTheme();
-  const borderColor = error ? colors.negative : colors.border;
+  const borderColor = error ? colors.negative : colors.borderStrong;
+  const spokenLabel = suffix ? `${label}, ${suffix}` : label;
 
   return (
     <View style={styles.field}>
@@ -48,7 +49,8 @@ export function TextField({
       <View style={[styles.input, { backgroundColor: colors.surface, borderColor }]}>
         {prefix ? <AppText tone="muted">{prefix}</AppText> : null}
         <TextInput
-          accessibilityLabel={label}
+          accessibilityLabel={spokenLabel}
+          accessibilityHint={error ?? hint}
           value={value}
           onChangeText={onChangeText}
           onBlur={onBlur}
@@ -64,7 +66,7 @@ export function TextField({
         {suffix ? <AppText tone="muted">{suffix}</AppText> : null}
       </View>
       {error ? (
-        <AppText variant="caption" tone="negative">
+        <AppText variant="caption" tone="negative" accessibilityLiveRegion="polite">
           {error}
         </AppText>
       ) : null}

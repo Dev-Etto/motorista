@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { spacing, useTheme } from '@shared/theme/theme';
+import { MIN_TOUCH_TARGET, spacing, useTheme } from '@shared/theme/theme';
 import { AppIcon } from './AppIcon';
 import { AppText } from './primitives';
 
@@ -23,7 +23,7 @@ export function LearnMore({ title, children }: { title: string; children: ReactN
 
 const styles = StyleSheet.create({
   container: { gap: spacing.sm },
-  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, minHeight: 40 },
+  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, minHeight: MIN_TOUCH_TARGET },
   title: { flex: 1 },
   body: { gap: spacing.sm },
 });

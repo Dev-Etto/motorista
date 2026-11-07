@@ -13,7 +13,9 @@
   "chart": {
     "byMonth": "Profit by month",
     "byDay": "Profit by day",
-    "accessibilityLabel": "Profit for the period: {{amount}}"
+    "accessibilityLabel": "Profit for the period: {{amount}}",
+    "showData": "See the chart data",
+    "dayRow": "Day {{day}}"
   },
   "monthClose": {
     "title": "Closed month",

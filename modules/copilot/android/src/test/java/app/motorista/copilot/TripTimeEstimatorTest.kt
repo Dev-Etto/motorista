@@ -51,6 +51,15 @@ class TripTimeEstimatorTest {
   }
 
   @Test
+  fun cartaoTemUmaDescricaoSemSetas() {
+    val result = OfferEvaluator.evaluate(ParsedOffer(1300, 4.3, 12), targets, "inDrive")
+    val description = format.cardDescription(result)
+    assertTrue(description.startsWith("inDrive"))
+    assertTrue(description.contains("R$ 13,00"))
+    assertFalse(description.contains("▲") || description.contains("▼") || description.contains("\n"))
+  }
+
+  @Test
   fun tempoLidoNaoTemTil() {
     val result = OfferEvaluator.evaluate(ParsedOffer(1300, 4.3, 12), targets, "inDrive")
     assertEquals("4,3 km • 12 min", format.distanceAndTime(result))

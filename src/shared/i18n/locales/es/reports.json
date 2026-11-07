@@ -13,7 +13,9 @@
   "chart": {
     "byMonth": "Ganancia por mes",
     "byDay": "Ganancia por día",
-    "accessibilityLabel": "Ganancia en el período: {{amount}}"
+    "accessibilityLabel": "Ganancia en el período: {{amount}}",
+    "showData": "Ver los datos del gráfico",
+    "dayRow": "Día {{day}}"
   },
   "monthClose": {
     "title": "Mes cerrado",

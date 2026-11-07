@@ -1,6 +1,6 @@
-import { useSyncExternalStore } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Modal, Pressable, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, Modal, Pressable, StyleSheet, View } from 'react-native';
 import { radius, spacing, useTheme } from '@shared/theme/theme';
 import { reportError } from '@shared/utils/reportError';
 import { closeDialog, currentDialog, DialogAction, subscribeDialog } from './dialog';
@@ -20,12 +20,24 @@ export function DialogHost() {
   const { t } = useTranslation();
   const inRow = (dialog?.actions.length ?? 0) <= ROW_LIMIT;
 
+  useEffect(() => {
+    if (!dialog) return;
+    AccessibilityInfo.announceForAccessibility([dialog.title, dialog.message].filter(Boolean).join('. '));
+  }, [dialog]);
+
   return (
     <Modal visible={dialog !== null} transparent animationType="fade" statusBarTranslucent onRequestClose={closeDialog}>
-      <Pressable accessibilityLabel={t('dialog.dismiss')} onPress={closeDialog} style={[styles.backdrop, { backgroundColor: colors.backdrop }]}>
+      <View style={[styles.backdrop, { backgroundColor: colors.backdrop }]}>
+        <Pressable
+          accessible={false}
+          importantForAccessibility="no"
+          accessibilityLabel={t('dialog.dismiss')}
+          onPress={closeDialog}
+          style={StyleSheet.absoluteFill}
+        />
         {dialog ? (
-          <Pressable accessibilityRole="alert" accessibilityViewIsModal style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <AppText variant="subtitle" bold>
+          <View accessibilityViewIsModal style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <AppText variant="subtitle" bold accessibilityRole="header">
               {dialog.title}
             </AppText>
             {dialog.message ? <AppText tone="muted">{dialog.message}</AppText> : null}
@@ -36,9 +48,9 @@ export function DialogHost() {
                 </View>
               ))}
             </View>
-          </Pressable>
+          </View>
         ) : null}
-      </Pressable>
+      </View>
     </Modal>
   );
 }

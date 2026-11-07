@@ -17,7 +17,8 @@
   },
   "row": {
     "distanceWithTime": "{{distance}} • {{minutes}} min",
-    "distanceWithEstimatedTime": "{{distance}} • ~{{minutes}} min"
+    "distanceWithEstimatedTime": "{{distance}} • ~{{minutes}} min",
+    "scoreSpoken": "score {{score}}"
   },
   "estimate": {
     "title": "Estimated earnings",
