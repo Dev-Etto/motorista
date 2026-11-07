@@ -89,14 +89,17 @@ O Copiloto, principal diferencial do app, fica dentro de Mais, e a calculadora o
 | F2.2.3 | Mostra o resumo dos mínimos por corrida | Manual |
 | F2.2.4 | Ferramentas: "Avaliar uma oferta" e "Orçamento de corrida particular" abrem a calculadora no modo certo | Jest |
 
-### F2.3 Barra da jornada
+### F2.3 Jornada em andamento
+
+A primeira versão tinha uma barra acima das abas. Ela foi trocada por uma notificação, a pedido do dono do produto.
 
 | ID | Critério de aceite | Teste |
 | --- | --- | --- |
-| F2.3.1 | Com a jornada iniciada, uma barra acima das abas mostra o estado, o tempo e os km medidos | Jest |
-| F2.3.2 | A barra pausa e retoma a jornada, junto com o GPS, sem abrir o formulário | Jest |
-| F2.3.3 | "Encerrar" abre o encerramento, e tocar no resto da barra abre a medição | Jest |
-| F2.3.4 | Sem jornada iniciada, a barra não aparece | Jest |
+| F2.3.1 | Com a jornada iniciada, uma notificação fixa mostra o estado e o cronômetro. Pausada, mostra o tempo parado | Manual |
+| F2.3.2 | A notificação pausa e retoma a jornada sem abrir o app | Manual |
+| F2.3.3 | "Encerrar" abre o encerramento, e tocar na notificação abre a medição | Manual |
+| F2.3.4 | Sem jornada iniciada, a notificação some | Manual |
+| F2.3.5 | No app, o Início mostra um card da jornada em andamento, com o tempo, os km, pausar ou retomar e encerrar | Jest |
 
 ### F2.4 Mais
 
@@ -114,7 +117,7 @@ O Início repete o cronômetro que agora está na barra da jornada. Para começa
 | ID | Critério de aceite | Teste |
 | --- | --- | --- |
 | F3.1.1 | Sem jornada iniciada, a ação principal é "Iniciar jornada": liga o cronômetro e, se a medição por GPS estiver ligada, o GPS, sem abrir o formulário. "Registrar jornada passada" abre o formulário | Jest |
-| F3.1.2 | Com jornada iniciada, o Início e Jornadas não repetem o cronômetro. O andamento fica na barra da jornada | Jest |
+| F3.1.2 | Com jornada iniciada, os botões de iniciar dão lugar ao card da jornada em andamento | Jest |
 | F3.1.3 | Lucro zero aparece em tom neutro, não em verde | Jest |
 | F3.1.4 | Semana e mês ficam num card só, com lucro, faturamento e tempo de cada período | Manual |
 | F3.1.5 | Sem acessibilidade concedida, o próximo passo depois do veículo é "Configurar o Copiloto", que leva à configuração guiada | Jest |
@@ -131,7 +134,7 @@ O Início repete o cronômetro que agora está na barra da jornada. Para começa
 
 | ID | Critério de aceite | Teste |
 | --- | --- | --- |
-| F3.3.1 | Com a jornada aberta há 14 h ou mais, a barra da jornada avisa, e o card de medição pergunta "Que horas você parou?", com a hora sugerida pelo início mais as horas por dia da meta, ou 8 h. "Usar no registro" usa as horas até esse horário e pede para conferir os km | Jest |
+| F3.3.1 | Com a jornada aberta há 14 h ou mais, o card da jornada avisa, e o card de medição pergunta "Que horas você parou?", com a hora sugerida pelo início mais as horas por dia da meta, ou 8 h. "Usar no registro" usa as horas até esse horário e pede para conferir os km | Jest |
 | F3.3.2 | A notificação de jornada esquecida abre o encerramento da jornada | Manual |
 | F3.3.3 | Salvar uma jornada nova abre o detalhe dela | Jest |
 

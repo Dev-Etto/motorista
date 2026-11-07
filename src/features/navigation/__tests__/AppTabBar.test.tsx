@@ -5,7 +5,6 @@ import { TABS } from '@features/navigation/tabs';
 
 const mockUnseen = { count: 0 };
 
-jest.mock('@features/navigation/ShiftBar', () => ({ ShiftBar: () => null }));
 jest.mock('@features/navigation/useUnseenOffers', () => ({ useUnseenOffers: () => mockUnseen.count }));
 
 const routes = TABS.map((tab) => ({ key: `${tab.name}-key`, name: tab.name, params: undefined }));

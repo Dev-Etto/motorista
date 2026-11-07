@@ -79,4 +79,6 @@
   <string name="panel_handle_description">Motorista, %1$s, %2$s</string>
   <string name="panel_state_open">Aberto</string>
   <string name="panel_state_closed">Fechado</string>
+  <string name="shift_channel_name">Jornada em andamento</string>
+  <string name="shift_finish">Encerrar</string>
 </resources>

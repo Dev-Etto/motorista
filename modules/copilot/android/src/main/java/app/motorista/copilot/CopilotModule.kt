@@ -97,6 +97,7 @@ class CopilotModule : Module() {
     }
     Function("setAppInForeground") { value: Boolean ->
       Handler(Looper.getMainLooper()).post { FloatingTimerService.setAppInForeground(value) }
+      ShiftTimer(context).refreshNotification()
     }
     Function("stopFloating") { context.stopService(Intent(context, FloatingTimerService::class.java)) }
   }
