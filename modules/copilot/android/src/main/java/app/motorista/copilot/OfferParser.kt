@@ -2,7 +2,14 @@ package app.motorista.copilot
 
 import kotlin.math.abs
 
-data class ParsedOffer(val valueCents: Long, val km: Double, val minutes: Int, val passengerRating: Double? = null, val legs: Int = 1)
+data class ParsedOffer(
+  val valueCents: Long,
+  val km: Double,
+  val minutes: Int,
+  val passengerRating: Double? = null,
+  val legs: Int = 1,
+  val minutesEstimated: Boolean = false,
+)
 
 private data class RouteLeg(val minutes: Int, val km: Double)
 

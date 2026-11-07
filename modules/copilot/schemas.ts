@@ -8,6 +8,7 @@ export const offerHistoryEntrySchema = z.object({
   valueCents: z.number(),
   km: z.number(),
   minutes: z.number(),
+  minutesEstimated: z.boolean().optional(),
   perKmCents: z.number(),
   perHourCents: z.number(),
   profitCents: z.number().optional(),

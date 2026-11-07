@@ -12,9 +12,14 @@ class CopilotStore private constructor(private val context: Context) {
   @Volatile
   private var cachedPreferences: Pair<String?, CopilotPreferences>? = null
 
+  @Volatile
+  var tripSpeedKmh: Double = TripTimeEstimator.DEFAULT_KMH
+    private set
+
   init {
     if (prefs.contains(KEY_LEGACY_HISTORY)) prefs.edit().remove(KEY_LEGACY_HISTORY).apply()
     migrateHistoryFromPreferences()
+    refreshTripSpeed()
   }
 
   var enabled: Boolean
@@ -73,15 +78,18 @@ class CopilotStore private constructor(private val context: Context) {
   fun replaceHistory(json: String) {
     val entries = runCatching { JSONArray(json) }.getOrNull() ?: return
     log.replaceAll(entries)
+    refreshTripSpeed()
   }
 
   fun clearHistory() {
     log.clear()
     prefs.edit().remove(KEY_FAILED_READS).apply()
+    refreshTripSpeed()
   }
 
   fun record(evaluation: OfferEvaluation, source: String, timestamp: Long): Long {
     log.insert(toJson(evaluation, source, timestamp), timestamp - RETENTION_MS)
+    refreshTripSpeed()
     return timestamp
   }
 
@@ -90,7 +98,18 @@ class CopilotStore private constructor(private val context: Context) {
     if (outcome.counterCents == null) entry.remove("counterCents") else entry.put("counterCents", outcome.counterCents)
   }
 
-  fun refine(offerId: Long, evaluation: OfferEvaluation) = log.update(offerId) { entry -> putEvaluation(entry, evaluation) }
+  fun refine(offerId: Long, evaluation: OfferEvaluation) {
+    log.update(offerId) { entry -> putEvaluation(entry, evaluation) }
+    refreshTripSpeed()
+  }
+
+  private fun refreshTripSpeed() {
+    val entries = runCatching { JSONArray(log.recent(SPEED_SAMPLE_LIMIT)) }.getOrNull() ?: return
+    val samples = (0 until entries.length()).map(entries::getJSONObject)
+      .filterNot { it.optBoolean(KEY_MINUTES_ESTIMATED) }
+      .map { TripSample(it.optDouble("km", 0.0), it.optInt("minutes", 0)) }
+    tripSpeedKmh = TripTimeEstimator.speedKmh(samples)
+  }
 
   private fun toJson(evaluation: OfferEvaluation, source: String, timestamp: Long): JSONObject {
     val json = JSONObject()
@@ -108,6 +127,7 @@ class CopilotStore private constructor(private val context: Context) {
       .put("perKmCents", evaluation.perKmCents)
       .put("perHourCents", evaluation.perHourCents)
       .put("color", evaluation.color.id)
+    if (evaluation.offer.minutesEstimated) json.put(KEY_MINUTES_ESTIMATED, true) else json.remove(KEY_MINUTES_ESTIMATED)
     evaluation.score?.let { json.put("score", it) }
     val profit = evaluation.profitCents ?: return json
     return json.put("profitCents", profit)
@@ -132,6 +152,8 @@ class CopilotStore private constructor(private val context: Context) {
     private const val KEY_FAILED_READS = "failed_reads"
     private const val KEY_CARD_X = "card_x"
     private const val KEY_CARD_Y = "card_y"
+    private const val KEY_MINUTES_ESTIMATED = "minutesEstimated"
+    private const val SPEED_SAMPLE_LIMIT = 200
     private const val RETENTION_MS = 365L * 24 * 60 * 60 * 1000
   }
 }

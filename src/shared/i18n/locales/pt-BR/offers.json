@@ -16,7 +16,8 @@
     "unanswered": "Sem resposta"
   },
   "row": {
-    "distanceWithTime": "{{distance}} • {{minutes}} min"
+    "distanceWithTime": "{{distance}} • {{minutes}} min",
+    "distanceWithEstimatedTime": "{{distance}} • ~{{minutes}} min"
   },
   "estimate": {
     "title": "Faturamento estimado",

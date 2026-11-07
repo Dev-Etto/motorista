@@ -136,6 +136,20 @@
       "rating": 4.96
     },
     {
+      "text": "R$ 3/km | ~2,2 km | ~12 min | R$ 13 | 5.0 (16) | 2 min. | Aceitar por R$ 13",
+      "valueCents": 1300,
+      "km": 4.3,
+      "minutes": 12,
+      "rating": 5.0
+    },
+    {
+      "text": "R$ 3/km | ~2,2 km | ~1 h 5 min | R$ 13 | Agora mesmo | Aceitar por R$ 13",
+      "valueCents": 1300,
+      "km": 4.3,
+      "minutes": 65,
+      "rating": null
+    },
+    {
       "text": "R$ 2,30 por km | R$ 15,00 | 6 km | 12 min | Aceitar",
       "valueCents": 1500,
       "km": 6.5,

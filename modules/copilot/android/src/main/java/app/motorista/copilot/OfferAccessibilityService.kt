@@ -53,7 +53,7 @@ class OfferAccessibilityService : AccessibilityService() {
     session = OfferSession(
       channels = ::activeChannels,
       preferences = { store.preferences },
-      evaluate = { offer, source -> OfferEvaluator.evaluate(offer, store.targets, OfferSources.label(source)) },
+      evaluate = { offer, source -> OfferEvaluator.evaluate(TripTimeEstimator.withEstimatedTime(offer, store.tripSpeedKmh), store.targets, OfferSources.label(source)) },
       record = { evaluation, source -> recordOffer(evaluation, source) },
       markOutcome = { offerId, outcome -> scanHandler.post { runCatching { store.markOutcome(offerId, outcome) } } },
       scheduler = scheduler,
