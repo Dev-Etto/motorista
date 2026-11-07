@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { z } from 'zod';
+import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
+import { reportError } from '@/shared/utils/reportError';
 import { useGpsTracking } from './useGpsTracking';
 import { useShiftTimer } from './useShiftTimer';
 
@@ -7,6 +10,10 @@ export function useLiveTracking(onApply: (minutes: number, startedAt: number, km
   const gps = useGpsTracking();
   const [measureKm, setMeasureKm] = useState(true);
   const [applied, setApplied] = useState(false);
+
+  useEffect(() => {
+    settingsRepository.getJson(SETTING_KEYS.gpsMeasureKm, z.boolean(), true).then(setMeasureKm, reportError);
+  }, []);
 
   const start = async () => {
     setApplied(false);
@@ -21,6 +28,7 @@ export function useLiveTracking(onApply: (minutes: number, startedAt: number, km
 
   const toggleMeasureKm = async (value: boolean) => {
     setMeasureKm(value);
+    await settingsRepository.setJson(SETTING_KEYS.gpsMeasureKm, value);
     if (!timer.running) return;
 
     if (value) await gps.start();

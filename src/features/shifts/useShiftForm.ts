@@ -7,7 +7,7 @@ import { computeShift } from '@/domain/shift/shift';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { toISODate, today } from '@/shared/utils/dates';
 import { centsToInput } from '@/shared/utils/money';
-import { centsOrZero, decimalOrNull, hasInvalidHour, hasInvalidNumber, intOrNull, parseHours } from '@/shared/utils/parse';
+import { centsOrZero, decimalOrNull, decimalToInput, hasInvalidHour, hasInvalidNumber, hoursToInput, intOrNull, parseHours } from '@/shared/utils/parse';
 
 export const JOURNEY_EXPENSES: { category: ExpenseCategory; label: string }[] = [
   { category: 'toll', label: 'Pedágio' },
@@ -62,13 +62,13 @@ export function useShiftForm(shiftId?: number) {
 
     const { shift, earnings: savedEarnings, expenses: savedExpenses } = loaded.existing;
     setDate(shift.date);
-    setHours(String(shift.minutes / MINUTES_PER_HOUR).replace('.', ','));
+    setHours(hoursToInput(shift.minutes));
     setStartHour(shift.start_hour === null ? '' : String(shift.start_hour));
     setKmMode(shift.km_source === 'odometer' ? 'odometer' : 'manual');
     setKmMeasured(shift.km_source === 'gps');
-    setKmText(shift.km === null ? '' : String(shift.km).replace('.', ','));
-    setOdometerEnd(shift.odometer_end === null ? '' : String(shift.odometer_end));
-    setOdometerStart(shift.odometer_end === null || shift.km === null ? '' : String(shift.odometer_end - shift.km));
+    setKmText(shift.km === null ? '' : decimalToInput(shift.km));
+    setOdometerEnd(shift.odometer_end === null ? '' : decimalToInput(shift.odometer_end));
+    setOdometerStart(shift.odometer_end === null || shift.km === null ? '' : decimalToInput(shift.odometer_end - shift.km));
     setTrips(shift.trips === null ? '' : String(shift.trips));
     setEarnings(Object.fromEntries(savedEarnings.map((earning) => [earning.platform_id, centsToInput(earning.cents)])));
     setExpenses(Object.fromEntries(savedExpenses.map((expense) => [expense.category, centsToInput(expense.cents)])));
@@ -94,7 +94,7 @@ export function useShiftForm(shiftId?: number) {
   );
 
   const applyLive = (timerMinutes: number, startedAt: number, measuredKm: number) => {
-    setHours(String(Math.round((timerMinutes / MINUTES_PER_HOUR) * 100) / 100).replace('.', ','));
+    setHours(hoursToInput(timerMinutes));
     if (startedAt > 0) {
       setStartHour(String(new Date(startedAt).getHours()));
       setDate(toISODate(new Date(startedAt)));
@@ -102,7 +102,7 @@ export function useShiftForm(shiftId?: number) {
     if (measuredKm <= 0) return;
 
     setKmMode('manual');
-    setKmText(String(Math.round(measuredKm * 10) / 10).replace('.', ','));
+    setKmText(decimalToInput(measuredKm, 1));
     setKmMeasured(true);
   };
 

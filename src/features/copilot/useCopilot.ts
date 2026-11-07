@@ -5,6 +5,7 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { useInterval } from '@/shared/hooks/useInterval';
+import { reportError } from '@/shared/utils/reportError';
 import { syncCopilotTargets } from './syncTargets';
 
 const RECENT_OFFERS = 5;
@@ -27,7 +28,7 @@ export function useCopilot() {
 
   const refresh = useCallback(() => {
     setStatus(copilot.getStatus());
-    setHistory(copilot.getRecentOffers(RECENT_OFFERS));
+    copilot.getRecentOffers(RECENT_OFFERS).then(setHistory, reportError);
   }, []);
 
   useFocusEffect(refresh);

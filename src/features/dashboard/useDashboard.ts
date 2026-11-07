@@ -55,8 +55,10 @@ async function loadDashboard() {
     gpsRunning: measuring && gpsProblem === null,
     gpsProblem,
     copilotStopped: copilotStatus.enabled && !copilotStatus.accessibilityGranted,
-    estimatedToday: copilot.getPreferences().estimateEarnings ? estimateEarnings(copilot.getOffers(dayRange(date).from, dayRange(date).to)) : null,
+    estimatedToday: copilot.getPreferences().estimateEarnings ? estimateEarnings(await copilot.getOffers(dayRange(date).from, dayRange(date).to)) : null,
   };
 }
+
+export type DashboardData = Awaited<ReturnType<typeof loadDashboard>>;
 
 export const useDashboard = () => useAsyncData(loadDashboard);

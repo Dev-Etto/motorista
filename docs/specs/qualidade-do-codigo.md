@@ -72,7 +72,7 @@ Tipos de teste:
 | R5.1 | `useAsyncData` carrega uma vez ao montar a tela, não duas | Jest |
 | R5.2 | Ao mudar `deps`, `loading` volta a verdadeiro até a resposta nova chegar | Jest |
 | R5.3 | Uma falha de carregamento aparece como erro com opção de tentar de novo, nunca como lista vazia | Jest |
-| R5.4 | `AsyncBoundary`, em `shared/ui`, mostra carregando, erro e conteúdo. Toda tela com `useAsyncData` usa esse componente | Jest, Revisão |
+| R5.4 | `AsyncBoundary`, em `shared/ui`, mostra carregando, erro e conteúdo. Toda tela cujo conteúdo principal vem de `useAsyncData` usa esse componente | Jest, Revisão |
 | R5.5 | O erro capturado vai para `reportError`, um ponto único que hoje grava no console em `__DEV__` | Revisão |
 
 ## R6. Formulários
@@ -92,7 +92,7 @@ Tipos de teste:
 
 | ID | Critério de aceite | Teste |
 | --- | --- | --- |
-| R7.1 | A sessão de GPS tem um número de ciclo. `reset` incrementa o número, e o `gpsTask` descarta gravações de um ciclo anterior | Jest |
+| R7.1 | A sessão de GPS tem um número de ciclo. `reset` incrementa o número, e o `gpsTask` só grava no ciclo em que leu a sessão e com a medição ligada | Jest |
 | R7.2 | Descartar a medição durante um lote em andamento termina com 0 metros, e a próxima jornada começa do zero | Jest |
 | R7.3 | Pedir permissão e ler o estado do GPS em `start()` ficam dentro do `try` | Jest |
 | R7.4 | A escolha de medir km por GPS é salva e respeitada ao reabrir o formulário | Jest |

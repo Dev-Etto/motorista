@@ -1,6 +1,7 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
+import { reportError } from '@/shared/utils/reportError';
 import { useLatest } from './useLatest';
 
 export interface AsyncData<T> {
@@ -27,7 +28,8 @@ export function useAsyncData<T>(loader: () => Promise<T>, deps: readonly unknown
       if (current !== requestId.current) return;
       setData(result);
       setError(null);
-    } catch {
+    } catch (caught) {
+      reportError(caught);
       if (current !== requestId.current) return;
       setError(LOAD_ERROR);
     } finally {
@@ -35,7 +37,14 @@ export function useAsyncData<T>(loader: () => Promise<T>, deps: readonly unknown
     }
   }, [latestLoader]);
 
+  const loadedKey = useRef(depsKey);
+
   useEffect(() => {
+    if (loadedKey.current === depsKey) return;
+
+    loadedKey.current = depsKey;
+    setData(null);
+    setLoading(true);
     void reload();
   }, [reload, depsKey]);
 

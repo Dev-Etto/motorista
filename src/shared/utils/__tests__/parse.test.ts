@@ -1,6 +1,6 @@
 import { csvField, toCsv } from '../csv';
 import { parseBRL, parseDecimal } from '../money';
-import { centsOrNull, centsOrZero, decimalOrNull, hasInvalidHour, hasInvalidNumber, intOrNull, parseHours } from '../parse';
+import { centsOrNull, centsOrZero, decimalOrNull, decimalToInput, hasInvalidHour, hasInvalidNumber, hoursToInput, intOrNull, parseHours } from '../parse';
 
 describe('leitura de números', () => {
   it('aceita a vírgula no final, enquanto o motorista digita', () => {
@@ -51,6 +51,21 @@ describe('números digitados em formulário', () => {
     expect(hasInvalidHour('23')).toBe(false);
     expect(hasInvalidHour('24')).toBe(true);
     expect(hasInvalidHour('8,5')).toBe(true);
+  });
+});
+
+describe('valores preenchidos ao editar', () => {
+  it('mostra decimais com vírgula e no máximo duas casas', () => {
+    expect(decimalToInput(45090.200000000004)).toBe('45090,2');
+    expect(decimalToInput(12)).toBe('12');
+    expect(decimalToInput(8.125)).toBe('8,13');
+    expect(decimalToInput(140.55, 1)).toBe('140,6');
+  });
+
+  it('mostra as horas como H:MM', () => {
+    expect(hoursToInput(125)).toBe('2:05');
+    expect(hoursToInput(480)).toBe('8:00');
+    expect(parseHours(hoursToInput(125))).toBeCloseTo(125 / 60);
   });
 });
 

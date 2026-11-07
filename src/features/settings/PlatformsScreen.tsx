@@ -2,13 +2,15 @@ import { useState } from 'react';
 import { platformRepository } from '@/data/repositories/platformRepository';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useSubmit } from '@/shared/hooks/useSubmit';
+import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { TextField } from '@/shared/ui/fields';
 import { PlatformBadge } from '@/shared/ui/PlatformBadge';
 import { AppText, Button, Card, ListRow, Notice, Screen } from '@/shared/ui/primitives';
 import { confirmAction } from '@/shared/utils/confirm';
 
 export default function PlatformsScreen() {
-  const { data, reload } = useAsyncData(() => platformRepository.list());
+  const platforms = useAsyncData(() => platformRepository.list());
+  const { reload } = platforms;
   const [name, setName] = useState('');
 
   const adding = useSubmit(async () => {
@@ -38,12 +40,18 @@ export default function PlatformsScreen() {
         {adding.error ? <Notice tone="negative" message={adding.error} /> : null}
         <Button label="Adicionar" busy={adding.busy} onPress={adding.submit} />
       </Card>
-      {(data ?? []).length === 1 ? <Notice tone="accent" message="Mantenha pelo menos uma plataforma para registrar seus ganhos." /> : null}
-      <Card title="Suas plataformas">
-        {(data ?? []).map((platform) => (
-          <ListRow key={platform.id} leading={<PlatformBadge name={platform.name} />} value={data?.length === 1 ? undefined : 'Remover'} valueTone="muted" onPress={data?.length === 1 ? undefined : () => remove(platform.id, platform.name)} />
-        ))}
-      </Card>
+      <AsyncBoundary state={platforms}>
+        {(list) => (
+          <>
+            {list.length === 1 ? <Notice tone="accent" message="Mantenha pelo menos uma plataforma para registrar seus ganhos." /> : null}
+            <Card title="Suas plataformas">
+              {list.map((platform) => (
+                <ListRow key={platform.id} leading={<PlatformBadge name={platform.name} />} value={list.length === 1 ? undefined : 'Remover'} valueTone="muted" onPress={list.length === 1 ? undefined : () => remove(platform.id, platform.name)} />
+              ))}
+            </Card>
+          </>
+        )}
+      </AsyncBoundary>
     </Screen>
   );
 }

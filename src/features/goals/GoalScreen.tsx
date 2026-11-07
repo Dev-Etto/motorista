@@ -7,13 +7,14 @@ import { syncCopilotTargets } from '@/features/copilot/syncTargets';
 import { useOfferTargets } from '@/features/copilot/useOfferTargets';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useFormHydration } from '@/shared/hooks/useFormHydration';
+import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { useSubmit } from '@/shared/hooks/useSubmit';
 import { MoneyField, NumberField } from '@/shared/ui/fields';
 import { AppText, Button, Card, Collapsible, Notice, Screen } from '@/shared/ui/primitives';
 import { WeekdayPicker } from '@/shared/ui/WeekdayPicker';
 import { formatMonth, monthKey, today } from '@/shared/utils/dates';
 import { centsToInput } from '@/shared/utils/money';
-import { centsOrNull, decimalOrNull, hasInvalidNumber } from '@/shared/utils/parse';
+import { centsOrNull, decimalOrNull, decimalToInput, hasInvalidNumber } from '@/shared/utils/parse';
 import { GoalPlanCard } from './GoalPlanCard';
 import { GoalProgressCard } from './GoalProgressCard';
 import { loadGoalProgress } from './goalProgress';
@@ -21,7 +22,8 @@ import { loadGoalProgress } from './goalProgress';
 export default function GoalScreen() {
   const router = useRouter();
   const date = today();
-  const { data: progress, reload } = useAsyncData(() => loadGoalProgress(date), [date]);
+  const goal = useAsyncData(() => loadGoalProgress(date), [date]);
+  const { data: progress, reload } = goal;
   const targets = useOfferTargets();
   const [desired, setDesired] = useState('');
   const [hoursPerDay, setHoursPerDay] = useState(String(DEFAULT_HOURS_PER_DAY));
@@ -34,7 +36,7 @@ export default function GoalScreen() {
     (loaded) => {
       setDesired(centsToInput(loaded.goal.desiredProfitCents));
       setWeekdays(loaded.goal.workWeekdays);
-      setHoursPerDay(String(loaded.goal.hoursPerDay).replace('.', ','));
+      setHoursPerDay(decimalToInput(loaded.goal.hoursPerDay));
       setDayTarget(loaded.dayOverride === null ? '' : centsToInput(loaded.dayOverride));
     },
     monthKey(date),
@@ -71,14 +73,18 @@ export default function GoalScreen() {
         {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
         <Button label={progress ? 'Atualizar meta' : 'Calcular meu plano'} busy={saving.busy} onPress={saving.submit} />
       </Card>
-      {progress ? <GoalProgressCard progress={progress} /> : null}
-      {progress ? <GoalPlanCard progress={progress} /> : null}
-      {progress ? (
-        <Collapsible title="Ajustar a meta de hoje">
-          <MoneyField label="Lucro que quer fazer hoje" value={dayTarget} onChangeText={setDayTarget} hint="Vale só para hoje. Em branco, o app calcula." />
-          <Button label="Salvar" variant="secondary" busy={saving.busy} onPress={saving.submit} />
-        </Collapsible>
-      ) : null}
+      <AsyncBoundary state={goal}>
+        {(loaded) => (
+          <>
+            <GoalProgressCard progress={loaded} />
+            <GoalPlanCard progress={loaded} />
+            <Collapsible title="Ajustar a meta de hoje">
+              <MoneyField label="Lucro que quer fazer hoje" value={dayTarget} onChangeText={setDayTarget} hint="Vale só para hoje. Em branco, o app calcula." />
+              <Button label="Salvar" variant="secondary" busy={saving.busy} onPress={saving.submit} />
+            </Collapsible>
+          </>
+        )}
+      </AsyncBoundary>
       <OfferTargetsEditor targets={targets} suggestion={progress?.suggestion ?? null} />
       <Button label="Concluir" variant="secondary" onPress={() => router.back()} />
     </Screen>

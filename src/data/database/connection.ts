@@ -127,6 +127,9 @@ export const MIGRATIONS: string[] = [
   `
   ALTER TABLE goals ADD COLUMN hours_per_day REAL NOT NULL DEFAULT 8;
   `,
+  `
+  ALTER TABLE gps_session ADD COLUMN cycle INTEGER NOT NULL DEFAULT 0;
+  `,
 ];
 
 export const SCHEMA_VERSION = MIGRATIONS.length;

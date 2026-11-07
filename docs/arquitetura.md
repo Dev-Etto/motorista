@@ -206,4 +206,9 @@ app -> features -> data -> domain -> shared/utils
 - **Toda escrita por botão usa `useSubmit`:** ele bloqueia o segundo toque e mostra o erro. Ele aceita argumentos, para ações como escolher um horário.
 - **Mínimos salvos ao sair do campo:** salvar a cada tecla enviava valores parciais, como `2,`, ao Copiloto.
 - **Concorrência no Kotlin:** `OfferDiagnostics` usa a mesma trava no setter e na captura, e `ShiftTimer` faz ler-modificar-gravar sob uma trava única, porque é chamado do JavaScript e do botão flutuante.
+- **Carregar uma vez:** `useAsyncData` carrega no foco, que já acontece ao montar, e só recarrega por `deps` quando eles mudam. Ao mudar de período, o dado antigo some até o novo chegar.
+- **Estado do carregamento na tela:** `AsyncBoundary` mostra carregando, erro com "Tentar de novo" ou o conteúdo. Uma falha nunca aparece como lista vazia. O erro vai para `reportError`.
+- **Histórico de ofertas assíncrono:** `getHistory`, `getOffers`, `getRecentOffers` e `setHistory` são `AsyncFunction`, porque leem SQLite e o histórico pode ter um ano de ofertas.
+- **Ciclo da sessão de GPS:** o `gpsTask` grava com `WHERE cycle = ? AND running = 1`. Descartar incrementa o ciclo e pausar desliga `running`, então um lote atrasado não volta com metros antigos. Iniciar e pausar não regravam os metros.
+- **Valores ao editar:** horas aparecem como `H:MM` e decimais por `decimalToInput`, sem resíduo de ponto flutuante.
 

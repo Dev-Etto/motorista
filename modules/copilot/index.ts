@@ -28,11 +28,11 @@ interface CopilotNativeModule {
   setPreferences(json: string): void;
   setTargets(costPerKm: number, targetPerKmCents: number, targetPerHourCents: number): void;
   resetCardPosition(): void;
-  getHistory(): string;
-  setHistory(json: string): void;
+  getHistory(): Promise<string>;
+  setHistory(json: string): Promise<void>;
   clearHistory(): void;
-  getOffers(from: number, to: number): string;
-  getRecentOffers(limit: number): string;
+  getOffers(from: number, to: number): Promise<string>;
+  getRecentOffers(limit: number): Promise<string>;
   openAccessibilitySettings(): void;
   openAppSettings(): void;
   openOverlaySettings(): void;
@@ -67,13 +67,13 @@ export const copilot = {
   setTargets: (costPerKm: number, targetPerKmCents: number, targetPerHourCents: number) =>
     requireModule().setTargets(costPerKm, targetPerKmCents, targetPerHourCents),
   resetCardPosition: () => requireModule().resetCardPosition(),
-  getOffers: (from: number, to: number) => parseHistory(requireModule().getOffers(from, Math.min(to, Number.MAX_SAFE_INTEGER))),
-  getRecentOffers: (limit: number) => parseHistory(requireModule().getRecentOffers(limit)),
+  getOffers: async (from: number, to: number) => parseHistory(await requireModule().getOffers(from, Math.min(to, Number.MAX_SAFE_INTEGER))),
+  getRecentOffers: async (limit: number) => parseHistory(await requireModule().getRecentOffers(limit)),
   clearHistory: () => requireModule().clearHistory(),
-  exportState: () => ({ preferences: requireModule().getPreferences(), history: requireModule().getHistory() }),
-  importState: (state: { preferences: string; history: string }) => {
+  exportState: async () => ({ preferences: requireModule().getPreferences(), history: await requireModule().getHistory() }),
+  importState: async (state: { preferences: string; history: string }) => {
     requireModule().setPreferences(state.preferences);
-    requireModule().setHistory(state.history);
+    await requireModule().setHistory(state.history);
   },
   openAccessibilitySettings: () => requireModule().openAccessibilitySettings(),
   openAppSettings: () => requireModule().openAppSettings(),

@@ -5,7 +5,7 @@ import { rescheduleAllNotifications } from './reminderNotifications';
 import { restoreThemeMode } from './themePreference';
 
 export async function applyRestoredState(backup: BackupFile): Promise<void> {
-  if (backup.copilot) copilot.importState(backup.copilot);
+  if (backup.copilot) await copilot.importState(backup.copilot);
   await syncCopilotTargets();
   await restoreThemeMode();
   await rescheduleAllNotifications();

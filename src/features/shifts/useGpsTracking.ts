@@ -27,7 +27,7 @@ export function useGpsTracking() {
     if (problem === null) return;
 
     setError(problem);
-    await gpsSessionRepository.save({ meters: session.meters, lastPoint: null, running: false });
+    await gpsSessionRepository.stop();
   }, []);
 
   useEffect(() => {
@@ -37,14 +37,13 @@ export function useGpsTracking() {
 
   const start = async () => {
     setError(null);
-    const { granted } = await Location.requestForegroundPermissionsAsync();
-    if (!granted) return setError('Permita a localização para medir os km por GPS.');
-
-    const problem = await readGpsProblem();
-    if (problem) return setError(problem);
-
-    const session = await gpsSessionRepository.get();
     try {
+      const { granted } = await Location.requestForegroundPermissionsAsync();
+      if (!granted) return setError('Permita a localização para medir os km por GPS.');
+
+      const problem = await readGpsProblem();
+      if (problem) return setError(problem);
+
       await Location.startLocationUpdatesAsync(GPS_TASK, {
         accuracy: Location.Accuracy.High,
         distanceInterval: DISTANCE_INTERVAL_M,
@@ -57,7 +56,7 @@ export function useGpsTracking() {
     } catch {
       return setError(START_ERROR);
     }
-    await gpsSessionRepository.save({ meters: session.meters, lastPoint: null, running: true });
+    await gpsSessionRepository.start();
     await refresh();
   };
 
@@ -68,15 +67,15 @@ export function useGpsTracking() {
 
   const pause = async () => {
     await stopUpdates();
+    await gpsSessionRepository.stop();
     const session = await gpsSessionRepository.get();
-    await gpsSessionRepository.save({ meters: session.meters, lastPoint: null, running: false });
     await refresh();
     return session.meters / METERS_PER_KM;
   };
 
   const reset = async () => {
     await stopUpdates();
-    await gpsSessionRepository.save({ meters: 0, lastPoint: null, running: false });
+    await gpsSessionRepository.reset();
     await refresh();
   };
 

@@ -40,10 +40,10 @@ class CopilotModule : Module() {
       CopilotStore.get(context).targets = OfferTargets(costPerKm, targetPerKmCents, targetPerHourCents)
     }
     Function("resetCardPosition") { CopilotStore.get(context).cardPosition = null }
-    Function("getHistory") { CopilotStore.get(context).history() }
-    Function("getOffers") { from: Double, to: Double -> CopilotStore.get(context).offers(from.toLong(), to.toLong()) }
-    Function("getRecentOffers") { limit: Int -> CopilotStore.get(context).recentOffers(limit) }
-    Function("setHistory") { json: String -> CopilotStore.get(context).replaceHistory(json) }
+    AsyncFunction("getHistory") { CopilotStore.get(context).history() }
+    AsyncFunction("getOffers") { from: Double, to: Double -> CopilotStore.get(context).offers(from.toLong(), to.toLong()) }
+    AsyncFunction("getRecentOffers") { limit: Int -> CopilotStore.get(context).recentOffers(limit) }
+    AsyncFunction("setHistory") { json: String -> CopilotStore.get(context).replaceHistory(json) }
     Function("clearHistory") { CopilotStore.get(context).clearHistory() }
 
     Function("openAccessibilitySettings") { openIntent(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }

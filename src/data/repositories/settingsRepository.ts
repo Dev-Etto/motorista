@@ -13,6 +13,7 @@ export const SETTING_KEYS = {
   nextStepsDismissed: 'next_steps_dismissed',
   dailyReminderId: 'daily_reminder_id',
   dailyReminderHour: 'daily_reminder_hour',
+  gpsMeasureKm: 'gps_measure_km',
 } as const;
 
 export type SettingKey = (typeof SETTING_KEYS)[keyof typeof SETTING_KEYS];

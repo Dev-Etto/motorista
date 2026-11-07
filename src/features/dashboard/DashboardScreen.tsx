@@ -5,22 +5,29 @@ import { NextStepCard } from '@/features/onboarding/NextStepCard';
 import { GoalProgressCard } from '@/features/goals/GoalProgressCard';
 import { InsightCard } from '@/features/insights/InsightCard';
 import { ActiveShiftCard, NewShiftButton } from '@/features/shifts/ActiveShift';
+import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { LearnMore } from '@/shared/ui/LearnMore';
 import { AppText, Button, Card, EmptyState, ListRow, Notice, Screen } from '@/shared/ui/primitives';
 import { formatPerKm } from '@/shared/utils/format';
 import { formatBRL } from '@/shared/utils/money';
 import { ProfitCard } from './ProfitCard';
-import { useDashboard } from './useDashboard';
+import { DashboardData, useDashboard } from './useDashboard';
 
 export default function DashboardScreen() {
-  const router = useRouter();
-  const { data, error, reload } = useDashboard();
-
-  if (error) return <Screen><Notice tone="negative" message={error} /></Screen>;
-  if (!data) return <Screen>{null}</Screen>;
+  const dashboard = useDashboard();
 
   return (
     <Screen>
+      <AsyncBoundary state={dashboard}>{(data) => <DashboardContent data={data} onReload={dashboard.reload} />}</AsyncBoundary>
+    </Screen>
+  );
+}
+
+function DashboardContent({ data, onReload }: { data: DashboardData; onReload: () => Promise<void> }) {
+  const router = useRouter();
+
+  return (
+    <>
       {data.copilotStopped ? (
         <EmptyState
           title="Copiloto em pausa"
@@ -31,7 +38,7 @@ export default function DashboardScreen() {
       {data.gpsRunning ? <Notice tone="accent" message="Medindo seus km por GPS. Em deslocamentos pessoais, é só pausar." /> : null}
       {data.gpsProblem ? <Notice tone="negative" message={`Os km não estão sendo medidos. ${data.gpsProblem}`} /> : null}
       <ActiveShiftCard />
-      <NextStepCard step={data.nextStep} onDismiss={reload} />
+      <NextStepCard step={data.nextStep} onDismiss={onReload} />
       <ProfitCard title="Lucro de hoje" summary={data.today} hero />
       {data.estimatedToday && data.estimatedToday.trips > 0 ? (
         <Card>
@@ -67,6 +74,6 @@ export default function DashboardScreen() {
       ) : null}
       <ProfitCard title="Nesta semana" summary={data.week} />
       <ProfitCard title="Neste mês" summary={data.month} />
-    </Screen>
+    </>
   );
 }

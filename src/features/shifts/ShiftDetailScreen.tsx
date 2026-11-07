@@ -6,24 +6,41 @@ import { summarizeOutcomes } from '@/domain/offer/offerLog';
 import { computeShift } from '@/domain/shift/shift';
 import { OutcomeSummaryCard } from '@/features/offers/OutcomeSummaryCard';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
-import { AppText, Button, Card, ListRow, Screen } from '@/shared/ui/primitives';
+import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
+import { AppText, Button, Card, EmptyState, ListRow, Screen } from '@/shared/ui/primitives';
 import { dayRange, formatDate, formatDuration } from '@/shared/utils/dates';
 import { confirmAction } from '@/shared/utils/confirm';
 import { formatKm } from '@/shared/utils/format';
 import { formatBRL } from '@/shared/utils/money';
 import { ShiftResultCard } from './ShiftResultCard';
 
+async function loadShiftDetail(shiftId: number) {
+  const detail = await shiftRepository.findById(shiftId);
+  if (!detail) return null;
+
+  const { from, to } = dayRange(detail.shift.date);
+  return { ...detail, dayOffers: await copilot.getOffers(from, to) };
+}
+
+type ShiftDetail = NonNullable<Awaited<ReturnType<typeof loadShiftDetail>>>;
+
 export default function ShiftDetailScreen() {
-  const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const shiftId = Number(id);
-  const { data } = useAsyncData(() => shiftRepository.findById(shiftId), [shiftId]);
+  const detail = useAsyncData(() => loadShiftDetail(shiftId), [shiftId]);
 
-  if (!data) return <Screen>{null}</Screen>;
+  return (
+    <Screen>
+      <AsyncBoundary state={detail} empty={<EmptyState title="Jornada não encontrada" message="Ela pode ter sido excluída." />}>
+        {(data) => <ShiftDetailContent shiftId={shiftId} detail={data} />}
+      </AsyncBoundary>
+    </Screen>
+  );
+}
 
-  const { shift, earnings, expenses } = data;
-  const { from, to } = dayRange(shift.date);
-  const dayOffers = copilot.getOffers(from, to);
+function ShiftDetailContent({ shiftId, detail }: { shiftId: number; detail: ShiftDetail }) {
+  const router = useRouter();
+  const { shift, earnings, expenses, dayOffers } = detail;
   const result = computeShift({
     grossCents: earnings.reduce((total, earning) => total + earning.cents, 0),
     km: shift.km,
@@ -45,7 +62,7 @@ export default function ShiftDetailScreen() {
   };
 
   return (
-    <Screen>
+    <>
       <AppText variant="title" bold>{formatDate(shift.date)}</AppText>
       <ShiftResultCard result={result} />
       <Card title="Detalhes">
@@ -62,6 +79,6 @@ export default function ShiftDetailScreen() {
       {dayOffers.length > 0 ? <OutcomeSummaryCard title="Ofertas do dia" summary={summarizeOutcomes(dayOffers)} /> : null}
       <Button label="Editar" variant="secondary" onPress={() => router.push({ pathname: '/shift/new', params: { id: shiftId } })} />
       <Button label="Excluir" variant="danger" onPress={confirmDelete} />
-    </Screen>
+    </>
   );
 }

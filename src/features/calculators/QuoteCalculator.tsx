@@ -5,6 +5,7 @@ import { computeQuote } from '@/domain/quote/quote';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { useSubmit } from '@/shared/hooks/useSubmit';
+import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { MoneyField, NumberField, TextField } from '@/shared/ui/fields';
 import { AppText, Button, ButtonRow, Card, Collapsible, ListRow, Notice } from '@/shared/ui/primitives';
 import { confirmAction } from '@/shared/utils/confirm';
@@ -90,19 +91,23 @@ export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
           {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
         </Card>
       ) : null}
-      {saved.data?.length ? (
-        <Card title="Orçamentos salvos">
-          {saved.data.map((item) => (
-            <ListRow
-              key={item.id}
-              title={item.label ?? 'Sem descrição'}
-              subtitle="Toque para remover"
-              value={formatBRL(item.price_cents)}
-              onPress={() => remove(item.id)}
-            />
-          ))}
-        </Card>
-      ) : null}
+      <AsyncBoundary state={saved}>
+        {(quotes) =>
+          quotes.length === 0 ? null : (
+            <Card title="Orçamentos salvos">
+              {quotes.map((item) => (
+                <ListRow
+                  key={item.id}
+                  title={item.label ?? 'Sem descrição'}
+                  subtitle="Toque para remover"
+                  value={formatBRL(item.price_cents)}
+                  onPress={() => remove(item.id)}
+                />
+              ))}
+            </Card>
+          )
+        }
+      </AsyncBoundary>
     </>
   );
 }

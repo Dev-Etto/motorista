@@ -11,7 +11,8 @@ async function loadReminders() {
 }
 
 export function useReminders() {
-  const { data, reload } = useAsyncData(loadReminders);
+  const state = useAsyncData(loadReminders);
+  const { data, reload } = state;
 
   const add = async (title: string, dueDate: string | null, kmFromNow: number | null) => {
     const notificationId = dueDate ? await scheduleDateReminder(title, dueDate) : null;
@@ -33,5 +34,5 @@ export function useReminders() {
     await reload();
   };
 
-  return { reminders: data?.reminders ?? [], totalKm: data?.totalKm ?? 0, profile: data?.profile ?? null, add, complete, remove };
+  return { state, reminders: data?.reminders ?? [], totalKm: data?.totalKm ?? 0, profile: data?.profile ?? null, add, complete, remove };
 }

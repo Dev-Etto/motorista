@@ -13,10 +13,10 @@ const toPoint = (location: LocationObject): GpsPoint => ({
   time: location.timestamp,
 });
 
-async function applyLocations(locations: LocationObject[]) {
+export async function applyLocations(locations: LocationObject[]) {
   const session = await gpsSessionRepository.get();
   if (!session.running) return;
-  if (!copilot.getTimer().running) return gpsSessionRepository.save({ ...session, lastPoint: null });
+  if (!copilot.getTimer().running) return gpsSessionRepository.recordProgress(session.cycle, session.meters, null);
 
   const next = locations.map(toPoint).reduce(
     (state, point) => {
@@ -25,7 +25,7 @@ async function applyLocations(locations: LocationObject[]) {
     },
     { meters: session.meters, lastPoint: session.lastPoint },
   );
-  await gpsSessionRepository.save({ ...next, running: true });
+  await gpsSessionRepository.recordProgress(session.cycle, next.meters, next.lastPoint);
 }
 
 TaskManager.defineTask<{ locations: LocationObject[] }>(GPS_TASK, async ({ data, error }) => {

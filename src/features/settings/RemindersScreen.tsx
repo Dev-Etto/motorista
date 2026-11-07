@@ -3,6 +3,7 @@ import { Alert } from 'react-native';
 import { ReminderRow } from '@/data/repositories/reminderRepository';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { useSubmit } from '@/shared/hooks/useSubmit';
+import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { DateField } from '@/shared/ui/DateField';
 import { NumberField, TextField } from '@/shared/ui/fields';
 import { Button, ButtonRow, Card, EmptyState, ListRow, Notice, Screen } from '@/shared/ui/primitives';
@@ -23,7 +24,7 @@ const describeDue = (reminder: ReminderRow, totalKm: number) =>
   [reminder.due_date ? formatDate(reminder.due_date) : null, reminder.due_km ? describeKm(reminder.due_km, totalKm) : null].filter(Boolean).join(' ou ');
 
 export default function RemindersScreen() {
-  const { reminders, totalKm, profile, add, complete, remove } = useReminders();
+  const { state, reminders, totalKm, profile, add, complete, remove } = useReminders();
   const { values, bind, setValues } = useFormFields(INITIAL);
   const [dueDate, setDueDate] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -71,15 +72,19 @@ export default function RemindersScreen() {
         <Button label="Adicionar" busy={saving.busy} onPress={saving.submit} />
       </Card>
       <DailyReminderCard />
-      {pending.length === 0 ? (
-        <EmptyState title="Nenhum lembrete" message="Crie lembretes para troca de óleo, pneus e revisões." />
-      ) : (
-        <Card title="Pendentes">
-          {pending.map((reminder) => (
-            <ListRow key={reminder.id} title={reminder.title} subtitle={describeDue(reminder, totalKm)} onPress={() => chooseAction(reminder)} />
-          ))}
-        </Card>
-      )}
+      <AsyncBoundary state={state}>
+        {() =>
+          pending.length === 0 ? (
+            <EmptyState title="Nenhum lembrete" message="Crie lembretes para troca de óleo, pneus e revisões." />
+          ) : (
+            <Card title="Pendentes">
+              {pending.map((reminder) => (
+                <ListRow key={reminder.id} title={reminder.title} subtitle={describeDue(reminder, totalKm)} onPress={() => chooseAction(reminder)} />
+              ))}
+            </Card>
+          )
+        }
+      </AsyncBoundary>
     </Screen>
   );
 }

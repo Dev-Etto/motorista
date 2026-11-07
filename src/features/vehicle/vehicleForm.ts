@@ -1,6 +1,6 @@
 import { CostProfile, defaultDepreciationEnabled, FuelType, Ownership, suggestedProfile, VehicleKind } from '@/domain/vehicle/costs';
 import { centsToInput } from '@/shared/utils/money';
-import { centsOrZero, decimalOrZero } from '@/shared/utils/parse';
+import { centsOrZero, decimalOrZero, decimalToInput } from '@/shared/utils/parse';
 
 export type CostFields = {
   fuelPrice: string;
@@ -23,7 +23,7 @@ export type CostFields = {
 export function profileToFields(profile: CostProfile): CostFields {
   return {
     fuelPrice: centsToInput(profile.fuelPriceCents),
-    consumption: String(profile.consumptionKmPerUnit).replace('.', ','),
+    consumption: decimalToInput(profile.consumptionKmPerUnit),
     oilChange: centsToInput(profile.oilChangeCents),
     oilInterval: String(profile.oilIntervalKm),
     tires: centsToInput(profile.tiresCents),
@@ -34,7 +34,7 @@ export function profileToFields(profile: CostProfile): CostFields {
     licensing: centsToInput(profile.licensingYearlyCents),
     payment: centsToInput(profile.paymentMonthlyCents),
     vehicleValue: centsToInput(profile.vehicleValueCents),
-    depreciationPct: String(profile.depreciationAnnualPct).replace('.', ','),
+    depreciationPct: decimalToInput(profile.depreciationAnnualPct),
     otherFixed: centsToInput(profile.otherFixedMonthlyCents),
     plannedKm: String(profile.plannedKmMonth),
   };

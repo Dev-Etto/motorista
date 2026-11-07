@@ -23,7 +23,7 @@ function writeSafetyCopy(content: string) {
 }
 
 async function fullBackup(): Promise<BackupFile> {
-  return { ...(await createBackup()), copilot: copilot.exportState() };
+  return { ...(await createBackup()), copilot: await copilot.exportState() };
 }
 
 export function useBackup() {

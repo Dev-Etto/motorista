@@ -14,7 +14,7 @@ jest.mock('expo-location', () => ({
 }));
 jest.mock('expo-task-manager', () => ({ defineTask: jest.fn() }));
 jest.mock('@modules/copilot', () => ({ copilot: { getTimer: () => ({ running: true }) } }));
-jest.mock('@/data/repositories/gpsSessionRepository', () => ({ gpsSessionRepository: { get: jest.fn(), save: jest.fn() } }));
+jest.mock('@/data/repositories/gpsSessionRepository', () => ({ gpsSessionRepository: { get: jest.fn(), start: jest.fn(), stop: jest.fn(), reset: jest.fn() } }));
 
 const location = jest.mocked(Location);
 const sessions = jest.mocked(gpsSessionRepository);
@@ -29,7 +29,7 @@ const allow = (granted: boolean, services: boolean, started: boolean) => {
 describe('useGpsTracking', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    sessions.get.mockResolvedValue({ meters: 0, lastPoint: null, running: false });
+    sessions.get.mockResolvedValue({ meters: 0, lastPoint: null, running: false, cycle: 0 });
     location.startLocationUpdatesAsync.mockResolvedValue();
   });
 
@@ -61,25 +61,25 @@ describe('useGpsTracking', () => {
 
     await act(async () => result.current.start());
 
-    expect(sessions.save).not.toHaveBeenCalled();
+    expect(sessions.start).not.toHaveBeenCalled();
     expect(result.current.error).toContain('Não foi possível iniciar');
   });
 
   it('corrige uma medição salva como ativa quando a permissão foi retirada, mantendo os km', async () => {
     allow(false, true, true);
-    sessions.get.mockResolvedValue({ meters: 700, lastPoint: null, running: true });
+    sessions.get.mockResolvedValue({ meters: 700, lastPoint: null, running: true, cycle: 0 });
     const { result } = await renderHook(() => useGpsTracking());
 
     await waitFor(() => expect(result.current.error).toContain('Permita a localização'));
 
     expect(result.current.running).toBe(false);
     expect(result.current.km).toBe(0.7);
-    expect(sessions.save).toHaveBeenCalledWith({ meters: 700, lastPoint: null, running: false });
+    expect(sessions.stop).toHaveBeenCalled();
   });
 
   it('avisa quando a medição deixou de receber posições', async () => {
     allow(true, true, false);
-    sessions.get.mockResolvedValue({ meters: 100, lastPoint: null, running: true });
+    sessions.get.mockResolvedValue({ meters: 100, lastPoint: null, running: true, cycle: 0 });
     const { result } = await renderHook(() => useGpsTracking());
 
     await waitFor(() => expect(result.current.error).toContain('A medição de km parou'));
@@ -88,10 +88,19 @@ describe('useGpsTracking', () => {
 
   it('continua medindo quando está tudo certo', async () => {
     allow(true, true, true);
-    sessions.get.mockResolvedValue({ meters: 100, lastPoint: null, running: true });
+    sessions.get.mockResolvedValue({ meters: 100, lastPoint: null, running: true, cycle: 0 });
     const { result } = await renderHook(() => useGpsTracking());
 
     await waitFor(() => expect(result.current.running).toBe(true));
     expect(result.current.error).toBeNull();
+  });
+
+  it('mostra erro em vez de falhar quando o pedido de permissão quebra', async () => {
+    location.requestForegroundPermissionsAsync.mockRejectedValue(new Error('sem serviço'));
+    const { result } = await renderHook(() => useGpsTracking());
+
+    await act(async () => result.current.start());
+
+    expect(result.current.error).toContain('Não foi possível iniciar');
   });
 });

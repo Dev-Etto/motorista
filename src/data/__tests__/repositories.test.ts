@@ -1,6 +1,7 @@
 import { MIGRATIONS } from '@/data/database/connection';
 import { expenseRepository } from '@/data/repositories/expenseRepository';
 import { goalRepository } from '@/data/repositories/goalRepository';
+import { gpsSessionRepository } from '@/data/repositories/gpsSessionRepository';
 import { platformRepository } from '@/data/repositories/platformRepository';
 import { reminderRepository } from '@/data/repositories/reminderRepository';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
@@ -168,6 +169,51 @@ describe('plataformas', () => {
 
     await platformRepository.add('Uber');
     expect((await platformRepository.list()).map((platform) => platform.name)).toContain('Uber');
+  });
+});
+
+describe('sessão de GPS', () => {
+  const point = { lat: -23.5, lng: -46.6, accuracy: 5, time: 1 };
+
+  it('soma o progresso do ciclo atual', async () => {
+    await gpsSessionRepository.start();
+    const { cycle } = await gpsSessionRepository.get();
+
+    await gpsSessionRepository.recordProgress(cycle, 1200, point);
+
+    expect(await gpsSessionRepository.get()).toMatchObject({ meters: 1200, lastPoint: point, running: true });
+  });
+
+  it('descartar durante um lote termina com zero metros', async () => {
+    await gpsSessionRepository.start();
+    const { cycle } = await gpsSessionRepository.get();
+
+    await gpsSessionRepository.reset();
+    await gpsSessionRepository.recordProgress(cycle, 1200, point);
+
+    expect(await gpsSessionRepository.get()).toMatchObject({ meters: 0, lastPoint: null, running: false });
+  });
+
+  it('pausar não deixa um lote atrasado religar a medição', async () => {
+    await gpsSessionRepository.start();
+    const { cycle } = await gpsSessionRepository.get();
+    await gpsSessionRepository.recordProgress(cycle, 500, point);
+
+    await gpsSessionRepository.stop();
+    await gpsSessionRepository.recordProgress(cycle, 900, point);
+
+    expect(await gpsSessionRepository.get()).toMatchObject({ meters: 500, running: false, lastPoint: null });
+  });
+
+  it('a próxima jornada começa do zero depois de descartar', async () => {
+    await gpsSessionRepository.start();
+    const { cycle } = await gpsSessionRepository.get();
+    await gpsSessionRepository.recordProgress(cycle, 800, point);
+
+    await gpsSessionRepository.reset();
+    await gpsSessionRepository.start();
+
+    expect((await gpsSessionRepository.get()).meters).toBe(0);
   });
 });
 

@@ -35,3 +35,14 @@ export function parseHours(text: string): number | null {
   if (match) return Number(match[1]) + Number(match[2]) / MINUTES_PER_HOUR;
   return amountOrNull(text);
 }
+
+export function decimalToInput(value: number, maxDecimals = 2): string {
+  const factor = 10 ** maxDecimals;
+  return String(Math.round(value * factor) / factor).replace('.', ',');
+}
+
+export function hoursToInput(minutes: number): string {
+  const whole = Math.round(minutes);
+  const rest = String(whole % MINUTES_PER_HOUR).padStart(2, '0');
+  return `${Math.floor(whole / MINUTES_PER_HOUR)}:${rest}`;
+}
