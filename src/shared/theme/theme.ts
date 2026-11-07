@@ -23,6 +23,7 @@ export const palette = {
     scoreNone: '#404040',
     onScoreNone: '#FFFFFF',
     cardShadow: '0 1px 3px rgba(0, 0, 0, 0.10)',
+    backdrop: 'rgba(0, 0, 0, 0.45)',
   },
   dark: {
     background: '#0F0F0F',
@@ -46,6 +47,7 @@ export const palette = {
     scoreNone: '#A8A8A8',
     onScoreNone: '#171717',
     cardShadow: 'none',
+    backdrop: 'rgba(0, 0, 0, 0.7)',
   },
 };
 

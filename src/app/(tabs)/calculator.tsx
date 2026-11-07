@@ -1,1 +1,1 @@
-export { default } from '@/features/calculators/CalculatorScreen';
+export { default } from '@features/calculators/CalculatorScreen';

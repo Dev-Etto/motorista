@@ -1,24 +1,30 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { loadGoalProgress } from '@/application/goalProgress';
-import { DEFAULT_HOURS_PER_DAY, DEFAULT_WORK_WEEKDAYS } from '@/domain/goal/goal';
-import { OfferTargetsEditor, useOfferTargets } from '@/features/copilot';
-import { useAsyncData } from '@/shared/hooks/useAsyncData';
-import { useFormHydration } from '@/shared/hooks/useFormHydration';
-import { useSubmit } from '@/shared/hooks/useSubmit';
-import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
-import { MoneyField, NumberField } from '@/shared/ui/fields';
-import { AppText, Button, Card, Collapsible, Notice, Screen } from '@/shared/ui/primitives';
-import { WeekdayPicker } from '@/shared/ui/WeekdayPicker';
-import { formatMonth, monthKey, today } from '@/shared/utils/dates';
-import { centsToInput } from '@/shared/utils/money';
-import { centsOrNull, decimalOrNull, decimalToInput, hasInvalidNumber } from '@/shared/utils/parse';
+import { useTranslation } from 'react-i18next';
+import { loadGoalProgress } from '@application/goalProgress';
+import { DEFAULT_HOURS_PER_DAY, DEFAULT_WORK_WEEKDAYS } from '@domain/goal/goal';
+import { OfferTargetsEditor, useOfferTargets } from '@features/copilot';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
+import { useFormHydration } from '@shared/hooks/useFormHydration';
+import { useSubmit } from '@shared/hooks/useSubmit';
+import { useFormat } from '@shared/i18n/format';
+import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
+import { MoneyField, NumberField } from '@shared/ui/fields';
+import { AppText, Button, Card, Collapsible, Notice, Screen } from '@shared/ui/primitives';
+import { WeekdayPicker } from '@shared/ui/WeekdayPicker';
+import { monthKey, today } from '@shared/utils/dates';
 import { GoalPlanCard } from './GoalPlanCard';
 import { GoalProgressCard } from './GoalProgressCard';
 import { saveGoal } from './saveGoal';
 
+const MIN_HOURS_PER_DAY = 1;
+const MAX_HOURS_PER_DAY = 24;
+const EXAMPLE_DAY_TARGET_CENTS = 15050;
+
 export default function GoalScreen() {
   const router = useRouter();
+  const { t } = useTranslation(['goals', 'common']);
+  const format = useFormat();
   const date = today();
   const goal = useAsyncData(() => loadGoalProgress(date), [date]);
   const { data: progress, reload } = goal;
@@ -32,10 +38,10 @@ export default function GoalScreen() {
   useFormHydration(
     progress,
     (loaded) => {
-      setDesired(centsToInput(loaded.goal.desiredProfitCents));
+      setDesired(format.moneyInput(loaded.goal.desiredProfitCents));
       setWeekdays(loaded.goal.workWeekdays);
-      setHoursPerDay(decimalToInput(loaded.goal.hoursPerDay));
-      setDayTarget(loaded.dayOverride === null ? '' : centsToInput(loaded.dayOverride));
+      setHoursPerDay(format.decimalInput(loaded.goal.hoursPerDay));
+      setDayTarget(loaded.dayOverride === null ? '' : format.moneyInput(loaded.dayOverride));
     },
     monthKey(date),
   );
@@ -45,48 +51,48 @@ export default function GoalScreen() {
   };
 
   const saving = useSubmit(async () => {
-    const cents = centsOrNull(desired);
-    const hours = decimalOrNull(hoursPerDay);
-    if (!cents) return setError('Informe quanto você quer lucrar.');
-    if (weekdays.length === 0) return setError('Selecione pelo menos um dia de trabalho.');
-    if (!hours || hours <= 0 || hours > 24) return setError('Informe as horas por dia, de 1 a 24.');
-    if (hasInvalidNumber(dayTarget)) return setError('Confira o lucro de hoje. Use só números, como 150,50.');
+    const cents = format.parseCents(desired);
+    const hours = format.parseDecimal(hoursPerDay);
+    if (!cents) return setError(t('screen.errors.desired'));
+    if (weekdays.length === 0) return setError(t('screen.errors.weekdays'));
+    if (!hours || hours <= 0 || hours > MAX_HOURS_PER_DAY) return setError(t('screen.errors.hours', { min: MIN_HOURS_PER_DAY, max: MAX_HOURS_PER_DAY }));
+    if (format.hasInvalidNumber(dayTarget)) return setError(t('screen.errors.dayTarget', { example: format.moneyInput(EXAMPLE_DAY_TARGET_CENTS) }));
 
     setError(null);
-    await saveGoal({ month: monthKey(date), desiredProfitCents: cents, workWeekdays: weekdays, hoursPerDay: hours }, date, centsOrNull(dayTarget));
+    await saveGoal({ month: monthKey(date), desiredProfitCents: cents, workWeekdays: weekdays, hoursPerDay: hours }, date, format.parseCents(dayTarget));
     await Promise.all([reload(), targets.reload()]);
   });
 
   return (
     <Screen>
       <AppText variant="title" bold>
-        Meta de {formatMonth(date)}
+        {t('screen.title', { month: format.month(date) })}
       </AppText>
-      <AppText tone="muted">Diga quanto quer lucrar no mês. O app acompanha seu lucro real e mostra o que falta, hoje e até o fim do mês.</AppText>
-      <Card title="Sua meta">
-        <MoneyField label="Quanto quer lucrar no mês" value={desired} onChangeText={setDesired} error={error} />
-        <NumberField label="Horas de trabalho por dia" value={hoursPerDay} onChangeText={setHoursPerDay} suffix="h" />
+      <AppText tone="muted">{t('screen.intro')}</AppText>
+      <Card title={t('screen.goalTitle')}>
+        <MoneyField label={t('screen.desired')} value={desired} onChangeText={setDesired} error={error} />
+        <NumberField label={t('screen.hoursPerDay')} value={hoursPerDay} onChangeText={setHoursPerDay} suffix="h" />
         <AppText variant="caption" tone="muted">
-          Dias de trabalho
+          {t('screen.workDays')}
         </AppText>
         <WeekdayPicker selected={weekdays} onToggle={toggleWeekday} />
         {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
-        <Button label={progress ? 'Atualizar meta' : 'Calcular meu plano'} busy={saving.busy} onPress={saving.submit} />
+        <Button label={progress ? t('screen.update') : t('screen.calculate')} busy={saving.busy} onPress={saving.submit} />
       </Card>
       <AsyncBoundary state={goal}>
         {(loaded) => (
           <>
             <GoalProgressCard progress={loaded} />
             <GoalPlanCard progress={loaded} />
-            <Collapsible title="Ajustar a meta de hoje">
-              <MoneyField label="Lucro que quer fazer hoje" value={dayTarget} onChangeText={setDayTarget} hint="Vale só para hoje. Em branco, o app calcula." />
-              <Button label="Salvar" variant="secondary" busy={saving.busy} onPress={saving.submit} />
+            <Collapsible title={t('screen.adjustToday')}>
+              <MoneyField label={t('screen.todayProfit')} value={dayTarget} onChangeText={setDayTarget} hint={t('screen.todayProfitHint')} />
+              <Button label={t('common:actions.save')} variant="secondary" busy={saving.busy} onPress={saving.submit} />
             </Collapsible>
           </>
         )}
       </AsyncBoundary>
       <OfferTargetsEditor targets={targets} suggestion={progress?.suggestion ?? null} />
-      <Button label="Concluir" variant="secondary" onPress={() => router.back()} />
+      <Button label={t('common:actions.done')} variant="secondary" onPress={() => router.back()} />
     </Screen>
   );
 }

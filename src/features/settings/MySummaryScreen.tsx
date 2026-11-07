@@ -1,12 +1,15 @@
 import Constants from 'expo-constants';
+import { useTranslation } from 'react-i18next';
 import { Share } from 'react-native';
-import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
-import { AppText, Button, Card, ListRow, Screen } from '@/shared/ui/primitives';
-import { formatDate } from '@/shared/utils/dates';
+import { APP_NAME } from '@config/app';
+import { Formatter, useFormat } from '@shared/i18n/format';
+import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
+import { AppText, Button, Card, ListRow, Screen } from '@shared/ui/primitives';
+import { PLACEHOLDER } from '@shared/utils/format';
 import { UsageStats, useUsageStats } from './useUsageStats';
 
 const version = () => Constants.expoConfig?.version ?? '—';
-const displayDate = (date: string | null) => (date ? formatDate(date) : '—');
+const displayDate = (date: string | null, format: Formatter) => (date ? format.date(date) : PLACEHOLDER);
 
 export default function MySummaryScreen() {
   const stats = useUsageStats();
@@ -19,22 +22,31 @@ export default function MySummaryScreen() {
 }
 
 function MySummaryContent({ data }: { data: UsageStats }) {
+  const { t } = useTranslation('settings');
+  const format = useFormat();
   const share = () =>
     Share.share({
-      message: `Resumo do app Motorista\nVersão: ${version()}\nJornadas: ${data.total}\nDias com jornada: ${data.days}\nPrimeira: ${displayDate(data.first)}\nÚltima: ${displayDate(data.last)}`,
+      message: t('summary.shareMessage', {
+        appName: APP_NAME,
+        version: version(),
+        total: data.total,
+        days: data.days,
+        first: displayDate(data.first, format),
+        last: displayDate(data.last, format),
+      }),
     });
 
   return (
     <>
-      <Card title="Uso do app">
-        <ListRow title="Jornadas registradas" value={String(data.total)} />
-        <ListRow title="Dias com jornada" value={String(data.days)} />
-        <ListRow title="Primeira jornada" value={displayDate(data.first)} />
-        <ListRow title="Última jornada" value={displayDate(data.last)} />
-        <ListRow title="Versão" value={version()} />
+      <Card title={t('summary.cardTitle')}>
+        <ListRow title={t('summary.shifts')} value={String(data.total)} />
+        <ListRow title={t('summary.days')} value={String(data.days)} />
+        <ListRow title={t('summary.first')} value={displayDate(data.first, format)} />
+        <ListRow title={t('summary.last')} value={displayDate(data.last, format)} />
+        <ListRow title={t('summary.version')} value={version()} />
       </Card>
-      <AppText tone="muted">Só estes números são compartilhados, sem valores, locais ou dados pessoais. O envio só acontece se você quiser.</AppText>
-      <Button label="Compartilhar resumo" onPress={share} />
+      <AppText tone="muted">{t('summary.disclaimer')}</AppText>
+      <Button label={t('summary.shareButton')} onPress={share} />
     </>
   );
 }

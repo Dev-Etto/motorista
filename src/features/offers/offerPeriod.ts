@@ -1,5 +1,5 @@
-import { OfferRange } from '@/domain/offer/offerLog';
-import { addDays, dayRange } from '@/shared/utils/dates';
+import { OfferRange } from '@domain/offer/offerLog';
+import { addDays, dayRange } from '@shared/utils/dates';
 
 export type OfferPeriod = 'today' | 'yesterday' | 'week' | 'month' | 'custom';
 
@@ -11,13 +11,7 @@ export interface CustomDates {
 const WEEK_DAYS_BACK = 6;
 const MONTH_DAYS_BACK = 29;
 
-export const PERIOD_OPTIONS: { value: OfferPeriod; label: string }[] = [
-  { value: 'today', label: 'Hoje' },
-  { value: 'yesterday', label: 'Ontem' },
-  { value: 'week', label: '7 dias' },
-  { value: 'month', label: '30 dias' },
-  { value: 'custom', label: 'Escolher datas' },
-];
+export const OFFER_PERIODS: OfferPeriod[] = ['today', 'yesterday', 'week', 'month', 'custom'];
 
 const spanning = (start: string, end: string): OfferRange => ({ from: dayRange(start).from, to: dayRange(end).to });
 

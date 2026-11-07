@@ -1,4 +1,4 @@
-import { estimateEarnings, filterOffers, listSources, matchPlatforms, OfferLogEntry, statusOf, summarizeOutcomes } from '../offer/offerLog';
+import { estimateEarnings, filterOffers, listSources, matchPlatforms, OfferLogEntry, statusOf, summarizeOutcomes } from '@domain/offer/offerLog';
 
 const offer = (over: Partial<OfferLogEntry>): OfferLogEntry => ({ timestamp: 100, source: 'Uber', valueCents: 1000, km: 5, ...over });
 

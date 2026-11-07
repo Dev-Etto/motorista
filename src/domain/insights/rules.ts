@@ -1,9 +1,8 @@
-import { computeShift } from '@/domain/shift/shift';
-import { totalsByPlatform } from '@/domain/shift/summary';
-import { addDays, dayPeriod, daysBetween, monthBounds, weekdayName, weekdayOf } from '@/shared/utils/dates';
-import { formatBRL, formatNumber } from '@/shared/utils/money';
-import { MINUTES_PER_HOUR } from '@/shared/utils/time';
-import { InsightRule, ShiftFact } from './types';
+import { computeShift } from '@domain/shift/shift';
+import { totalsByPlatform } from '@domain/shift/summary';
+import { addDays, type DayPeriod, dayPeriod, daysBetween, monthBounds, weekdayOf } from '@shared/utils/dates';
+import { MINUTES_PER_HOUR } from '@shared/utils/time';
+import type { CostPart, InsightRule, ShiftFact } from './types';
 
 const MIN_BUCKET_SHIFTS = 2;
 const MIN_PERIOD_GAP_CENTS = 100;
@@ -16,8 +15,8 @@ const profitOf = (shift: ShiftFact) => computeShift(shift).profitCents;
 
 const sumBy = <T>(items: T[], selector: (item: T) => number) => items.reduce((total, item) => total + selector(item), 0);
 
-function rankByProfitPerHour(shifts: ShiftFact[], keyOf: (shift: ShiftFact) => string | null) {
-  const buckets = new Map<string, { profit: number; minutes: number; count: number }>();
+function rankByProfitPerHour<K>(shifts: ShiftFact[], keyOf: (shift: ShiftFact) => K | null) {
+  const buckets = new Map<K, { profit: number; minutes: number; count: number }>();
 
   for (const shift of shifts) {
     const key = keyOf(shift);
@@ -43,36 +42,23 @@ export const realProfitRule: InsightRule = ({ shifts, looseExpenses = [] }) => {
 
   const profit = sumBy(shifts, profitOf) - sumBy(looseExpenses, (expense) => expense.cents);
   const shareOfHundred = Math.round((profit / gross) * 100);
-  return {
-    id: 'real-profit',
-    title: 'Lucro real',
-    message:
-      profit >= 0
-        ? `De cada R$ 100 faturados, R$ ${shareOfHundred} ficaram com você.`
-        : `Para cada R$ 100 faturados, faltaram R$ ${-shareOfHundred} para cobrir os custos.`,
-    basis: `Faturamento ${formatBRL(gross)} e lucro ${formatBRL(profit)} em ${shifts.length} jornadas.`,
-  };
+  return { id: 'real-profit', grossCents: gross, profitCents: profit, shifts: shifts.length, sharePerHundred: shareOfHundred };
 };
 
 export const bestWeekdayRule: InsightRule = ({ shifts, today }) => {
   const cutoff = addDays(today, -(RECENT_DAYS - 1));
   const recent = shifts.filter((shift) => shift.date >= cutoff && shift.date <= today);
-  const ranked = rankByProfitPerHour(recent, (shift) => String(weekdayOf(shift.date)));
+  const ranked = rankByProfitPerHour(recent, (shift) => weekdayOf(shift.date));
   if (ranked.length < 2) return null;
 
   const [best] = ranked;
   if (!best) return null;
 
-  return {
-    id: 'best-weekday',
-    title: 'Melhor dia',
-    message: `${weekdayName(Number(best.key))} rendeu o maior lucro por hora nas últimas 4 semanas.`,
-    basis: `${formatBRL(best.perHour)}/h em ${best.count} jornadas.`,
-  };
+  return { id: 'best-weekday', weekday: best.key, perHourCents: best.perHour, shifts: best.count };
 };
 
 export const bestPeriodRule: InsightRule = ({ shifts }) => {
-  const ranked = rankByProfitPerHour(shifts, (shift) => (shift.startHour === null ? null : dayPeriod(shift.startHour)));
+  const ranked = rankByProfitPerHour<DayPeriod>(shifts, (shift) => (shift.startHour === null ? null : dayPeriod(shift.startHour)));
   if (ranked.length < 2) return null;
 
   const best = ranked[0];
@@ -82,12 +68,7 @@ export const bestPeriodRule: InsightRule = ({ shifts }) => {
   const gap = best.perHour - worst.perHour;
   if (gap < MIN_PERIOD_GAP_CENTS) return null;
 
-  return {
-    id: 'best-period',
-    title: 'Melhor período',
-    message: `Jornadas iniciadas de ${best.key} rendem ${formatBRL(gap)}/h a mais do que as de ${worst.key}.`,
-    basis: `${best.key}: ${formatBRL(best.perHour)}/h. ${worst.key}: ${formatBRL(worst.perHour)}/h.`,
-  };
+  return { id: 'best-period', best: best.key, worst: worst.key, gapCents: gap, bestPerHourCents: best.perHour, worstPerHourCents: worst.perHour };
 };
 
 export const platformRule: InsightRule = ({ shifts }) => {
@@ -100,36 +81,25 @@ export const platformRule: InsightRule = ({ shifts }) => {
   const [top] = totals;
   if (!top) return null;
 
-  const { platform: name, cents } = top;
-  return {
-    id: 'platform',
-    title: 'Plataforma',
-    message: `${name} trouxe ${Math.round((cents / gross) * 100)}% do seu faturamento.`,
-    basis: `${formatBRL(cents)} de ${formatBRL(gross)}.`,
-  };
+  const { platform, cents } = top;
+  return { id: 'platform', platform, sharePct: Math.round((cents / gross) * 100), cents, grossCents: gross };
 };
 
 export const biggestCostRule: InsightRule = ({ costs }) => {
   if (!costs || costs.fullPerKm <= 0) return null;
 
-  const parts: [string, number][] = [
-    ['Combustível', costs.fuelPerKm],
-    ['Óleo', costs.oilPerKm],
-    ['Pneus', costs.tiresPerKm],
-    ['Manutenção', costs.maintenancePerKm],
-    ['Custos fixos', costs.fixedPerKm],
+  const parts: [CostPart, number][] = [
+    ['fuel', costs.fuelPerKm],
+    ['oil', costs.oilPerKm],
+    ['tires', costs.tiresPerKm],
+    ['maintenance', costs.maintenancePerKm],
+    ['fixed', costs.fixedPerKm],
   ];
   const [biggest] = parts.sort((a, b) => b[1] - a[1]);
   if (!biggest) return null;
 
-  const [name, value] = biggest;
-
-  return {
-    id: 'biggest-cost',
-    title: 'Maior custo',
-    message: `${name} é ${Math.round((value / costs.fullPerKm) * 100)}% do seu custo por km.`,
-    basis: `${formatBRL(value)}/km de ${formatBRL(costs.fullPerKm)}/km.`,
-  };
+  const [part, value] = biggest;
+  return { id: 'biggest-cost', part, sharePct: Math.round((value / costs.fullPerKm) * 100), perKmCents: value, fullPerKmCents: costs.fullPerKm };
 };
 
 export const efficiencyRule: InsightRule = ({ shifts, today }) => {
@@ -147,12 +117,7 @@ export const efficiencyRule: InsightRule = ({ shifts, today }) => {
   const previousRate = (previousProfit / previousMinutes) * MINUTES_PER_HOUR;
   if (lastProfit <= previousProfit || lastRate >= previousRate) return null;
 
-  return {
-    id: 'efficiency',
-    title: 'Eficiência',
-    message: 'Seu lucro subiu, mas o lucro por hora caiu: você trabalhou mais para chegar lá.',
-    basis: `Por hora: ${formatBRL(previousRate)} para ${formatBRL(lastRate)} nos últimos 7 dias.`,
-  };
+  return { id: 'efficiency', previousPerHourCents: previousRate, lastPerHourCents: lastRate };
 };
 
 export const breakEvenRule: InsightRule = ({ shifts, costs, today }) => {
@@ -167,12 +132,7 @@ export const breakEvenRule: InsightRule = ({ shifts, costs, today }) => {
   const kmPerDay = sumBy(shifts, (shift) => shift.km ?? 0) / workedDays;
   const breakEven = costs.fixedMonthly / daysPerMonth + kmPerDay * costs.variablePerKm;
 
-  return {
-    id: 'break-even',
-    title: 'Ponto de equilíbrio',
-    message: `Você precisa faturar ${formatBRL(breakEven)} por dia só para cobrir os custos.`,
-    basis: `${daysPerMonth} dias por mês e ${formatNumber(kmPerDay, 0)} km por dia, em média.`,
-  };
+  return { id: 'break-even', dailyCents: breakEven, daysPerMonth, kmPerDay };
 };
 
 export const projectionRule: InsightRule = ({ shifts, costs, today, looseExpenses = [] }) => {
@@ -186,12 +146,7 @@ export const projectionRule: InsightRule = ({ shifts, costs, today, looseExpense
   const profit = sumBy(month, profitOf) - sumBy(monthLoose, (expense) => expense.cents);
   const dayOfMonth = Number(today.slice(8, 10));
 
-  return {
-    id: 'projection',
-    title: 'Projeção do mês',
-    message: `Nesse ritmo, você fecha o mês com ${formatBRL((profit / dayOfMonth) * days)} de lucro.`,
-    basis: `${formatBRL(profit)} em ${dayOfMonth} dias do mês.`,
-  };
+  return { id: 'projection', projectedCents: (profit / dayOfMonth) * days, profitCents: profit, dayOfMonth };
 };
 
 export const fuelGapRule: InsightRule = ({ costs, fuelKm, fuelPaidCents }) => {
@@ -201,13 +156,7 @@ export const fuelGapRule: InsightRule = ({ costs, fuelKm, fuelPaidCents }) => {
   const gapPct = Math.round(((fuelPaidCents - expected) / expected) * 100);
   if (Math.abs(gapPct) < MIN_FUEL_GAP_PCT) return null;
 
-  const direction = gapPct > 0 ? 'a mais' : 'a menos';
-  return {
-    id: 'fuel-gap',
-    title: 'Combustível',
-    message: `Você gastou ${Math.abs(gapPct)}% ${direction} do que o previsto. Vale revisar o consumo.`,
-    basis: `Previsto ${formatBRL(expected)} e pago ${formatBRL(fuelPaidCents)}.`,
-  };
+  return { id: 'fuel-gap', gapPct, expectedCents: expected, paidCents: fuelPaidCents };
 };
 
 export const fixedWeightRule: InsightRule = ({ costs, plannedKmMonth }) => {
@@ -215,10 +164,5 @@ export const fixedWeightRule: InsightRule = ({ costs, plannedKmMonth }) => {
 
   const saving = costs.fixedMonthly / plannedKmMonth - costs.fixedMonthly / (plannedKmMonth + EXTRA_KM_SCENARIO);
 
-  return {
-    id: 'fixed-weight',
-    title: 'Peso do custo fixo',
-    message: `Rodando ${formatNumber(EXTRA_KM_SCENARIO, 0)} km a mais por mês, seu custo cairia ${formatBRL(saving)}/km.`,
-    basis: `Fixos de ${formatBRL(costs.fixedMonthly)}/mês em ${formatNumber(plannedKmMonth, 0)} km previstos.`,
-  };
+  return { id: 'fixed-weight', extraKm: EXTRA_KM_SCENARIO, savingPerKmCents: saving, fixedMonthlyCents: costs.fixedMonthly, plannedKm: plannedKmMonth };
 };

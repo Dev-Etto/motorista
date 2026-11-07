@@ -1,15 +1,15 @@
 import { useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Linking } from 'react-native';
-import { RELEASES_URL } from '@/config/app';
-import { GoalProgressCard } from '@/features/goals';
-import { InsightCard } from '@/features/insights';
-import { NextStepCard } from '@/features/onboarding';
-import { ActiveShiftCard, NewShiftButton } from '@/features/shifts';
-import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
-import { LearnMore } from '@/shared/ui/LearnMore';
-import { AppText, Button, Card, EmptyState, ListRow, Notice, Screen } from '@/shared/ui/primitives';
-import { formatPerKm } from '@/shared/utils/format';
-import { formatBRL } from '@/shared/utils/money';
+import { RELEASES_URL } from '@config/app';
+import { GoalProgressCard } from '@features/goals';
+import { InsightCard } from '@features/insights';
+import { NextStepCard } from '@features/onboarding';
+import { ActiveShiftCard, NewShiftButton } from '@features/shifts';
+import { useFormat } from '@shared/i18n/format';
+import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
+import { LearnMore } from '@shared/ui/LearnMore';
+import { AppText, Button, Card, EmptyState, ListRow, Notice, Screen } from '@shared/ui/primitives';
 import { ProfitCard } from './ProfitCard';
 import { DashboardData, useDashboard } from './useDashboard';
 
@@ -25,63 +25,62 @@ export default function DashboardScreen() {
 
 function DashboardContent({ data, onReload }: { data: DashboardData; onReload: () => Promise<void> }) {
   const router = useRouter();
+  const { t } = useTranslation('dashboard');
+  const format = useFormat();
+  const unit = { context: format.distanceUnit };
 
   return (
     <>
       {data.copilotStopped ? (
         <EmptyState
-          title="Copiloto em pausa"
-          message="A permissão de acessibilidade foi desligada. Ative de novo para voltar a avaliar as ofertas."
-          action={<Button label="Reativar o Copiloto" variant="secondary" onPress={() => router.push('/copilot')} />}
+          title={t('copilotStopped.title')}
+          message={t('copilotStopped.message')}
+          action={<Button label={t('copilotStopped.action')} variant="secondary" onPress={() => router.push('/copilot')} />}
         />
       ) : null}
-      {data.gpsRunning ? <Notice tone="accent" message="Medindo seus km por GPS. Em deslocamentos pessoais, é só pausar." /> : null}
-      {data.gpsProblem ? <Notice tone="negative" message={`Os km não estão sendo medidos. ${data.gpsProblem}`} /> : null}
+      {data.gpsRunning ? <Notice tone="accent" message={t('gpsRunning', unit)} /> : null}
+      {data.gpsProblem ? <Notice tone="negative" message={t('gpsProblem', { ...unit, problem: data.gpsProblem })} /> : null}
       <ActiveShiftCard />
       <NextStepCard step={data.nextStep} onDismiss={onReload} />
-      <ProfitCard title="Lucro de hoje" summary={data.today} hero />
+      <ProfitCard title={t('todayTitle')} summary={data.today} hero />
       {data.estimatedToday && data.estimatedToday.trips > 0 ? (
         <Card>
           <ListRow
             icon="layers"
-            title="Faturamento estimado hoje"
-            subtitle="Pelos aceites. Confira ao registrar a jornada."
-            value={formatBRL(data.estimatedToday.totalCents)}
+            title={t('estimated.title')}
+            subtitle={t('estimated.subtitle')}
+            value={format.money(data.estimatedToday.totalCents)}
             onPress={() => router.push('/offers')}
           />
         </Card>
       ) : null}
-      {data.missingFixedCosts ? (
-        <Notice tone="accent" message="Esse lucro ainda não considera seguro, IPVA, parcela ou aluguel. Inclua em Veículo e custos para ver o valor real." />
-      ) : null}
+      {data.missingFixedCosts ? <Notice tone="accent" message={t('missingFixedCosts')} /> : null}
       <Card>
-        <LearnMore title="Por que o lucro é menor que o que recebi?">
-          <AppText variant="caption">
-            Parte do que você recebe paga o carro: combustível, desgaste, seguro e outros custos. Lucro é o que sobra depois disso.
-          </AppText>
-          {data.costs ? <AppText variant="caption">Hoje, cada km custa cerca de {formatPerKm(data.costs.fullPerKm)}.</AppText> : null}
+        <LearnMore title={t('whyLess.title')}>
+          <AppText variant="caption">{t('whyLess.body')}</AppText>
+          {data.costs ? <AppText variant="caption">{t('whyLess.costToday', { ...unit, cost: format.perDistance(data.costs.fullPerKm) })}</AppText> : null}
         </LearnMore>
       </Card>
       <NewShiftButton />
       {data.goal ? <GoalProgressCard progress={data.goal} onOpenDetails={() => router.push('/goal')} /> : null}
       {data.topInsight ? <InsightCard insight={data.topInsight} /> : null}
       {data.dueKmReminders.map((reminder) => (
-        <Notice key={reminder.id} message={`Lembrete: ${reminder.title}`} />
+        <Notice key={reminder.id} message={t('reminder', { title: reminder.title })} />
       ))}
       {data.backupDue ? (
         <>
-          <Notice tone="accent" message="Que tal fazer um backup? Assim seus dados ficam guardados também fora do celular." />
-          <Button label="Fazer backup" variant="secondary" onPress={() => router.push('/backup')} />
+          <Notice tone="accent" message={t('backup.message')} />
+          <Button label={t('backup.action')} variant="secondary" onPress={() => router.push('/backup')} />
         </>
       ) : null}
       {data.updateDue ? (
         <>
-          <Notice tone="accent" message="Esta versão do app já tem mais de um mês. Uma versão nova pode corrigir a leitura das ofertas." />
-          <Button label="Verificar atualização" variant="secondary" onPress={() => Linking.openURL(RELEASES_URL)} />
+          <Notice tone="accent" message={t('update.message')} />
+          <Button label={t('update.action')} variant="secondary" onPress={() => Linking.openURL(RELEASES_URL)} />
         </>
       ) : null}
-      <ProfitCard title="Nesta semana" summary={data.week} />
-      <ProfitCard title="Neste mês" summary={data.month} />
+      <ProfitCard title={t('weekTitle')} summary={data.week} />
+      <ProfitCard title={t('monthTitle')} summary={data.month} />
     </>
   );
 }

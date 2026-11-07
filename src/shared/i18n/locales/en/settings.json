@@ -1,0 +1,300 @@
+{
+  "more": {
+    "section": {
+      "work": "Your work",
+      "copilot": "Copilot and permissions",
+      "data": "Your data",
+      "help": "Help"
+    },
+    "item": {
+      "vehicle": {
+        "title": "Vehicle and costs",
+        "subtitle": "Your cost per {{unit}}"
+      },
+      "goal": {
+        "title": "Goal and minimums",
+        "subtitle": "Your profit and the minimum per ride"
+      },
+      "offers": {
+        "title": "Offers and earnings",
+        "subtitle": "Accepted, not accepted, and the estimated amount"
+      },
+      "platforms": {
+        "title": "Platforms",
+        "subtitle": "Apps you work on"
+      },
+      "reminders": {
+        "title": "Reminders",
+        "subtitle": "Oil, tires, servicing, and end of day"
+      },
+      "copilot": {
+        "title": "Offer Copilot",
+        "subtitle": "Reading, card, voice, and floating button"
+      },
+      "permissions": {
+        "title": "Permissions",
+        "subtitle": "What the app can use"
+      },
+      "backup": {
+        "title": "Backup",
+        "subtitle": "Save and restore your data"
+      },
+      "summary": {
+        "title": "My summary",
+        "subtitle": "Usage numbers to share"
+      },
+      "privacy": {
+        "title": "Privacy",
+        "subtitle": "What happens to your data"
+      },
+      "help": {
+        "title": "Help",
+        "subtitle": "How the app works"
+      },
+      "report": {
+        "title": "Report a problem",
+        "subtitle": "Or suggest an improvement"
+      },
+      "terms": {
+        "title": "Terms of use",
+        "subtitle": "The rules for using the app"
+      },
+      "region": {
+        "title": "Language and region",
+        "subtitle": "Language, currency, units, and date format"
+      }
+    },
+    "about": {
+      "title": "About the app",
+      "donateTitle": "Support the project",
+      "donateSubtitle": "The app is free. Help keep it going.",
+      "updateTitle": "Check for updates",
+      "updateSubtitle": "Opens the releases page in your browser.",
+      "versionTitle": "Version {{version}}",
+      "versionSubtitle": "See the code and what's new."
+    }
+  },
+  "appearance": {
+    "title": "Theme",
+    "system": "Automatic",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "backup": {
+    "never": "Never",
+    "tip": "Keep the file outside your phone, like in Drive or your email. When you switch devices, use Restore.",
+    "intro": "Your data is stored only on this phone. With a backup, you can take it anywhere, including if you switch devices or reinstall the app. The file has no password: keep it somewhere only you can access.",
+    "cardTitle": "Backup",
+    "lastBackup": "Last backup",
+    "exportButton": "Back up now",
+    "restoreButton": "Restore from a file",
+    "undoButton": "Undo the last restore",
+    "restoreConfirm": {
+      "title": "Restore backup?",
+      "message": "Your current data will be replaced by the data in the file.",
+      "action": "Restore"
+    },
+    "undoConfirm": {
+      "title": "Undo the restore?",
+      "message": "Your data goes back to what it was before the last restore.",
+      "action": "Undo"
+    },
+    "exported": "Backup created. Check that the file was saved where you chose.",
+    "exportFailed": "Couldn't create the backup.",
+    "restoreFailed": "The restore failed and your current data was kept.",
+    "restored": "Data restored successfully.",
+    "restoredPartial": "Data restored successfully. Check your reminders and Copilot.",
+    "undone": "Restore undone. Your previous data is back.",
+    "undonePartial": "Restore undone. Your previous data is back. Check your reminders and Copilot.",
+    "invalid": {
+      "corrupted": "The file is corrupted or isn't a backup from this app.",
+      "notBackup": "This file isn't a valid backup from this app.",
+      "newerVersion": "This backup came from a newer version of the app. Update the app and try again."
+    },
+    "marketConfirm": {
+      "title": "Restore from another country?",
+      "message": "This backup is from {{country}}. The currency and offer reading will follow {{country}}, and amounts come back with the same numbers, with no currency conversion.",
+      "action": "Restore"
+    }
+  },
+  "dailyReminder": {
+    "title": "End of day",
+    "toggleLabel": "Remind me to log my shift",
+    "toggleHint": "One alert per day, at the time you choose.",
+    "denied": "Allow notifications for the app to get the reminder."
+  },
+  "notifications": {
+    "maintenanceTitle": "Maintenance reminder",
+    "dailyTitle": "Did you log today's shift?",
+    "dailyBody": "In under a minute, you see how much you kept."
+  },
+  "summary": {
+    "cardTitle": "App usage",
+    "shifts": "Shifts logged",
+    "days": "Days with shifts",
+    "first": "First shift",
+    "last": "Last shift",
+    "version": "Version",
+    "disclaimer": "Only these numbers are shared, with no amounts, locations, or personal data. They're only sent if you choose to.",
+    "shareButton": "Share summary",
+    "shareMessage": "{{appName}} app summary\nVersion: {{version}}\nShifts: {{total}}\nDays with shifts: {{days}}\nFirst: {{first}}\nLast: {{last}}"
+  },
+  "platforms": {
+    "intro": "These platforms appear when you log a shift and in reports.",
+    "newTitle": "New platform",
+    "nameLabel": "Name",
+    "namePlaceholder": "DoorDash, Lyft…",
+    "keepOne": "Keep at least one platform to log your earnings.",
+    "listTitle": "Your platforms",
+    "removeConfirm": {
+      "title": "Remove {{name}}?",
+      "message": "Past shifts keep this name."
+    }
+  },
+  "privacy": {
+    "data": {
+      "title": "Your data",
+      "body": "Everything stays on your phone. The app has no account, no server, and no internet permission. Project links open in your browser."
+    },
+    "permissions": {
+      "title": "Permissions",
+      "body": "Location, notifications, display over other apps, and accessibility are optional and only used by the features you turn on. If you turn on screen image reading in Copilot, the app may use it on Uber and 99 to find the offer. The image is read on your phone and discarded right away, without being saved or sent."
+    },
+    "copilot": {
+      "title": "Copilot",
+      "body": "Reads the fare, distance, time, and rating of offers. It stores only the numbers, the result, and whether you tapped accept or decline, without the rating, names, addresses, conversations, or images. It doesn't touch the screen. Offers are kept for up to 12 months, and earnings estimates can be turned off in Offers and earnings. The offer notification doesn't appear on the lock screen."
+    },
+    "backup": {
+      "title": "Backup",
+      "body": "It only leaves your device when you share the file. It contains your financial data and has no password, so keep it somewhere only you can access."
+    },
+    "estimates": {
+      "title": "Estimates",
+      "body": "The results are estimates based on the data you enter. They aren't financial or tax advice."
+    }
+  },
+  "terms": {
+    "about": {
+      "title": "What the app is",
+      "body": "{{appName}} helps you understand costs, profit, and offers. It's free, doesn't require an account, and works offline."
+    },
+    "estimates": {
+      "title": "Estimates",
+      "body": "The results are estimates based on the data you enter and on what the app can read from the screen. They may contain errors, don't guarantee earnings, and aren't financial, tax, or legal advice."
+    },
+    "decisions": {
+      "title": "Your decisions",
+      "body": "The app only informs. It doesn't accept or decline rides, and every decision is yours."
+    },
+    "traffic": {
+      "title": "On the road",
+      "body": "Set up and check the app only when the car is stopped. While driving, use the voice. You're responsible for following traffic laws."
+    },
+    "platforms": {
+      "title": "Platforms",
+      "body": "{{appName}} is independent and isn't affiliated with Uber, 99, inDrive, or other platforms. Each one has its own rules about helper apps, and it's up to you to know them before using Copilot. Platforms can detect apps that use accessibility or display over other apps, and using them may have consequences for your account."
+    },
+    "data": {
+      "title": "Your data",
+      "body": "Your data stays on your phone, with no copy on our servers. If you lose the device or uninstall the app, it's lost. That's why you should make backups and keep the file somewhere only you can access."
+    },
+    "warranty": {
+      "title": "No warranty",
+      "body": "The app is provided as is, with no warranty of continuous operation or compatibility with the platforms. To the extent permitted by law, the project maintainers aren't liable for losses resulting from its use."
+    },
+    "license": {
+      "title": "License",
+      "body": "You may use the app in your work as a driver. Selling the app or derived versions, charging for it, or showing ads in it is prohibited. The full text is in the LICENSE file in the project repository."
+    },
+    "changes": {
+      "title": "Changes",
+      "body": "These terms may change in new versions of the app. Questions and problems can be sent through the Report a problem option, in More."
+    },
+    "updatedAt": "Updated on November 5, 2026."
+  },
+  "reminders": {
+    "newTitle": "New reminder",
+    "oilButton": "Oil change",
+    "oilTask": "Change the oil",
+    "tiresButton": "Tires",
+    "tiresTask": "Replace the tires",
+    "titleLabel": "What to do",
+    "titlePlaceholder": "Change the oil",
+    "dateLabel": "Date (optional)",
+    "distanceLabel_km": "In how many kilometers (optional)",
+    "distanceLabel_mi": "In how many miles (optional)",
+    "distanceHint_km": "The app adds up the kilometers from your shifts and alerts you on the home screen.",
+    "distanceHint_mi": "The app adds up the miles from your shifts and alerts you on the home screen.",
+    "missingTitle": "Enter what needs to be done.",
+    "invalidDistance_km": "Check the kilometers. Use numbers only, like {{example}}.",
+    "invalidDistance_mi": "Check the miles. Use numbers only, like {{example}}.",
+    "missingDue_km": "Enter a date or the kilometers.",
+    "missingDue_mi": "Enter a date or the miles.",
+    "noNotification": "Reminder saved, but with no alert on your phone. Allow notifications for the app or choose a future date.",
+    "emptyTitle": "No reminders",
+    "emptyMessage": "Create reminders for oil changes, tires, and servicing.",
+    "pendingTitle": "Pending",
+    "due": {
+      "remaining": "{{distance}} to go",
+      "reached": "it's time",
+      "dateOrDistance": "{{date}} or {{distance}}"
+    }
+  },
+  "report": {
+    "cardTitle": "What happened?",
+    "descriptionLabel": "Tell us in your own words",
+    "descriptionPlaceholder": "The Uber offer didn't show up",
+    "sendButton": "Send report",
+    "sendHint": "You choose where to send it, like WhatsApp or email. Nothing leaves your phone unless you send it.",
+    "previewTitle": "What will be sent",
+    "maskedNotice": "Words read by Copilot are masked, but the numbers stay. Check the text above before sending.",
+    "githubButton": "Open on GitHub",
+    "unknownDevice": "unknown",
+    "body": {
+      "heading": "{{appName}} app report",
+      "noDescription": "(no description)",
+      "version": "Version: {{version}}",
+      "android": "Android: {{android}}",
+      "device": "Device: {{device}}",
+      "accessibilityOn": "Accessibility: on",
+      "accessibilityOff": "Accessibility: off",
+      "failedReads": "Incomplete readings: {{failedReads}}",
+      "readingsHeading": "What Copilot read (words masked):"
+    }
+  },
+  "region": {
+    "language": {
+      "title": "Language",
+      "automatic": "Automatic ({{language}})",
+      "automaticHint": "Follows your phone's language."
+    },
+    "format": {
+      "title": "Number and date format",
+      "automatic": "Automatic",
+      "hint": "Decimal separator, date order, and first day of the week."
+    },
+    "units": {
+      "title": "Units",
+      "distance": "Distance",
+      "volume": "Fuel",
+      "consumption": "Fuel economy",
+      "firstWeekday": "Week starts on",
+      "km": "Kilometers",
+      "mi": "Miles",
+      "L": "Liters",
+      "gal": "Gallons",
+      "kmPerLiter": "km/L",
+      "litersPer100km": "L/100 km",
+      "mpg": "mpg",
+      "example": "Example: {{distance}}, {{money}}"
+    },
+    "market": {
+      "title": "Country where you drive",
+      "hint": "The currency and offer reading follow the country, because amounts come from the platforms' screens there. New countries are added when reading their platforms is ready.",
+      "currency": "Currency: {{currency}}",
+      "confirmTitle": "Change country?",
+      "confirmMessage": "Saved amounts keep the same numbers, now in {{currency}}. The app does not convert currency.",
+      "confirmAction": "Change"
+    }
+  }
+}

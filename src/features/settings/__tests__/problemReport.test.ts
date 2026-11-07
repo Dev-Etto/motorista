@@ -1,4 +1,7 @@
-import { buildProblemReport } from '../problemReport';
+import { buildProblemReport, type ProblemReportInput } from '@features/settings/problemReport';
+import { i18n } from '@shared/i18n';
+
+const build = (input: ProblemReportInput) => buildProblemReport(input, i18n.getFixedT('pt-BR', 'settings'));
 
 const base = {
   description: ' A Uber não avisa. ',
@@ -12,7 +15,7 @@ const base = {
 
 describe('relato de problema', () => {
   it('reúne a descrição e os dados do aparelho', () => {
-    const report = buildProblemReport(base);
+    const report = build(base);
     expect(report).toContain('A Uber não avisa.');
     expect(report).toContain('Versão: 0.8.2');
     expect(report).toContain('Aparelho: Samsung SM-A155');
@@ -21,7 +24,27 @@ describe('relato de problema', () => {
   });
 
   it('inclui as leituras quando existem', () => {
-    const report = buildProblemReport({ ...base, readings: ['R$ 13 | xxxxxx'] });
+    const report = build({ ...base, readings: ['R$ 13 | xxxxxx'] });
     expect(report).toContain('R$ 13 | xxxxxx');
+  });
+
+  it('monta o texto completo sem descrição e com a acessibilidade desligada', () => {
+    const report = build({ ...base, description: ' ', accessibilityGranted: false, readings: ['R$ 13 | xxxxxx'] });
+    expect(report).toBe(
+      [
+        'Relato do app Motorista',
+        '',
+        '(sem descrição)',
+        '',
+        'Versão: 0.8.2',
+        'Android: 15',
+        'Aparelho: Samsung SM-A155',
+        'Acessibilidade: desativada',
+        'Leituras incompletas: 2',
+        '',
+        'O que o Copiloto leu (palavras mascaradas):',
+        'R$ 13 | xxxxxx',
+      ].join('\n'),
+    );
   });
 });

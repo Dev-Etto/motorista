@@ -1,20 +1,25 @@
 import { useRouter } from 'expo-router';
-import { OfferMode, OfferTargets } from '@/domain/offer/offer';
-import { MoneyField } from '@/shared/ui/fields';
-import { AppText, Button, Card, ListRow, Notice, Segmented, ToggleRow } from '@/shared/ui/primitives';
-import { formatPerHour, formatPerKm } from '@/shared/utils/format';
+import { useTranslation } from 'react-i18next';
+import { OfferMode, OfferTargets } from '@domain/offer/offer';
+import { useFormat } from '@shared/i18n/format';
+import { MoneyField } from '@shared/ui/fields';
+import { AppText, Button, Card, ListRow, Notice, Segmented, ToggleRow } from '@shared/ui/primitives';
 import { OfferTargetsState } from './useOfferTargets';
 
-const MODES: { value: OfferMode; label: string }[] = [
-  { value: 'normal', label: 'Normal' },
-  { value: 'low', label: 'Período fraco' },
-];
+const MODES: OfferMode[] = ['normal', 'low'];
+
+function useModeOptions() {
+  const { t } = useTranslation('copilot');
+  return MODES.map((value) => ({ value, label: t(`targets.mode.${value}`) }));
+}
 
 function TargetValues({ targets }: { targets: OfferTargetsState }) {
+  const { t } = useTranslation('copilot');
+  const format = useFormat();
   return (
     <>
-      <ListRow title="Mínimo por km" value={formatPerKm(targets.values.targetPerKmCents)} />
-      <ListRow title="Mínimo por hora" value={formatPerHour(targets.values.targetPerHourCents)} />
+      <ListRow title={t('targets.minPerDistance', { context: format.distanceUnit })} value={format.perDistance(targets.values.targetPerKmCents)} />
+      <ListRow title={t('targets.minPerHour')} value={format.perHour(targets.values.targetPerHourCents)} />
     </>
   );
 }
@@ -22,15 +27,21 @@ function TargetValues({ targets }: { targets: OfferTargetsState }) {
 export function OfferTargetsEditor({ targets, suggestion }: { targets: OfferTargetsState; suggestion: OfferTargets | null }) {
   const isNormal = targets.mode === 'normal';
   const following = isNormal && targets.followGoal && !!suggestion;
+  const { t } = useTranslation('copilot');
+  const format = useFormat();
+  const modes = useModeOptions();
 
   return (
-    <Card title="Mínimos por corrida">
-      <AppText tone="muted">O menor valor que você quer receber em cada corrida. A nota das ofertas usa estes valores.</AppText>
-      <Segmented value={targets.mode} options={MODES} onChange={targets.setMode} />
+    <Card title={t('targets.title')}>
+      <AppText tone="muted">{t('targets.editorIntro')}</AppText>
+      <Segmented value={targets.mode} options={modes} onChange={targets.setMode} />
       {isNormal && suggestion ? (
         <ToggleRow
-          label="Calcular pela minha meta"
-          hint={`Sua meta pede ${formatPerKm(suggestion.targetPerKmCents)} e ${formatPerHour(suggestion.targetPerHourCents)}. Ligado, acompanha a meta quando ela mudar.`}
+          label={t('targets.followGoal')}
+          hint={t('targets.followGoalHint', {
+            perDistance: format.perDistance(suggestion.targetPerKmCents),
+            perHour: format.perHour(suggestion.targetPerHourCents),
+          })}
           value={targets.followGoal}
           onChange={targets.setFollowGoal}
         />
@@ -39,8 +50,8 @@ export function OfferTargetsEditor({ targets, suggestion }: { targets: OfferTarg
         <TargetValues targets={targets} />
       ) : (
         <>
-          <MoneyField label="Mínimo por km" hint="Oferta abaixo do seu custo fica vermelha em qualquer modo." {...targets.perKm} />
-          <MoneyField label="Mínimo por hora" {...targets.perHour} />
+          <MoneyField label={t('targets.minPerDistance', { context: format.distanceUnit })} hint={t('targets.belowCostHint')} {...targets.perKm} />
+          <MoneyField label={t('targets.minPerHour')} {...targets.perHour} />
           {targets.saveError ? <Notice tone="negative" message={targets.saveError} /> : null}
         </>
       )}
@@ -49,14 +60,16 @@ export function OfferTargetsEditor({ targets, suggestion }: { targets: OfferTarg
 }
 
 export function OfferTargetsSummary({ targets }: { targets: OfferTargetsState }) {
+  const { t } = useTranslation('copilot');
   const router = useRouter();
+  const modes = useModeOptions();
 
   return (
-    <Card title="Mínimos por corrida">
-      <AppText tone="muted">A nota das ofertas compara cada corrida com estes valores.</AppText>
-      <Segmented value={targets.mode} options={MODES} onChange={targets.setMode} />
+    <Card title={t('targets.title')}>
+      <AppText tone="muted">{t('targets.summaryIntro')}</AppText>
+      <Segmented value={targets.mode} options={modes} onChange={targets.setMode} />
       <TargetValues targets={targets} />
-      <Button label="Alterar" variant="secondary" onPress={() => router.push('/goal')} />
+      <Button label={t('targets.change')} variant="secondary" onPress={() => router.push('/goal')} />
     </Card>
   );
 }

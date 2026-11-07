@@ -1,0 +1,85 @@
+{
+  "screen": {
+    "replayIntro": "Rever a introdução"
+  },
+  "costPerKm": {
+    "title_km": "Como calculamos seu custo por km",
+    "title_mi": "Como calculamos seu custo por milha",
+    "howItWorks_km": "Somamos combustível, óleo, pneus e manutenção por km, e dividimos os custos fixos do mês pelos km que você prevê rodar.",
+    "howItWorks_mi": "Somamos combustível, óleo, pneus e manutenção por milha, e dividimos os custos fixos do mês pelas milhas que você prevê rodar.",
+    "precision": "Quanto mais valores reais você informar em Veículo e custos, mais preciso fica o resultado."
+  },
+  "profit": {
+    "title": "Como calculamos seu lucro",
+    "formula_km": "Lucro é o faturamento menos o custo do veículo pelos km rodados e as despesas da jornada, como pedágio e alimentação.",
+    "formula_mi": "Lucro é o faturamento menos o custo do veículo pelas milhas rodadas e as despesas da jornada, como pedágio e alimentação.",
+    "notCountedTwice_km": "Abastecimentos e manutenção não saem do lucro de novo, porque já estão no custo por km. Eles servem para comparar o previsto com o pago.",
+    "notCountedTwice_mi": "Abastecimentos e manutenção não saem do lucro de novo, porque já estão no custo por milha. Eles servem para comparar o previsto com o pago."
+  },
+  "offerScore": {
+    "title": "Como entender a nota da oferta",
+    "scale_km": "A nota vai de 0 a 5 e compara a oferta com seu custo e seus mínimos por km e por hora. Ela aparece em um selo, e a cor do selo indica a faixa.",
+    "scale_mi": "A nota vai de 0 a 5 e compara a oferta com seu custo e seus mínimos por milha e por hora. Ela aparece em um selo, e a cor do selo indica a faixa.",
+    "green": "Verde, {{min}} ou mais: atinge os dois mínimos. Quanto mais acima deles, maior a nota.",
+    "yellow": "Amarelo, de {{min}} a {{max}}: cobre seu custo, mas fica abaixo de algum mínimo.",
+    "red_km": "Vermelho, até {{max}}: não cobre seu custo por km.",
+    "red_mi": "Vermelho, até {{max}}: não cobre seu custo por milha.",
+    "arrows_km": "No cartão, ▲ ao lado do valor por km ou por hora indica que ele atingiu o seu mínimo, e ▼ indica que ficou abaixo.",
+    "arrows_mi": "No cartão, ▲ ao lado do valor por milha ou por hora indica que ele atingiu o seu mínimo, e ▼ indica que ficou abaixo.",
+    "withoutTime_km": "Quando a oferta não mostra o tempo da corrida, a nota usa só o valor por km e vai no máximo até 4, e o valor por hora fica vazio.",
+    "withoutTime_mi": "Quando a oferta não mostra o tempo da corrida, a nota usa só o valor por milha e vai no máximo até 4, e o valor por hora fica vazio.",
+    "rating": "★ é a avaliação do passageiro, quando o app de corrida a mostra. Ela não entra na nota.",
+    "noCosts": "Sem custos cadastrados, a oferta aparece sem nota. A decisão é sempre sua."
+  },
+  "shift": {
+    "title": "Como registrar uma jornada",
+    "howTo_km": "Toque em Nova jornada com o carro parado. Informe ganhos, km e horas, e use o cronômetro ou o GPS se preferir.",
+    "howTo_mi": "Toque em Nova jornada com o carro parado. Informe ganhos, milhas e horas, e use o cronômetro ou o GPS se preferir.",
+    "partial_km": "Sem km, o resultado fica parcial até você completar.",
+    "partial_mi": "Sem milhas, o resultado fica parcial até você completar."
+  },
+  "copilotSetup": {
+    "title": "Como configurar o Copiloto",
+    "guided": "Em Mais, abra Copiloto de ofertas e use a configuração guiada. Depois, toque em Testar.",
+    "driving": "Dirigindo, a voz avisa por você. Toque no celular só com o carro parado."
+  },
+  "copilotMissing": {
+    "title": "Se o Copiloto não aparecer",
+    "accessibility": "Confira se a acessibilidade continua ativa. Alguns aparelhos pausam serviços para economizar bateria: nesse caso, retire o app da otimização de bateria.",
+    "calibration": "Se alguma oferta não for reconhecida, a Calibração mostra o que o Copiloto está lendo, com as palavras mascaradas."
+  },
+  "shortcutIcon": {
+    "title": "O ícone na lateral da tela",
+    "what": "É o atalho de acessibilidade do Android, e o Copiloto funciona sem ele. Ele só aparece se a opção de atalho estiver ligada.",
+    "remove": "Para remover, arraste o ícone até Remover. Ou abra Configurações do Android, Acessibilidade, Copiloto de ofertas, e desligue o atalho."
+  },
+  "moveCard": {
+    "title": "Mover o cartão",
+    "drag": "Com o carro parado, arraste o cartão para onde preferir. A posição fica guardada, e você pode voltar ao topo na tela do Copiloto."
+  },
+  "goal": {
+    "title": "Como funciona a meta do mês",
+    "realProfit_km": "A meta mede seu lucro real, o mesmo de Neste mês no início: o que você faturou menos o custo por km e as despesas. Se rodar mais km pelo mesmo valor, seu lucro cai e a barra anda menos.",
+    "realProfit_mi": "A meta mede seu lucro real, o mesmo de Neste mês no início: o que você faturou menos o custo por milha e as despesas. Se rodar mais milhas pelo mesmo valor, seu lucro cai e a barra anda menos.",
+    "today": "A meta de hoje divide o que faltava no começo do dia pelos dias de trabalho restantes e não muda durante o dia. O faturamento mostrado é só uma referência para chegar nela.",
+    "plan_km": "O plano do mês é uma previsão com os km que você informou, e é dele que saem os mínimos por corrida.",
+    "plan_mi": "O plano do mês é uma previsão com as milhas que você informou, e é dele que saem os mínimos por corrida.",
+    "closedMonth": "O Mês fechado, em Relatórios, desconta o custo fixo inteiro. Se você rodar menos que o previsto, ele será menor que o lucro da meta."
+  },
+  "estimatedRevenue": {
+    "title": "Como funciona o faturamento estimado",
+    "howItWorks": "Quando você toca em aceitar em um app de corrida, o Copiloto soma o valor da oferta por plataforma. Em Mais, Ofertas e faturamento mostra o total e todas as ofertas, com filtros de período, app, aceitas e não aceitas. As ofertas ficam guardadas por até 12 meses.",
+    "suggestion": "É uma sugestão. O app não sabe se o passageiro cancelou nem quanto a plataforma pagou no fim, e alguns apps podem não avisar o toque.",
+    "useValues": "Ao registrar a jornada, toque em Usar estes valores para preencher os ganhos. Se o valor estiver diferente do que você recebeu, corrija antes de salvar: nada entra no seu lucro sem você confirmar."
+  },
+  "backup": {
+    "title": "Backup e troca de celular",
+    "onDevice": "Seus dados ficam só no celular. Faça backups de vez em quando e guarde o arquivo fora dele, como no Drive.",
+    "newPhone": "No aparelho novo, instale o app, abra Backup e use Restaurar."
+  },
+  "update": {
+    "title": "Como instalar uma atualização",
+    "howTo": "Em Mais, toque em Verificar atualização, baixe a nova versão e instale por cima da atual. Seus dados continuam no app.",
+    "backupFirst": "Faça um backup antes, por segurança."
+  }
+}

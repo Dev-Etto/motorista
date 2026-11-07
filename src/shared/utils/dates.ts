@@ -1,13 +1,13 @@
 import { DateTime, Duration } from 'luxon';
-import { MS_PER_SECOND } from '@/shared/utils/time';
+import { MS_PER_SECOND } from '@shared/utils/time';
 
-const LOCALE = 'pt-BR';
 const ISO_DATE = 'yyyy-MM-dd';
 const NOON = 12;
 const DAYS_PER_WEEK = 7;
-const WEEKDAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
-const dateOf = (iso: string) => DateTime.fromISO(iso, { locale: LOCALE }).set({ hour: NOON });
+export type HourCycle = 'h12' | 'h23';
+
+const dateOf = (iso: string) => DateTime.fromISO(iso).set({ hour: NOON });
 const isoOf = (date: DateTime) => date.toFormat(ISO_DATE);
 
 export function toISODate(date: Date): string {
@@ -56,21 +56,43 @@ export function addMonths(iso: string, delta: number): string {
   return isoOf(dateOf(iso).startOf('month').plus({ months: delta }));
 }
 
-export function weekBounds(iso: string): { start: string; end: string } {
-  const start = dateOf(iso).startOf('week');
+export const weekdayFromIso = (isoWeekday: number) => isoWeekday % DAYS_PER_WEEK;
+
+export function weekdaysFrom(firstWeekday: number): number[] {
+  return Array.from({ length: DAYS_PER_WEEK }, (_, index) => (weekdayFromIso(firstWeekday) + index) % DAYS_PER_WEEK);
+}
+
+export function weekBounds(iso: string, firstWeekday: number): { start: string; end: string } {
+  const date = dateOf(iso);
+  const offset = (weekdayOf(iso) - weekdayFromIso(firstWeekday) + DAYS_PER_WEEK) % DAYS_PER_WEEK;
+  const start = date.minus({ days: offset });
   return { start: isoOf(start), end: isoOf(start.plus({ days: DAYS_PER_WEEK - 1 })) };
 }
 
-export function weekdayName(index: number): string {
-  return WEEKDAYS[index] ?? '';
+export function formatDate(iso: string, locale: string): string {
+  return dateOf(iso).setLocale(locale).toLocaleString({ day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
-export function formatDate(iso: string): string {
-  return dateOf(iso).toFormat('dd/MM/yyyy');
+export function formatMonth(iso: string, locale: string): string {
+  return dateOf(iso).setLocale(locale).toLocaleString({ month: 'long', year: 'numeric' });
 }
 
-export function formatMonth(iso: string): string {
-  return dateOf(iso).toFormat("LLLL 'de' yyyy");
+const capitalize = (text: string, locale: string) => text.charAt(0).toLocaleUpperCase(locale) + text.slice(1);
+
+export function formatMonthShort(iso: string, locale: string): string {
+  return capitalize(dateOf(iso).setLocale(locale).toLocaleString({ month: 'short' }).replace('.', ''), locale);
+}
+
+export function formatHourOfDay(hour: number, locale: string, hourCycle: HourCycle): string {
+  return DateTime.fromObject({ hour }).setLocale(locale).toLocaleString({ hour: 'numeric', hourCycle });
+}
+
+export function formatDayMonth(iso: string, locale: string): string {
+  return dateOf(iso).setLocale(locale).toLocaleString({ day: '2-digit', month: '2-digit' });
+}
+
+export function formatDayOfMonth(iso: string): string {
+  return dateOf(iso).toFormat('dd');
 }
 
 export function formatDuration(minutes: number): string {
@@ -83,13 +105,13 @@ export function formatClock(elapsedMs: number): string {
   return Duration.fromMillis(Math.max(0, Math.floor(elapsedMs / MS_PER_SECOND) * MS_PER_SECOND)).toFormat('hh:mm:ss');
 }
 
-export type DayPeriod = 'madrugada' | 'manhã' | 'tarde' | 'noite';
+export type DayPeriod = 'dawn' | 'morning' | 'afternoon' | 'night';
 
 export function dayPeriod(hour: number): DayPeriod {
-  if (hour < 6) return 'madrugada';
-  if (hour < 12) return 'manhã';
-  if (hour < 18) return 'tarde';
-  return 'noite';
+  if (hour < 6) return 'dawn';
+  if (hour < 12) return 'morning';
+  if (hour < 18) return 'afternoon';
+  return 'night';
 }
 
 export function datesInRange(start: string, end: string): string[] {

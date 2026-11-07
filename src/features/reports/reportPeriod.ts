@@ -1,11 +1,13 @@
-import { ReportPeriod } from '@/domain/report/report';
-import { addDays, addMonths, formatDate, formatMonth, monthBounds, weekBounds } from '@/shared/utils/dates';
-import { MONTHS_PER_YEAR } from '@/shared/utils/time';
+import type { TFunction } from 'i18next';
+import { ReportPeriod } from '@domain/report/report';
+import type { Formatter } from '@shared/i18n/format';
+import { addDays, addMonths, monthBounds, weekBounds } from '@shared/utils/dates';
+import { MONTHS_PER_YEAR } from '@shared/utils/time';
 
 const DAYS_IN_WEEK = 7;
 
-export function periodBounds(period: ReportPeriod, date: string) {
-  if (period === 'week') return weekBounds(date);
+export function periodBounds(period: ReportPeriod, date: string, firstWeekday: number) {
+  if (period === 'week') return weekBounds(date, firstWeekday);
   if (period === 'month') return monthBounds(date);
   const year = date.slice(0, 4);
   return { start: `${year}-01-01`, end: `${year}-12-31` };
@@ -16,11 +18,11 @@ export function stepPeriod(period: ReportPeriod, date: string, direction: 1 | -1
   return addMonths(date, (period === 'month' ? 1 : MONTHS_PER_YEAR) * direction);
 }
 
-export function periodLabel(period: ReportPeriod, date: string): string {
-  if (period === 'month') return formatMonth(date);
+export function periodLabel(period: ReportPeriod, date: string, format: Formatter, t: TFunction<'reports'>): string {
+  if (period === 'month') return format.month(date);
   if (period === 'year') return date.slice(0, 4);
-  const { start, end } = weekBounds(date);
-  return `${formatDate(start).slice(0, 5)} a ${formatDate(end).slice(0, 5)}`;
+  const { start, end } = format.weekBounds(date);
+  return t('weekRange', { start: format.dayMonth(start), end: format.dayMonth(end) });
 }
 
-export const PERIOD_NOUNS: Record<ReportPeriod, string> = { week: 'Semana', month: 'Mês', year: 'Ano' };
+export const periodNoun = (period: ReportPeriod, t: TFunction<'reports'>) => t(`period.${period}`);

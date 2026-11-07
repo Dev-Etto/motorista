@@ -1,6 +1,6 @@
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import Svg, { Line, Rect } from 'react-native-svg';
-import { spacing, useTheme } from '@/shared/theme/theme';
+import { spacing, useTheme } from '@shared/theme/theme';
 import { AppText } from './primitives';
 
 export interface BarDatum {

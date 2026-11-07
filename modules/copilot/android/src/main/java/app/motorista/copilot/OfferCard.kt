@@ -13,7 +13,7 @@ class OfferCard(
 ) : OfferChannel {
   private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
   private val cardView = OfferCardView(context)
-  private val dismissZone = DismissZone(context, windowManager, WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, context.getString(R.string.drop_to_close))
+  private val dismissZone = DismissZone(context, windowManager, WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY, context.copilotText(R.string.drop_to_close))
   private var current: View? = null
 
   override fun show(evaluation: OfferEvaluation, preferences: CopilotPreferences) {

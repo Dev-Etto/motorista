@@ -1,31 +1,41 @@
 import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Linking } from 'react-native';
-import { DONATION_URL, RELEASES_URL, REPOSITORY_URL } from '@/config/app';
-import { Card, ListRow, Screen } from '@/shared/ui/primitives';
+import { DONATION_URL, RELEASES_URL, REPOSITORY_URL } from '@config/app';
+import { useFormat } from '@shared/i18n/format';
+import { Card, ListRow, Screen } from '@shared/ui/primitives';
 import { AppearanceCard } from './AppearanceCard';
 import { MORE_SECTIONS } from './moreMenu';
 
 export default function MoreScreen() {
   const router = useRouter();
+  const { t } = useTranslation('settings');
+  const format = useFormat();
 
   return (
     <Screen>
       <AppearanceCard />
       {MORE_SECTIONS.map((section) => (
-        <Card key={section.title} title={section.title}>
+        <Card key={section.id} title={t(`more.section.${section.id}`)}>
           {section.items.map((item) => (
-            <ListRow key={item.title} icon={item.icon} title={item.title} subtitle={item.subtitle} onPress={() => router.push(item.href)} />
+            <ListRow
+              key={item.id}
+              icon={item.icon}
+              title={t(`more.item.${item.id}.title`)}
+              subtitle={t(`more.item.${item.id}.subtitle`, { unit: format.distanceUnit })}
+              onPress={() => router.push(item.href)}
+            />
           ))}
         </Card>
       ))}
-      <Card title="Sobre o app">
-        <ListRow icon="heart" title="Apoiar o projeto" subtitle="O app é gratuito. Ajude a mantê-lo." onPress={() => Linking.openURL(DONATION_URL)} />
-        <ListRow icon="update" title="Verificar atualização" subtitle="Abre a página de versões no navegador." onPress={() => Linking.openURL(RELEASES_URL)} />
+      <Card title={t('more.about.title')}>
+        <ListRow icon="heart" title={t('more.about.donateTitle')} subtitle={t('more.about.donateSubtitle')} onPress={() => Linking.openURL(DONATION_URL)} />
+        <ListRow icon="update" title={t('more.about.updateTitle')} subtitle={t('more.about.updateSubtitle')} onPress={() => Linking.openURL(RELEASES_URL)} />
         <ListRow
           icon="document"
-          title={`Versão ${Constants.expoConfig?.version ?? ''}`}
-          subtitle="Ver o código e as novidades."
+          title={t('more.about.versionTitle', { version: Constants.expoConfig?.version ?? '' })}
+          subtitle={t('more.about.versionSubtitle')}
           onPress={() => Linking.openURL(REPOSITORY_URL)}
         />
       </Card>

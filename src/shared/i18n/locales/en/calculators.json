@@ -1,0 +1,57 @@
+{
+  "tabs": {
+    "offer": "Evaluate offer",
+    "quote": "Private ride"
+  },
+  "costNotice": {
+    "title": "First, find out your cost per {{unit}}",
+    "message": "Without it, the calculator can't tell how much of the fare goes to the car.",
+    "action": "Calculate cost"
+  },
+  "offer": {
+    "title": "Is this ride worth it?",
+    "intro": "Enter what the offer shows and see how much you keep.",
+    "value": "What the ride pays",
+    "distance": "Total distance",
+    "distanceHint": "Add the drive to the pickup and the trip itself.",
+    "time": "Total time",
+    "profit": "What you keep",
+    "perDistance": "Pays per {{unit}}",
+    "perHour": "Pays per hour",
+    "scoreTitle": "How is the score calculated?",
+    "scoreExplain": "The score compares the ride with your cost and your minimums. At {{target}} or higher, it meets both minimums. Below {{belowCost}}, it doesn't cover the cost of the car.",
+    "scoreDisclaimer": "The score is only a guide: the decision is always yours."
+  },
+  "quote": {
+    "title": "How much to charge for this ride?",
+    "intro": "For rides arranged directly with the passenger, outside the apps.",
+    "toPassenger": "To the pickup",
+    "trip": "Trip",
+    "time": "Total time",
+    "timeHint": "Include the drive to the pickup.",
+    "moreOptions": "More options",
+    "return": "Return trip without a passenger",
+    "returnHint": "If you need to drive back on your own.",
+    "profitPerHour": "How much you want to make per hour",
+    "profitPerHourHint": "This is the value of your time in the suggested price.",
+    "toll": "Tolls",
+    "extras": "Waiting time or other extras",
+    "minimum": "Don't charge less than",
+    "minimumHint": "A short ride can result in a very low price. If that happens, the app suggests this amount.",
+    "price": "Suggested price",
+    "vehicle": "For the car",
+    "vehicleDetail": "{{distance}} at your cost per {{unit}}",
+    "timeValue": "For your time",
+    "tollAndExtras": "Tolls and extras",
+    "profit": "What you keep",
+    "description": "Description (optional)",
+    "descriptionPlaceholder": "Downtown to the airport",
+    "share": "Share",
+    "shareMessage": "Price: {{price}}",
+    "shareMessageWithTrip": "Trip: {{trip}}\nPrice: {{price}}",
+    "savedTitle": "Saved quotes",
+    "noDescription": "No description",
+    "tapToRemove": "Tap to remove",
+    "removeTitle": "Remove quote?"
+  }
+}

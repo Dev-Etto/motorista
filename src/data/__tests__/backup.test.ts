@@ -1,5 +1,5 @@
-import { parseBackup } from '@/data/backup/backup';
-import { SCHEMA_VERSION } from '@/data/database/connection';
+import { parseBackup } from '@data/backup/backup';
+import { SCHEMA_VERSION } from '@data/database/connection';
 
 const emptyTables = {
   vehicles: [],

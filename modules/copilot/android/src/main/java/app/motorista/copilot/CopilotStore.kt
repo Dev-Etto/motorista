@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import org.json.JSONArray
 import org.json.JSONObject
 
-class CopilotStore private constructor(context: Context) {
+class CopilotStore private constructor(private val context: Context) {
   private val prefs: SharedPreferences = context.applicationContext.getSharedPreferences(FILE, Context.MODE_PRIVATE)
 
   private val log = OfferLogDatabase.get(context)
@@ -101,7 +101,7 @@ class CopilotStore private constructor(context: Context) {
   }
 
   private fun putEvaluation(json: JSONObject, evaluation: OfferEvaluation): JSONObject {
-    json.put("reason", evaluation.reason)
+    json.put("reason", OfferFormat.of(context, preferences.regional).reason(evaluation))
       .put("valueCents", evaluation.offer.valueCents)
       .put("km", evaluation.offer.km)
       .put("minutes", evaluation.offer.minutes)

@@ -1,17 +1,16 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { MIN_TOUCH_TARGET, radius, spacing, useTheme, fonts } from '@/shared/theme/theme';
-import { weekdayName } from '@/shared/utils/dates';
-
-const WEEKDAYS = [1, 2, 3, 4, 5, 6, 0];
+import { useFormat } from '@shared/i18n/format';
+import { MIN_TOUCH_TARGET, radius, spacing, useTheme, fonts } from '@shared/theme/theme';
 
 export function WeekdayPicker({ selected, onToggle }: { selected: number[]; onToggle: (weekday: number) => void }) {
   const colors = useTheme();
+  const format = useFormat();
 
   return (
     <View style={styles.row}>
-      {WEEKDAYS.map((weekday) => {
+      {format.weekdays().map((weekday) => {
         const active = selected.includes(weekday);
-        const name = weekdayName(weekday);
+        const name = format.weekday(weekday);
         return (
           <Pressable
             key={weekday}

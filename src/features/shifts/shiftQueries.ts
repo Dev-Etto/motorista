@@ -1,7 +1,7 @@
-import { expenseRepository } from '@/data/repositories/expenseRepository';
-import { shiftRepository } from '@/data/repositories/shiftRepository';
-import { dayRange, monthBounds } from '@/shared/utils/dates';
+import { expenseRepository } from '@data/repositories/expenseRepository';
+import { shiftRepository } from '@data/repositories/shiftRepository';
 import { copilot } from '@modules/copilot';
+import { dayRange, monthBounds } from '@shared/utils/dates';
 
 export async function loadMonth(date: string) {
   const { start, end } = monthBounds(date);

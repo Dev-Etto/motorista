@@ -15,12 +15,12 @@ object ScoreBadge {
   private const val SCALE_TEXT = "/5"
   private const val EMPTY_TEXT = "—"
 
-  fun bitmap(context: Context, evaluation: OfferEvaluation, height: Int, night: Boolean): Bitmap {
+  fun bitmap(context: Context, evaluation: OfferEvaluation, format: OfferFormat, height: Int, night: Boolean): Bitmap {
     val color = evaluation.color
     val ink = if (night) color.nightText else color.dayText
     val scorePaint = textPaint(context, ink, height * SCORE_RATIO)
     val scalePaint = textPaint(context, ink, height * SCALE_RATIO).apply { alpha = SCALE_ALPHA }
-    val score = evaluation.score?.let { OfferFormat.decimal(it) } ?: EMPTY_TEXT
+    val score = evaluation.score?.let { format.decimal(it) } ?: EMPTY_TEXT
     val scale = if (evaluation.score == null) "" else SCALE_TEXT
     val padding = height * PADDING_RATIO
     val width = padding * 2 + scorePaint.measureText(score) + scalePaint.measureText(scale)

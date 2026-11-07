@@ -3,8 +3,26 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": [
-        "./src/*"
+      "@app/*": [
+        "./src/app/*"
+      ],
+      "@application/*": [
+        "./src/application/*"
+      ],
+      "@config/*": [
+        "./src/config/*"
+      ],
+      "@data/*": [
+        "./src/data/*"
+      ],
+      "@domain/*": [
+        "./src/domain/*"
+      ],
+      "@features/*": [
+        "./src/features/*"
+      ],
+      "@shared/*": [
+        "./src/shared/*"
       ],
       "@modules/*": [
         "./modules/*"

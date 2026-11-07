@@ -1,31 +1,36 @@
-import { CostBreakdown } from '@/domain/vehicle/costs';
-import { Card, Collapsible, ListRow, Stat, StatGrid } from '@/shared/ui/primitives';
-import { formatPerKm } from '@/shared/utils/format';
-import { formatBRL } from '@/shared/utils/money';
+import { useTranslation } from 'react-i18next';
+import { CostBreakdown } from '@domain/vehicle/costs';
+import { useFormat } from '@shared/i18n/format';
+import { Card, Collapsible, ListRow, Stat, StatGrid } from '@shared/ui/primitives';
 
 export function CostSummaryCard({ costs, detailed }: { costs: CostBreakdown; detailed?: boolean }) {
+  const { t } = useTranslation('vehicle');
+  const format = useFormat();
+  const unit = format.distanceUnit;
+  const perMonth = (cents: number) => t('costSummary.perMonth', { amount: format.money(cents) });
+
   if (detailed) {
     return (
-      <Collapsible title="Ver de onde vem esse custo">
-        <ListRow title="Combustível" value={formatPerKm(costs.fuelPerKm)} />
-        <ListRow title="Óleo" value={formatPerKm(costs.oilPerKm)} />
-        <ListRow title="Pneus" value={formatPerKm(costs.tiresPerKm)} />
-        <ListRow title="Manutenção" value={formatPerKm(costs.maintenancePerKm)} />
-        <ListRow title="Seguro" value={`${formatBRL(costs.insuranceMonthly)}/mês`} />
-        <ListRow title="IPVA e licenciamento" value={`${formatBRL(costs.taxesMonthly)}/mês`} />
-        <ListRow title="Parcela ou aluguel" value={`${formatBRL(costs.paymentMonthly)}/mês`} />
-        <ListRow title="Depreciação" value={`${formatBRL(costs.depreciationMonthly)}/mês`} />
+      <Collapsible title={t('costSummary.detailsTitle')}>
+        <ListRow title={t('costSummary.fuel')} value={format.perDistance(costs.fuelPerKm)} />
+        <ListRow title={t('costSummary.oil')} value={format.perDistance(costs.oilPerKm)} />
+        <ListRow title={t('costSummary.tires')} value={format.perDistance(costs.tiresPerKm)} />
+        <ListRow title={t('costSummary.maintenance')} value={format.perDistance(costs.maintenancePerKm)} />
+        <ListRow title={t('costSummary.insurance')} value={perMonth(costs.insuranceMonthly)} />
+        <ListRow title={t('costSummary.taxes')} value={perMonth(costs.taxesMonthly)} />
+        <ListRow title={t('costSummary.payment')} value={perMonth(costs.paymentMonthly)} />
+        <ListRow title={t('costSummary.depreciation')} value={perMonth(costs.depreciationMonthly)} />
       </Collapsible>
     );
   }
 
   return (
-    <Card title="Seu custo por km">
+    <Card title={t('costSummary.title', { unit })}>
       <StatGrid>
-        <Stat label="Custo total por km" value={formatPerKm(costs.fullPerKm)} tone="accent" />
-        <Stat label="Combustível e desgaste" value={formatPerKm(costs.variablePerKm)} />
-        <Stat label="Contas fixas no mês" value={formatBRL(costs.fixedMonthly)} />
-        <Stat label="Contas fixas por km" value={formatPerKm(costs.fixedPerKm)} />
+        <Stat label={t('costSummary.fullPerDistance', { unit })} value={format.perDistance(costs.fullPerKm)} tone="accent" />
+        <Stat label={t('costSummary.variable')} value={format.perDistance(costs.variablePerKm)} />
+        <Stat label={t('costSummary.fixedMonthly')} value={format.money(costs.fixedMonthly)} />
+        <Stat label={t('costSummary.fixedPerDistance', { unit })} value={format.perDistance(costs.fixedPerKm)} />
       </StatGrid>
     </Card>
   );

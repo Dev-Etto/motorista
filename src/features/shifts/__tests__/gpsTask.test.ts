@@ -1,9 +1,9 @@
-import { gpsSessionRepository } from '@/data/repositories/gpsSessionRepository';
-import { applyLocations } from '../gpsTask';
+import { gpsSessionRepository } from '@data/repositories/gpsSessionRepository';
+import { applyLocations } from '@features/shifts/gpsTask';
 
 jest.mock('expo-task-manager', () => ({ defineTask: jest.fn() }));
 jest.mock('@modules/copilot', () => ({ copilot: { getTimer: () => ({ running: true }) } }));
-jest.mock('@/data/repositories/gpsSessionRepository', () => ({ gpsSessionRepository: { get: jest.fn(), recordProgress: jest.fn() } }));
+jest.mock('@data/repositories/gpsSessionRepository', () => ({ gpsSessionRepository: { get: jest.fn(), recordProgress: jest.fn() } }));
 
 const sessions = jest.mocked(gpsSessionRepository);
 const location = (latitude: number, timestamp: number) => ({ coords: { latitude, longitude: -46.6, accuracy: 5 }, timestamp }) as never;

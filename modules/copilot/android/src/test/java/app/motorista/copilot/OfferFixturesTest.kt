@@ -19,7 +19,7 @@ class OfferFixturesTest {
       val targets = OfferTargets(case.getDouble("costPerKm"), case.getDouble("targetPerKmCents"), case.getDouble("targetPerHourCents"))
       val result = OfferEvaluator.evaluate(offer, targets)
       assertEquals(case.getString("color"), result.color.id)
-      assertEquals(case.getString("reason"), result.reason)
+      assertEquals(case.getString("reason"), testFormat().reason(result))
       if (case.isNull("score")) assertNull(result.score) else assertEquals(case.getDouble("score"), result.score!!, 0.001)
       assertEquals(case.getDouble("perKm"), result.perKmCents, 0.001)
       assertEquals(case.getDouble("perHour"), result.perHourCents, 0.001)

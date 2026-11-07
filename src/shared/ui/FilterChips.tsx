@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { fonts, fontSize, MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@/shared/theme/theme';
+import { fonts, fontSize, MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@shared/theme/theme';
 import { AppText } from './primitives';
 
 interface FilterChipsProps<T extends string> {

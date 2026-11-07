@@ -58,6 +58,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     'expo-router',
     'expo-sqlite',
     'expo-sharing',
+    ['expo-localization', { supportsRTL: false, allowDynamicLocaleChangesAndroid: true, supportedLocales: { android: ['pt-BR', 'en', 'es'] } }],
     ['expo-splash-screen', { image: './assets/splash-icon.png', imageWidth: 220, backgroundColor: '#171717' }],
     ['expo-build-properties', { android: { minSdkVersion: 26 } }],
     ['expo-location', { isAndroidForegroundServiceEnabled: true, isAndroidBackgroundLocationEnabled: false }],

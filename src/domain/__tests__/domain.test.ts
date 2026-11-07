@@ -1,13 +1,18 @@
-import { addDays, formatClock, monthBounds, weekBounds, workDaysLeft } from '@/shared/utils/dates';
-import { formatBRL, parseBRL, parseDecimal } from '@/shared/utils/money';
-import { computeGoalProgress, requiredGrossForGoal } from '../goal/goal';
-import { accumulateGps } from '../gps/gps';
-import { buildInsights } from '../insights/buildInsights';
-import { ShiftFact } from '../insights/types';
-import { classifyOffer } from '../offer/offer';
-import { computeQuote } from '../quote/quote';
-import { computeMonthClose, computeShift } from '../shift/shift';
-import { computeCosts, suggestedProfile, CostProfile } from '../vehicle/costs';
+import { computeGoalProgress, requiredGrossForGoal } from '@domain/goal/goal';
+import { accumulateGps } from '@domain/gps/gps';
+import { buildInsights } from '@domain/insights/buildInsights';
+import { ShiftFact } from '@domain/insights/types';
+import { classifyOffer } from '@domain/offer/offer';
+import { computeQuote } from '@domain/quote/quote';
+import { computeMonthClose, computeShift } from '@domain/shift/shift';
+import { computeCosts, suggestedProfile, CostProfile } from '@domain/vehicle/costs';
+import { addDays, formatClock, monthBounds, weekBounds, workDaysLeft } from '@shared/utils/dates';
+import { Money } from '@shared/utils/money';
+import { parseDecimal } from '@shared/utils/numbers';
+
+const BRL = { locale: 'pt-BR', currency: 'BRL' };
+const formatBRL = (cents: number) => Money.fromCents(cents).format(BRL);
+const parseBRL = (text: string) => Money.parse(text, BRL)?.wholeCents ?? null;
 
 const profile = (over: Partial<CostProfile> = {}): CostProfile => ({
   ...suggestedProfile('car', 'owned'),
@@ -44,7 +49,7 @@ describe('money', () => {
     expect(parseBRL('1.234')).toBe(123400);
     expect(parseBRL('abc')).toBeNull();
     expect(parseBRL('')).toBeNull();
-    expect(parseDecimal('11,5')).toBe(11.5);
+    expect(parseDecimal('11,5', 'pt-BR')).toBe(11.5);
   });
 });
 
@@ -275,8 +280,8 @@ describe('datas', () => {
 
   it('limites de mês e semana', () => {
     expect(monthBounds('2026-02-10')).toEqual({ start: '2026-02-01', end: '2026-02-28', days: 28 });
-    expect(weekBounds('2026-11-04')).toEqual({ start: '2026-11-02', end: '2026-11-08' });
-    expect(weekBounds('2026-11-08').start).toBe('2026-11-02');
+    expect(weekBounds('2026-11-04', 1)).toEqual({ start: '2026-11-02', end: '2026-11-08' });
+    expect(weekBounds('2026-11-08', 1).start).toBe('2026-11-02');
     expect(addDays('2026-12-31', 1)).toBe('2027-01-01');
   });
 
@@ -307,12 +312,12 @@ describe('insights', () => {
   it('calcula o lucro real', () => {
     const shifts = ['2026-11-16', '2026-11-17', '2026-11-18', '2026-11-19', '2026-11-20'].map((d) => shift(d));
     const real = buildInsights({ ...ctx, shifts }).find((i) => i.id === 'real-profit');
-    expect(real?.message).toBe('De cada R$ 100 faturados, R$ 50 ficaram com você.');
+    expect(real).toMatchObject({ sharePerHundred: 50, shifts: 5 });
   });
 
   it('compara combustível previsto e pago', () => {
     const shifts = ['2026-11-16', '2026-11-17', '2026-11-18', '2026-11-19', '2026-11-20'].map((d) => shift(d));
     const gap = buildInsights({ ...ctx, shifts, fuelKm: 1000, fuelPaidCents: 56000 }).find((i) => i.id === 'fuel-gap');
-    expect(gap?.message).toContain('12% a mais');
+    expect(gap).toMatchObject({ gapPct: 12 });
   });
 });

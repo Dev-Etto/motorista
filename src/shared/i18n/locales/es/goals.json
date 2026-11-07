@@ -1,0 +1,63 @@
+{
+  "day": {
+    "reached": "Meta cumplida.",
+    "reachedWithSurplus": "Meta cumplida. Ya ganaste {{surplus}} por encima de ella.",
+    "noDaysLeft": "No quedan más días de trabajo en tu meta este mes. Faltaron {{remaining}} para alcanzarla.",
+    "notWorkDay": "Hoy no es día de trabajo en tu meta.",
+    "planLastDay": "En el último día de trabajo del mes, el objetivo es ganar {{target}}.",
+    "planNextDays_one": "En el próximo {{count}} día de trabajo, el objetivo es ganar {{target}} por día.",
+    "planNextDays_other": "En los próximos {{count}} días de trabajo, el objetivo es ganar {{target}} por día.",
+    "todayReached": "Meta de hoy cumplida. Lo que ganes de más reduce lo que falta en los próximos días.",
+    "leftToday": "Faltan {{amount}} de ganancia hoy.",
+    "effort": "Eso pide cerca de {{gross}} de ingresos en el día, recorriendo {{distance}}.",
+    "lastDay": "Hoy es el último día de trabajo del mes.",
+    "daysLeft_one": "Queda {{count}} día de trabajo en el mes, contando hoy.",
+    "daysLeft_other": "Quedan {{count}} días de trabajo en el mes, contando hoy."
+  },
+  "partialShifts_one": "{{count}} jornada sin km o sin costo: no se le descontó el costo del vehículo, así que tu ganancia real puede ser menor.",
+  "partialShifts_other": "{{count}} jornadas sin km o sin costo: no se les descontó el costo del vehículo, así que tu ganancia real puede ser menor.",
+  "plan": {
+    "noVehicle": "Registra tu vehículo para ver cuánto facturar y cuánto tiene que pagar cada viaje.",
+    "title": "Tu plan para el mes",
+    "caption_km": "Es una previsión hecha al principio, con los km que indicaste. Los mínimos por viaje salen de ella.",
+    "caption_mi": "Es una previsión hecha al principio, con las millas que indicaste. Los mínimos por viaje salen de ella.",
+    "gross": "Ingresos previstos en el mes",
+    "perWorkDay": "Por día de trabajo",
+    "plannedDistance_km": "Km previstos por día",
+    "plannedDistance_mi": "Millas previstas por día"
+  },
+  "progress": {
+    "title": "Meta del mes",
+    "ofProfit": "de {{goal}} de ganancia",
+    "todayTarget": "Meta de ganancia hoy",
+    "todayTargetAdjusted": "Meta de hoy, ajustada por ti",
+    "profitToday": "Ganancia de hoy",
+    "remaining": "Falta ganar en el mes",
+    "openDetails": "Ver meta y plan",
+    "howTitle": "¿Cómo funciona esta cuenta?",
+    "howProfit": "La ganancia es la misma de \"Este mes\" en Inicio: lo que facturaste menos el costo por {{unit}} de las jornadas y los gastos.",
+    "howFixed_km": "El costo fijo, como el seguro y la cuota, se reparte en cada km, según los km que prevés recorrer en el mes.",
+    "howFixed_mi": "El costo fijo, como el seguro y la cuota, se reparte en cada milla, según las millas que prevés recorrer en el mes.",
+    "howClosedMonth": "Por eso, el Mes cerrado, en Informes, puede dar un valor distinto: descuenta el costo fijo completo. Si recorres menos de lo previsto, será menor que la ganancia de aquí.",
+    "howToday": "La meta de hoy divide lo que faltaba al principio del día entre los días de trabajo restantes. No cambia durante el día."
+  },
+  "screen": {
+    "title": "Meta de {{month}}",
+    "intro": "Di cuánto quieres ganar en el mes. La app sigue tu ganancia real y muestra lo que falta, hoy y hasta el fin del mes.",
+    "goalTitle": "Tu meta",
+    "desired": "Cuánto quieres ganar en el mes",
+    "hoursPerDay": "Horas de trabajo por día",
+    "workDays": "Días de trabajo",
+    "update": "Actualizar meta",
+    "calculate": "Calcular mi plan",
+    "adjustToday": "Ajustar la meta de hoy",
+    "todayProfit": "Ganancia que quieres hacer hoy",
+    "todayProfitHint": "Vale solo para hoy. En blanco, la app la calcula.",
+    "errors": {
+      "desired": "Indica cuánto quieres ganar.",
+      "weekdays": "Selecciona al menos un día de trabajo.",
+      "hours": "Indica las horas por día, de {{min}} a {{max}}.",
+      "dayTarget": "Revisa la ganancia de hoy. Usa solo números, como {{example}}."
+    }
+  }
+}

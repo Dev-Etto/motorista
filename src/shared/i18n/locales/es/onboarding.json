@@ -1,0 +1,67 @@
+{
+  "welcome": {
+    "tagline": "Descubre cuánto te queda de verdad en tu trabajo como conductor de aplicación.",
+    "promise": "Sin cuenta. Sin cobros. Sin anuncios.",
+    "privacy": "Tus datos quedan solo en tu celular.",
+    "start": "Comenzar",
+    "skipIntro": "Saltar introducción",
+    "terms": "Al continuar, aceptas los <bold>Términos de uso</bold>.",
+    "region": "{{language}} · {{currency}} · {{unit}}. Toca para cambiar el idioma y la región."
+  },
+  "intro": {
+    "registerTitle": "Registra el día en menos de un minuto",
+    "registerBody_km": "Indica lo que ganaste, los km y las horas. La app descuenta tus costos y muestra cuánto te quedó de verdad.",
+    "registerBody_mi": "Indica lo que ganaste, las millas y las horas. La app descuenta tus costos y muestra cuánto te quedó de verdad.",
+    "offersTitle": "Evalúa las ofertas con tus números",
+    "offersBody": "Mira de dónde viene cada oferta, cuánto te queda y una puntuación de 0 a 5. Decides con más claridad.",
+    "skip": "Saltar"
+  },
+  "setup": {
+    "title": "Tu costo con pocos datos",
+    "hint": "El aceite, las llantas y el mantenimiento empiezan con estimaciones. El seguro, el impuesto vehicular y la cuota los agregas después.",
+    "seeCost": "Ver mi costo"
+  },
+  "result": {
+    "caption_km": "Cada km te cuesta",
+    "caption_mi": "Cada milla te cuesta",
+    "firstEstimate": "Es una primera cuenta. Agrega el seguro, el impuesto vehicular, la cuota o el alquiler para ver el valor completo.",
+    "addOtherCosts": "Agregar los otros costos"
+  },
+  "permissions": {
+    "title": "Deja todo listo para usar",
+    "hint": "Así no tienes que detenerte a mitad de la jornada. Todo queda en tu celular, y puedes cambiarlo después.",
+    "notice": "Quien decide los viajes siempre eres tú: la app no toca la pantalla. Cada plataforma tiene sus reglas sobre apps de apoyo, y conviene conocerlas. Mientras manejas, la voz te avisa: toca el celular solo con el carro detenido."
+  },
+  "done": {
+    "title": "Todo listo",
+    "message": "Registra tu primera jornada y mira cuánto te quedó de verdad.",
+    "registerShift": "Registrar una jornada",
+    "backHome": "Volver al inicio",
+    "seeHome": "Ver el inicio"
+  },
+  "nextStep": {
+    "caption": "Tu próximo paso",
+    "vehicle": {
+      "title_km": "Descubre tu costo por km",
+      "title_mi": "Descubre tu costo por milla",
+      "message": "Con él, la app muestra cuánto te queda de verdad en cada jornada.",
+      "action": "Calcular costo"
+    },
+    "firstShift": {
+      "title": "Registra tu primera jornada",
+      "message_km": "Indica cuánto ganaste, los km y las horas. En menos de un minuto ves tu ganancia real.",
+      "message_mi": "Indica cuánto ganaste, las millas y las horas. En menos de un minuto ves tu ganancia real.",
+      "action": "Registrar jornada"
+    },
+    "goal": {
+      "title": "Define tu meta del mes",
+      "message": "Di cuánto quieres ganar y mira cuánto falta hoy y hasta el fin del mes.",
+      "action": "Definir meta"
+    },
+    "firstBackup": {
+      "title": "Guarda una copia de tus datos",
+      "message": "Tus datos quedan solo en este celular. Con una copia de seguridad, te los llevas si cambias de dispositivo.",
+      "action": "Hacer copia de seguridad"
+    }
+  }
+}

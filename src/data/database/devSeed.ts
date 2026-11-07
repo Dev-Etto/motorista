@@ -1,5 +1,5 @@
 import { File, Paths } from 'expo-file-system';
-import { addDays, isoFromMillis } from '@/shared/utils/dates';
+import { addDays, isoFromMillis } from '@shared/utils/dates';
 import { runInTransaction } from './connection';
 
 const REQUEST_FILE = 'mock-seed';

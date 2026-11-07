@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { addMonths, today } from '@/shared/utils/dates';
+import { addMonths, today } from '@shared/utils/dates';
 
 export function useMonthCursor() {
   const [date, setDate] = useState(today());

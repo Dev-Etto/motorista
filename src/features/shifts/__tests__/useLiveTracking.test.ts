@@ -1,13 +1,13 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
-import { settingsRepository } from '@/data/repositories/settingsRepository';
-import { useLiveTracking } from '../useLiveTracking';
+import { settingsRepository } from '@data/repositories/settingsRepository';
+import { useLiveTracking } from '@features/shifts/useLiveTracking';
 
 const mockGps = { running: false, km: 0, error: null, start: jest.fn(), pause: jest.fn().mockResolvedValue(0), reset: jest.fn() };
 const mockTimer = { running: true, started: true, startedAt: 0, elapsedMs: 0, minutes: 0, start: jest.fn(), pause: jest.fn(), reset: jest.fn() };
 
-jest.mock('../useGpsTracking', () => ({ useGpsTracking: () => mockGps }));
-jest.mock('../useShiftTimer', () => ({ useShiftTimer: () => mockTimer }));
-jest.mock('@/data/repositories/settingsRepository', () => ({
+jest.mock('@features/shifts/useGpsTracking', () => ({ useGpsTracking: () => mockGps }));
+jest.mock('@features/shifts/useShiftTimer', () => ({ useShiftTimer: () => mockTimer }));
+jest.mock('@data/repositories/settingsRepository', () => ({
   SETTING_KEYS: { gpsMeasureKm: 'gps_measure_km' },
   settingsRepository: { getJson: jest.fn(), setJson: jest.fn() },
 }));

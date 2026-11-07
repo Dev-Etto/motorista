@@ -1,4 +1,4 @@
-import { palette } from '../theme/theme';
+import { palette } from '@shared/theme/theme';
 
 function luminance(hex: string): number {
   const channels = [1, 3, 5].map((start) => parseInt(hex.slice(start, start + 2), 16) / 255);

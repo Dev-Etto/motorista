@@ -1,6 +1,6 @@
-import { OfferRange } from '@/domain/offer/offerLog';
-import { useAsyncData } from '@/shared/hooks/useAsyncData';
+import { OfferRange } from '@domain/offer/offerLog';
 import { copilot } from '@modules/copilot';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
 
 export function useOfferHistory({ from, to }: OfferRange) {
   const history = useAsyncData(() => copilot.getOffers(from, to), [from, to]);

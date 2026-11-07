@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { loadGoalProgress } from '@/application/goalProgress';
-import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
-import { vehicleRepository } from '@/data/repositories/vehicleRepository';
+import { loadGoalProgress } from '@application/goalProgress';
+import { SETTING_KEYS, settingsRepository } from '@data/repositories/settingsRepository';
+import { vehicleRepository } from '@data/repositories/vehicleRepository';
 import {
   activeTargets,
   DEFAULT_LOW_DEMAND_TARGETS,
@@ -12,9 +12,9 @@ import {
   type OfferTargets,
   offerTargetsSchema,
   withGoalTargets,
-} from '@/domain/offer/offer';
-import { today } from '@/shared/utils/dates';
+} from '@domain/offer/offer';
 import { copilot } from '@modules/copilot';
+import { today } from '@shared/utils/dates';
 
 export async function loadOfferSettings(): Promise<OfferSettings> {
   const [mode, normal, low, followGoal, progress] = await Promise.all([

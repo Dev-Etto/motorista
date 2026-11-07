@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
-import { estimateEarnings, filterOffers, listSources, OutcomeFilter, summarizeOutcomes } from '@/domain/offer/offerLog';
-import { today } from '@/shared/utils/dates';
+import { estimateEarnings, filterOffers, listSources, OutcomeFilter, summarizeOutcomes } from '@domain/offer/offerLog';
 import { copilot } from '@modules/copilot';
+import { today } from '@shared/utils/dates';
 import { CustomDates, defaultCustomDates, OfferPeriod, periodRange } from './offerPeriod';
 import { useOfferHistory } from './useOfferHistory';
 

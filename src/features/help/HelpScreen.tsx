@@ -1,20 +1,24 @@
 import { useRouter } from 'expo-router';
-import { AppText, Button, Collapsible, Screen } from '@/shared/ui/primitives';
-import { HELP_SECTIONS } from './helpContent';
+import { useTranslation } from 'react-i18next';
+import { useFormat } from '@shared/i18n/format';
+import { AppText, Button, Collapsible, Screen } from '@shared/ui/primitives';
+import { helpSections } from './helpContent';
 
 export default function HelpScreen() {
   const router = useRouter();
+  const { t } = useTranslation('help');
+  const format = useFormat();
 
   return (
     <Screen>
-      {HELP_SECTIONS.map((section) => (
-        <Collapsible key={section.title} title={section.title}>
+      {helpSections(t, format).map((section) => (
+        <Collapsible key={section.id} title={section.title}>
           {section.paragraphs.map((paragraph) => (
             <AppText key={paragraph}>{paragraph}</AppText>
           ))}
         </Collapsible>
       ))}
-      <Button label="Rever a introdução" variant="secondary" onPress={() => router.push({ pathname: '/onboarding', params: { replay: '1' } })} />
+      <Button label={t('screen.replayIntro')} variant="secondary" onPress={() => router.push({ pathname: '/onboarding', params: { replay: '1' } })} />
     </Screen>
   );
 }

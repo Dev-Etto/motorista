@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="copilot_service_label">Copiloto de ofertas</string>
+  <string name="copilot_service_description">Lee el valor, la distancia, el tiempo y la calificación de las ofertas en las apps de viajes para mostrar tus números, y anota cuando tocas aceptar o rechazar, para estimar tus ingresos. Si activas la opción, también puede leer la imagen de la pantalla en Uber y en 99, en el propio dispositivo y sin guardarla. No toca la pantalla, no acepta ni rechaza viajes, y nada sale del dispositivo.</string>
+  <string name="drop_to_close">Suelta aquí para cerrar</string>
+  <string name="drop_to_hide">Suelta aquí para ocultar</string>
+  <string name="floating_channel_name">Botón flotante</string>
+  <string name="floating_notification_title">Botón flotante activo</string>
+  <string name="floating_notification_text">Muestra el cronómetro y las ofertas sobre las otras apps.</string>
+  <string name="panel_hide_detail">Vuelve cuando abras la app y salgas de ella</string>
+  <string name="panel_last_offer">Última oferta</string>
+  <string name="panel_open_app">Abrir la app</string>
+  <string name="panel_hide_button">Ocultar el botón</string>
+  <string name="panel_shift_running">Jornada en curso</string>
+  <string name="panel_shift_paused">Jornada en pausa</string>
+  <string name="panel_shift_idle">Ninguna jornada iniciada</string>
+  <string name="panel_pause">Pausar</string>
+  <string name="panel_resume">Reanudar</string>
+  <string name="panel_start">Iniciar cronómetro</string>
+  <string name="card_per_distance">Por %1$s</string>
+  <string name="card_per_hour">Por hora</string>
+  <string name="card_profit">Ganancia</string>
+  <string name="forgotten_channel_name">Jornada</string>
+  <string name="forgotten_title">El cronómetro sigue encendido</string>
+  <string name="forgotten_text">Si la jornada ya terminó, abre la app y revisa las horas.</string>
+  <string name="offers_channel_name">Ofertas</string>
+  <string name="offers_channel_description">Resultado de las ofertas leídas por el Copiloto</string>
+  <string name="offer_score_of_five">Puntuación %1$s de 5</string>
+  <string name="offer_no_score">Sin puntuación</string>
+  <string name="offer_score_short">Puntuación %1$s</string>
+  <string name="offer_profit_line">Ganancia %1$s</string>
+  <string name="reason_no_costs">Registra tus costos para ver la puntuación</string>
+  <string name="reason_below_cost">No cubre tu costo por %1$s</string>
+  <string name="reason_targets">%1$s: %2$s · hora: %3$s</string>
+  <string name="reason_no_target">sin mínimo</string>
+  <string name="reason_at_target">en el mínimo</string>
+  <string name="reason_above">%1$d%% por encima del mínimo</string>
+  <string name="reason_below">%1$d%% por debajo del mínimo</string>
+  <string name="reason_no_time">sin tiempo en la oferta</string>
+  <string name="spoken_score">Puntuación %1$s.</string>
+  <string name="spoken_per_km">%1$s por kilómetro.</string>
+  <string name="spoken_per_mi">%1$s por milla.</string>
+  <string name="spoken_profit">%1$s de ganancia.</string>
+  <string name="spoken_loss">%1$s de pérdida.</string>
+  <string name="spoken_amount_with_minor">%1$s con %2$s</string>
+  <string name="spoken_amount_short">%1$d con %2$d</string>
+  <plurals name="currency_brl_major">
+    <item quantity="one">%d real</item>
+    <item quantity="other">%d reales</item>
+  </plurals>
+  <plurals name="currency_brl_minor">
+    <item quantity="one">%d centavo</item>
+    <item quantity="other">%d centavos</item>
+  </plurals>
+  <plurals name="currency_usd_major">
+    <item quantity="one">%d dólar</item>
+    <item quantity="other">%d dólares</item>
+  </plurals>
+  <plurals name="currency_usd_minor">
+    <item quantity="one">%d centavo</item>
+    <item quantity="other">%d centavos</item>
+  </plurals>
+  <plurals name="currency_eur_major">
+    <item quantity="one">%d euro</item>
+    <item quantity="other">%d euros</item>
+  </plurals>
+  <plurals name="currency_eur_minor">
+    <item quantity="one">%d céntimo</item>
+    <item quantity="other">%d céntimos</item>
+  </plurals>
+  <plurals name="currency_mxn_major">
+    <item quantity="one">%d peso</item>
+    <item quantity="other">%d pesos</item>
+  </plurals>
+  <plurals name="currency_mxn_minor">
+    <item quantity="one">%d centavo</item>
+    <item quantity="other">%d centavos</item>
+  </plurals>
+</resources>

@@ -54,6 +54,7 @@ data class CopilotPreferences(
   val estimateEarnings: Boolean = true,
   val imageReading: Boolean = false,
   val floatingButton: Boolean = true,
+  val regional: RegionalSettings = RegionalSettings(),
 ) {
   fun toJson(): String = JSONObject()
     .put("voice", voice)
@@ -68,6 +69,7 @@ data class CopilotPreferences(
     .put("estimateEarnings", estimateEarnings)
     .put("imageReading", imageReading)
     .put("floatingButton", floatingButton)
+    .put("regional", regional.toJson())
     .toString()
 
   companion object {
@@ -75,6 +77,12 @@ data class CopilotPreferences(
     private const val MAX_DURATION_SECONDS = 15
     private const val MIN_DURATION_SECONDS = 5
     val DEFAULT_PACKAGES = OfferSources.packages
+
+    fun merge(raw: String?, current: CopilotPreferences): CopilotPreferences {
+      val incoming = fromJson(raw)
+      val hasRegional = runCatching { JSONObject(raw.orEmpty()).has("regional") }.getOrDefault(false)
+      return if (hasRegional) incoming else incoming.copy(regional = current.regional)
+    }
 
     fun fromJson(raw: String?): CopilotPreferences {
       if (raw.isNullOrBlank()) return CopilotPreferences()
@@ -102,6 +110,7 @@ data class CopilotPreferences(
       estimateEarnings = json.optBoolean("estimateEarnings", true),
       imageReading = json.optBoolean("imageReading", false),
       floatingButton = json.optBoolean("floatingButton", true),
+      regional = RegionalSettings.from(json.optJSONObject("regional")),
     )
   }
 }

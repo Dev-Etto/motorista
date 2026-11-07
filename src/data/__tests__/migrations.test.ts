@@ -1,7 +1,7 @@
 import { DatabaseSync } from 'node:sqlite';
-import { BackupFile, createBackup, parseBackup, restoreBackup } from '@/data/backup/backup';
-import { migrate, MIGRATIONS, SCHEMA_VERSION } from '@/data/database/connection';
-import { seedSampleData } from '@/data/database/devSeed';
+import { BackupFile, backupMarket, createBackup, parseBackup, restoreBackup } from '@data/backup/backup';
+import { migrate, MIGRATIONS, SCHEMA_VERSION } from '@data/database/connection';
+import { seedSampleData } from '@data/database/devSeed';
 import { openTestDatabase } from './sqliteHarness';
 
 let mockDb: DatabaseSync;
@@ -25,6 +25,8 @@ function seed() {
 }
 
 const count = (table: string) => (mockDb.prepare(`SELECT COUNT(*) AS total FROM ${table}`).get() as { total: number }).total;
+const BEFORE_REGIONAL = MIGRATIONS.findIndex((migration) => migration.includes("'format_locale'"));
+const setting = (key: string) => (mockDb.prepare('SELECT value FROM settings WHERE key = ?').get(key) as { value: string } | undefined)?.value;
 const userVersion = () => (mockDb.prepare('PRAGMA user_version').get() as { user_version: number }).user_version;
 
 describe('migrações', () => {
@@ -47,6 +49,40 @@ describe('migrações', () => {
     expect(count('shift_earnings')).toBe(1);
     expect(mockDb.prepare('SELECT km FROM shifts').get()).toEqual({ km: 120.5 });
     expect(count('goals')).toBe(1);
+  });
+
+  it('instalação existente mantém português, real e quilômetro', async () => {
+    openAtVersion(BEFORE_REGIONAL);
+    seed();
+    await migrate();
+    expect(setting('language')).toBe('pt-BR');
+    expect(setting('market')).toBe('BR');
+    expect(setting('distance_unit')).toBe('km');
+    expect(setting('first_weekday')).toBe('1');
+  });
+
+  it('marca as plataformas padrão para o nome seguir o idioma', async () => {
+    openAtVersion(0);
+    await migrate();
+    const rows = mockDb.prepare('SELECT name, system_key AS systemKey FROM platforms WHERE system_key IS NOT NULL ORDER BY name').all();
+    expect(rows).toEqual([
+      { name: 'Outros', systemKey: 'other' },
+      { name: 'Particular', systemKey: 'private' },
+    ]);
+  });
+
+  it('instalação nova segue o aparelho', async () => {
+    openAtVersion(0);
+    await migrate();
+    expect(setting('language')).toBeUndefined();
+  });
+
+  it('não sobrescreve uma escolha já salva', async () => {
+    openAtVersion(BEFORE_REGIONAL);
+    seed();
+    mockDb.exec("INSERT INTO settings (key, value) VALUES ('distance_unit', 'mi')");
+    await migrate();
+    expect(setting('distance_unit')).toBe('mi');
   });
 
   it('rodar de novo não muda nada', async () => {
@@ -143,5 +179,37 @@ describe('backup de ponta a ponta', () => {
     await restoreBackup(file.backup);
 
     expect(mockDb.prepare('SELECT hours_per_day FROM goals').get()).toEqual({ hours_per_day: 8 });
+  });
+
+  it('backup de antes do perfil regional volta em português, real e quilômetro', async () => {
+    const backup = await createBackup();
+    const oldSettings = backup.tables.settings.filter((row) => row.key === 'onboarded');
+    const platforms = backup.tables.platforms.map(({ system_key: _key, ...platform }) => platform);
+    const old: BackupFile = { ...backup, schemaVersion: BEFORE_REGIONAL, tables: { ...backup.tables, settings: oldSettings, platforms } };
+
+    await restoreBackup(old);
+
+    expect(setting('language')).toBe('pt-BR');
+    expect(setting('market')).toBe('BR');
+    expect(setting('distance_unit')).toBe('km');
+    expect(mockDb.prepare("SELECT system_key AS systemKey FROM platforms WHERE name = 'Particular'").get()).toEqual({ systemKey: 'private' });
+    expect(backupMarket(old)).toBe('BR');
+  });
+
+  it('backup novo diz o país em que foi feito', async () => {
+    mockDb.exec("INSERT INTO settings (key, value) VALUES ('market', 'BR') ON CONFLICT(key) DO UPDATE SET value = excluded.value");
+    const backup = await createBackup();
+    expect(backupMarket(backup)).toBe('BR');
+    const unknown: BackupFile = {
+      ...backup,
+      tables: { ...backup.tables, settings: [...backup.tables.settings.filter((row) => row.key !== 'market'), { key: 'market', value: 'XX' }] },
+    };
+    expect(backupMarket(unknown)).toBeNull();
+  });
+
+  it('backup novo sem país escolhido segue o aparelho', async () => {
+    const backup = await createBackup();
+    const withoutMarket: BackupFile = { ...backup, tables: { ...backup.tables, settings: backup.tables.settings.filter((row) => row.key !== 'market') } };
+    expect(backupMarket(withoutMarket)).toBeNull();
   });
 });

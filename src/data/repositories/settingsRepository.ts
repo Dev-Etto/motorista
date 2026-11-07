@@ -1,5 +1,5 @@
 import type { z } from 'zod';
-import { getDb, type SqlExecutor } from '@/data/database/connection';
+import { getDb, type SqlExecutor } from '@data/database/connection';
 
 export const SETTING_KEYS = {
   onboarded: 'onboarded',
@@ -14,6 +14,13 @@ export const SETTING_KEYS = {
   dailyReminderId: 'daily_reminder_id',
   dailyReminderHour: 'daily_reminder_hour',
   gpsMeasureKm: 'gps_measure_km',
+  language: 'language',
+  formatLocale: 'format_locale',
+  market: 'market',
+  distanceUnit: 'distance_unit',
+  volumeUnit: 'volume_unit',
+  consumptionUnit: 'consumption_unit',
+  firstWeekday: 'first_weekday',
 } as const;
 
 export type SettingKey = (typeof SETTING_KEYS)[keyof typeof SETTING_KEYS];

@@ -16,6 +16,19 @@ enum class OfferColor(
   NEUTRAL("neutral", 0xFF404040.toInt(), 0xFFFFFFFF.toInt(), 0xFFA8A8A8.toInt(), 0xFF171717.toInt()),
 }
 
+sealed interface TargetComparison {
+  data object NoTarget : TargetComparison
+  data object AtTarget : TargetComparison
+  data class Above(val percent: Long) : TargetComparison
+  data class Below(val percent: Long) : TargetComparison
+}
+
+sealed interface OfferReason {
+  data object NoCosts : OfferReason
+  data object BelowCost : OfferReason
+  data class Targets(val perKm: TargetComparison, val perHour: TargetComparison?) : OfferReason
+}
+
 data class OfferTargets(val costPerKm: Double, val targetPerKmCents: Double, val targetPerHourCents: Double)
 
 data class OfferEvaluation(
@@ -26,14 +39,13 @@ data class OfferEvaluation(
   val profitCents: Double?,
   val color: OfferColor,
   val score: Double?,
-  val reason: String,
+  val reason: OfferReason,
   val kmOnTarget: Boolean? = null,
   val hourOnTarget: Boolean? = null,
 )
 
 object OfferEvaluator {
   private const val NO_TIME_MAX_SCORE = 4.0
-  private const val NO_TIME = "sem tempo na oferta"
   private const val TARGET_SCORE = 3.5
   private const val MAX_SCORE = 5.0
   private const val SCORE_PER_RATIO_ABOVE_TARGET = 3.0
@@ -47,7 +59,7 @@ object OfferEvaluator {
     val perKm = if (offer.km > 0) offer.valueCents / offer.km else 0.0
     val perHour = if (offer.minutes > 0) offer.valueCents.toDouble() / offer.minutes * 60 else 0.0
     if (targets.costPerKm <= 0) {
-      return OfferEvaluation(offer, sourceLabel, perKm, perHour, null, OfferColor.NEUTRAL, null, "Cadastre seus custos para ver a nota")
+      return OfferEvaluation(offer, sourceLabel, perKm, perHour, null, OfferColor.NEUTRAL, null, OfferReason.NoCosts)
     }
 
     val profit = offer.valueCents - offer.km * targets.costPerKm
@@ -90,15 +102,15 @@ object OfferEvaluator {
     return Math.round(max(low, min(high, base)) * 10) / 10.0
   }
 
-  private fun reason(profit: Double, perKm: Double, perHour: Double, hasTime: Boolean, targets: OfferTargets): String {
-    if (profit < 0) return "Não cobre seu custo por km"
-    return "km: ${comparison(perKm, targets.targetPerKmCents)} · hora: ${if (hasTime) comparison(perHour, targets.targetPerHourCents) else NO_TIME}"
+  private fun reason(profit: Double, perKm: Double, perHour: Double, hasTime: Boolean, targets: OfferTargets): OfferReason {
+    if (profit < 0) return OfferReason.BelowCost
+    return OfferReason.Targets(comparison(perKm, targets.targetPerKmCents), if (hasTime) comparison(perHour, targets.targetPerHourCents) else null)
   }
 
-  private fun comparison(value: Double, target: Double): String {
-    if (target <= 0) return "sem mínimo"
+  private fun comparison(value: Double, target: Double): TargetComparison {
+    if (target <= 0) return TargetComparison.NoTarget
     val percent = Math.round((value / target - 1) * 100)
-    if (percent == 0L) return "no mínimo"
-    return if (percent > 0) "$percent% acima do mínimo" else "${-percent}% abaixo do mínimo"
+    if (percent == 0L) return TargetComparison.AtTarget
+    return if (percent > 0) TargetComparison.Above(percent) else TargetComparison.Below(-percent)
   }
 }

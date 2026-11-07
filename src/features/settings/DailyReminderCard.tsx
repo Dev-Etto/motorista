@@ -1,18 +1,19 @@
 import { useState } from 'react';
-import { useSubmit } from '@/shared/hooks/useSubmit';
-import { Card, Notice, Segmented, ToggleRow } from '@/shared/ui/primitives';
+import { useTranslation } from 'react-i18next';
+import { useSubmit } from '@shared/hooks/useSubmit';
+import { useFormat } from '@shared/i18n/format';
+import { Card, Notice, Segmented, ToggleRow } from '@shared/ui/primitives';
 import { cancelDailyReminder, scheduleDailyReminder } from './reminderNotifications';
 import { useDailyReminderHour } from './useDailyReminderHour';
 
 const DEFAULT_HOUR = '20';
-const HOUR_OPTIONS = [
-  { value: '18', label: '18h' },
-  { value: '20', label: '20h' },
-  { value: '22', label: '22h' },
-];
+const HOURS = [18, 20, 22];
 
 export function DailyReminderCard() {
   const { data: hour, reload } = useDailyReminderHour();
+  const { t } = useTranslation('settings');
+  const format = useFormat();
+  const hourOptions = HOURS.map((value) => ({ value: String(value), label: format.hourOfDay(value) }));
   const [denied, setDenied] = useState(false);
 
   const schedule = async (value: string) => {
@@ -33,16 +34,11 @@ export function DailyReminderCard() {
   const failure = toggling.error ?? scheduling.error;
 
   return (
-    <Card title="Fim do dia">
-      <ToggleRow
-        label="Lembrar de registrar a jornada"
-        hint="Um aviso por dia, no horário que você escolher."
-        value={Boolean(hour)}
-        onChange={toggling.submit}
-      />
-      {hour ? <Segmented value={hour} options={HOUR_OPTIONS} onChange={scheduling.submit} /> : null}
+    <Card title={t('dailyReminder.title')}>
+      <ToggleRow label={t('dailyReminder.toggleLabel')} hint={t('dailyReminder.toggleHint')} value={Boolean(hour)} onChange={toggling.submit} />
+      {hour ? <Segmented value={hour} options={hourOptions} onChange={scheduling.submit} /> : null}
       {failure ? <Notice tone="negative" message={failure} /> : null}
-      {denied ? <Notice message="Permita as notificações do app para receber o lembrete." /> : null}
+      {denied ? <Notice message={t('dailyReminder.denied')} /> : null}
     </Card>
   );
 }

@@ -1,6 +1,6 @@
-import { getDb, type SqlExecutor } from '@/data/database/connection';
-import { parseJsonColumn } from '@/data/database/jsonColumn';
-import { computeCosts, type CostBreakdown, type CostProfile, costProfileSchema, type FuelType, type VehicleKind } from '@/domain/vehicle/costs';
+import { getDb, type SqlExecutor } from '@data/database/connection';
+import { parseJsonColumn } from '@data/database/jsonColumn';
+import { computeCosts, type CostBreakdown, type CostProfile, costProfileSchema, type FuelType, type VehicleKind } from '@domain/vehicle/costs';
 
 export interface Vehicle {
   id: number;

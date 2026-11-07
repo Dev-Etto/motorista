@@ -1,0 +1,117 @@
+{
+  "platform": {
+    "private": "Private",
+    "other": "Other"
+  },
+  "app": {
+    "loading": "Loading…",
+    "openFailed": "Couldn't open the app data. Restart the app and try again."
+  },
+  "weekday": {
+    "0": "Sunday",
+    "1": "Monday",
+    "2": "Tuesday",
+    "3": "Wednesday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday"
+  },
+  "hourOfDay": "{{hour}}",
+  "perUnit": "{{amount}}/{{unit}}",
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "remove": "Remove",
+    "done": "Done",
+    "continue": "Continue",
+    "add": "Add",
+    "gotIt": "Got it",
+    "notNow": "Not now",
+    "later": "Do this later",
+    "clear": "Clear",
+    "retry": "Try again"
+  },
+  "irreversible": "This action can't be undone.",
+  "invalidNumber": "Check the numbers you entered. Use numbers only, like {{example}}.",
+  "unit": {
+    "km": "km",
+    "mi": "mi"
+  },
+  "screens": {
+    "vehicle": "Vehicle and costs",
+    "goal": "Goal and minimums",
+    "copilot": "Offer Copilot",
+    "offers": "Offers and earnings",
+    "copilotSetup": "Set up Copilot",
+    "help": "Help",
+    "permissions": "Permissions",
+    "summary": "My summary",
+    "platforms": "Platforms",
+    "reminders": "Reminders",
+    "backup": "Backup",
+    "report": "Report a problem",
+    "privacy": "Privacy",
+    "terms": "Terms of use",
+    "shiftNew": "Shift",
+    "shiftDetail": "Shift details",
+    "expenseNew": "New expense",
+    "region": "Language and region"
+  },
+  "tabs": {
+    "home": "Home",
+    "shifts": "Shifts",
+    "calculator": "Calculator",
+    "reports": "Reports",
+    "more": "More"
+  },
+  "location": {
+    "permissionNeeded_km": "Allow location access to track kilometers by GPS.",
+    "permissionNeeded_mi": "Allow location access to track miles by GPS.",
+    "servicesOff_km": "Turn on your phone's location to track kilometers by GPS.",
+    "servicesOff_mi": "Turn on your phone's location to track miles by GPS."
+  },
+  "errors": {
+    "load": "Couldn't load the data.",
+    "save": "Couldn't save. Try again."
+  },
+  "loading": "Loading",
+  "scoreBadge": {
+    "label": "Score {{score}} out of 5",
+    "empty": "No score"
+  },
+  "periodSwitcher": {
+    "previous_week": "Previous week",
+    "previous_month": "Previous month",
+    "previous_year": "Previous year",
+    "next_week": "Next period: week",
+    "next_month": "Next period: month",
+    "next_year": "Next period: year"
+  },
+  "dateField": {
+    "placeholder": "Choose a date",
+    "accessibilityLabel": "{{label}}: {{value}}",
+    "clearLabel": "Clear {{label}}"
+  },
+  "monthCalendar": {
+    "dayEmpty": "Day {{day}}, no shift",
+    "dayProfit": "Day {{day}}, profit of {{profit}}"
+  },
+  "progressBar": {
+    "label": "{{percent}} complete"
+  },
+  "stepDots": {
+    "label": "Step {{current}} of {{total}}"
+  },
+  "languageName": {
+    "pt-BR": "Português",
+    "en": "English",
+    "es": "Español"
+  },
+  "dialog": {
+    "dismiss": "Close alert"
+  },
+  "marketName": {
+    "BR": "Brazil"
+  }
+}

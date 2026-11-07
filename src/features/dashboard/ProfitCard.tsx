@@ -1,30 +1,24 @@
-import { ShiftSummary } from '@/domain/shift/summary';
-import { AppText, Card, Notice, Stat, StatGrid } from '@/shared/ui/primitives';
-import { formatDuration } from '@/shared/utils/dates';
-import { formatPerHour, formatPerKm, profitTone } from '@/shared/utils/format';
-import { formatBRL } from '@/shared/utils/money';
+import { useTranslation } from 'react-i18next';
+import { ShiftSummary } from '@domain/shift/summary';
+import { useFormat } from '@shared/i18n/format';
+import { AppText, Card, Notice, Stat, StatGrid } from '@shared/ui/primitives';
+import { profitTone } from '@shared/utils/format';
 
 export function ProfitCard({ title, summary, hero }: { title: string; summary: ShiftSummary; hero?: boolean }) {
+  const { t } = useTranslation('dashboard');
+  const format = useFormat();
   return (
     <Card title={title}>
       <AppText variant={hero ? 'display' : 'title'} bold tone={profitTone(summary.profitCents)}>
-        {formatBRL(summary.profitCents)}
+        {format.money(summary.profitCents)}
       </AppText>
       <StatGrid>
-        <Stat label="Faturamento" value={formatBRL(summary.grossCents)} />
-        <Stat label="Tempo" value={formatDuration(summary.minutes)} />
-        <Stat label="Por km" value={formatPerKm(summary.grossPerKm)} />
-        <Stat label="Lucro por hora" value={formatPerHour(summary.profitPerHour)} />
+        <Stat label={t('profitCard.gross')} value={format.money(summary.grossCents)} />
+        <Stat label={t('profitCard.time')} value={format.duration(summary.minutes)} />
+        <Stat label={t('profitCard.perKm', { context: format.distanceUnit })} value={format.perDistance(summary.grossPerKm)} />
+        <Stat label={t('profitCard.profitPerHour')} value={format.perHour(summary.profitPerHour)} />
       </StatGrid>
-      {summary.partialCount > 0 ? (
-        <Notice
-          message={
-            summary.partialCount === 1
-              ? '1 jornada sem km ou sem custo: o custo do veículo não foi descontado dela.'
-              : `${summary.partialCount} jornadas sem km ou sem custo: o custo do veículo não foi descontado delas.`
-          }
-        />
-      ) : null}
+      {summary.partialCount > 0 ? <Notice message={t('profitCard.partial', { context: format.distanceUnit, count: summary.partialCount })} /> : null}
     </Card>
   );
 }

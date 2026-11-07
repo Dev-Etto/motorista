@@ -35,7 +35,16 @@ class CopilotModule : Module() {
 
     Function("setEnabled") { value: Boolean -> CopilotStore.get(context).enabled = value }
     Function("getPreferences") { CopilotStore.get(context).preferences.toJson() }
-    Function("setPreferences") { json: String -> CopilotStore.get(context).preferences = CopilotPreferences.fromJson(json) }
+    Function("setPreferences") { json: String ->
+      val store = CopilotStore.get(context)
+      store.preferences = CopilotPreferences.merge(json, store.preferences)
+    }
+    Function("setRegional") { json: String ->
+      val store = CopilotStore.get(context)
+      store.preferences = store.preferences.copy(regional = RegionalSettings.parse(json))
+    }
+    Function("getAppLanguage") { AppLanguage.get(context) }
+    Function("setAppLanguage") { tag: String? -> AppLanguage.set(context, tag) }
     Function("setTargets") { costPerKm: Double, targetPerKmCents: Double, targetPerHourCents: Double ->
       CopilotStore.get(context).targets = OfferTargets(costPerKm, targetPerKmCents, targetPerHourCents)
     }

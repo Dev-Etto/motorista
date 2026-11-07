@@ -1,10 +1,13 @@
-import { AppText, Screen } from '@/shared/ui/primitives';
+import { useTranslation } from 'react-i18next';
+import { AppText, Screen } from '@shared/ui/primitives';
 import { PermissionsList } from './PermissionsList';
 
 export default function PermissionsScreen() {
+  const { t } = useTranslation('permissions');
+
   return (
     <Screen>
-      <AppText tone="muted">Tudo é processado no seu celular. Nada é enviado para fora.</AppText>
+      <AppText tone="muted">{t('intro')}</AppText>
       <PermissionsList />
     </Screen>
   );

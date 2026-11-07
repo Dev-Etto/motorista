@@ -1,7 +1,9 @@
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import { useTranslation } from 'react-i18next';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
-import { MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@/shared/theme/theme';
-import { formatDate, toISODate, toJsDate } from '@/shared/utils/dates';
+import { useFormat } from '@shared/i18n/format';
+import { MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@shared/theme/theme';
+import { toISODate, toJsDate } from '@shared/utils/dates';
 import { AppIcon } from './AppIcon';
 import { AppText } from './primitives';
 
@@ -15,8 +17,11 @@ interface DateFieldProps {
   clearable?: boolean;
 }
 
-export function DateField({ label, value, onChange, placeholder = 'Escolher data', minimumDate, maximumDate, clearable }: DateFieldProps) {
+export function DateField({ label, value, onChange, placeholder, minimumDate, maximumDate, clearable }: DateFieldProps) {
   const colors = useTheme();
+  const format = useFormat();
+  const { t } = useTranslation();
+  const empty = placeholder ?? t('dateField.placeholder');
   const current = value ? toJsDate(value) : new Date();
 
   const openAndroid = () => {
@@ -54,17 +59,17 @@ export function DateField({ label, value, onChange, placeholder = 'Escolher data
       </AppText>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={`${label}: ${value ? formatDate(value) : placeholder}`}
+        accessibilityLabel={t('dateField.accessibilityLabel', { label, value: value ? format.date(value) : empty })}
         onPress={openAndroid}
         style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border }]}
       >
         <AppIcon name="calendar" color={colors.textMuted} size={22} />
         <AppText tone={value ? 'default' : 'muted'} style={styles.value}>
-          {value ? formatDate(value) : placeholder}
+          {value ? format.date(value) : empty}
         </AppText>
         {clearable && value ? (
-          <Pressable accessibilityRole="button" accessibilityLabel={`Limpar ${label}`} hitSlop={12} onPress={() => onChange(null)}>
-            <AppText tone="muted">Limpar</AppText>
+          <Pressable accessibilityRole="button" accessibilityLabel={t('dateField.clearLabel', { label })} hitSlop={12} onPress={() => onChange(null)}>
+            <AppText tone="muted">{t('actions.clear')}</AppText>
           </Pressable>
         ) : null}
       </Pressable>

@@ -1,7 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
+import { i18n } from '@shared/i18n';
 import { useLatest } from './useLatest';
-
-const SAVE_ERROR = 'Não foi possível salvar. Tente de novo.';
 
 export function useSubmit<Args extends unknown[]>(action: (...args: Args) => Promise<unknown>) {
   const [busy, setBusy] = useState(false);
@@ -19,7 +18,7 @@ export function useSubmit<Args extends unknown[]>(action: (...args: Args) => Pro
       try {
         await latest.current(...args);
       } catch {
-        setError(SAVE_ERROR);
+        setError(i18n.t('errors.save'));
       } finally {
         inFlight.current = false;
         setBusy(false);

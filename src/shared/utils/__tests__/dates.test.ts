@@ -2,6 +2,8 @@ import {
   addDays,
   addMonths,
   datesInRange,
+  formatDayOfMonth,
+  formatMonthShort,
   dayRange,
   daysBetween,
   formatClock,
@@ -13,9 +15,11 @@ import {
   toJsDate,
   weekBounds,
   weekdayOf,
+  weekdaysFrom,
+  formatHourOfDay,
   workDaysInMonth,
   workDaysLeft,
-} from '../dates';
+} from '@shared/utils/dates';
 
 describe('datas', () => {
   it('soma dias e meses sem pular a troca de mês', () => {
@@ -32,8 +36,8 @@ describe('datas', () => {
 
   it('calcula mês e semana', () => {
     expect(monthBounds('2026-02-10')).toEqual({ start: '2026-02-01', end: '2026-02-28', days: 28 });
-    expect(weekBounds('2026-11-05')).toEqual({ start: '2026-11-02', end: '2026-11-08' });
-    expect(weekBounds('2026-11-08')).toEqual({ start: '2026-11-02', end: '2026-11-08' });
+    expect(weekBounds('2026-11-05', 1)).toEqual({ start: '2026-11-02', end: '2026-11-08' });
+    expect(weekBounds('2026-11-08', 1)).toEqual({ start: '2026-11-02', end: '2026-11-08' });
   });
 
   it('dá o dia da semana com domingo em 0', () => {
@@ -60,11 +64,62 @@ describe('datas', () => {
   });
 
   it('formata como antes', () => {
-    expect(formatDate('2026-11-05')).toBe('05/11/2026');
-    expect(formatMonth('2026-11-05')).toBe('novembro de 2026');
+    expect(formatDate('2026-11-05', 'pt-BR')).toBe('05/11/2026');
+    expect(formatMonth('2026-11-05', 'pt-BR')).toBe('novembro de 2026');
     expect(formatDuration(125)).toBe('2h 05min');
     expect(formatDuration(120)).toBe('2h');
     expect(formatDuration(45)).toBe('45min');
     expect(formatClock(3725000)).toBe('01:02:05');
+  });
+});
+
+describe('rótulos curtos do gráfico', () => {
+  it('mês abreviado com inicial maiúscula e sem ponto', () => {
+    expect(['2026-01-01', '2026-02-01', '2026-03-01', '2026-05-01', '2026-08-01', '2026-12-01'].map((iso) => formatMonthShort(iso, 'pt-BR'))).toEqual([
+      'Jan',
+      'Fev',
+      'Mar',
+      'Mai',
+      'Ago',
+      'Dez',
+    ]);
+  });
+
+  it('dia do mês com dois dígitos', () => {
+    expect(formatDayOfMonth('2026-11-02')).toBe('02');
+  });
+});
+
+describe('semana pelo primeiro dia escolhido', () => {
+  it('começa no domingo', () => {
+    expect(weekBounds('2026-11-05', 7)).toEqual({ start: '2026-11-01', end: '2026-11-07' });
+    expect(weekBounds('2026-11-08', 7)).toEqual({ start: '2026-11-08', end: '2026-11-14' });
+  });
+
+  it('começa no sábado', () => {
+    expect(weekBounds('2026-11-05', 6)).toEqual({ start: '2026-10-31', end: '2026-11-06' });
+  });
+
+  it('ordena os dias a partir do primeiro, com domingo em 0', () => {
+    expect(weekdaysFrom(1)).toEqual([1, 2, 3, 4, 5, 6, 0]);
+    expect(weekdaysFrom(7)).toEqual([0, 1, 2, 3, 4, 5, 6]);
+  });
+});
+
+describe('formatos de data por região', () => {
+  it.each([
+    ['pt-BR', '05/11/2026', 'novembro de 2026', 'Nov'],
+    ['en-US', '11/05/2026', 'November 2026', 'Nov'],
+    ['es-MX', '05/11/2026', 'noviembre de 2026', 'Nov'],
+    ['es-ES', '05/11/2026', 'noviembre de 2026', 'Nov'],
+  ])('%s', (locale, date, month, short) => {
+    expect(formatDate('2026-11-05', locale)).toBe(date);
+    expect(formatMonth('2026-11-05', locale)).toBe(month);
+    expect(formatMonthShort('2026-11-05', locale)).toBe(short);
+  });
+
+  it('hora do dia em 24 ou 12 horas', () => {
+    expect(formatHourOfDay(20, 'pt-BR', 'h23')).toBe('20');
+    expect(formatHourOfDay(20, 'en-US', 'h12')).toMatch(/^8\sPM$/);
   });
 });

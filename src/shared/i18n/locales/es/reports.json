@@ -1,0 +1,61 @@
+{
+  "period": {
+    "week": "Semana",
+    "month": "Mes",
+    "year": "Año"
+  },
+  "weekRange": "{{start}} a {{end}}",
+  "tip": "El Mes cerrado descuenta el costo fijo completo. Ahí ves si recorriste lo suficiente para pagar los costos.",
+  "exportFailed": "No se pudo generar el archivo.",
+  "emptyTitle": "Sin jornadas en este período",
+  "emptyMessage": "Registra jornadas para ver gráficos e informes.",
+  "periodProfit": "Ganancia en el período",
+  "chart": {
+    "byMonth": "Ganancia por mes",
+    "byDay": "Ganancia por día",
+    "accessibilityLabel": "Ganancia en el período: {{amount}}"
+  },
+  "monthClose": {
+    "title": "Mes cerrado",
+    "variable": "Costo variable",
+    "fixed": "Costo fijo del mes completo",
+    "expenses": "Gastos",
+    "realCostPerKm_km": "Costo real por km",
+    "realCostPerKm_mi": "Costo real por milla",
+    "profit": "Ganancia con el fijo completo"
+  },
+  "byPlatform": "Por plataforma",
+  "pdfButton": "Generar PDF",
+  "csvButton": "Exportar CSV",
+  "insightsFrom": "Los datos clave aparecen a partir de {{minimum}} jornadas.",
+  "pdf": {
+    "title": "{{app}}: informe",
+    "range": "{{start}} a {{end}}",
+    "summary": "Resumen",
+    "shifts": "Jornadas",
+    "gross": "Ingresos",
+    "vehicleCost": "Costo del vehículo",
+    "expenses": "Gastos",
+    "estimatedProfit": "Ganancia estimada",
+    "distance": "Distancia",
+    "time": "Tiempo",
+    "grossPerKm_km": "Ingresos por km",
+    "grossPerKm_mi": "Ingresos por milla",
+    "profitPerHour": "Ganancia por hora",
+    "date": "Fecha",
+    "profit": "Ganancia",
+    "footer": "Generado con los datos indicados por el usuario. Valores estimados, sin validez fiscal."
+  },
+  "csv": {
+    "fileName": "jornadas-{{start}}-a-{{end}}.csv",
+    "date": "Fecha",
+    "gross": "Ingresos ({{currency}})",
+    "minutes": "Minutos",
+    "expenses": "Gastos ({{currency}})",
+    "profit": "Ganancia ({{currency}})",
+    "distance_km": "Km",
+    "distance_mi": "Millas",
+    "costPerDistance_km": "Costo por km ({{currency}})",
+    "costPerDistance_mi": "Costo por milla ({{currency}})"
+  }
+}

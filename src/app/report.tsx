@@ -1,1 +1,1 @@
-export { default } from '@/features/settings/ReportScreen';
+export { default } from '@features/settings/ReportScreen';

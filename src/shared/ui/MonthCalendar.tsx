@@ -1,6 +1,8 @@
+import type { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { spacing, radius, useTheme } from '@/shared/theme/theme';
-import { formatBRL } from '@/shared/utils/money';
+import { Formatter, useFormat } from '@shared/i18n/format';
+import { spacing, radius, useTheme } from '@shared/theme/theme';
 import { AppText } from './primitives';
 
 interface CalendarDayView {
@@ -15,24 +17,25 @@ interface MonthCalendarProps {
   onSelect: (date: string) => void;
 }
 
-const WEEKDAY_LABELS = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'];
 const CELL_MIN_HEIGHT = 48;
 
-function dayLabel(cell: CalendarDayView) {
-  if (cell.profitCents === null) return `Dia ${cell.day}, sem jornada`;
-  return `Dia ${cell.day}, lucro de ${formatBRL(cell.profitCents)}`;
+function dayLabel(cell: CalendarDayView, t: TFunction, format: Formatter) {
+  if (cell.profitCents === null) return t('monthCalendar.dayEmpty', { day: cell.day });
+  return t('monthCalendar.dayProfit', { day: cell.day, profit: format.money(cell.profitCents) });
 }
 
 export function MonthCalendar({ weeks, selectedDate, onSelect }: MonthCalendarProps) {
   const colors = useTheme();
+  const format = useFormat();
+  const { t } = useTranslation();
 
   return (
     <View style={styles.grid}>
       <View style={styles.week}>
-        {WEEKDAY_LABELS.map((label, index) => (
-          <View key={index} style={styles.cell}>
+        {format.weekdays().map((weekday) => (
+          <View key={weekday} style={styles.cell}>
             <AppText variant="caption" tone="muted">
-              {label}
+              {format.weekday(weekday).charAt(0)}
             </AppText>
           </View>
         ))}
@@ -48,7 +51,7 @@ export function MonthCalendar({ weeks, selectedDate, onSelect }: MonthCalendarPr
               <Pressable
                 key={cell.date}
                 accessibilityRole="button"
-                accessibilityLabel={dayLabel(cell)}
+                accessibilityLabel={dayLabel(cell, t, format)}
                 accessibilityState={{ selected }}
                 onPress={() => onSelect(cell.date)}
                 style={[styles.cell, styles.day, selected && { backgroundColor: colors.surfaceAlt }]}

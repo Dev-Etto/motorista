@@ -9,27 +9,29 @@ import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import java.util.Locale
 
-class OfferVoice(context: Context) : OfferChannel {
+class OfferVoice(private val context: Context) : OfferChannel {
   private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
   private val attributes = AudioAttributes.Builder()
     .setUsage(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
     .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
     .build()
   private val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK).setAudioAttributes(attributes).build()
-  private var ready = false
-  private val brazil = Locale("pt", "BR")
+  private var engineReady = false
+  private var language: Locale? = null
+  private var languageReady = false
 
   private val engine: TextToSpeech = TextToSpeech(context.applicationContext) { status -> onEngineReady(status) }
 
   val available: Boolean
-    get() = ready
+    get() = engineReady && languageReady
 
   override fun show(evaluation: OfferEvaluation, preferences: CopilotPreferences) {
-    if (!ready) return
+    useLanguage(preferences.regional.language)
+    if (!available) return
 
     requestFocus()
     val params = Bundle()
-    engine.speak(OfferFormat.spokenPhrase(evaluation, preferences.primaryMetric), TextToSpeech.QUEUE_FLUSH, params, UTTERANCE_ID)
+    engine.speak(OfferFormat.of(context, preferences.regional).spokenPhrase(evaluation, preferences.primaryMetric), TextToSpeech.QUEUE_FLUSH, params, UTTERANCE_ID)
   }
 
   override fun hide() {
@@ -44,8 +46,8 @@ class OfferVoice(context: Context) : OfferChannel {
 
   private fun onEngineReady(status: Int) {
     if (status != TextToSpeech.SUCCESS) return
-    val language = engine.setLanguage(brazil)
-    ready = language != TextToSpeech.LANG_MISSING_DATA && language != TextToSpeech.LANG_NOT_SUPPORTED
+    engineReady = true
+    useLanguage(CopilotStore.get(context).preferences.regional.language)
     engine.setAudioAttributes(attributes)
     engine.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
       override fun onStart(utteranceId: String?) = Unit
@@ -54,6 +56,13 @@ class OfferVoice(context: Context) : OfferChannel {
       @Deprecated("Exigido pela classe base")
       override fun onError(utteranceId: String?) = abandonFocus()
     })
+  }
+
+  fun useLanguage(locale: Locale) {
+    if (!engineReady || locale == language) return
+    val result = engine.setLanguage(locale)
+    language = locale
+    languageReady = result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED
   }
 
   private fun requestFocus() {

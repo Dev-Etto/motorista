@@ -1,9 +1,9 @@
-import { expenseRepository } from '@/data/repositories/expenseRepository';
-import { shiftRepository } from '@/data/repositories/shiftRepository';
-import { vehicleRepository } from '@/data/repositories/vehicleRepository';
-import { countsAgainstProfit } from '@/domain/expense/expense';
-import { buildInsights } from '@/domain/insights/buildInsights';
-import { addDays } from '@/shared/utils/dates';
+import { expenseRepository } from '@data/repositories/expenseRepository';
+import { shiftRepository } from '@data/repositories/shiftRepository';
+import { vehicleRepository } from '@data/repositories/vehicleRepository';
+import { countsAgainstProfit } from '@domain/expense/expense';
+import { buildInsights } from '@domain/insights/buildInsights';
+import { addDays } from '@shared/utils/dates';
 
 const LOOKBACK_DAYS = 90;
 

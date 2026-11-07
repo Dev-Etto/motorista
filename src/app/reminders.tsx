@@ -1,1 +1,1 @@
-export { default } from '@/features/settings/RemindersScreen';
+export { default } from '@features/settings/RemindersScreen';

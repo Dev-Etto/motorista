@@ -1,1 +1,1 @@
-export { default } from '@/features/copilot/CopilotSetupScreen';
+export { default } from '@features/copilot/CopilotSetupScreen';

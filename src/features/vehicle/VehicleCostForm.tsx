@@ -1,69 +1,85 @@
-import { MoneyField, NumberField, TextField } from '@/shared/ui/fields';
-import { AppText, Card, Collapsible, Notice, Segmented, ToggleRow } from '@/shared/ui/primitives';
+import { useTranslation } from 'react-i18next';
+import { useFormat } from '@shared/i18n/format';
+import { MoneyField, NumberField, TextField } from '@shared/ui/fields';
+import { AppText, Card, Collapsible, Notice, Segmented, ToggleRow } from '@shared/ui/primitives';
 import { CostSummaryCard } from './CostSummaryCard';
 import { useVehicleForm } from './useVehicleForm';
-import { CONSUMPTION_UNITS, FUEL_OPTIONS, KIND_OPTIONS, OWNERSHIP_OPTIONS } from './vehicleForm';
+import { useVehicleOptions } from './useVehicleOptions';
+import { consumptionLabel, CONSUMPTION_HINT_KEYS } from './vehicleForm';
 
 type VehicleFormState = ReturnType<typeof useVehicleForm>;
 
 export function VehicleCostForm({ form }: { form: VehicleFormState }) {
+  const { t } = useTranslation('vehicle');
+  const format = useFormat();
+  const { fuelOptions, kindOptions, ownershipOptions } = useVehicleOptions();
   const { bind, ownership } = form;
 
   return (
     <>
       <CostSummaryCard costs={form.costs} />
-      <Notice tone="accent" message="Os valores sugeridos são estimativas. Troque pelos seus para ter um resultado real." />
+      <Notice tone="accent" message={t('form.estimateNotice')} />
 
-      <Card title="Veículo">
-        <TextField label="Nome" value={form.name} onChangeText={form.setName} />
+      <Card title={t('form.vehicleTitle')}>
+        <TextField label={t('form.name')} value={form.name} onChangeText={form.setName} />
         <AppText variant="caption" tone="muted">
-          Tipo
+          {t('form.kind')}
         </AppText>
-        <Segmented value={form.kind} options={KIND_OPTIONS} onChange={form.setKind} />
+        <Segmented value={form.kind} options={kindOptions} onChange={form.setKind} />
         <AppText variant="caption" tone="muted">
-          Combustível
+          {t('form.fuel')}
         </AppText>
-        <Segmented value={form.fuel} options={FUEL_OPTIONS} onChange={form.setFuel} />
+        <Segmented value={form.fuel} options={fuelOptions} onChange={form.setFuel} />
         <AppText variant="caption" tone="muted">
-          Situação do veículo
+          {t('form.ownership')}
         </AppText>
-        <Segmented value={ownership} options={OWNERSHIP_OPTIONS} onChange={form.setOwnership} />
+        <Segmented value={ownership} options={ownershipOptions} onChange={form.setOwnership} />
       </Card>
 
-      <Card title="Uso e combustível">
-        <NumberField label="Km previstos por mês" suffix="km" hint="Quanto mais você roda, mais os custos fixos se diluem." {...bind('plannedKm')} />
-        <MoneyField label="Preço do combustível" {...bind('fuelPrice')} />
-        <NumberField label="Consumo" suffix={CONSUMPTION_UNITS[form.fuel]} hint="Quantos km o veículo faz com um litro." {...bind('consumption')} />
+      <Card title={t('form.usageTitle')}>
+        <NumberField
+          label={t('form.plannedDistance', { context: format.distanceUnit })}
+          suffix={format.distanceUnit}
+          hint={t('form.plannedDistanceHint')}
+          {...bind('plannedKm')}
+        />
+        <MoneyField label={t('form.fuelPrice')} {...bind('fuelPrice')} />
+        <NumberField
+          label={t('form.consumption')}
+          suffix={consumptionLabel(form.fuel, format)}
+          hint={t(CONSUMPTION_HINT_KEYS[format.consumptionUnit])}
+          {...bind('consumption')}
+        />
       </Card>
 
-      <Collapsible title="Desgaste">
-        <MoneyField label="Troca de óleo" {...bind('oilChange')} />
-        <NumberField label="Intervalo da troca" suffix="km" {...bind('oilInterval')} />
-        <MoneyField label="Jogo de pneus" {...bind('tires')} />
-        <NumberField label="Vida útil dos pneus" suffix="km" {...bind('tiresLife')} />
-        <MoneyField label="Manutenção por mês" {...bind('maintenance')} />
+      <Collapsible title={t('form.wearTitle')}>
+        <MoneyField label={t('form.oilChange')} {...bind('oilChange')} />
+        <NumberField label={t('form.oilInterval')} suffix={format.distanceUnit} {...bind('oilInterval')} />
+        <MoneyField label={t('form.tires')} {...bind('tires')} />
+        <NumberField label={t('form.tiresLife')} suffix={format.distanceUnit} {...bind('tiresLife')} />
+        <MoneyField label={t('form.maintenance')} {...bind('maintenance')} />
       </Collapsible>
 
-      <Collapsible title="Custos fixos">
-        <MoneyField label="Seguro por mês" {...bind('insurance')} />
-        <MoneyField label="IPVA por ano" {...bind('ipva')} />
-        <MoneyField label="Licenciamento por ano" {...bind('licensing')} />
-        {ownership === 'owned' ? null : <MoneyField label={ownership === 'rented' ? 'Aluguel por mês' : 'Parcela por mês'} {...bind('payment')} />}
-        <MoneyField label="Outros custos fixos por mês" {...bind('otherFixed')} />
+      <Collapsible title={t('form.fixedTitle')}>
+        <MoneyField label={t('form.insurance')} {...bind('insurance')} />
+        <MoneyField label={t('form.ipva')} {...bind('ipva')} />
+        <MoneyField label={t('form.licensing')} {...bind('licensing')} />
+        {ownership === 'owned' ? null : <MoneyField label={ownership === 'rented' ? t('form.rent') : t('form.installment')} {...bind('payment')} />}
+        <MoneyField label={t('form.otherFixed')} {...bind('otherFixed')} />
       </Collapsible>
 
       {ownership === 'rented' ? null : (
-        <Collapsible title="Depreciação">
+        <Collapsible title={t('form.depreciationTitle')}>
           <ToggleRow
-            label="Considerar a depreciação"
-            hint={ownership === 'financed' ? 'Desligada por padrão, para não somar com a parcela.' : 'O quanto o veículo perde de valor com o tempo.'}
+            label={t('form.depreciationToggle')}
+            hint={ownership === 'financed' ? t('form.depreciationHintFinanced') : t('form.depreciationHint')}
             value={form.depreciationEnabled}
             onChange={form.setDepreciationEnabled}
           />
           {form.depreciationEnabled ? (
             <>
-              <MoneyField label="Valor do veículo" {...bind('vehicleValue')} />
-              <NumberField label="Depreciação por ano" suffix="%" {...bind('depreciationPct')} />
+              <MoneyField label={t('form.vehicleValue')} {...bind('vehicleValue')} />
+              <NumberField label={t('form.depreciationPerYear')} suffix="%" {...bind('depreciationPct')} />
             </>
           ) : null}
         </Collapsible>

@@ -1,6 +1,6 @@
-import { addDays, weekdayName, weekdayOf } from '@/shared/utils/dates';
-import { bestWeekdayRule, realProfitRule } from '../insights/rules';
-import { ShiftFact } from '../insights/types';
+import { bestWeekdayRule, realProfitRule } from '@domain/insights/rules';
+import { ShiftFact } from '@domain/insights/types';
+import { addDays, weekdayOf } from '@shared/utils/dates';
 
 const TODAY = '2026-11-28';
 
@@ -21,12 +21,12 @@ const context = (shifts: ShiftFact[]) => ({ today: TODAY, shifts, costs: null, p
 describe('melhor dia nas últimas 4 semanas', () => {
   const weak = [shift(addDays(TODAY, -7), 2000), shift(addDays(TODAY, -14), 2000)];
   const strong = [shift(addDays(TODAY, -1), 9000), shift(addDays(TODAY, -8), 9000)];
-  const strongDay = weekdayName(weekdayOf(addDays(TODAY, -1)));
+  const strongDay = weekdayOf(addDays(TODAY, -1));
 
   it('considera só os 28 dias até hoje', () => {
     const outside = [shift(addDays(TODAY, -28), 900000), shift(addDays(TODAY, 7), 900000)];
 
-    expect(bestWeekdayRule(context([...weak, ...strong, ...outside]))?.message).toContain(strongDay);
+    expect(bestWeekdayRule(context([...weak, ...strong, ...outside]))).toMatchObject({ weekday: strongDay });
   });
 });
 
@@ -34,6 +34,6 @@ describe('lucro real nas regras', () => {
   it('usa a mesma conta da jornada, sem custo para km negativo', () => {
     const insight = realProfitRule(context([shift(TODAY, 10000, { km: -5 })]));
 
-    expect(insight?.basis).toContain('lucro R$ 100,00');
+    expect(insight).toMatchObject({ profitCents: 10000 });
   });
 });

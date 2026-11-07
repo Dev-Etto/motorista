@@ -1,4 +1,10 @@
-import { describeGoalDay, describePartialShifts, GoalDayFacts } from '../goalMessages';
+import { describeGoalDay as describeWith, describePartialShifts as describeShiftsWith, GoalDayFacts } from '@features/goals/goalMessages';
+import { i18n } from '@shared/i18n';
+import { createFormatter, currentFormat, DEFAULT_FORMAT } from '@shared/i18n/format';
+
+const t = i18n.getFixedT('pt-BR', 'goals');
+const describeGoalDay = (facts: GoalDayFacts) => describeWith(facts, t, currentFormat());
+const describePartialShifts = (count: number) => describeShiftsWith(count, t);
 
 const facts = (over: Partial<GoalDayFacts> = {}): GoalDayFacts => ({
   reached: false,
@@ -52,5 +58,14 @@ describe('frases da meta', () => {
   it('avisa sobre jornadas sem custo', () => {
     expect(describePartialShifts(1)).toContain('1 jornada');
     expect(describePartialShifts(2)).toContain('2 jornadas');
+  });
+});
+
+describe('frases da meta em espanhol com peso mexicano', () => {
+  it('usa o idioma e a moeda do perfil', () => {
+    const format = createFormatter({ ...DEFAULT_FORMAT, locale: 'es-MX', currency: 'MXN' });
+    const text = describeWith(facts({ reached: true, surplusCents: 12000 }), i18n.getFixedT('es', 'goals'), format);
+    expect(text).toContain('$120.00');
+    expect(text).not.toContain('Meta batida');
   });
 });

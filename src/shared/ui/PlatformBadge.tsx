@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { fonts, radius, spacing, useTheme } from '@/shared/theme/theme';
+import { fonts, radius, spacing, useTheme } from '@shared/theme/theme';
 
 const PLATFORM_STYLES: Record<string, { background: string; text: string }> = {
   Uber: { background: '#000000', text: '#FFFFFF' },

@@ -1,6 +1,8 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
-import { shiftRepository } from '@/data/repositories/shiftRepository';
-import { useShiftForm } from '../useShiftForm';
+import { shiftRepository } from '@data/repositories/shiftRepository';
+import { describeFormError, useShiftForm } from '@features/shifts/useShiftForm';
+import { i18n } from '@shared/i18n';
+import { currentFormat } from '@shared/i18n/format';
 
 const mockFocus: { callbacks: (() => void)[] } = { callbacks: [] };
 
@@ -11,12 +13,12 @@ jest.mock('expo-router', () => ({
     useEffect(callback, [callback]);
   },
 }));
-jest.mock('@/data/repositories/platformRepository', () => ({ platformRepository: { list: jest.fn().mockResolvedValue([{ id: 1, name: 'Uber' }]) } }));
-jest.mock('@/data/repositories/vehicleRepository', () => ({
+jest.mock('@data/repositories/platformRepository', () => ({ platformRepository: { list: jest.fn().mockResolvedValue([{ id: 1, name: 'Uber' }]) } }));
+jest.mock('@data/repositories/vehicleRepository', () => ({
   vehicleRepository: { getCostsAt: jest.fn().mockResolvedValue({ vehicle: null, profile: null, costs: null }) },
 }));
-jest.mock('@/data/repositories/shiftRepository', () => ({ shiftRepository: { findById: jest.fn(), save: jest.fn() } }));
-jest.mock('@/shared/utils/reportError', () => ({ reportError: jest.fn() }));
+jest.mock('@data/repositories/shiftRepository', () => ({ shiftRepository: { findById: jest.fn(), save: jest.fn() } }));
+jest.mock('@shared/utils/reportError', () => ({ reportError: jest.fn() }));
 
 const SAVED = {
   shift: {
@@ -68,5 +70,21 @@ describe('formulário da jornada', () => {
 
     await act(async () => result.current.kmField.onChangeText('13'));
     expect(result.current.kmMeasured).toBe(false);
+  });
+});
+
+describe('mensagens de erro do formulário da jornada', () => {
+  const t = i18n.getFixedT('pt-BR', ['shifts', 'common'] as const);
+  const format = currentFormat();
+
+  it('mostra o exemplo de número no formato da região', () => {
+    expect(describeFormError('invalid-number', t, format)).toBe('Confira os números digitados. Use só números, como 150,50.');
+  });
+
+  it('explica cada problema do formulário', () => {
+    expect(describeFormError('invalid-start-hour', t, format)).toBe('A hora de início vai de 0 a 23.');
+    expect(describeFormError('too-long', t, format)).toBe('Uma jornada tem no máximo 24 horas. Confira as horas trabalhadas.');
+    expect(describeFormError('no-earnings', t, format)).toBe('Informe o ganho de pelo menos uma plataforma.');
+    expect(describeFormError('odometer-order', t, format)).toBe('O odômetro final precisa ser maior que o inicial.');
   });
 });

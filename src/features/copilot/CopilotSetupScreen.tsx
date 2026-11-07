@@ -1,9 +1,11 @@
 import { useRouter } from 'expo-router';
-import { Illustration } from '@/shared/ui/illustrations/Illustration';
-import { AppText, Button, Card, Notice, Screen, StepDots } from '@/shared/ui/primitives';
+import { useTranslation } from 'react-i18next';
+import { Illustration } from '@shared/ui/illustrations/Illustration';
+import { AppText, Button, Card, Notice, Screen, StepDots } from '@shared/ui/primitives';
 import { useCopilot } from './useCopilot';
 
 export default function CopilotSetupScreen() {
+  const { t } = useTranslation(['copilot', 'common']);
   const router = useRouter();
   const copilot = useCopilot();
   const status = copilot.status.current;
@@ -20,32 +22,27 @@ export default function CopilotSetupScreen() {
         <Illustration name="copilot" height={120} />
         <StepDots total={2} current={0} />
         <AppText variant="title" bold center>
-          Permitir a leitura das ofertas
+          {t('setup.permission.title')}
         </AppText>
         <Card>
-          <AppText>O Android chama essa permissão de acessibilidade. Com ela, o app lê valor, distância, tempo e avaliação das ofertas.</AppText>
-          <AppText tone="muted">Nomes, endereços e conversas não são guardados, e nada sai do seu celular.</AppText>
+          <AppText>{t('setup.permission.explanation')}</AppText>
+          <AppText tone="muted">{t('setup.permission.privacy')}</AppText>
         </Card>
-        <Button label="Abrir acessibilidade" onPress={copilot.status.openAccessibility} />
-        <Card title="Na tela que abrir">
-          <AppText>1. Procure Copiloto de ofertas, em Apps baixados ou instalados.</AppText>
-          <AppText>2. Ligue a primeira opção, Usar Copiloto de ofertas.</AppText>
-          <AppText>3. Confirme em Permitir e volte para cá. Esta tela avança sozinha.</AppText>
+        <Button label={t('setup.permission.openAccessibility')} onPress={copilot.status.openAccessibility} />
+        <Card title={t('setup.permission.stepsTitle')}>
+          <AppText>{t('setup.permission.step1')}</AppText>
+          <AppText>{t('setup.permission.step2')}</AppText>
+          <AppText>{t('setup.permission.step3')}</AppText>
         </Card>
-        <Card title="O Android vai falar em controle total">
-          <AppText>
-            Esse aviso é padrão e aparece para qualquer app com essa permissão. O Copiloto usa a leitura da tela e mostra o cartão, sem tocar em nada por você.
-          </AppText>
-          <AppText tone="muted">A opção de atalho pode ficar desligada: ela só colocaria um ícone na lateral da tela.</AppText>
+        <Card title={t('setup.permission.fullControlTitle')}>
+          <AppText>{t('setup.permission.fullControl')}</AppText>
+          <AppText tone="muted">{t('setup.permission.shortcut')}</AppText>
         </Card>
-        <Card title="A opção apareceu bloqueada?">
-          <AppText>
-            É uma proteção do Android para apps instalados fora da loja, e é rápido liberar. Nos detalhes do app, toque nos três pontos e escolha permitir
-            configurações restritas. O caminho pode mudar um pouco conforme o aparelho.
-          </AppText>
-          <Button label="Abrir detalhes do app" variant="secondary" onPress={copilot.status.openAppSettings} />
+        <Card title={t('setup.permission.blockedTitle')}>
+          <AppText>{t('setup.permission.blocked')}</AppText>
+          <Button label={t('setup.permission.openAppSettings')} variant="secondary" onPress={copilot.status.openAppSettings} />
         </Card>
-        <Button label="Fazer isso depois" variant="secondary" onPress={() => router.back()} />
+        <Button label={t('common:actions.later')} variant="secondary" onPress={() => router.back()} />
       </Screen>
     );
   }
@@ -56,11 +53,11 @@ export default function CopilotSetupScreen() {
         <Illustration name="copilot" height={120} />
         <StepDots total={2} current={1} />
         <AppText variant="title" bold center>
-          Tudo certo para testar
+          {t('setup.ready.title')}
         </AppText>
-        <AppText center>Vamos ligar a voz e o cartão, os canais mais indicados, e mostrar um exemplo.</AppText>
-        <Button label="Ligar e testar" onPress={activate} />
-        <Button label="Fazer isso depois" variant="secondary" onPress={() => router.back()} />
+        <AppText center>{t('setup.ready.explanation')}</AppText>
+        <Button label={t('setup.ready.activate')} onPress={activate} />
+        <Button label={t('common:actions.later')} variant="secondary" onPress={() => router.back()} />
       </Screen>
     );
   }
@@ -69,15 +66,13 @@ export default function CopilotSetupScreen() {
     <Screen>
       <Illustration name="welcome" height={120} />
       <AppText variant="title" bold center>
-        Copiloto ativo
+        {t('setup.active.title')}
       </AppText>
-      <AppText center>
-        A cada oferta reconhecida, você ouve e vê de onde ela vem, a nota e seus números. Se alguma não aparecer, a Calibração ajuda a ajustar.
-      </AppText>
-      <Notice tone="accent" message="Dirigindo, a voz avisa por você. Toque no celular só com o carro parado." />
-      <Button label="Testar de novo" variant="secondary" onPress={copilot.tests.test} />
+      <AppText center>{t('setup.active.explanation')}</AppText>
+      <Notice tone="accent" message={t('setup.active.driving')} />
+      <Button label={t('setup.active.testAgain')} variant="secondary" onPress={copilot.tests.test} />
       {copilot.message ? <Notice tone="accent" message={copilot.message} /> : null}
-      <Button label="Concluir" onPress={() => router.back()} />
+      <Button label={t('common:actions.done')} onPress={() => router.back()} />
     </Screen>
   );
 }

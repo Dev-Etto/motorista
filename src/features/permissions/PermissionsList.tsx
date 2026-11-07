@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
-import { spacing, useTheme } from '@/shared/theme/theme';
-import { AppIcon, AppIconName } from '@/shared/ui/AppIcon';
-import { LearnMore } from '@/shared/ui/LearnMore';
-import { AppText, Button, Card } from '@/shared/ui/primitives';
+import { useFormat } from '@shared/i18n/format';
+import { spacing, useTheme } from '@shared/theme/theme';
+import { AppIcon, AppIconName } from '@shared/ui/AppIcon';
+import { LearnMore } from '@shared/ui/LearnMore';
+import { AppText, Button, Card } from '@shared/ui/primitives';
 import { usePermissions } from './usePermissions';
 
 interface PermissionRowProps {
@@ -14,6 +16,7 @@ interface PermissionRowProps {
 }
 
 function PermissionRow({ icon, title, description, granted, onAllow }: PermissionRowProps) {
+  const { t } = useTranslation('permissions');
   const colors = useTheme();
 
   return (
@@ -26,10 +29,10 @@ function PermissionRow({ icon, title, description, granted, onAllow }: Permissio
         </AppText>
         {granted ? (
           <AppText variant="caption" tone="positive" bold>
-            Permitido
+            {t('granted')}
           </AppText>
         ) : (
-          <Button label="Permitir" variant="secondary" onPress={onAllow} />
+          <Button label={t('allow')} variant="secondary" onPress={onAllow} />
         )}
       </View>
     </View>
@@ -37,6 +40,8 @@ function PermissionRow({ icon, title, description, granted, onAllow }: Permissio
 }
 
 export function PermissionsList() {
+  const { t } = useTranslation('permissions');
+  const format = useFormat();
   const permissions = usePermissions();
   const { state } = permissions;
 
@@ -44,41 +49,37 @@ export function PermissionsList() {
     <Card>
       <PermissionRow
         icon="copilot"
-        title="Ler as ofertas"
-        description="Para avaliar as ofertas da Uber, da 99 e da inDrive. O Android chama isso de acessibilidade."
+        title={t('accessibility.title')}
+        description={t('accessibility.description')}
         granted={state.accessibility}
         onAllow={permissions.openAccessibility}
       />
       {state.accessibility ? null : (
-        <LearnMore title="Como ativar a leitura">
-          <AppText variant="caption">1. Procure Copiloto de ofertas e ligue a primeira opção. Deixe o atalho desligado.</AppText>
-          <AppText variant="caption">
-            2. O Android avisa sobre controle total. É o aviso padrão dessa permissão: o app lê a tela e não toca em nada por você.
-          </AppText>
-          <AppText variant="caption">
-            3. Se a opção estiver bloqueada, abra os detalhes do app, toque nos três pontos e permita as configurações restritas.
-          </AppText>
-          <Button label="Abrir detalhes do app" variant="secondary" onPress={permissions.openAppSettings} />
+        <LearnMore title={t('accessibility.howTo.title')}>
+          <AppText variant="caption">{t('accessibility.howTo.step1')}</AppText>
+          <AppText variant="caption">{t('accessibility.howTo.step2')}</AppText>
+          <AppText variant="caption">{t('accessibility.howTo.step3')}</AppText>
+          <Button label={t('accessibility.howTo.openAppSettings')} variant="secondary" onPress={permissions.openAppSettings} />
         </LearnMore>
       )}
       <PermissionRow
         icon="layers"
-        title="Mostrar sobre outros apps"
-        description="Para o cronômetro aparecer enquanto você usa a Uber ou a 99."
+        title={t('overlay.title')}
+        description={t('overlay.description')}
         granted={state.overlay}
         onAllow={permissions.openOverlay}
       />
       <PermissionRow
         icon="location"
-        title="Localização"
-        description="Para medir os km da jornada por GPS. Escolha permitir durante o uso do app."
+        title={t('location.title')}
+        description={t('location.description', { context: format.distanceUnit })}
         granted={state.location}
         onAllow={permissions.requestLocation}
       />
       <PermissionRow
         icon="bell"
-        title="Notificações"
-        description="Para lembretes de manutenção e para consultar as ofertas depois."
+        title={t('notifications.title')}
+        description={t('notifications.description')}
         granted={state.notifications}
         onAllow={permissions.requestNotifications}
       />

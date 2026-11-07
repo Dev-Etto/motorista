@@ -1,4 +1,6 @@
 import * as Location from 'expo-location';
+import { i18n } from '@shared/i18n';
+import { currentFormat } from '@shared/i18n/format';
 
 export type { LocationObject } from 'expo-location';
 
@@ -8,8 +10,8 @@ export interface BackgroundTracking {
   notification: { title: string; body: string };
 }
 
-export const LOCATION_PERMISSION_MESSAGE = 'Permita a localização para medir os km por GPS.';
-const SERVICES_MESSAGE = 'Ligue a localização do celular para medir os km por GPS.';
+export const locationPermissionMessage = () => i18n.t('location.permissionNeeded', { context: currentFormat().distanceUnit });
+const servicesMessage = () => i18n.t('location.servicesOff', { context: currentFormat().distanceUnit });
 
 export async function ensureLocation(): Promise<boolean> {
   const { granted } = await Location.requestForegroundPermissionsAsync();
@@ -23,8 +25,8 @@ export async function hasLocationPermission(): Promise<boolean> {
 
 export async function readGpsProblem(): Promise<string | null> {
   const [granted, servicesEnabled] = await Promise.all([hasLocationPermission(), Location.hasServicesEnabledAsync()]);
-  if (!granted) return LOCATION_PERMISSION_MESSAGE;
-  return servicesEnabled ? null : SERVICES_MESSAGE;
+  if (!granted) return locationPermissionMessage();
+  return servicesEnabled ? null : servicesMessage();
 }
 
 export function startBackgroundTracking(task: string, tracking: BackgroundTracking): Promise<void> {

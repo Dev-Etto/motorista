@@ -1,0 +1,57 @@
+{
+  "tabs": {
+    "offer": "Evaluar oferta",
+    "quote": "Viaje particular"
+  },
+  "costNotice": {
+    "title": "Primero, descubre tu costo por {{unit}}",
+    "message": "Sin él, la calculadora no sabe cuánto del valor se va en el carro.",
+    "action": "Calcular costo"
+  },
+  "offer": {
+    "title": "¿Vale la pena este viaje?",
+    "intro": "Escribe lo que aparece en la oferta y mira cuánto te queda.",
+    "value": "Cuánto paga el viaje",
+    "distance": "Distancia total",
+    "distanceHint": "Suma el camino hasta el pasajero y el viaje.",
+    "time": "Tiempo total",
+    "profit": "Te queda",
+    "perDistance": "Paga por {{unit}}",
+    "perHour": "Paga por hora",
+    "scoreTitle": "¿Cómo se calcula la puntuación?",
+    "scoreExplain": "La puntuación compara el viaje con tu costo y tus mínimos. De {{target}} para arriba, alcanza los dos mínimos. Por debajo de {{belowCost}}, no cubre el costo del carro.",
+    "scoreDisclaimer": "La puntuación solo ayuda: quien decide siempre eres tú."
+  },
+  "quote": {
+    "title": "¿Cuánto cobrar por este viaje?",
+    "intro": "Para viajes acordados directamente con el pasajero, fuera de las apps.",
+    "toPassenger": "Hasta recoger al pasajero",
+    "trip": "Del viaje",
+    "time": "Tiempo total",
+    "timeHint": "Incluye el camino hasta el pasajero.",
+    "moreOptions": "Más opciones",
+    "return": "Regreso sin pasajero",
+    "returnHint": "Si tienes que regresar por tu cuenta.",
+    "profitPerHour": "Cuánto quieres ganar por hora",
+    "profitPerHourHint": "Es el valor de tu tiempo en el precio sugerido.",
+    "toll": "Peaje",
+    "extras": "Espera u otros extras",
+    "minimum": "No cobrar menos de",
+    "minimumHint": "Un viaje corto puede dar un precio muy bajo. Si eso pasa, la app sugiere este valor.",
+    "price": "Precio sugerido",
+    "vehicle": "Para el carro",
+    "vehicleDetail": "{{distance}} con tu costo por {{unit}}",
+    "timeValue": "Por tu tiempo",
+    "tollAndExtras": "Peaje y extras",
+    "profit": "Te queda",
+    "description": "Descripción (opcional)",
+    "descriptionPlaceholder": "Del centro al aeropuerto",
+    "share": "Compartir",
+    "shareMessage": "Precio: {{price}}",
+    "shareMessageWithTrip": "Viaje: {{trip}}\nPrecio: {{price}}",
+    "savedTitle": "Cotizaciones guardadas",
+    "noDescription": "Sin descripción",
+    "tapToRemove": "Toca para quitar",
+    "removeTitle": "¿Quitar la cotización?"
+  }
+}

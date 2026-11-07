@@ -1,3 +1,6 @@
+import type { TFunction } from 'i18next';
+import { APP_NAME } from '@config/app';
+
 export interface ProblemReportInput {
   description: string;
   version: string;
@@ -8,18 +11,18 @@ export interface ProblemReportInput {
   readings: string[];
 }
 
-export function buildProblemReport(input: ProblemReportInput): string {
+export function buildProblemReport(input: ProblemReportInput, t: TFunction<'settings'>): string {
   const lines = [
-    'Relato do app Motorista',
+    t('report.body.heading', { appName: APP_NAME }),
     '',
-    input.description.trim() || '(sem descrição)',
+    input.description.trim() || t('report.body.noDescription'),
     '',
-    `Versão: ${input.version}`,
-    `Android: ${input.android}`,
-    `Aparelho: ${input.device}`,
-    `Acessibilidade: ${input.accessibilityGranted ? 'ativa' : 'desativada'}`,
-    `Leituras incompletas: ${input.failedReads}`,
+    t('report.body.version', { version: input.version }),
+    t('report.body.android', { android: input.android }),
+    t('report.body.device', { device: input.device }),
+    input.accessibilityGranted ? t('report.body.accessibilityOn') : t('report.body.accessibilityOff'),
+    t('report.body.failedReads', { failedReads: input.failedReads }),
   ];
   if (input.readings.length === 0) return lines.join('\n');
-  return [...lines, '', 'O que o Copiloto leu (palavras mascaradas):', ...input.readings].join('\n');
+  return [...lines, '', t('report.body.readingsHeading'), ...input.readings].join('\n');
 }

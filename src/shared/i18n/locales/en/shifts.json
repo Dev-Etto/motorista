@@ -1,0 +1,114 @@
+{
+  "status": {
+    "running": "Shift in progress",
+    "paused": "Shift paused"
+  },
+  "form": {
+    "tip_km": "Log it with the car stopped. Just earnings, kilometers, and hours are enough to see your profit.",
+    "tip_mi": "Log it with the car stopped. Just earnings, miles, and hours are enough to see your profit.",
+    "measurePending_km": "You have a measurement in progress. Tap Use in log to bring over the time and kilometers, or discard the measurement.",
+    "measurePending_mi": "You have a measurement in progress. Tap Use in log to bring over the time and miles, or discard the measurement.",
+    "timeAndDistance": "Time and distance",
+    "hoursLabel": "Hours worked",
+    "hoursSuffix": "h",
+    "kmMode": {
+      "manual": "Total",
+      "odometer": "Odometer"
+    },
+    "kmLabel_km": "Kilometers driven",
+    "kmLabel_mi": "Miles driven",
+    "kmMeasured": "Measured by GPS. You can adjust it.",
+    "odometerStart": "Starting odometer",
+    "odometerEnd": "Ending odometer",
+    "earningsTitle": "Earnings by platform",
+    "dateLabel": "Date",
+    "expensesTitle": "Expenses for the day",
+    "otherExpenses": "Other expenses",
+    "moreDetails": "More details",
+    "startHourLabel": "Start time",
+    "startHourHint": "Helps find your best time of day.",
+    "tripsLabel": "Rides",
+    "saveButton": "Save shift",
+    "errors": {
+      "invalidStartHour": "The start time goes from 0 to 23.",
+      "tooLong": "A shift can be 24 hours at most. Check the hours worked.",
+      "noEarnings": "Enter earnings for at least one platform.",
+      "odometerOrder": "The ending odometer must be greater than the starting one."
+    }
+  },
+  "result": {
+    "title": "Result",
+    "partial_km": "Partial result: the kilometers or vehicle costs are missing.",
+    "partial_mi": "Partial result: the miles or vehicle costs are missing.",
+    "gross": "Earnings",
+    "vehicleCost": "Vehicle cost",
+    "expenses": "Shift expenses",
+    "grossPerKm_km": "Earnings per km",
+    "grossPerKm_mi": "Earnings per mile",
+    "grossPerHour": "Earnings per hour",
+    "profitPerHour": "Profit per hour"
+  },
+  "list": {
+    "addExpense": "Add expense or refuel",
+    "emptyDay": "No shifts on this day",
+    "emptyMonth": "No shifts this month",
+    "emptyMessage": "Log your first shift to see your real profit.",
+    "title": "Shifts",
+    "dayTitle": "Shifts on {{date}}",
+    "shiftSubtitle": "{{gross}} in {{duration}}",
+    "shiftSubtitlePartial": "{{gross}} in {{duration}} • partial",
+    "looseTitle": "Standalone expenses",
+    "looseHint": "Tap an expense to delete it.",
+    "deleteExpense": {
+      "title": "Delete {{label}}?",
+      "message": "The {{amount}} expense will be removed from your results."
+    }
+  },
+  "detail": {
+    "notFoundTitle": "Shift not found",
+    "notFoundMessage": "It may have been deleted.",
+    "deleteTitle": "Delete shift?",
+    "title": "Details",
+    "time": "Time",
+    "distance": "Distance",
+    "costPerKm_km": "Cost per km for the day",
+    "costPerKm_mi": "Cost per mile for the day",
+    "dayOffers": "Offers for the day",
+    "edit": "Edit"
+  },
+  "live": {
+    "idleTitle": "Measure now",
+    "time": "Time",
+    "distance": "Distance",
+    "measureKm_km": "Track kilometers by GPS",
+    "measureKm_mi": "Track miles by GPS",
+    "measureHint": "Your location stays on your phone only. For personal trips, just pause it.",
+    "applied": "Measurement brought into the log below. It's only cleared after you save the shift.",
+    "pause": "Pause",
+    "resume": "Resume",
+    "start": "Start",
+    "apply": "Use in log",
+    "discardButton": "Discard measurement",
+    "discard": {
+      "title": "Discard measurement?",
+      "message_km": "The time and kilometers measured will be deleted.",
+      "message_mi": "The time and miles measured will be deleted.",
+      "action": "Discard"
+    }
+  },
+  "active": {
+    "forgotten": "The timer has been running for a long time. If you've already finished, just review the hours.",
+    "onePerTime": "One shift at a time. Finish this one to start another.",
+    "finish": "End and log",
+    "continue": "Continue shift",
+    "new": "New shift"
+  },
+  "gps": {
+    "startError": "Couldn't start GPS. Check your phone's location and try again.",
+    "stopped_km": "Kilometer tracking stopped. Turn GPS back on to continue.",
+    "stopped_mi": "Mile tracking stopped. Turn GPS back on to continue.",
+    "notificationTitle_km": "Tracking shift kilometers",
+    "notificationTitle_mi": "Tracking shift miles",
+    "notificationBody": "Your location stays on the device only. Pause it for personal trips."
+  }
+}

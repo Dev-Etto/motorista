@@ -1,0 +1,114 @@
+{
+  "status": {
+    "running": "Jornada en curso",
+    "paused": "Jornada en pausa"
+  },
+  "form": {
+    "tip_km": "Regístrala con el carro detenido. Con las ganancias, los km y las horas ya basta para ver la ganancia.",
+    "tip_mi": "Regístrala con el carro detenido. Con las ganancias, las millas y las horas ya basta para ver la ganancia.",
+    "measurePending_km": "Tienes una medición en curso. Toca Usar en el registro para llevar el tiempo y los km, o descarta la medición.",
+    "measurePending_mi": "Tienes una medición en curso. Toca Usar en el registro para llevar el tiempo y las millas, o descarta la medición.",
+    "timeAndDistance": "Tiempo y distancia",
+    "hoursLabel": "Horas trabajadas",
+    "hoursSuffix": "h",
+    "kmMode": {
+      "manual": "Total",
+      "odometer": "Odómetro"
+    },
+    "kmLabel_km": "Km recorridos",
+    "kmLabel_mi": "Millas recorridas",
+    "kmMeasured": "Medido por GPS. Puedes ajustarlo.",
+    "odometerStart": "Odómetro inicial",
+    "odometerEnd": "Odómetro final",
+    "earningsTitle": "Ganancias por plataforma",
+    "dateLabel": "Fecha",
+    "expensesTitle": "Gastos del día",
+    "otherExpenses": "Otros gastos",
+    "moreDetails": "Más detalles",
+    "startHourLabel": "Hora de inicio",
+    "startHourHint": "Ayuda a descubrir tu mejor horario.",
+    "tripsLabel": "Viajes",
+    "saveButton": "Guardar jornada",
+    "errors": {
+      "invalidStartHour": "La hora de inicio va de 0 a 23.",
+      "tooLong": "Una jornada dura como máximo 24 horas. Revisa las horas trabajadas.",
+      "noEarnings": "Indica la ganancia de al menos una plataforma.",
+      "odometerOrder": "El odómetro final tiene que ser mayor que el inicial."
+    }
+  },
+  "result": {
+    "title": "Resultado",
+    "partial_km": "Resultado parcial: faltan los km o los costos del vehículo.",
+    "partial_mi": "Resultado parcial: faltan las millas o los costos del vehículo.",
+    "gross": "Ingresos",
+    "vehicleCost": "Costo del vehículo",
+    "expenses": "Gastos de la jornada",
+    "grossPerKm_km": "Ingresos por km",
+    "grossPerKm_mi": "Ingresos por milla",
+    "grossPerHour": "Ingresos por hora",
+    "profitPerHour": "Ganancia por hora"
+  },
+  "list": {
+    "addExpense": "Registrar gasto o carga de combustible",
+    "emptyDay": "No hay jornadas este día",
+    "emptyMonth": "No hay jornadas este mes",
+    "emptyMessage": "Registra tu primera jornada para ver tu ganancia real.",
+    "title": "Jornadas",
+    "dayTitle": "Jornadas del {{date}}",
+    "shiftSubtitle": "{{gross}} en {{duration}}",
+    "shiftSubtitlePartial": "{{gross}} en {{duration}} • parcial",
+    "looseTitle": "Gastos sueltos",
+    "looseHint": "Toca un gasto para eliminarlo.",
+    "deleteExpense": {
+      "title": "¿Eliminar {{label}}?",
+      "message": "El gasto de {{amount}} sale de tus resultados."
+    }
+  },
+  "detail": {
+    "notFoundTitle": "Jornada no encontrada",
+    "notFoundMessage": "Puede que se haya eliminado.",
+    "deleteTitle": "¿Eliminar la jornada?",
+    "title": "Detalles",
+    "time": "Tiempo",
+    "distance": "Distancia",
+    "costPerKm_km": "Costo por km del día",
+    "costPerKm_mi": "Costo por milla del día",
+    "dayOffers": "Ofertas del día",
+    "edit": "Editar"
+  },
+  "live": {
+    "idleTitle": "Medir ahora",
+    "time": "Tiempo",
+    "distance": "Distancia",
+    "measureKm_km": "Medir km por GPS",
+    "measureKm_mi": "Medir millas por GPS",
+    "measureHint": "La ubicación queda solo en el celular. En trayectos personales, solo tienes que pausar.",
+    "applied": "Medición llevada al registro de abajo. Solo se borra después de guardar la jornada.",
+    "pause": "Pausar",
+    "resume": "Reanudar",
+    "start": "Iniciar",
+    "apply": "Usar en el registro",
+    "discardButton": "Descartar medición",
+    "discard": {
+      "title": "¿Descartar la medición?",
+      "message_km": "Se borrarán el tiempo y los km medidos.",
+      "message_mi": "Se borrarán el tiempo y las millas medidas.",
+      "action": "Descartar"
+    }
+  },
+  "active": {
+    "forgotten": "El cronómetro lleva bastante tiempo encendido. Si ya terminaste, solo revisa las horas.",
+    "onePerTime": "Es una jornada a la vez. Finaliza esta para empezar otra.",
+    "finish": "Terminar y registrar",
+    "continue": "Continuar jornada",
+    "new": "Nueva jornada"
+  },
+  "gps": {
+    "startError": "No se pudo iniciar el GPS. Revisa la ubicación del celular e inténtalo de nuevo.",
+    "stopped_km": "La medición de km se detuvo. Activa el GPS de nuevo para continuar.",
+    "stopped_mi": "La medición de millas se detuvo. Activa el GPS de nuevo para continuar.",
+    "notificationTitle_km": "Midiendo los km de la jornada",
+    "notificationTitle_mi": "Midiendo las millas de la jornada",
+    "notificationBody": "La ubicación queda solo en el dispositivo. Pausa en los trayectos personales."
+  }
+}

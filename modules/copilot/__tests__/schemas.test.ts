@@ -1,4 +1,4 @@
-import { parseHistory, parsePreferences } from '../schemas';
+import { copilotRegionalSchema, parseHistory, parsePreferences } from '@modules/copilot/schemas';
 
 const entry = { timestamp: 1, source: 'Uber', valueCents: 1500, km: 5, minutes: 10, perKmCents: 300, perHourCents: 9000, color: 'green' };
 
@@ -18,3 +18,13 @@ describe('preferências vindas do módulo nativo', () => {
     expect(() => parsePreferences('{"voice":"sim"}')).toThrow();
   });
 });
+
+describe('perfil regional enviado ao Kotlin', () => {
+  it('aceita o perfil e recusa moeda ou unidade fora do formato', () => {
+    const regional = { languageTag: 'en', formatLocale: 'en-US', currencyCode: 'USD', distanceUnit: 'mi' };
+    expect(copilotRegionalSchema.parse(regional)).toEqual(regional);
+    expect(copilotRegionalSchema.safeParse({ ...regional, currencyCode: 'real' }).success).toBe(false);
+    expect(copilotRegionalSchema.safeParse({ ...regional, distanceUnit: 'léguas' }).success).toBe(false);
+  });
+});
+

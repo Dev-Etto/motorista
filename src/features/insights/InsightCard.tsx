@@ -1,15 +1,22 @@
-import { Insight } from '@/domain/insights/types';
-import { AppText, Card } from '@/shared/ui/primitives';
+import { useTranslation } from 'react-i18next';
+import { Insight } from '@domain/insights/types';
+import { useFormat } from '@shared/i18n/format';
+import { AppText, Card } from '@shared/ui/primitives';
+import { describeInsight } from './describeInsight';
 
 export function InsightCard({ insight }: { insight: Insight }) {
+  const { t } = useTranslation('insights');
+  const format = useFormat();
+  const text = describeInsight(insight, t, format);
+
   return (
     <Card>
       <AppText variant="caption" tone="accent" bold>
-        {insight.title}
+        {text.title}
       </AppText>
-      <AppText>{insight.message}</AppText>
+      <AppText>{text.message}</AppText>
       <AppText variant="caption" tone="muted">
-        {insight.basis}
+        {text.basis}
       </AppText>
     </Card>
   );

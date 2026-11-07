@@ -45,12 +45,12 @@ class FloatingPanel(
     setOnClickListener { onToggle() }
   }
   private val lastOfferDetail = text(CAPTION_SP, bold = false)
-  private val hideDetail = text(CAPTION_SP, bold = false).apply { text = context.getString(R.string.panel_hide_detail) }
+  private val hideDetail = text(CAPTION_SP, bold = false).apply { text = context.copilotText(R.string.panel_hide_detail) }
   private val rowIcons = mutableListOf<ImageView>()
   private val rowLabels = mutableListOf<TextView>()
   private val lastOfferBadge = ImageView(context)
-  private val lastOfferRow = row(R.drawable.ic_panel_offer, context.getString(R.string.panel_last_offer), lastOfferDetail, lastOfferBadge, onLastOffer)
-  private val rows = listOf(lastOfferRow, row(R.drawable.ic_panel_open, context.getString(R.string.panel_open_app), null, null, onOpenApp), row(R.drawable.ic_panel_hide, context.getString(R.string.panel_hide_button), hideDetail, null, onHide))
+  private val lastOfferRow = row(R.drawable.ic_panel_offer, context.copilotText(R.string.panel_last_offer), lastOfferDetail, lastOfferBadge, onLastOffer)
+  private val rows = listOf(lastOfferRow, row(R.drawable.ic_panel_open, context.copilotText(R.string.panel_open_app), null, null, onOpenApp), row(R.drawable.ic_panel_hide, context.copilotText(R.string.panel_hide_button), hideDetail, null, onHide))
   private val titles = LinearLayout(context).apply {
     orientation = LinearLayout.VERTICAL
     addView(title)
@@ -77,7 +77,7 @@ class FloatingPanel(
     addView(menu)
   }
 
-  fun render(timer: TimerState, lastOffer: OfferEvaluation?, open: Boolean, theme: ThemeMode) {
+  fun render(timer: TimerState, lastOffer: OfferEvaluation?, open: Boolean, theme: ThemeMode, format: OfferFormat) {
     val clock = OfferFormat.clock(timer.elapsedMs)
     if (title.text.toString() != clock) title.text = clock
 
@@ -87,7 +87,7 @@ class FloatingPanel(
 
     rendered = next
     menu.visibility = if (open) View.VISIBLE else View.GONE
-    if (open) renderOpen(timer, lastOffer, cardTheme.palette(theme), night) else renderClosed()
+    if (open) renderOpen(timer, lastOffer, cardTheme.palette(theme), night, format) else renderClosed()
   }
 
   private fun renderClosed() {
@@ -107,7 +107,7 @@ class FloatingPanel(
     close.visibility = View.GONE
   }
 
-  private fun renderOpen(timer: TimerState, lastOffer: OfferEvaluation?, colors: CardPalette, night: Boolean) {
+  private fun renderOpen(timer: TimerState, lastOffer: OfferEvaluation?, colors: CardPalette, night: Boolean, format: OfferFormat) {
     view.background = rounded(colors.surface, OPEN_CORNER_DP)
     view.elevation = context.dp(ELEVATION_DP).toFloat()
     view.setPadding(context.dp(SPACE_M_DP), context.dp(SPACE_S_DP), context.dp(SPACE_M_DP), context.dp(SPACE_M_DP))
@@ -126,17 +126,17 @@ class FloatingPanel(
     close.visibility = View.VISIBLE
     close.imageTintList = ColorStateList.valueOf(colors.muted)
     renderToggle(timer, colors)
-    renderRows(lastOffer, colors, night)
+    renderRows(lastOffer, colors, night, format)
   }
 
   private fun statusText(timer: TimerState) = when {
-    timer.running -> context.getString(R.string.panel_shift_running)
-    timer.started -> context.getString(R.string.panel_shift_paused)
-    else -> context.getString(R.string.panel_shift_idle)
+    timer.running -> context.copilotText(R.string.panel_shift_running)
+    timer.started -> context.copilotText(R.string.panel_shift_paused)
+    else -> context.copilotText(R.string.panel_shift_idle)
   }
 
   private fun renderToggle(timer: TimerState, colors: CardPalette) {
-    toggleLabel.text = context.getString(
+    toggleLabel.text = context.copilotText(
       when {
         timer.running -> R.string.panel_pause
         timer.started -> R.string.panel_resume
@@ -149,12 +149,12 @@ class FloatingPanel(
     toggle.background = pressable(colors.text, colors.surface)
   }
 
-  private fun renderRows(lastOffer: OfferEvaluation?, colors: CardPalette, night: Boolean) {
+  private fun renderRows(lastOffer: OfferEvaluation?, colors: CardPalette, night: Boolean, format: OfferFormat) {
     lastOfferRow.visibility = if (lastOffer == null) View.GONE else View.VISIBLE
     lastOffer?.let {
-      lastOfferDetail.text = "${it.sourceLabel} · ${OfferFormat.money(it.offer.valueCents.toDouble())}"
-      lastOfferBadge.setImageBitmap(ScoreBadge.bitmap(context, it, context.dp(BADGE_DP), night))
-      lastOfferBadge.contentDescription = OfferFormat.scoreDescription(it)
+      lastOfferDetail.text = "${it.sourceLabel} · ${format.money(it.offer.valueCents.toDouble())}"
+      lastOfferBadge.setImageBitmap(ScoreBadge.bitmap(context, it, format, context.dp(BADGE_DP), night))
+      lastOfferBadge.contentDescription = format.scoreDescription(it)
     }
     lastOfferDetail.setTextColor(colors.muted)
     hideDetail.setTextColor(colors.muted)

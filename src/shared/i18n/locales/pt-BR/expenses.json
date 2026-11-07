@@ -1,0 +1,27 @@
+{
+  "category": {
+    "fuel": "Abastecimento",
+    "maintenance": "Manutenção",
+    "toll": "Pedágio",
+    "parking": "Estacionamento",
+    "wash": "Lavagem",
+    "food": "Alimentação",
+    "other": "Outra despesa"
+  },
+  "form": {
+    "option": {
+      "fuel": "Abastecer",
+      "maintenance": "Manutenção",
+      "other": "Outra"
+    },
+    "valueRequired": "Informe um valor maior que zero.",
+    "dateLabel": "Data",
+    "valueLabel": "Valor",
+    "litersLabel_L": "Litros (opcional)",
+    "litersLabel_gal": "Galões (opcional)",
+    "odometerLabel": "Odômetro (opcional)",
+    "noteLabel": "Observação (opcional)"
+  },
+  "alreadyInCost_km": "{{category}} já está no custo por km. O valor serve para comparar o previsto com o pago.",
+  "alreadyInCost_mi": "{{category}} já está no custo por milha. O valor serve para comparar o previsto com o pago."
+}

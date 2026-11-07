@@ -1,0 +1,61 @@
+{
+  "period": {
+    "week": "Week",
+    "month": "Month",
+    "year": "Year"
+  },
+  "weekRange": "{{start}} to {{end}}",
+  "tip": "Closed month deducts the full fixed cost. It's where you see whether you drove enough to cover your costs.",
+  "exportFailed": "Couldn't create the file.",
+  "emptyTitle": "No shifts in this period",
+  "emptyMessage": "Log shifts to see charts and reports.",
+  "periodProfit": "Profit for the period",
+  "chart": {
+    "byMonth": "Profit by month",
+    "byDay": "Profit by day",
+    "accessibilityLabel": "Profit for the period: {{amount}}"
+  },
+  "monthClose": {
+    "title": "Closed month",
+    "variable": "Variable cost",
+    "fixed": "Fixed cost for the whole month",
+    "expenses": "Expenses",
+    "realCostPerKm_km": "Real cost per km",
+    "realCostPerKm_mi": "Real cost per mile",
+    "profit": "Profit with full fixed cost"
+  },
+  "byPlatform": "By platform",
+  "pdfButton": "Create PDF",
+  "csvButton": "Export CSV",
+  "insightsFrom": "Insights appear after {{minimum}} shifts.",
+  "pdf": {
+    "title": "{{app}}: report",
+    "range": "{{start}} to {{end}}",
+    "summary": "Summary",
+    "shifts": "Shifts",
+    "gross": "Earnings",
+    "vehicleCost": "Vehicle cost",
+    "expenses": "Expenses",
+    "estimatedProfit": "Estimated profit",
+    "distance": "Distance",
+    "time": "Time",
+    "grossPerKm_km": "Earnings per km",
+    "grossPerKm_mi": "Earnings per mile",
+    "profitPerHour": "Profit per hour",
+    "date": "Date",
+    "profit": "Profit",
+    "footer": "Generated from data entered by the user. Estimated amounts, not valid for tax purposes."
+  },
+  "csv": {
+    "fileName": "shifts-{{start}}-to-{{end}}.csv",
+    "date": "Date",
+    "gross": "Earnings ({{currency}})",
+    "minutes": "Minutes",
+    "expenses": "Expenses ({{currency}})",
+    "profit": "Profit ({{currency}})",
+    "distance_km": "Km",
+    "distance_mi": "Miles",
+    "costPerDistance_km": "Cost per km ({{currency}})",
+    "costPerDistance_mi": "Cost per mile ({{currency}})"
+  }
+}

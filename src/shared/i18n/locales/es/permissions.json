@@ -1,0 +1,29 @@
+{
+  "intro": "Todo se procesa en tu celular. Nada se envía afuera.",
+  "granted": "Permitido",
+  "allow": "Permitir",
+  "accessibility": {
+    "title": "Leer las ofertas",
+    "description": "Para evaluar las ofertas de Uber, 99 e inDrive. Android lo llama accesibilidad.",
+    "howTo": {
+      "title": "Cómo activar la lectura",
+      "step1": "1. Busca Copiloto de ofertas y activa la primera opción. Deja el acceso directo desactivado.",
+      "step2": "2. Android avisa sobre control total. Es el aviso estándar de este permiso: la app lee la pantalla y no toca nada por ti.",
+      "step3": "3. Si la opción está bloqueada, abre los detalles de la app, toca los tres puntos y permite los ajustes restringidos.",
+      "openAppSettings": "Abrir detalles de la app"
+    }
+  },
+  "overlay": {
+    "title": "Mostrar sobre otras apps",
+    "description": "Para que el cronómetro aparezca mientras usas Uber o 99."
+  },
+  "location": {
+    "title": "Ubicación",
+    "description_km": "Para medir los km de la jornada por GPS. Elige permitir mientras se usa la app.",
+    "description_mi": "Para medir las millas de la jornada por GPS. Elige permitir mientras se usa la app."
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "description": "Para recordatorios de mantenimiento y para consultar las ofertas después."
+  }
+}

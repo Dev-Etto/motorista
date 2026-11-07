@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { MINUTES_PER_HOUR } from '@/shared/utils/time';
+import { MINUTES_PER_HOUR } from '@shared/utils/time';
 
 export type OfferColor = 'green' | 'yellow' | 'red' | 'neutral';
 export const OFFER_MODES = ['normal', 'low'] as const;
@@ -51,7 +51,6 @@ function resolveColor(offer: OfferInput, profitCents: number, perKm: number, per
 }
 
 const NO_TIME_MAX_SCORE = 4;
-const NO_TIME = 'sem tempo na oferta';
 const TARGET_SCORE = 3.5;
 const MAX_SCORE = 5;
 const SCORE_PER_RATIO_ABOVE_TARGET = 3;
@@ -80,18 +79,26 @@ function resolveScore(offer: OfferInput, color: OfferColor, perKm: number, perHo
   return Math.round(Math.max(low, Math.min(high, base)) * 10) / 10;
 }
 
-function compareToTarget(value: number, target: number): string {
-  if (target <= 0) return 'sem mínimo';
+export type TargetComparison = { kind: 'no-target' } | { kind: 'at-target' } | { kind: 'above' | 'below'; percent: number };
+
+export type OfferReason = { kind: 'no-costs' } | { kind: 'below-cost' } | { kind: 'targets'; perKm: TargetComparison; perHour: TargetComparison | null };
+
+function compareToTarget(value: number, target: number): TargetComparison {
+  if (target <= 0) return { kind: 'no-target' };
 
   const percent = Math.round((value / target - 1) * 100);
-  if (percent === 0) return 'no mínimo';
-  return percent > 0 ? `${percent}% acima do mínimo` : `${-percent}% abaixo do mínimo`;
+  if (percent === 0) return { kind: 'at-target' };
+  return percent > 0 ? { kind: 'above', percent } : { kind: 'below', percent: -percent };
 }
 
-function resolveReason(offer: OfferInput, color: OfferColor, perKm: number, perHour: number): string {
-  if (color === 'neutral') return 'Cadastre seus custos para ver a nota';
-  if (color === 'red') return 'Não cobre seu custo por km';
-  return `km: ${compareToTarget(perKm, offer.targetPerKmCents)} · hora: ${offer.minutes > 0 ? compareToTarget(perHour, offer.targetPerHourCents) : NO_TIME}`;
+function resolveReason(offer: OfferInput, color: OfferColor, perKm: number, perHour: number): OfferReason {
+  if (color === 'neutral') return { kind: 'no-costs' };
+  if (color === 'red') return { kind: 'below-cost' };
+  return {
+    kind: 'targets',
+    perKm: compareToTarget(perKm, offer.targetPerKmCents),
+    perHour: offer.minutes > 0 ? compareToTarget(perHour, offer.targetPerHourCents) : null,
+  };
 }
 
 export function classifyOffer(offer: OfferInput) {

@@ -1,29 +1,29 @@
-import { OutcomeFilter } from '@/domain/offer/offerLog';
-import { confirmAction } from '@/shared/platform/confirm';
-import { DateField } from '@/shared/ui/DateField';
-import { FilterChips } from '@/shared/ui/FilterChips';
-import { Button, Card, EmptyState, Notice, Screen, ToggleRow } from '@/shared/ui/primitives';
+import { useTranslation } from 'react-i18next';
+import { OutcomeFilter } from '@domain/offer/offerLog';
+import { DateField } from '@shared/ui/DateField';
+import { confirmAction } from '@shared/ui/dialog';
+import { FilterChips } from '@shared/ui/FilterChips';
+import { Button, Card, EmptyState, Notice, Screen, ToggleRow } from '@shared/ui/primitives';
 import { EstimateCard } from './EstimateCard';
-import { PERIOD_OPTIONS } from './offerPeriod';
+import { OFFER_PERIODS } from './offerPeriod';
 import { OfferRow } from './OfferRow';
 import { OutcomeSummaryCard } from './OutcomeSummaryCard';
 import { ALL_SOURCES, useOffers } from './useOffers';
 
-const OUTCOME_OPTIONS: { value: OutcomeFilter; label: string }[] = [
-  { value: 'all', label: 'Todas' },
-  { value: 'accepted', label: 'Aceitas' },
-  { value: 'notAccepted', label: 'Não aceitas' },
-];
+const OUTCOMES: OutcomeFilter[] = ['all', 'accepted', 'notAccepted'];
 
 export default function OffersScreen() {
+  const { t } = useTranslation(['offers', 'common']);
   const offers = useOffers();
-  const sourceOptions = [{ value: ALL_SOURCES, label: 'Todos' }, ...offers.sources.map((source) => ({ value: source, label: source }))];
+  const periodOptions = OFFER_PERIODS.map((value) => ({ value, label: t(`screen.period.${value}`) }));
+  const outcomeOptions = OUTCOMES.map((value) => ({ value, label: t(`screen.outcome.${value}`) }));
+  const sourceOptions = [{ value: ALL_SOURCES, label: t('screen.allSources') }, ...offers.sources.map((source) => ({ value: source, label: source }))];
 
   const confirmClear = () => {
     confirmAction({
-      title: 'Limpar as ofertas?',
-      message: 'O histórico e a estimativa de faturamento serão apagados. As jornadas salvas não mudam.',
-      actionLabel: 'Limpar',
+      title: t('screen.clearConfirm.title'),
+      message: t('screen.clearConfirm.message'),
+      actionLabel: t('common:actions.clear'),
       onConfirm: offers.clear,
     });
   };
@@ -31,39 +31,31 @@ export default function OffersScreen() {
   return (
     <Screen>
       <Card>
-        <FilterChips label="Período" value={offers.period} options={PERIOD_OPTIONS} onChange={offers.setPeriod} />
+        <FilterChips label={t('screen.periodLabel')} value={offers.period} options={periodOptions} onChange={offers.setPeriod} />
         {offers.period === 'custom' ? (
           <>
-            <DateField label="De" value={offers.custom.start} onChange={(start) => start && offers.setCustom({ ...offers.custom, start })} />
-            <DateField label="Até" value={offers.custom.end} onChange={(end) => end && offers.setCustom({ ...offers.custom, end })} />
+            <DateField label={t('screen.from')} value={offers.custom.start} onChange={(start) => start && offers.setCustom({ ...offers.custom, start })} />
+            <DateField label={t('screen.to')} value={offers.custom.end} onChange={(end) => end && offers.setCustom({ ...offers.custom, end })} />
           </>
         ) : null}
-        {offers.sources.length > 1 ? <FilterChips label="App" value={offers.source} options={sourceOptions} onChange={offers.setSource} /> : null}
+        {offers.sources.length > 1 ? (
+          <FilterChips label={t('screen.appLabel')} value={offers.source} options={sourceOptions} onChange={offers.setSource} />
+        ) : null}
       </Card>
       {offers.estimating ? <EstimateCard estimate={offers.estimate} /> : null}
-      {offers.estimating ? <OutcomeSummaryCard title="Aceitas e não aceitas" summary={offers.summary} /> : null}
-      <Card title="Ofertas">
-        <FilterChips label="Resultado" value={offers.outcome} options={OUTCOME_OPTIONS} onChange={offers.setOutcome} />
+      {offers.estimating ? <OutcomeSummaryCard title={t('screen.outcomeTitle')} summary={offers.summary} /> : null}
+      <Card title={t('screen.listTitle')}>
+        <FilterChips label={t('screen.outcomeLabel')} value={offers.outcome} options={outcomeOptions} onChange={offers.setOutcome} />
         {offers.offers.map((entry) => (
           <OfferRow key={entry.timestamp} entry={entry} />
         ))}
-        {offers.hasMore ? <Button label="Ver mais" variant="secondary" onPress={offers.showMore} /> : null}
+        {offers.hasMore ? <Button label={t('screen.seeMore')} variant="secondary" onPress={offers.showMore} /> : null}
       </Card>
-      {offers.offers.length === 0 ? (
-        <EmptyState title="Nenhuma oferta aqui" message="Troque os filtros ou aguarde as próximas ofertas lidas pelo Copiloto." />
-      ) : null}
-      <Notice
-        tone="accent"
-        message="O app registra sozinho o que você aceita. Se o valor sugerido estiver diferente do que recebeu, é só corrigir ao registrar a jornada."
-      />
-      <Card title="Ajustes">
-        <ToggleRow
-          label="Estimar faturamento pelos aceites"
-          hint="Nota quando você toca em aceitar ou recusar nos apps de corrida. Nada sai do celular."
-          value={offers.estimating}
-          onChange={offers.toggleEstimating}
-        />
-        <Button label="Limpar as ofertas" variant="danger" onPress={confirmClear} />
+      {offers.offers.length === 0 ? <EmptyState title={t('screen.emptyTitle')} message={t('screen.emptyMessage')} /> : null}
+      <Notice tone="accent" message={t('screen.autoRecord')} />
+      <Card title={t('screen.settingsTitle')}>
+        <ToggleRow label={t('screen.estimating')} hint={t('screen.estimatingHint')} value={offers.estimating} onChange={offers.toggleEstimating} />
+        <Button label={t('screen.clearButton')} variant="danger" onPress={confirmClear} />
       </Card>
     </Screen>
   );

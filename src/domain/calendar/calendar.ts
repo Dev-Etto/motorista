@@ -1,4 +1,4 @@
-import { addDays, monthBounds, weekdayOf } from '@/shared/utils/dates';
+import { addDays, monthBounds, weekdayFromIso, weekdayOf } from '@shared/utils/dates';
 
 export interface CalendarFact {
   date: string;
@@ -13,12 +13,12 @@ export interface CalendarDay {
 
 const DAYS_PER_WEEK = 7;
 
-export function buildCalendar(monthDate: string, facts: CalendarFact[]): (CalendarDay | null)[][] {
+export function buildCalendar(monthDate: string, facts: CalendarFact[], firstWeekday: number): (CalendarDay | null)[][] {
   const { start, days } = monthBounds(monthDate);
   const totals = new Map<string, number>();
   for (const fact of facts) totals.set(fact.date, (totals.get(fact.date) ?? 0) + fact.profitCents);
 
-  const leadingBlanks = (weekdayOf(start) + 6) % DAYS_PER_WEEK;
+  const leadingBlanks = (weekdayOf(start) - weekdayFromIso(firstWeekday) + DAYS_PER_WEEK) % DAYS_PER_WEEK;
   const cells: (CalendarDay | null)[] = Array.from({ length: leadingBlanks }, () => null);
   for (let index = 0; index < days; index++) {
     const date = addDays(start, index);

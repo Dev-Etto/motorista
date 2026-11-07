@@ -1,4 +1,4 @@
-import { MS_PER_HOUR } from '@/shared/utils/time';
+import { MS_PER_HOUR } from '@shared/utils/time';
 
 const FORGOTTEN_AFTER_HOURS = 14;
 const FORGOTTEN_AFTER_MS = FORGOTTEN_AFTER_HOURS * MS_PER_HOUR;

@@ -1,0 +1,127 @@
+{
+  "messages": {
+    "notificationsForChannel": "Allow notifications for the app to use this channel.",
+    "notificationsForExample": "Allow notifications for the app to see the example.",
+    "accessibilityForTest": "Turn on the accessibility service to test.",
+    "overlayForFloating": "Allow display over other apps to use the floating button.",
+    "testSent": "Test sent. Tap again to see another platform and another score.",
+    "exampleSent": "Example sent. Look at the top of the screen or swipe down the notification panel.",
+    "outsideTestSent": "Leave the app now. The sample offer will appear in {{seconds}} seconds."
+  },
+  "screen": {
+    "inControl": "You're in control: Copilot only reads and informs, and you always decide whether to accept or decline. While driving, the voice tells you: only touch your phone when the car is stopped. Each platform has its own rules about helper apps, and it's worth knowing them.",
+    "reviewSetup": "Review the guided setup"
+  },
+  "status": {
+    "title": "Copilot",
+    "readOffers": "Read offers",
+    "readOffersHint": "Evaluates every recognized offer.",
+    "imageReading": "Read the screen image",
+    "imageReadingHint": "A backup for Uber and 99, for when the offer text isn't available. The image is read on your phone and discarded right away.",
+    "platformRules": "Platforms can detect apps that use accessibility or display over other apps, and their rules may include penalties on your account. Using Copilot is your decision, and reading may not work on every device.",
+    "accessibilityOn": "Accessibility on",
+    "accessibilityOff": "Accessibility off",
+    "enableAccessibility": "Turn on accessibility",
+    "shortcutNotice": "The icon on the side is an Android shortcut, and Copilot works without it. To remove it, open Offer Copilot on the next screen and turn off the shortcut option.",
+    "removeShortcut": "Remove the side icon",
+    "batteryNotice_km": "Android may pause Copilot and kilometer tracking to save battery. If offers stop showing up, choose Motorista on the next screen and select Don't optimize.",
+    "batteryNotice_mi": "Android may pause Copilot and mile tracking to save battery. If offers stop showing up, choose Motorista on the next screen and select Don't optimize.",
+    "openBattery": "Open battery settings",
+    "failedReads_one": "1 reading was incomplete and wasn't shown, so you only see reliable numbers.",
+    "failedReads_other": "{{count}} readings were incomplete and weren't shown, so you only see reliable numbers."
+  },
+  "channels": {
+    "title": "How to get the offer",
+    "voice": "Voice",
+    "voiceHint": "Recommended while driving: you don't need to look at the screen.",
+    "installVoice": "Install an English voice on Android to hear the offers.",
+    "openVoiceSettings": "Open voice settings",
+    "card": "On-screen card",
+    "cardHint": "With the car stopped, drag it wherever you like. The app remembers the position.",
+    "floating": "Floating button",
+    "floatingHint": "Stays on top of other apps, with the timer. The offer opens inside it. Only this option turns the button off for good. The platform may hide it during the offer, so keep the voice on.",
+    "notification": "Notification",
+    "notificationHint": "Stays in the Android notification panel so you can check it later.",
+    "notificationExample": "See a sample notification",
+    "testCard": "Test card",
+    "testOutside": "Test outside the app"
+  },
+  "display": {
+    "title": "Card appearance",
+    "intro": "Applies to the on-screen card and to the offer inside the floating button.",
+    "layoutLabel": "Layout",
+    "layout": {
+      "complete": "Full",
+      "summary": "Compact"
+    },
+    "primaryMetricLabel": "Main number (voice and compact layout)",
+    "profit": "Profit",
+    "sizeLabel": "Size",
+    "size": {
+      "compact": "Small",
+      "large": "Large",
+      "extra": "Extra large"
+    },
+    "durationLabel": "Maximum time on screen",
+    "durationOption": "{{seconds}} s",
+    "resetPosition": "Move the card back to the top"
+  },
+  "apps": {
+    "title": "Monitored apps"
+  },
+  "history": {
+    "title": "Latest offers",
+    "seeAll": "See all offers"
+  },
+  "calibration": {
+    "title": "Calibration",
+    "showReading": "See what Copilot reads",
+    "showReadingHint": "Shows the screen text with words masked. It stays in memory only.",
+    "sendReadings": "Send these readings"
+  },
+  "targets": {
+    "title": "Minimums per ride",
+    "mode": {
+      "normal": "Normal",
+      "low": "Slow period"
+    },
+    "minPerDistance_km": "Minimum per km",
+    "minPerDistance_mi": "Minimum per mile",
+    "minPerHour": "Minimum per hour",
+    "editorIntro": "The lowest amount you want to get for each ride. The offer score uses these values.",
+    "followGoal": "Calculate from my goal",
+    "followGoalHint": "Your goal calls for {{perDistance}} and {{perHour}}. When on, it follows the goal whenever it changes.",
+    "belowCostHint": "An offer below your cost turns red in any mode.",
+    "summaryIntro": "The offer score compares each ride with these values.",
+    "change": "Change"
+  },
+  "setup": {
+    "permission": {
+      "title": "Allow offer reading",
+      "explanation": "Android calls this permission accessibility. With it, the app reads the fare, distance, time, and rating of offers.",
+      "privacy": "Names, addresses, and conversations aren't stored, and nothing leaves your phone.",
+      "openAccessibility": "Open accessibility",
+      "stepsTitle": "On the screen that opens",
+      "step1": "1. Find Offer Copilot, under Downloaded apps or Installed apps.",
+      "step2": "2. Turn on the first option, Use Offer Copilot.",
+      "step3": "3. Confirm with Allow and come back here. This screen moves on by itself.",
+      "fullControlTitle": "Android will mention full control",
+      "fullControl": "This warning is standard and appears for any app with this permission. Copilot reads the screen and shows the card, without tapping anything for you.",
+      "shortcut": "The shortcut option can stay off: it would only add an icon to the side of the screen.",
+      "blockedTitle": "Was the option blocked?",
+      "blocked": "It's an Android protection for apps installed outside the store, and it's quick to unlock. In the app details, tap the three dots and choose to allow restricted settings. The steps may vary slightly by device.",
+      "openAppSettings": "Open app details"
+    },
+    "ready": {
+      "title": "All set to test",
+      "explanation": "We'll turn on the voice and the card, the recommended channels, and show you an example.",
+      "activate": "Turn on and test"
+    },
+    "active": {
+      "title": "Copilot on",
+      "explanation": "For every recognized offer, you hear and see where it comes from, the score, and your numbers. If any offer doesn't show up, Calibration helps you adjust.",
+      "driving": "While driving, the voice tells you. Only touch your phone when the car is stopped.",
+      "testAgain": "Test again"
+    }
+  }
+}

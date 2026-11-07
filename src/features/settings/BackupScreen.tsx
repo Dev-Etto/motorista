@@ -1,43 +1,44 @@
-import { TipBanner } from '@/features/tips';
-import { confirmAction } from '@/shared/platform/confirm';
-import { Button, Card, ListRow, Notice, Screen } from '@/shared/ui/primitives';
-import { formatDate, isoFromMillis } from '@/shared/utils/dates';
+import { useTranslation } from 'react-i18next';
+import { TipBanner } from '@features/tips';
+import { useFormat } from '@shared/i18n/format';
+import { confirmAction } from '@shared/ui/dialog';
+import { Button, Card, ListRow, Notice, Screen } from '@shared/ui/primitives';
+import { isoFromMillis } from '@shared/utils/dates';
 import { useBackup } from './useBackup';
 
 export default function BackupScreen() {
+  const { t } = useTranslation('settings');
+  const format = useFormat();
   const backup = useBackup();
-  const lastLabel = backup.lastBackupAt ? formatDate(isoFromMillis(Number(backup.lastBackupAt))) : 'Nunca';
+  const lastLabel = backup.lastBackupAt ? format.date(isoFromMillis(Number(backup.lastBackupAt))) : t('backup.never');
 
   const confirmRestore = () => {
     confirmAction({
-      title: 'Restaurar backup?',
-      message: 'Os dados atuais serão substituídos pelos do arquivo.',
-      actionLabel: 'Restaurar',
+      title: t('backup.restoreConfirm.title'),
+      message: t('backup.restoreConfirm.message'),
+      actionLabel: t('backup.restoreConfirm.action'),
       onConfirm: backup.importBackup,
     });
   };
 
   const confirmUndo = () => {
     confirmAction({
-      title: 'Desfazer a restauração?',
-      message: 'Os dados voltam a ser os de antes da última restauração.',
-      actionLabel: 'Desfazer',
+      title: t('backup.undoConfirm.title'),
+      message: t('backup.undoConfirm.message'),
+      actionLabel: t('backup.undoConfirm.action'),
       onConfirm: backup.undoRestore,
     });
   };
 
   return (
     <Screen>
-      <TipBanner id="backup" message="Guarde o arquivo fora do celular, como no Drive ou em seu e-mail. Na troca de aparelho, use Restaurar." />
-      <Notice
-        tone="accent"
-        message="Seus dados ficam só neste celular. Com um backup, você os leva para onde quiser, inclusive se trocar de aparelho ou reinstalar o app. O arquivo não tem senha: guarde em um lugar só seu."
-      />
-      <Card title="Backup">
-        <ListRow title="Último backup" value={lastLabel} />
-        <Button label="Fazer backup" busy={backup.busy} onPress={backup.exportBackup} />
-        <Button label="Restaurar de um arquivo" variant="secondary" onPress={confirmRestore} />
-        {backup.canUndo ? <Button label="Desfazer a última restauração" variant="secondary" onPress={confirmUndo} /> : null}
+      <TipBanner id="backup" message={t('backup.tip')} />
+      <Notice tone="accent" message={t('backup.intro')} />
+      <Card title={t('backup.cardTitle')}>
+        <ListRow title={t('backup.lastBackup')} value={lastLabel} />
+        <Button label={t('backup.exportButton')} busy={backup.busy} onPress={backup.exportBackup} />
+        <Button label={t('backup.restoreButton')} variant="secondary" onPress={confirmRestore} />
+        {backup.canUndo ? <Button label={t('backup.undoButton')} variant="secondary" onPress={confirmUndo} /> : null}
       </Card>
       {backup.message ? <Notice tone={backup.message.tone} message={backup.message.text} /> : null}
     </Screen>

@@ -1,26 +1,27 @@
 import Constants from 'expo-constants';
-import { loadGoalProgress } from '@/application/goalProgress';
-import { loadInsights } from '@/application/insights';
-import { loadNextStep } from '@/application/nextStep';
-import { BACKUP_REMINDER_DAYS, UPDATE_REMINDER_DAYS } from '@/config/app';
-import { expenseRepository } from '@/data/repositories/expenseRepository';
-import { gpsSessionRepository } from '@/data/repositories/gpsSessionRepository';
-import { reminderRepository } from '@/data/repositories/reminderRepository';
-import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
-import { shiftRepository } from '@/data/repositories/shiftRepository';
-import { vehicleRepository } from '@/data/repositories/vehicleRepository';
-import { isBackupDue, isUpdateDue } from '@/domain/maintenance/notices';
-import { estimateEarnings } from '@/domain/offer/offerLog';
-import { isDueByKm } from '@/domain/reminder/reminder';
-import { summarizeShifts, withLooseExpenses } from '@/domain/shift/summary';
-import { useAsyncData } from '@/shared/hooks/useAsyncData';
-import { readGpsProblem } from '@/shared/platform/location';
-import { dayRange, monthBounds, today, weekBounds } from '@/shared/utils/dates';
+import { loadGoalProgress } from '@application/goalProgress';
+import { loadInsights } from '@application/insights';
+import { loadNextStep } from '@application/nextStep';
+import { BACKUP_REMINDER_DAYS, UPDATE_REMINDER_DAYS } from '@config/app';
+import { expenseRepository } from '@data/repositories/expenseRepository';
+import { gpsSessionRepository } from '@data/repositories/gpsSessionRepository';
+import { reminderRepository } from '@data/repositories/reminderRepository';
+import { SETTING_KEYS, settingsRepository } from '@data/repositories/settingsRepository';
+import { shiftRepository } from '@data/repositories/shiftRepository';
+import { vehicleRepository } from '@data/repositories/vehicleRepository';
+import { isBackupDue, isUpdateDue } from '@domain/maintenance/notices';
+import { estimateEarnings } from '@domain/offer/offerLog';
+import { isDueByKm } from '@domain/reminder/reminder';
+import { summarizeShifts, withLooseExpenses } from '@domain/shift/summary';
 import { copilot } from '@modules/copilot';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
+import { useFormat } from '@shared/i18n/format';
+import { readGpsProblem } from '@shared/platform/location';
+import { dayRange, monthBounds, today, weekBounds } from '@shared/utils/dates';
 
-async function loadDashboard() {
+async function loadDashboard(firstWeekday: number) {
   const date = today();
-  const week = weekBounds(date);
+  const week = weekBounds(date, firstWeekday);
   const month = monthBounds(date);
   const [monthFacts, weekFacts, { costs }, goal, insights, lastBackupAt, reminders, totalKm, looseToday, looseWeek, looseMonth] = await Promise.all([
     shiftRepository.listFacts(month.start, month.end),
@@ -62,4 +63,7 @@ async function loadDashboard() {
 
 export type DashboardData = Awaited<ReturnType<typeof loadDashboard>>;
 
-export const useDashboard = () => useAsyncData(loadDashboard);
+export function useDashboard() {
+  const { firstWeekday } = useFormat().profile;
+  return useAsyncData(() => loadDashboard(firstWeekday), [firstWeekday]);
+}

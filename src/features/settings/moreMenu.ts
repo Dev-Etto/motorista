@@ -1,45 +1,63 @@
 import type { Href } from 'expo-router';
-import { AppIconName } from '@/shared/ui/AppIcon';
+import { AppIconName } from '@shared/ui/AppIcon';
+
+export type MoreSectionId = 'work' | 'copilot' | 'data' | 'help';
+
+export type MoreItemId =
+  | 'vehicle'
+  | 'goal'
+  | 'offers'
+  | 'platforms'
+  | 'reminders'
+  | 'copilot'
+  | 'permissions'
+  | 'region'
+  | 'backup'
+  | 'summary'
+  | 'privacy'
+  | 'help'
+  | 'report'
+  | 'terms';
 
 export interface MoreMenuItem {
+  id: MoreItemId;
   icon: AppIconName;
-  title: string;
-  subtitle: string;
   href: Href;
 }
 
-export const MORE_SECTIONS: { title: string; items: MoreMenuItem[] }[] = [
+export const MORE_SECTIONS: { id: MoreSectionId; items: MoreMenuItem[] }[] = [
   {
-    title: 'Seu trabalho',
+    id: 'work',
     items: [
-      { icon: 'vehicle', title: 'Veículo e custos', subtitle: 'Seu custo por km', href: '/vehicle' },
-      { icon: 'goal', title: 'Meta e mínimos', subtitle: 'Seu lucro e o mínimo por corrida', href: '/goal' },
-      { icon: 'layers', title: 'Ofertas e faturamento', subtitle: 'Aceitas, não aceitas e o valor estimado', href: '/offers' },
-      { icon: 'apps', title: 'Plataformas', subtitle: 'Apps em que você trabalha', href: '/platforms' },
-      { icon: 'bell', title: 'Lembretes', subtitle: 'Óleo, pneus, revisões e fim do dia', href: '/reminders' },
+      { id: 'vehicle', icon: 'vehicle', href: '/vehicle' },
+      { id: 'goal', icon: 'goal', href: '/goal' },
+      { id: 'offers', icon: 'layers', href: '/offers' },
+      { id: 'platforms', icon: 'apps', href: '/platforms' },
+      { id: 'reminders', icon: 'bell', href: '/reminders' },
     ],
   },
   {
-    title: 'Copiloto e permissões',
+    id: 'copilot',
     items: [
-      { icon: 'copilot', title: 'Copiloto de ofertas', subtitle: 'Leitura, cartão, voz e botão flutuante', href: '/copilot' },
-      { icon: 'key', title: 'Permissões', subtitle: 'O que o app pode usar', href: '/permissions' },
+      { id: 'copilot', icon: 'copilot', href: '/copilot' },
+      { id: 'permissions', icon: 'key', href: '/permissions' },
     ],
   },
   {
-    title: 'Seus dados',
+    id: 'data',
     items: [
-      { icon: 'backup', title: 'Backup', subtitle: 'Salvar e restaurar seus dados', href: '/backup' },
-      { icon: 'reports', title: 'Meu resumo', subtitle: 'Números de uso para compartilhar', href: '/summary' },
-      { icon: 'shield', title: 'Privacidade', subtitle: 'O que acontece com seus dados', href: '/privacy' },
+      { id: 'region', icon: 'globe', href: '/region' },
+      { id: 'backup', icon: 'backup', href: '/backup' },
+      { id: 'summary', icon: 'reports', href: '/summary' },
+      { id: 'privacy', icon: 'shield', href: '/privacy' },
     ],
   },
   {
-    title: 'Ajuda',
+    id: 'help',
     items: [
-      { icon: 'help', title: 'Ajuda', subtitle: 'Como o app funciona', href: '/help' },
-      { icon: 'flag', title: 'Relatar um problema', subtitle: 'Ou sugerir uma melhoria', href: '/report' },
-      { icon: 'document', title: 'Termos de uso', subtitle: 'As regras para usar o app', href: '/terms' },
+      { id: 'help', icon: 'help', href: '/help' },
+      { id: 'report', icon: 'flag', href: '/report' },
+      { id: 'terms', icon: 'document', href: '/terms' },
     ],
   },
 ];

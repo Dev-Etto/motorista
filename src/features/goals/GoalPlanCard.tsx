@@ -1,21 +1,24 @@
-import { loadGoalProgress } from '@/application/goalProgress';
-import { AppText, Card, ListRow, Notice } from '@/shared/ui/primitives';
-import { formatNumber, formatBRL } from '@/shared/utils/money';
+import { useTranslation } from 'react-i18next';
+import { loadGoalProgress } from '@application/goalProgress';
+import { useFormat } from '@shared/i18n/format';
+import { AppText, Card, ListRow, Notice } from '@shared/ui/primitives';
 
 type GoalProgress = NonNullable<Awaited<ReturnType<typeof loadGoalProgress>>>;
 
 export function GoalPlanCard({ progress }: { progress: GoalProgress }) {
+  const { t } = useTranslation('goals');
+  const format = useFormat();
   const { suggestion } = progress;
-  if (!suggestion) return <Notice tone="accent" message="Cadastre seu veículo para ver quanto faturar e quanto cada corrida precisa pagar." />;
+  if (!suggestion) return <Notice tone="accent" message={t('plan.noVehicle')} />;
 
   return (
-    <Card title="Seu plano para o mês">
+    <Card title={t('plan.title')}>
       <AppText variant="caption" tone="muted">
-        É uma previsão feita no começo, com os km que você informou. Os mínimos por corrida saem dela.
+        {t('plan.caption', { context: format.distanceUnit })}
       </AppText>
-      <ListRow title="Faturamento previsto no mês" value={formatBRL(progress.requiredGrossCents)} />
-      <ListRow title="Por dia de trabalho" value={formatBRL(suggestion.grossPerWorkDayCents)} />
-      <ListRow title="Km previstos por dia" value={`${formatNumber(progress.plannedKmPerDay, 0)} km`} />
+      <ListRow title={t('plan.gross')} value={format.money(progress.requiredGrossCents)} />
+      <ListRow title={t('plan.perWorkDay')} value={format.money(suggestion.grossPerWorkDayCents)} />
+      <ListRow title={t('plan.plannedDistance', { context: format.distanceUnit })} value={format.distance(progress.plannedKmPerDay, 0)} />
     </Card>
   );
 }

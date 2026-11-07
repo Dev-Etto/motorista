@@ -1,0 +1,117 @@
+{
+  "platform": {
+    "private": "Particular",
+    "other": "Outros"
+  },
+  "app": {
+    "loading": "Carregando…",
+    "openFailed": "Não foi possível abrir os dados do app. Reinicie e tente novamente."
+  },
+  "weekday": {
+    "0": "Domingo",
+    "1": "Segunda",
+    "2": "Terça",
+    "3": "Quarta",
+    "4": "Quinta",
+    "5": "Sexta",
+    "6": "Sábado"
+  },
+  "hourOfDay": "{{hour}}h",
+  "perUnit": "{{amount}}/{{unit}}",
+  "actions": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "remove": "Remover",
+    "done": "Concluir",
+    "continue": "Continuar",
+    "add": "Adicionar",
+    "gotIt": "Entendi",
+    "notNow": "Agora não",
+    "later": "Fazer isso depois",
+    "clear": "Limpar",
+    "retry": "Tentar de novo"
+  },
+  "irreversible": "Essa ação não pode ser desfeita.",
+  "invalidNumber": "Confira os números digitados. Use só números, como {{example}}.",
+  "unit": {
+    "km": "km",
+    "mi": "mi"
+  },
+  "screens": {
+    "vehicle": "Veículo e custos",
+    "goal": "Meta e mínimos",
+    "copilot": "Copiloto de ofertas",
+    "offers": "Ofertas e faturamento",
+    "copilotSetup": "Configurar o Copiloto",
+    "help": "Ajuda",
+    "permissions": "Permissões",
+    "summary": "Meu resumo",
+    "platforms": "Plataformas",
+    "reminders": "Lembretes",
+    "backup": "Backup",
+    "report": "Relatar um problema",
+    "privacy": "Privacidade",
+    "terms": "Termos de uso",
+    "shiftNew": "Jornada",
+    "shiftDetail": "Detalhes da jornada",
+    "expenseNew": "Novo lançamento",
+    "region": "Idioma e região"
+  },
+  "tabs": {
+    "home": "Início",
+    "shifts": "Jornadas",
+    "calculator": "Calculadora",
+    "reports": "Relatórios",
+    "more": "Mais"
+  },
+  "location": {
+    "permissionNeeded_km": "Permita a localização para medir os km por GPS.",
+    "permissionNeeded_mi": "Permita a localização para medir as milhas por GPS.",
+    "servicesOff_km": "Ligue a localização do celular para medir os km por GPS.",
+    "servicesOff_mi": "Ligue a localização do celular para medir as milhas por GPS."
+  },
+  "errors": {
+    "load": "Não foi possível carregar os dados.",
+    "save": "Não foi possível salvar. Tente de novo."
+  },
+  "loading": "Carregando",
+  "scoreBadge": {
+    "label": "Nota {{score}} de 5",
+    "empty": "Sem nota"
+  },
+  "periodSwitcher": {
+    "previous_week": "Semana anterior",
+    "previous_month": "Mês anterior",
+    "previous_year": "Ano anterior",
+    "next_week": "Próximo período: semana",
+    "next_month": "Próximo período: mês",
+    "next_year": "Próximo período: ano"
+  },
+  "dateField": {
+    "placeholder": "Escolher data",
+    "accessibilityLabel": "{{label}}: {{value}}",
+    "clearLabel": "Limpar {{label}}"
+  },
+  "monthCalendar": {
+    "dayEmpty": "Dia {{day}}, sem jornada",
+    "dayProfit": "Dia {{day}}, lucro de {{profit}}"
+  },
+  "progressBar": {
+    "label": "{{percent}} concluído"
+  },
+  "stepDots": {
+    "label": "Passo {{current}} de {{total}}"
+  },
+  "languageName": {
+    "pt-BR": "Português",
+    "en": "English",
+    "es": "Español"
+  },
+  "dialog": {
+    "dismiss": "Fechar aviso"
+  },
+  "marketName": {
+    "BR": "Brasil"
+  }
+}

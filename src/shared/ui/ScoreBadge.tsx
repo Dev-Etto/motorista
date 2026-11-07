@@ -1,6 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
-import { fonts, ThemeColors, useTheme } from '@/shared/theme/theme';
-import { formatNumber } from '@/shared/utils/money';
+import { useFormat } from '@shared/i18n/format';
+import { fonts, ThemeColors, useTheme } from '@shared/theme/theme';
 
 type ScoreColor = 'green' | 'yellow' | 'red' | 'neutral';
 
@@ -20,6 +21,8 @@ const SCORE_TOKENS: Record<ScoreColor, { fill: keyof ThemeColors; ink: keyof The
 
 export function ScoreBadge({ score, color, height = 32 }: { score: number | null | undefined; color: ScoreColor; height?: number }) {
   const colors = useTheme();
+  const format = useFormat();
+  const { t } = useTranslation();
   const tokens = SCORE_TOKENS[color];
   const ink = colors[tokens.ink];
   const hasScore = score !== null && score !== undefined;
@@ -27,11 +30,11 @@ export function ScoreBadge({ score, color, height = 32 }: { score: number | null
   return (
     <View
       accessible
-      accessibilityLabel={hasScore ? `Nota ${formatNumber(score)} de 5` : 'Sem nota'}
+      accessibilityLabel={hasScore ? t('scoreBadge.label', { score: format.number(score) }) : t('scoreBadge.empty')}
       style={[styles.badge, { height, borderRadius: height * CORNER_RATIO, paddingHorizontal: height * PADDING_RATIO, backgroundColor: colors[tokens.fill] }]}
     >
       <Text maxFontSizeMultiplier={MAX_FONT_SCALE} style={[styles.text, { color: ink, fontSize: height * SCORE_RATIO }]}>
-        {hasScore ? formatNumber(score) : '—'}
+        {hasScore ? format.number(score) : '—'}
         {hasScore ? <Text style={{ fontSize: height * SCALE_RATIO, opacity: SCALE_OPACITY }}>/5</Text> : null}
       </Text>
     </View>

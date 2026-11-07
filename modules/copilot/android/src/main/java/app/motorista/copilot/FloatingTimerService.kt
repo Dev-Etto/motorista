@@ -46,8 +46,8 @@ class FloatingTimerService : Service(), FloatingHost {
     timer = ShiftTimer(this)
     store = CopilotStore.get(this)
     pill = PillPositionStore(this)
-    dismissZone = DismissZone(this, windowManager, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, getString(R.string.drop_to_close))
-    hideZone = DismissZone(this, windowManager, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, getString(R.string.drop_to_hide))
+    dismissZone = DismissZone(this, windowManager, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, copilotText(R.string.drop_to_close))
+    hideZone = DismissZone(this, windowManager, WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, copilotText(R.string.drop_to_hide))
     ForegroundNotification.start(this)
     if (!Settings.canDrawOverlays(this)) return stopSelf()
 
@@ -172,7 +172,7 @@ class FloatingTimerService : Service(), FloatingHost {
     if (cards.showing || window.root.visibility != View.VISIBLE) return
 
     val state = timer.state()
-    panel.render(state, lastOffer, menuOpen, store.preferences.theme)
+    panel.render(state, lastOffer, menuOpen, store.preferences.theme, OfferFormat.of(this, store.preferences.regional))
     window.root.alpha = if (menuOpen || state.running) 1f else IDLE_ALPHA
   }
 

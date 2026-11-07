@@ -1,9 +1,20 @@
 import { z } from 'zod';
-import { assertForeignKeys, getDb, runInTransaction, SCHEMA_VERSION, type SqlExecutor } from '@/data/database/connection';
-import { isJsonOf } from '@/data/database/jsonColumn';
-import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
-import { workWeekdaysSchema } from '@/domain/goal/goal';
-import { costProfileSchema } from '@/domain/vehicle/costs';
+import {
+  assertForeignKeys,
+  getDb,
+  LEGACY_REGIONAL_SQL,
+  REGIONAL_SCHEMA_VERSION,
+  runInTransaction,
+  SCHEMA_VERSION,
+  type SqlExecutor,
+  SYSTEM_PLATFORMS_SCHEMA_VERSION,
+  SYSTEM_PLATFORMS_SQL,
+} from '@data/database/connection';
+import { isJsonOf } from '@data/database/jsonColumn';
+import { SETTING_KEYS, settingsRepository } from '@data/repositories/settingsRepository';
+import { workWeekdaysSchema } from '@domain/goal/goal';
+import { LEGACY_REGIONAL, type Market, SUPPORTED_MARKETS } from '@domain/regional/regional';
+import { costProfileSchema } from '@domain/vehicle/costs';
 import { isHistoryText, isPreferencesText, sanitizeHistoryText } from '@modules/copilot/schemas';
 
 const scalar = z.union([z.string(), z.number(), z.null()]);
@@ -55,19 +66,21 @@ export async function createBackup(): Promise<BackupFile> {
   return { app: 'motorista', schemaVersion: SCHEMA_VERSION, exportedAt: new Date().toISOString(), tables };
 }
 
-export type ParseResult = { ok: true; backup: BackupFile } | { ok: false; error: string };
+export type BackupProblem = 'corrupted' | 'notBackup' | 'newerVersion';
+
+export type ParseResult = { ok: true; backup: BackupFile } | { ok: false; error: BackupProblem };
 
 export function parseBackup(text: string): ParseResult {
   let json: unknown;
   try {
     json = JSON.parse(text);
   } catch {
-    return { ok: false, error: 'O arquivo está corrompido ou não é um backup do app.' };
+    return { ok: false, error: 'corrupted' };
   }
   const parsed = backupSchema.safeParse(json);
-  if (!parsed.success) return { ok: false, error: 'Este arquivo não é um backup válido do app.' };
+  if (!parsed.success) return { ok: false, error: 'notBackup' };
   if (parsed.data.schemaVersion > SCHEMA_VERSION) {
-    return { ok: false, error: 'Este backup veio de uma versão mais nova do app. Atualize o app e tente de novo.' };
+    return { ok: false, error: 'newerVersion' };
   }
   return { ok: true, backup: parsed.data };
 }
@@ -95,5 +108,13 @@ export async function restoreBackup(backup: BackupFile): Promise<void> {
     }
     await assertForeignKeys(tx);
     await settingsRepository.set(SETTING_KEYS.onboarded, '1', tx);
+    if (backup.schemaVersion < REGIONAL_SCHEMA_VERSION) await tx.execAsync(LEGACY_REGIONAL_SQL);
+    if (backup.schemaVersion < SYSTEM_PLATFORMS_SCHEMA_VERSION) await tx.execAsync(SYSTEM_PLATFORMS_SQL);
   });
+}
+
+export function backupMarket(backup: BackupFile): Market | null {
+  if (backup.schemaVersion < REGIONAL_SCHEMA_VERSION) return LEGACY_REGIONAL.market;
+  const row = backup.tables.settings.find((setting) => setting.key === SETTING_KEYS.market);
+  return SUPPORTED_MARKETS.find((market) => market === row?.value) ?? null;
 }

@@ -1,1 +1,1 @@
-export { default } from '@/features/settings/MoreScreen';
+export { default } from '@features/settings/MoreScreen';

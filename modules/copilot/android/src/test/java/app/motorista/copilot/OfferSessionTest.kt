@@ -33,6 +33,7 @@ private class FakeScheduler : OfferScheduler {
 }
 
 class OfferSessionTest {
+  private val format = testFormat()
   private val channel = FakeChannel()
   private val scheduler = FakeScheduler()
   private val recorded = mutableListOf<String>()
@@ -131,7 +132,7 @@ class OfferSessionTest {
   @Test
   fun textoDoLucroNaoMostraANota() {
     val rated = OfferEvaluator.evaluate(offer.copy(passengerRating = 4.7), targets, "Uber")
-    val line = OfferFormat.profitLine(rated)
+    val line = format.profitLine(rated)
     assertTrue(line.startsWith("Lucro"))
     assertFalse(line.contains("★"))
   }
@@ -226,8 +227,8 @@ class OfferSessionTest {
   @Test
   fun fraseDeVozCurta() {
     val result = OfferEvaluator.evaluate(ParsedOffer(1840, 8.5, 19), targets, "Uber")
-    assertEquals("Uber. Nota 4,1. 2 e 16 por quilômetro.", OfferFormat.spokenPhrase(result, PrimaryMetric.PER_KM))
-    assertEquals("Uber. Nota 4,1. 9 e 90 de lucro.", OfferFormat.spokenPhrase(result, PrimaryMetric.PROFIT))
+    assertEquals("Uber. Nota 4,1. 2 e 16 por quilômetro.", format.spokenPhrase(result, PrimaryMetric.PER_KM))
+    assertEquals("Uber. Nota 4,1. 9 e 90 de lucro.", format.spokenPhrase(result, PrimaryMetric.PROFIT))
   }
 
   @Test
@@ -235,8 +236,8 @@ class OfferSessionTest {
     val result = OfferEvaluator.evaluate(ParsedOffer(1300, 4.3, 0), targets, "inDrive")
     assertEquals(null, result.hourOnTarget)
     assertEquals(OfferColor.GREEN, result.color)
-    assertEquals("4,3 km", OfferFormat.distanceAndTime(result))
-    assertEquals(false, OfferFormat.rates(result).contains("/h"))
+    assertEquals("4,3 km", format.distanceAndTime(result))
+    assertEquals(false, format.rates(result).contains("/h"))
   }
 
   @Test
@@ -325,8 +326,8 @@ class OfferSessionTest {
   @Test
   fun vozFalaCentavosSemAmbiguidade() {
     val result = OfferEvaluator.evaluate(ParsedOffer(1025, 5.0, 19), targets, "")
-    assertTrue(OfferFormat.spokenPhrase(result, PrimaryMetric.PER_KM).contains("2 e 5").not())
-    assertTrue(OfferFormat.spokenPhrase(OfferEvaluator.evaluate(ParsedOffer(1025, 5.0, 19), targets, ""), PrimaryMetric.PER_KM).contains("2 reais e 5 centavos"))
+    assertTrue(format.spokenPhrase(result, PrimaryMetric.PER_KM).contains("2 e 5").not())
+    assertTrue(format.spokenPhrase(OfferEvaluator.evaluate(ParsedOffer(1025, 5.0, 19), targets, ""), PrimaryMetric.PER_KM).contains("2 reais e 5 centavos"))
   }
 
   @Test
@@ -366,9 +367,9 @@ class OfferSessionTest {
   @Test
   fun notificacaoMostraOrigemENossaNotaSemADoPassageiro() {
     val result = OfferEvaluator.evaluate(ParsedOffer(1840, 8.5, 19, 4.92), targets, "99")
-    assertEquals("99 • Nota 4,1 • R$ 18,40", OfferFormat.notificationTitle(result).replace('\u00a0', ' '))
-    assertFalse(OfferFormat.notificationDetails(result).contains("★"))
-    assertTrue(OfferFormat.notificationDetails(result).contains("8% acima do mínimo"))
+    assertEquals("99 • Nota 4,1 • R$ 18,40", format.notificationTitle(result))
+    assertFalse(format.notificationDetails(result).contains("★"))
+    assertTrue(format.notificationDetails(result).contains("8% acima do mínimo"))
   }
 
   @Test

@@ -1,33 +1,38 @@
 import { Stack, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { prepareApp } from '@/application/startup';
-import { useFloatingVisibility } from '@/features/copilot/useFloatingVisibility';
-import { restoreThemeMode } from '@/features/settings/themePreference';
-import '@/features/shifts/gpsTask';
-import { fonts, useTheme } from '@/shared/theme/theme';
-import { AppText, Notice, Screen } from '@/shared/ui/primitives';
-import { ThemedStatusBar } from '@/shared/ui/ThemedStatusBar';
+import { prepareApp } from '@application/startup';
+import { useDeviceLocaleSync } from '@application/useRegional';
+import { useFloatingVisibility } from '@features/copilot/useFloatingVisibility';
+import { restoreThemeMode } from '@features/settings/themePreference';
+import { useRescheduleOnLanguageChange } from '@features/settings/useRescheduleOnLanguageChange';
+import '@features/shifts/gpsTask';
+import { fonts, useTheme } from '@shared/theme/theme';
+import { DialogHost } from '@shared/ui/DialogHost';
+import { AppText, Notice, Screen } from '@shared/ui/primitives';
+import { ThemedStatusBar } from '@shared/ui/ThemedStatusBar';
 
-const SCREEN_TITLES: Record<string, string> = {
-  vehicle: 'Veículo e custos',
-  goal: 'Meta e mínimos',
-  copilot: 'Copiloto de ofertas',
-  offers: 'Ofertas e faturamento',
-  'copilot-setup': 'Configurar o Copiloto',
-  help: 'Ajuda',
-  permissions: 'Permissões',
-  summary: 'Meu resumo',
-  platforms: 'Plataformas',
-  reminders: 'Lembretes',
-  backup: 'Backup',
-  report: 'Relatar um problema',
-  privacy: 'Privacidade',
-  terms: 'Termos de uso',
-  'shift/new': 'Jornada',
-  'shift/[id]': 'Detalhes da jornada',
-  'expense/new': 'Novo lançamento',
-};
+const SCREENS = [
+  { name: 'vehicle', titleKey: 'screens.vehicle' },
+  { name: 'goal', titleKey: 'screens.goal' },
+  { name: 'copilot', titleKey: 'screens.copilot' },
+  { name: 'offers', titleKey: 'screens.offers' },
+  { name: 'copilot-setup', titleKey: 'screens.copilotSetup' },
+  { name: 'help', titleKey: 'screens.help' },
+  { name: 'permissions', titleKey: 'screens.permissions' },
+  { name: 'summary', titleKey: 'screens.summary' },
+  { name: 'platforms', titleKey: 'screens.platforms' },
+  { name: 'reminders', titleKey: 'screens.reminders' },
+  { name: 'region', titleKey: 'screens.region' },
+  { name: 'backup', titleKey: 'screens.backup' },
+  { name: 'report', titleKey: 'screens.report' },
+  { name: 'privacy', titleKey: 'screens.privacy' },
+  { name: 'terms', titleKey: 'screens.terms' },
+  { name: 'shift/new', titleKey: 'screens.shiftNew' },
+  { name: 'shift/[id]', titleKey: 'screens.shiftDetail' },
+  { name: 'expense/new', titleKey: 'screens.expenseNew' },
+] as const;
 
 function useAppBootstrap() {
   const router = useRouter();
@@ -53,14 +58,17 @@ function useAppBootstrap() {
 export default function RootLayout() {
   const colors = useTheme();
   const state = useAppBootstrap();
+  const { t } = useTranslation();
   useFloatingVisibility();
+  useDeviceLocaleSync();
+  useRescheduleOnLanguageChange();
 
   if (state === 'failed') {
     return (
       <SafeAreaProvider>
         <ThemedStatusBar />
         <Screen safeTop>
-          <Notice tone="negative" message="Não foi possível abrir os dados do app. Reinicie e tente novamente." />
+          <Notice tone="negative" message={t('app.openFailed')} />
         </Screen>
       </SafeAreaProvider>
     );
@@ -70,7 +78,7 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <ThemedStatusBar />
         <Screen safeTop>
-          <AppText tone="muted">Carregando…</AppText>
+          <AppText tone="muted">{t('app.loading')}</AppText>
         </Screen>
       </SafeAreaProvider>
     );
@@ -90,10 +98,11 @@ export default function RootLayout() {
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
-        {Object.entries(SCREEN_TITLES).map(([name, title]) => (
-          <Stack.Screen key={name} name={name} options={{ title }} />
+        {SCREENS.map((screen) => (
+          <Stack.Screen key={screen.name} name={screen.name} options={{ title: t(screen.titleKey) }} />
         ))}
       </Stack>
+      <DialogHost />
     </SafeAreaProvider>
   );
 }

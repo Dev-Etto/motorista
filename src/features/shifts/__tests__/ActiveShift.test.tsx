@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { ActiveShiftCard, NewShiftButton } from '@features/shifts/ActiveShift';
 import { copilot } from '@modules/copilot';
-import { ActiveShiftCard, NewShiftButton } from '../ActiveShift';
 
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: mockPush }) }));

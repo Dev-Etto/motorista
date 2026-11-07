@@ -1,7 +1,8 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
-import { reportError } from '@/shared/utils/reportError';
+import { i18n } from '@shared/i18n';
+import { reportError } from '@shared/utils/reportError';
 import { useLatest } from './useLatest';
 
 export interface AsyncData<T> {
@@ -10,8 +11,6 @@ export interface AsyncData<T> {
   error: string | null;
   reload: () => Promise<void>;
 }
-
-const LOAD_ERROR = 'Não foi possível carregar os dados.';
 
 export function useAsyncData<T>(loader: () => Promise<T>, deps: readonly unknown[] = []): AsyncData<T> {
   const [data, setData] = useState<T | null>(null);
@@ -31,7 +30,7 @@ export function useAsyncData<T>(loader: () => Promise<T>, deps: readonly unknown
     } catch (caught) {
       reportError(caught);
       if (current !== requestId.current) return;
-      setError(LOAD_ERROR);
+      setError(i18n.t('errors.load'));
     } finally {
       if (current === requestId.current) setLoading(false);
     }

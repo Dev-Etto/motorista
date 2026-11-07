@@ -1,5 +1,5 @@
-import { addDays, dayRange } from '@/shared/utils/dates';
-import { defaultCustomDates, periodRange } from '../offerPeriod';
+import { defaultCustomDates, periodRange } from '@features/offers/offerPeriod';
+import { addDays, dayRange } from '@shared/utils/dates';
 
 const TODAY = '2026-11-05';
 const CUSTOM = { start: '2026-01-10', end: '2026-03-20' };

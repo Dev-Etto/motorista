@@ -1,33 +1,38 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
-import { KmEntryMode } from '@/domain/shift/shiftForm';
-import { ShiftEstimateCard } from '@/features/offers';
-import { TipBanner } from '@/features/tips';
-import { useSubmit } from '@/shared/hooks/useSubmit';
-import { spacing } from '@/shared/theme/theme';
-import { DateField } from '@/shared/ui/DateField';
-import { MoneyField, NumberField } from '@/shared/ui/fields';
-import { PlatformBadge } from '@/shared/ui/PlatformBadge';
-import { Button, Card, Collapsible, Notice, Screen, Segmented } from '@/shared/ui/primitives';
-import { dayRange } from '@/shared/utils/dates';
+import type { ExpenseCategory } from '@domain/expense/expense';
+import { KmEntryMode } from '@domain/shift/shiftForm';
+import { ShiftEstimateCard } from '@features/offers';
+import { TipBanner } from '@features/tips';
+import { useSubmit } from '@shared/hooks/useSubmit';
+import { useFormat } from '@shared/i18n/format';
+import { spacing } from '@shared/theme/theme';
+import { DateField } from '@shared/ui/DateField';
+import { MoneyField, NumberField } from '@shared/ui/fields';
+import { PlatformBadge } from '@shared/ui/PlatformBadge';
+import { Button, Card, Collapsible, Notice, Screen, Segmented } from '@shared/ui/primitives';
+import { dayRange } from '@shared/utils/dates';
 import { LiveTrackingCard } from './LiveTrackingCard';
 import { ShiftResultCard } from './ShiftResultCard';
 import { useLiveTracking } from './useLiveTracking';
 import { JOURNEY_EXPENSES, useShiftForm } from './useShiftForm';
 
-const KM_OPTIONS: { value: KmEntryMode; label: string }[] = [
-  { value: 'manual', label: 'Total' },
-  { value: 'odometer', label: 'Odômetro' },
-];
+const KM_MODES: KmEntryMode[] = ['manual', 'odometer'];
+const EXAMPLE_HOURS = 8.5;
 
 export default function ShiftFormScreen() {
   const router = useRouter();
+  const { t } = useTranslation(['shifts', 'expenses']);
+  const format = useFormat();
   const { id, finish } = useLocalSearchParams<{ id?: string; finish?: string }>();
   const form = useShiftForm(id ? Number(id) : undefined);
   const live = useLiveTracking(form.applyLive);
   const [measureError, setMeasureError] = useState<string | null>(null);
 
+  const kmOptions = KM_MODES.map((value) => ({ value, label: t(`form.kmMode.${value}`) }));
+  const expenseLabel = (category: ExpenseCategory) => (category === 'other' ? t('form.otherExpenses') : t(`expenses:category.${category}`));
   const finishApplied = useRef(false);
   const estimateRange = useMemo(
     () => (live.started && live.startedAt > 0 ? { from: live.startedAt, to: Number.POSITIVE_INFINITY } : dayRange(form.date)),
@@ -42,8 +47,7 @@ export default function ShiftFormScreen() {
   }, [finish, live]);
 
   const saving = useSubmit(async () => {
-    if (!id && live.pending)
-      return setMeasureError('Você tem uma medição em andamento. Toque em Usar no registro para levar o tempo e os km, ou descarte a medição.');
+    if (!id && live.pending) return setMeasureError(t('form.measurePending', { context: format.distanceUnit }));
 
     setMeasureError(null);
     const saved = await form.save();
@@ -55,25 +59,30 @@ export default function ShiftFormScreen() {
 
   return (
     <Screen>
-      <TipBanner id="shift" message="Registre com o carro parado. Só ganhos, km e horas já bastam para ver o lucro." />
+      <TipBanner id="shift" message={t('form.tip', { context: format.distanceUnit })} />
       {id ? null : <LiveTrackingCard live={live} />}
 
-      <Card title="Tempo e distância">
-        <NumberField label="Horas trabalhadas" {...form.bind('hours')} suffix="h" placeholder="8,5" />
-        <Segmented value={form.kmMode} options={KM_OPTIONS} onChange={form.setKmMode} />
+      <Card title={t('form.timeAndDistance')}>
+        <NumberField label={t('form.hoursLabel')} {...form.bind('hours')} suffix={t('form.hoursSuffix')} placeholder={format.decimalInput(EXAMPLE_HOURS)} />
+        <Segmented value={form.kmMode} options={kmOptions} onChange={form.setKmMode} />
         {form.kmMode === 'manual' ? (
-          <NumberField label="Km rodados" {...form.kmField} suffix="km" hint={form.kmMeasured ? 'Medido por GPS. Você pode ajustar.' : undefined} />
+          <NumberField
+            label={t('form.kmLabel', { context: format.distanceUnit })}
+            {...form.kmField}
+            suffix={format.distanceUnit}
+            hint={form.kmMeasured ? t('form.kmMeasured') : undefined}
+          />
         ) : (
           <>
-            <NumberField label="Odômetro inicial" {...form.bind('odometerStart')} suffix="km" />
-            <NumberField label="Odômetro final" {...form.bind('odometerEnd')} suffix="km" />
+            <NumberField label={t('form.odometerStart')} {...form.bind('odometerStart')} suffix={format.distanceUnit} />
+            <NumberField label={t('form.odometerEnd')} {...form.bind('odometerEnd')} suffix={format.distanceUnit} />
           </>
         )}
       </Card>
 
       {id ? null : <ShiftEstimateCard range={estimateRange} platforms={form.platforms} onApply={form.setEarning} />}
 
-      <Card title="Ganhos por plataforma">
+      <Card title={t('form.earningsTitle')}>
         {form.platforms.map((platform) => (
           <View key={platform.id} style={styles.platform}>
             <PlatformBadge name={platform.name} />
@@ -83,25 +92,30 @@ export default function ShiftFormScreen() {
       </Card>
 
       <Card>
-        <DateField label="Data" value={form.date} onChange={(date) => date && form.setDate(date)} maximumDate={new Date()} />
+        <DateField label={t('form.dateLabel')} value={form.date} onChange={(date) => date && form.setDate(date)} maximumDate={new Date()} />
       </Card>
 
-      <Collapsible title="Despesas do dia">
-        {JOURNEY_EXPENSES.map(({ category, label }) => (
-          <MoneyField key={category} label={label} value={form.expenses[category] ?? ''} onChangeText={(text) => form.setExpense(category, text)} />
+      <Collapsible title={t('form.expensesTitle')}>
+        {JOURNEY_EXPENSES.map((category) => (
+          <MoneyField
+            key={category}
+            label={expenseLabel(category)}
+            value={form.expenses[category] ?? ''}
+            onChangeText={(text) => form.setExpense(category, text)}
+          />
         ))}
       </Collapsible>
 
-      <Collapsible title="Mais detalhes">
-        <NumberField label="Hora de início" {...form.bind('startHour')} placeholder="8" hint="Ajuda a descobrir seu melhor período." />
-        <NumberField label="Corridas" {...form.bind('trips')} />
+      <Collapsible title={t('form.moreDetails')}>
+        <NumberField label={t('form.startHourLabel')} {...form.bind('startHour')} placeholder="8" hint={t('form.startHourHint')} />
+        <NumberField label={t('form.tripsLabel')} {...form.bind('trips')} />
       </Collapsible>
 
       <ShiftResultCard result={form.preview} />
       {form.error ? <Notice tone="negative" message={form.error} /> : null}
       {measureError ? <Notice message={measureError} /> : null}
       {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
-      <Button label="Salvar jornada" busy={saving.busy} onPress={saving.submit} />
+      <Button label={t('form.saveButton')} busy={saving.busy} onPress={saving.submit} />
     </Screen>
   );
 }

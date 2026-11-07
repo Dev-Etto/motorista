@@ -1,6 +1,6 @@
-import { getDb, SqlExecutor } from '@/data/database/connection';
-import { parseJsonColumn } from '@/data/database/jsonColumn';
-import { workWeekdaysSchema } from '@/domain/goal/goal';
+import { getDb, SqlExecutor } from '@data/database/connection';
+import { parseJsonColumn } from '@data/database/jsonColumn';
+import { workWeekdaysSchema } from '@domain/goal/goal';
 
 export interface MonthlyGoal {
   month: string;

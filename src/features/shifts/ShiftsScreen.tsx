@@ -1,23 +1,25 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { buildCalendar } from '@/domain/calendar/calendar';
-import { EXPENSE_LABELS } from '@/domain/expense/expense';
-import { computeShift } from '@/domain/shift/shift';
-import { useAsyncData } from '@/shared/hooks/useAsyncData';
-import { useMonthCursor } from '@/shared/hooks/useMonthCursor';
-import { confirmAction } from '@/shared/platform/confirm';
-import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
-import { MonthCalendar } from '@/shared/ui/MonthCalendar';
-import { MonthSwitcher } from '@/shared/ui/MonthSwitcher';
-import { AppText, Button, Card, EmptyState, ListRow, Screen } from '@/shared/ui/primitives';
-import { formatDate, formatDuration, monthKey } from '@/shared/utils/dates';
-import { profitTone } from '@/shared/utils/format';
-import { formatBRL } from '@/shared/utils/money';
+import { useTranslation } from 'react-i18next';
+import { buildCalendar } from '@domain/calendar/calendar';
+import { computeShift } from '@domain/shift/shift';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
+import { useMonthCursor } from '@shared/hooks/useMonthCursor';
+import { useFormat } from '@shared/i18n/format';
+import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
+import { confirmAction } from '@shared/ui/dialog';
+import { MonthCalendar } from '@shared/ui/MonthCalendar';
+import { MonthSwitcher } from '@shared/ui/MonthSwitcher';
+import { AppText, Button, Card, EmptyState, ListRow, Screen } from '@shared/ui/primitives';
+import { monthKey } from '@shared/utils/dates';
+import { profitTone } from '@shared/utils/format';
 import { ActiveShiftCard, NewShiftButton } from './ActiveShift';
 import { loadMonth, removeLooseExpense } from './shiftQueries';
 
 export default function ShiftsScreen() {
   const router = useRouter();
+  const { t } = useTranslation(['shifts', 'expenses', 'common']);
+  const format = useFormat();
   const cursor = useMonthCursor();
   const month = useAsyncData(() => loadMonth(cursor.date), [cursor.date]);
   const { data, reload } = month;
@@ -30,16 +32,17 @@ export default function ShiftsScreen() {
       buildCalendar(
         cursor.date,
         allShifts.map((shift) => ({ date: shift.date, profitCents: computeShift(shift).profitCents })),
+        format.profile.firstWeekday,
       ),
-    [cursor.date, allShifts],
+    [cursor.date, allShifts, format.profile.firstWeekday],
   );
   const expenses = data?.expenses ?? [];
 
   const confirmDeleteExpense = (id: number, label: string, cents: number) => {
     confirmAction({
-      title: `Excluir ${label}?`,
-      message: `O lançamento de ${formatBRL(cents)} sai dos seus resultados.`,
-      actionLabel: 'Excluir',
+      title: t('list.deleteExpense.title', { label }),
+      message: t('list.deleteExpense.message', { amount: format.money(cents) }),
+      actionLabel: t('common:actions.delete'),
       onConfirm: async () => {
         await removeLooseExpense(id);
         await reload();
@@ -52,7 +55,7 @@ export default function ShiftsScreen() {
       <MonthSwitcher date={cursor.date} onPrevious={cursor.previous} onNext={cursor.next} />
       <ActiveShiftCard />
       <NewShiftButton />
-      <Button label="Lançar despesa ou abastecimento" variant="secondary" onPress={() => router.push('/expense/new')} />
+      <Button label={t('list.addExpense')} variant="secondary" onPress={() => router.push('/expense/new')} />
 
       <Card>
         <MonthCalendar weeks={calendar} selectedDate={selectedDate} onSelect={(date) => setSelectedDate((current) => (current === date ? null : date))} />
@@ -62,21 +65,18 @@ export default function ShiftsScreen() {
         {() => (
           <>
             {shifts.length === 0 ? (
-              <EmptyState
-                illustration="empty"
-                title={selectedDate ? 'Nenhuma jornada neste dia' : 'Nenhuma jornada neste mês'}
-                message="Registre sua primeira jornada para ver seu lucro real."
-              />
+              <EmptyState illustration="empty" title={selectedDate ? t('list.emptyDay') : t('list.emptyMonth')} message={t('list.emptyMessage')} />
             ) : (
-              <Card title={selectedDate ? `Jornadas de ${formatDate(selectedDate)}` : 'Jornadas'}>
+              <Card title={selectedDate ? t('list.dayTitle', { date: format.date(selectedDate) }) : t('list.title')}>
                 {shifts.map((shift) => {
                   const { profitCents } = computeShift(shift);
+                  const subtitle = { gross: format.money(shift.grossCents), duration: format.duration(shift.minutes) };
                   return (
                     <ListRow
                       key={shift.id}
-                      title={formatDate(shift.date)}
-                      subtitle={`${formatBRL(shift.grossCents)} em ${formatDuration(shift.minutes)}${shift.partial ? ' • parcial' : ''}`}
-                      value={formatBRL(profitCents)}
+                      title={format.date(shift.date)}
+                      subtitle={shift.partial ? t('list.shiftSubtitlePartial', subtitle) : t('list.shiftSubtitle', subtitle)}
+                      value={format.money(profitCents)}
                       valueTone={profitTone(profitCents)}
                       onPress={() => router.push(`/shift/${shift.id}`)}
                     />
@@ -86,17 +86,17 @@ export default function ShiftsScreen() {
             )}
 
             {expenses.length === 0 ? null : (
-              <Card title="Lançamentos avulsos">
+              <Card title={t('list.looseTitle')}>
                 <AppText variant="caption" tone="muted">
-                  Toque em um lançamento para excluir.
+                  {t('list.looseHint')}
                 </AppText>
                 {expenses.map((expense) => (
                   <ListRow
                     key={expense.id}
-                    title={EXPENSE_LABELS[expense.category]}
-                    subtitle={formatDate(expense.date)}
-                    value={formatBRL(expense.cents)}
-                    onPress={() => confirmDeleteExpense(expense.id, EXPENSE_LABELS[expense.category], expense.cents)}
+                    title={t(`expenses:category.${expense.category}`)}
+                    subtitle={format.date(expense.date)}
+                    value={format.money(expense.cents)}
+                    onPress={() => confirmDeleteExpense(expense.id, t(`expenses:category.${expense.category}`), expense.cents)}
                   />
                 ))}
               </Card>
