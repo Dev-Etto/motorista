@@ -2,13 +2,14 @@
   "more": {
     "section": {
       "work": "Your work",
+      "preferences": "Preferences",
       "copilot": "Copilot and permissions",
       "data": "Your data",
       "help": "Help"
     },
     "item": {
       "vehicle": {
-        "title": "Vehicle and costs",
+        "title": "Vehicles and costs",
         "subtitle": "Your cost per {{unit}}"
       },
       "goal": {
@@ -140,15 +141,16 @@
     "shareMessage": "{{appName}} app summary\nVersion: {{version}}\nShifts: {{total}}\nDays with shifts: {{days}}\nFirst: {{first}}\nLast: {{last}}"
   },
   "platforms": {
-    "intro": "These platforms appear when you log a shift and in reports.",
-    "newTitle": "New platform",
-    "nameLabel": "Name",
-    "namePlaceholder": "DoorDash, Lyft…",
-    "keepOne": "Keep at least one platform to log your earnings.",
-    "listTitle": "Your platforms",
-    "removeConfirm": {
-      "title": "Remove {{name}}?",
-      "message": "Past shifts keep this name."
+    "intro": "Turn on the platforms you work with. Only active ones show up in shifts, reports and the Copilot.",
+    "keepOne": "Keep at least one platform active to record your earnings.",
+    "appsTitle": "Apps with Copilot",
+    "ownTitle": "Other earnings",
+    "legacyTitle": "Added by you",
+    "hint": {
+      "copilot": "The Copilot reads offers from this app",
+      "private": "Rides arranged directly with the passenger",
+      "other": "Another ride or delivery app. No Copilot",
+      "legacy": "Once off, it leaves the list. Past shifts keep the name"
     }
   },
   "privacy": {
@@ -263,38 +265,40 @@
     }
   },
   "region": {
+    "previewTitle": "How values look",
+    "languageAndFormat": "Language and format",
     "language": {
       "title": "Language",
       "automatic": "Automatic ({{language}})",
       "automaticHint": "Follows your phone's language."
     },
     "format": {
-      "title": "Number and date format",
-      "automatic": "Automatic",
-      "hint": "Decimal separator, date order, and first day of the week."
+      "title": "Regional format",
+      "automatic": "Automatic ({{format}})",
+      "automaticHint": "Follows the phone's format.",
+      "firstWeekday": "Week starts on"
+    },
+    "market": {
+      "title": "Country where you drive",
+      "hint": "The currency and offer reading follow the country, because amounts come from the platforms' screens there. New countries are added when reading their platforms is ready.",
+      "confirmTitle": "Change country?",
+      "confirmMessage": "Saved amounts keep the same numbers, now in {{currency}}. The app does not convert currency.",
+      "confirmAction": "Change",
+      "learnMore": "Why does the currency follow the country?",
+      "soon": "More countries coming soon."
     },
     "units": {
       "title": "Units",
       "distance": "Distance",
       "volume": "Fuel",
       "consumption": "Fuel economy",
-      "firstWeekday": "Week starts on",
       "km": "Kilometers",
       "mi": "Miles",
       "L": "Liters",
       "gal": "Gallons",
       "kmPerLiter": "km/L",
       "litersPer100km": "L/100 km",
-      "mpg": "mpg",
-      "example": "Example: {{distance}}, {{money}}"
-    },
-    "market": {
-      "title": "Country where you drive",
-      "hint": "The currency and offer reading follow the country, because amounts come from the platforms' screens there. New countries are added when reading their platforms is ready.",
-      "currency": "Currency: {{currency}}",
-      "confirmTitle": "Change country?",
-      "confirmMessage": "Saved amounts keep the same numbers, now in {{currency}}. The app does not convert currency.",
-      "confirmAction": "Change"
+      "mpg": "mpg"
     }
   }
 }

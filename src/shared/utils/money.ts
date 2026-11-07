@@ -90,6 +90,6 @@ export class Money {
 
   toInput(spec: MoneyFormat): string {
     const digits = fractionDigitsOf(spec);
-    return formatNumber(this.wholeCents / CENTS_PER_UNIT, spec.locale, { decimals: digits, grouping: false });
+    return formatNumber(this.wholeCents / CENTS_PER_UNIT, spec.locale, { decimals: digits });
   }
 }

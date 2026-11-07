@@ -87,5 +87,19 @@
     "depreciationHintFinanced": "Desligada por padrão, para não somar com a parcela.",
     "vehicleValue": "Valor do veículo",
     "depreciationPerYear": "Depreciação por ano"
+  },
+  "manage": {
+    "intro": "O veículo atual define o custo por km do Copiloto, da calculadora e da meta. Em cada jornada, você escolhe o veículo usado.",
+    "currentName": "{{name}} · atual",
+    "add": "Adicionar veículo",
+    "useNow": "Usar agora",
+    "archive": "Arquivar",
+    "emptyTitle": "Nenhum veículo",
+    "emptyMessage": "Cadastre seu carro ou moto para o app calcular o custo por km.",
+    "archiveConfirm": {
+      "title": "Arquivar {{name}}?",
+      "message": "Ele sai das escolhas, mas as jornadas antigas continuam com o custo dele."
+    },
+    "currentRow": "Veículo atual"
   }
 }

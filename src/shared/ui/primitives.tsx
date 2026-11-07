@@ -141,14 +141,14 @@ interface SegmentedProps<T extends string> {
 export function Segmented<T extends string>({ value, options, onChange }: SegmentedProps<T>) {
   const colors = useTheme();
   return (
-    <View style={[styles.segmented, { backgroundColor: colors.surfaceAlt }]}>
+    <View accessibilityRole="radiogroup" style={[styles.segmented, { backgroundColor: colors.surfaceAlt }]}>
       {options.map((option) => {
         const selected = option.value === value;
         return (
           <Pressable
             key={option.value}
-            accessibilityRole="button"
-            accessibilityState={{ selected }}
+            accessibilityRole="radio"
+            accessibilityState={{ checked: selected }}
             onPress={() => onChange(option.value)}
             style={[styles.segment, selected && { backgroundColor: colors.primary }]}
           >
@@ -191,15 +191,21 @@ interface ListRowProps {
   value?: string;
   valueTone?: Tone;
   selected?: boolean;
+  chevron?: boolean;
   onPress?: () => void;
 }
 
-export function ListRow({ icon, leading, title, subtitle, value, valueTone = 'default', selected, onPress }: ListRowProps) {
+function rowRole(selected: boolean | undefined, onPress: (() => void) | undefined) {
+  if (selected !== undefined) return 'radio';
+  return onPress ? 'button' : undefined;
+}
+
+export function ListRow({ icon, leading, title, subtitle, value, valueTone = 'default', selected, chevron, onPress }: ListRowProps) {
   const colors = useTheme();
   return (
     <Pressable
-      accessibilityRole={onPress ? 'button' : undefined}
-      accessibilityState={selected === undefined ? undefined : { selected }}
+      accessibilityRole={rowRole(selected, onPress)}
+      accessibilityState={selected === undefined ? undefined : { checked: selected }}
       disabled={!onPress}
       onPress={onPress}
       style={[styles.listRow, { borderBottomColor: colors.border }]}
@@ -224,13 +230,22 @@ export function ListRow({ icon, leading, title, subtitle, value, valueTone = 'de
         </AppText>
       ) : null}
       {selected ? <AppIcon name="check" color={colors.primary} size={22} /> : null}
+      {chevron ? <AppIcon name="chevron" color={colors.textMuted} size={20} /> : null}
     </Pressable>
   );
 }
 
-export function Collapsible({ title, children, initiallyOpen = false }: { title: string; children: ReactNode; initiallyOpen?: boolean }) {
+interface CollapsibleProps {
+  title: string;
+  children: ReactNode;
+  initiallyOpen?: boolean;
+  forceOpen?: boolean;
+}
+
+export function Collapsible({ title, children, initiallyOpen = false, forceOpen = false }: CollapsibleProps) {
   const colors = useTheme();
-  const [open, setOpen] = useState(initiallyOpen);
+  const [toggled, setOpen] = useState(initiallyOpen);
+  const open = toggled || forceOpen;
 
   return (
     <View style={[styles.card, { backgroundColor: colors.surface, boxShadow: colors.cardShadow }]}>
@@ -338,7 +353,7 @@ const styles = StyleSheet.create({
   segmented: { flexDirection: 'row', borderRadius: radius.md, padding: spacing.xs, gap: spacing.xs },
   segment: {
     flex: 1,
-    minHeight: MIN_TOUCH_TARGET - spacing.sm,
+    minHeight: MIN_TOUCH_TARGET,
     borderRadius: radius.sm,
     alignItems: 'center',
     justifyContent: 'center',

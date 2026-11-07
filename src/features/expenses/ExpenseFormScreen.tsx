@@ -8,6 +8,7 @@ import { DateField } from '@shared/ui/DateField';
 import { MoneyField, NumberField, TextField } from '@shared/ui/fields';
 import { Button, Card, Notice, Screen, Segmented } from '@shared/ui/primitives';
 import { today } from '@shared/utils/dates';
+import { ExpenseField, ExpenseFieldError, expenseFormErrors } from './expenseFormErrors';
 import { saveExpense } from './saveExpense';
 
 type LooseCategory = 'fuel' | 'maintenance' | 'other';
@@ -26,13 +27,17 @@ export default function ExpenseFormScreen() {
   const [liters, setLiters] = useState('');
   const [odometer, setOdometer] = useState('');
   const [note, setNote] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Partial<Record<ExpenseField, ExpenseFieldError>>>({});
 
   const saving = useSubmit(async () => {
     const cents = format.parseCents(value);
-    if (!cents) return setError(t('form.valueRequired'));
-    if (format.hasInvalidNumber(liters) || format.hasInvalidNumber(odometer))
-      return setError(t('common:invalidNumber', { example: format.decimalInput(EXAMPLE_VOLUME) }));
+    const found = expenseFormErrors({
+      cents,
+      litersInvalid: category === 'fuel' && format.hasInvalidNumber(liters),
+      odometerInvalid: format.hasInvalidNumber(odometer),
+    });
+    setErrors(found);
+    if (!cents || Object.keys(found).length > 0) return;
 
     await saveExpense({
       date,
@@ -45,6 +50,12 @@ export default function ExpenseFormScreen() {
     router.back();
   });
 
+  const messageOf = (field: ExpenseField) => {
+    const error = errors[field];
+    if (!error) return null;
+    return error === 'required' ? t('form.valueRequired') : t('common:invalidNumber', { example: format.decimalInput(EXAMPLE_VOLUME) });
+  };
+
   return (
     <Screen>
       <Segmented value={category} options={options} onChange={setCategory} />
@@ -52,10 +63,12 @@ export default function ExpenseFormScreen() {
         <Notice tone="accent" message={t('alreadyInCost', { context: format.distanceUnit, category: t(`category.${category}`) })} />
       )}
       <Card>
-        <DateField label={t('form.dateLabel')} value={date} onChange={(next) => next && setDate(next)} />
-        <MoneyField label={t('form.valueLabel')} value={value} onChangeText={setValue} error={error} />
-        {category === 'fuel' ? <NumberField label={t('form.litersLabel', { context: format.volumeUnit })} value={liters} onChangeText={setLiters} /> : null}
-        <NumberField label={t('form.odometerLabel')} value={odometer} onChangeText={setOdometer} suffix={format.distanceUnit} />
+        <DateField label={t('form.dateLabel')} value={date} onChange={(next) => next && setDate(next)} maximumDate={new Date()} />
+        <MoneyField label={t('form.valueLabel')} value={value} onChangeText={setValue} error={messageOf('value')} />
+        {category === 'fuel' ? (
+          <NumberField label={t('form.litersLabel', { context: format.volumeUnit })} value={liters} onChangeText={setLiters} error={messageOf('liters')} />
+        ) : null}
+        <NumberField label={t('form.odometerLabel')} value={odometer} onChangeText={setOdometer} suffix={format.distanceUnit} error={messageOf('odometer')} />
         <TextField label={t('form.noteLabel')} value={note} onChangeText={setNote} />
       </Card>
       {saving.error ? <Notice tone="negative" message={saving.error} /> : null}

@@ -138,16 +138,16 @@ export function CopilotDisplayCard({ preferences: settings }: { preferences: Cop
 
 export function CopilotAppsCard({ preferences }: { preferences: CopilotPreferencesState }) {
   const { t } = useTranslation('copilot');
+  const router = useRouter();
+  const monitored = APPS.filter((app) => preferences.current.monitoredPackages.includes(app.packageName)).map((app) => app.label);
+
   return (
     <Collapsible title={t('apps.title')}>
-      {APPS.map((app) => (
-        <ToggleRow
-          key={app.packageName}
-          label={app.label}
-          value={preferences.current.monitoredPackages.includes(app.packageName)}
-          onChange={() => preferences.toggleMonitored(app.packageName)}
-        />
-      ))}
+      <AppText>{monitored.length > 0 ? monitored.join(', ') : t('apps.none')}</AppText>
+      <AppText variant="caption" tone="muted">
+        {t('apps.hint')}
+      </AppText>
+      <Button label={t('apps.manage')} variant="secondary" onPress={() => router.push('/platforms')} />
     </Collapsible>
   );
 }

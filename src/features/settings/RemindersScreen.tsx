@@ -15,12 +15,12 @@ import { Reminder, useReminders } from './useReminders';
 const INITIAL = { title: '', km: '' };
 
 export default function RemindersScreen() {
-  const { state, reminders, totalKm, profile, add, complete, remove } = useReminders();
+  const { state, reminders, kmOf, profile, add, complete, remove } = useReminders();
   const { values, bind, setValues } = useFormFields(INITIAL);
   const { t } = useTranslation(['settings', 'common']);
   const format = useFormat();
   const unitContext = { context: format.distanceUnit };
-  const describeDue = (reminder: Reminder) => describeReminderDue(reminder, totalKm, t, format);
+  const describeDue = (reminder: Reminder) => describeReminderDue(reminder, kmOf(reminder), t, format);
   const [dueDate, setDueDate] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);

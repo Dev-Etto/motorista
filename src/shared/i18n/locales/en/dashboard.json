@@ -22,13 +22,10 @@
     "costToday_km": "Right now, each kilometer costs about {{cost}}.",
     "costToday_mi": "Right now, each mile costs about {{cost}}."
   },
-  "reminder": "Reminder: {{title}}",
   "backup": {
-    "message": "How about making a backup? That way your data is also stored outside your phone.",
     "action": "Back up now"
   },
   "update": {
-    "message": "This version of the app is more than a month old. A new version may improve offer reading.",
     "action": "Check for updates"
   },
   "profitCard": {
@@ -41,5 +38,11 @@
     "partial_km_other": "{{count}} shifts have no kilometers or no cost: the vehicle cost wasn't deducted from them.",
     "partial_mi_one": "{{count}} shift has no miles or no cost: the vehicle cost wasn't deducted from it.",
     "partial_mi_other": "{{count}} shifts have no miles or no cost: the vehicle cost wasn't deducted from them."
+  },
+  "pending": {
+    "title": "To do",
+    "reminder": "Reminder: {{title}}",
+    "backup": "Keep your data outside the phone too.",
+    "update": "This version is over a month old. A new one may fix offer reading."
   }
 }

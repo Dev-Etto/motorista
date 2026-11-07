@@ -1,7 +1,7 @@
 import type { Href } from 'expo-router';
 import { AppIconName } from '@shared/ui/AppIcon';
 
-export type MoreSectionId = 'work' | 'copilot' | 'data' | 'help';
+export type MoreSectionId = 'work' | 'preferences' | 'copilot' | 'data' | 'help';
 
 export type MoreItemId =
   | 'vehicle'
@@ -29,9 +29,15 @@ export const MORE_SECTIONS: { id: MoreSectionId; items: MoreMenuItem[] }[] = [
   {
     id: 'work',
     items: [
-      { id: 'vehicle', icon: 'vehicle', href: '/vehicle' },
+      { id: 'vehicle', icon: 'vehicle', href: '/vehicles' },
       { id: 'goal', icon: 'goal', href: '/goal' },
       { id: 'offers', icon: 'layers', href: '/offers' },
+    ],
+  },
+  {
+    id: 'preferences',
+    items: [
+      { id: 'region', icon: 'globe', href: '/region' },
       { id: 'platforms', icon: 'apps', href: '/platforms' },
       { id: 'reminders', icon: 'bell', href: '/reminders' },
     ],
@@ -46,7 +52,6 @@ export const MORE_SECTIONS: { id: MoreSectionId; items: MoreMenuItem[] }[] = [
   {
     id: 'data',
     items: [
-      { id: 'region', icon: 'globe', href: '/region' },
       { id: 'backup', icon: 'backup', href: '/backup' },
       { id: 'summary', icon: 'reports', href: '/summary' },
       { id: 'privacy', icon: 'shield', href: '/privacy' },

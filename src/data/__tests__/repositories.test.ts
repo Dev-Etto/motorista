@@ -8,8 +8,8 @@ import { platformRepository } from '@data/repositories/platformRepository';
 import { regionalSettings } from '@data/repositories/regionalSettings';
 import { reminderRepository } from '@data/repositories/reminderRepository';
 import { SETTING_KEYS, settingsRepository } from '@data/repositories/settingsRepository';
-import { createShiftRepository, shiftRepository } from '@data/repositories/shiftRepository';
-import { vehicleRepository } from '@data/repositories/vehicleRepository';
+import { createShiftRepository, type ShiftInput, shiftRepository } from '@data/repositories/shiftRepository';
+import { OnlyVehicleError, vehicleRepository } from '@data/repositories/vehicleRepository';
 import { EMPTY_SAVED_REGIONAL, LEGACY_REGIONAL } from '@domain/regional/regional';
 import { summarizeShifts, withLooseExpenses } from '@domain/shift/summary';
 import { computeCosts, CostProfile } from '@domain/vehicle/costs';
@@ -37,7 +37,8 @@ const PROFILE: CostProfile = {
   plannedKmMonth: 4000,
 };
 
-const shiftInput = (over = {}) => ({
+const shiftInput = (over: Partial<ShiftInput> = {}): ShiftInput => ({
+  vehicleId: null,
   date: '2026-11-05',
   startHour: 8,
   minutes: 480,
@@ -54,8 +55,8 @@ const shiftInput = (over = {}) => ({
   ...over,
 });
 
-async function createVehicle(profile = PROFILE) {
-  const id = await vehicleRepository.save({ name: 'Carro', kind: 'car', fuel: 'gasoline' });
+async function createVehicle(profile = PROFILE, kind: 'car' | 'motorcycle' = 'car') {
+  const id = await vehicleRepository.save({ name: kind === 'car' ? 'Carro' : 'Moto', kind, fuel: 'gasoline' });
   await vehicleRepository.saveCostProfile(id, '2026-01-01', profile);
   return id;
 }
@@ -72,7 +73,7 @@ describe('repositórios criados por fábrica', () => {
 
     const id = await shifts.save(shiftInput());
 
-    expect(vehicles.getCostsAt).toHaveBeenCalledWith('2026-11-05');
+    expect(vehicles.getCostsAt).toHaveBeenCalledWith('2026-11-05', null);
     expect((await shifts.findById(id))?.shift.costPerKm).toBeCloseTo(costs.fullPerKm);
   });
 
@@ -186,24 +187,107 @@ describe('veículo e custos', () => {
   });
 });
 
+describe('mais de um veículo', () => {
+  const CHEAP = { ...PROFILE, fuelPriceCents: 300, consumptionKmPerUnit: 35 };
+
+  it('lista os veículos não arquivados, do mais antigo ao mais novo', async () => {
+    const car = await createVehicle();
+    const moto = await createVehicle(CHEAP, 'motorcycle');
+
+    expect((await vehicleRepository.list()).map((vehicle) => vehicle.id)).toEqual([car, moto]);
+  });
+
+  it('sem escolha salva, o atual é o último cadastrado', async () => {
+    await createVehicle();
+    const moto = await createVehicle(CHEAP, 'motorcycle');
+
+    expect((await vehicleRepository.getCurrent())?.id).toBe(moto);
+  });
+
+  it('a escolha salva define o atual e o custo padrão', async () => {
+    const car = await createVehicle();
+    await createVehicle(CHEAP, 'motorcycle');
+    await vehicleRepository.setCurrent(car);
+
+    expect((await vehicleRepository.getCurrent())?.id).toBe(car);
+    expect((await vehicleRepository.getCostsAt('2026-11-05')).costs?.fullPerKm).toBeCloseTo(computeCosts(PROFILE).fullPerKm);
+  });
+
+  it('arquivar o atual passa para outro e some da lista', async () => {
+    const car = await createVehicle();
+    const moto = await createVehicle(CHEAP, 'motorcycle');
+    await vehicleRepository.setCurrent(car);
+    await vehicleRepository.archive(car);
+
+    expect((await vehicleRepository.getCurrent())?.id).toBe(moto);
+    expect((await vehicleRepository.list()).map((vehicle) => vehicle.id)).toEqual([moto]);
+  });
+
+  it('não arquiva o único veículo', async () => {
+    const car = await createVehicle();
+    await expect(vehicleRepository.archive(car)).rejects.toBeInstanceOf(OnlyVehicleError);
+  });
+
+  it('a jornada copia o custo do veículo escolhido', async () => {
+    const car = await createVehicle();
+    const moto = await createVehicle(CHEAP, 'motorcycle');
+    await vehicleRepository.setCurrent(car);
+    const id = await shiftRepository.save(shiftInput({ vehicleId: moto }));
+
+    expect((await shiftRepository.findById(id))?.shift).toMatchObject({ vehicleId: moto, costPerKm: expect.closeTo(computeCosts(CHEAP).fullPerKm) });
+  });
+
+  it('sem veículo escolhido, a jornada usa o atual', async () => {
+    const car = await createVehicle();
+    const id = await shiftRepository.save(shiftInput());
+
+    expect((await shiftRepository.findById(id))?.shift.vehicleId).toBe(car);
+  });
+
+  it('trocar o veículo na edição copia o custo de novo', async () => {
+    const car = await createVehicle();
+    const moto = await createVehicle(CHEAP, 'motorcycle');
+    const id = await shiftRepository.save(shiftInput({ vehicleId: car }));
+    await shiftRepository.save(shiftInput({ id, vehicleId: moto }));
+
+    expect((await shiftRepository.findById(id))?.shift).toMatchObject({ vehicleId: moto, costPerKm: expect.closeTo(computeCosts(CHEAP).fullPerKm) });
+  });
+
+  it('soma o km de cada veículo e o total', async () => {
+    const car = await createVehicle();
+    const moto = await createVehicle(CHEAP, 'motorcycle');
+    await shiftRepository.save(shiftInput({ vehicleId: car, km: 100 }));
+    await shiftRepository.save(shiftInput({ vehicleId: moto, km: 40 }));
+
+    expect(await shiftRepository.kmTotals()).toEqual({ all: 140, byVehicle: { [car]: 100, [moto]: 40 } });
+  });
+
+  it('o lembrete guarda o veículo', async () => {
+    const moto = await createVehicle(CHEAP, 'motorcycle');
+    await reminderRepository.add({ title: 'Óleo', dueDate: null, dueKm: 1000, notificationId: null, vehicleId: moto });
+
+    expect((await reminderRepository.list())[0]?.vehicleId).toBe(moto);
+  });
+});
+
 describe('plataformas', () => {
   it('traduz só as plataformas padrão e não briga com um nome já usado', async () => {
-    await platformRepository.add('Private');
+    await getDb().runAsync("INSERT INTO platforms (name, sort) VALUES ('Private', 9)");
     await platformRepository.localizeSystemNames({ private: 'Private', other: 'Other' });
     const names = (await platformRepository.list()).map((platform) => platform.name);
     expect(names).toEqual(expect.arrayContaining(['Uber', 'Particular', 'Other', 'Private']));
     expect(names).not.toContain('Outros');
   });
 
-  it('remover esconde e adicionar de novo reativa, sem perder o histórico', async () => {
+  it('desativar esconde e ativar de novo mostra, sem perder o histórico', async () => {
     await createVehicle();
     const id = await shiftRepository.save(shiftInput());
-    await platformRepository.deactivate(1);
+    await platformRepository.setActive(1, false);
 
     expect((await platformRepository.list()).map((platform) => platform.name)).not.toContain('Uber');
     expect((await shiftRepository.findById(id))?.earnings.map((earning) => earning.name)).toContain('Uber');
 
-    await platformRepository.add('Uber');
+    await platformRepository.setActive(1, true);
     expect((await platformRepository.list()).map((platform) => platform.name)).toContain('Uber');
   });
 });
@@ -262,7 +346,7 @@ describe('metas, lembretes e ajustes', () => {
   });
 
   it('guarda o aviso do lembrete e marca como feito', async () => {
-    await reminderRepository.add({ title: 'Óleo', dueDate: '2026-12-01', dueKm: null, notificationId: null });
+    await reminderRepository.add({ title: 'Óleo', dueDate: '2026-12-01', dueKm: null, notificationId: null, vehicleId: null });
     const [reminder] = await reminderRepository.list();
     if (!reminder) throw new Error('lembrete não encontrado');
     await reminderRepository.setNotificationId(reminder.id, 'abc');

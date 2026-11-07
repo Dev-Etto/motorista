@@ -10,7 +10,15 @@ import { CostFields, defaultDepreciationEnabled, fieldsToProfile, ProfileProblem
 
 const EXAMPLE_FUEL_PRICE_CENTS = 589;
 
-export function useVehicleForm() {
+export type VehicleTarget = number | 'new' | 'current';
+
+async function findTarget(target: VehicleTarget) {
+  if (target === 'new') return null;
+  if (target === 'current') return vehicleRepository.getCurrent();
+  return vehicleRepository.find(target);
+}
+
+export function useVehicleForm(target: VehicleTarget = 'current') {
   const { t } = useTranslation('vehicle');
   const format = useFormat();
   const [vehicleId, setVehicleId] = useState<number | undefined>();
@@ -27,8 +35,10 @@ export function useVehicleForm() {
     void loadExisting();
 
     async function loadExisting() {
-      const { vehicle, profile } = await vehicleRepository.getCostsAt(today());
+      const vehicle = await findTarget(target);
       if (!vehicle) return;
+
+      const profile = await vehicleRepository.getCostProfile(vehicle.id, today());
 
       setVehicleId(vehicle.id);
       setName(vehicle.name);
@@ -40,7 +50,7 @@ export function useVehicleForm() {
       setDepreciationEnabled(profile.depreciationEnabled);
       setValues(profileToFields(profile, vehicle.fuel, format));
     }
-  }, [setValues, format]);
+  }, [setValues, format, target]);
 
   const setKind = (next: VehicleKind) => {
     setKindState(next);
@@ -72,12 +82,14 @@ export function useVehicleForm() {
 
     const id = await vehicleRepository.save({ id: vehicleId, name: name.trim() || t('defaultName'), kind, fuel });
     await vehicleRepository.saveCostProfile(id, today(), profile);
+    if (!vehicleId) await vehicleRepository.setCurrent(id);
     await syncCopilotTargets();
     setVehicleId(id);
     return true;
   };
 
   return {
+    vehicleId,
     name,
     setName,
     kind,

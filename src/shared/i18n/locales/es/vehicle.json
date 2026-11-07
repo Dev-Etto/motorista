@@ -87,5 +87,19 @@
     "depreciationHintFinanced": "Desactivada por defecto, para no sumarla con la cuota.",
     "vehicleValue": "Valor del vehículo",
     "depreciationPerYear": "Depreciación por año"
+  },
+  "manage": {
+    "intro": "El vehículo actual define el costo por distancia del Copiloto, la calculadora y la meta. En cada jornada, eliges el vehículo usado.",
+    "currentName": "{{name}} · actual",
+    "add": "Agregar vehículo",
+    "useNow": "Usar ahora",
+    "archive": "Archivar",
+    "emptyTitle": "Ningún vehículo",
+    "emptyMessage": "Registra tu auto o moto para que la app calcule el costo por distancia.",
+    "archiveConfirm": {
+      "title": "¿Archivar {{name}}?",
+      "message": "Sale de las opciones, pero las jornadas anteriores mantienen su costo."
+    },
+    "currentRow": "Vehículo actual"
   }
 }

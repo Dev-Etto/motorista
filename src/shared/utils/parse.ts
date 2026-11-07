@@ -37,12 +37,14 @@ export function hasInvalidHour(text: string, locale: string): boolean {
 
 export function parseHours(text: string, locale: string): number | null {
   const match = text.trim().match(HOURS_AND_MINUTES);
-  if (match) return Number(match[1]) + Number(match[2]) / MINUTES_PER_HOUR;
-  return amountOrNull(text, locale);
+  if (!match) return amountOrNull(text, locale);
+
+  const minutes = Number(match[2]);
+  return minutes < MINUTES_PER_HOUR ? Number(match[1]) + minutes / MINUTES_PER_HOUR : null;
 }
 
 export function hoursToInput(minutes: number): string {
   const whole = Math.round(minutes);
   const rest = String(whole % MINUTES_PER_HOUR).padStart(2, '0');
-  return `${Math.floor(whole / MINUTES_PER_HOUR)}:${rest}`;
+  return `${String(Math.floor(whole / MINUTES_PER_HOUR)).padStart(2, '0')}:${rest}`;
 }

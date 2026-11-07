@@ -2,11 +2,25 @@ import { getDb, SqlExecutor } from '@data/database/connection';
 
 export const PLATFORM_SYSTEM_KEYS = ['private', 'other'] as const;
 
+export const PLATFORM_CATALOG = ['uber', 'ninetyNine', 'inDrive', 'private', 'other'] as const;
+
 export type PlatformSystemKey = (typeof PLATFORM_SYSTEM_KEYS)[number];
+
+export type PlatformKey = (typeof PLATFORM_CATALOG)[number];
 
 export interface Platform {
   id: number;
   name: string;
+}
+
+export interface PlatformEntry extends Platform {
+  key: PlatformKey | null;
+  active: boolean;
+}
+
+interface PlatformRow extends Platform {
+  system_key: PlatformKey | null;
+  active: number;
 }
 
 export function createPlatformRepository(connection: () => SqlExecutor = getDb) {
@@ -15,14 +29,11 @@ export function createPlatformRepository(connection: () => SqlExecutor = getDb) 
       return connection().getAllAsync<Platform>('SELECT id, name FROM platforms WHERE active = 1 ORDER BY sort, id');
     },
 
-    async add(name: string): Promise<void> {
-      const db = connection();
-      const max = await db.getFirstAsync<{ value: number | null }>('SELECT MAX(sort) AS value FROM platforms');
-      await db.runAsync(
-        'INSERT INTO platforms (name, sort, active) VALUES (?, ?, 1) ON CONFLICT(name) DO UPDATE SET active = 1',
-        name.trim(),
-        (max?.value ?? 0) + 1,
+    async listAll(): Promise<PlatformEntry[]> {
+      const rows = await connection().getAllAsync<PlatformRow>(
+        'SELECT id, name, system_key, active FROM platforms WHERE system_key IS NOT NULL OR active = 1 ORDER BY sort, id',
       );
+      return rows.map((row) => ({ id: row.id, name: row.name, key: row.system_key, active: row.active === 1 }));
     },
 
     async localizeSystemNames(names: Record<PlatformSystemKey, string>): Promise<void> {
@@ -32,8 +43,8 @@ export function createPlatformRepository(connection: () => SqlExecutor = getDb) 
       }
     },
 
-    async deactivate(id: number): Promise<void> {
-      await connection().runAsync('UPDATE platforms SET active = 0 WHERE id = ?', id);
+    async setActive(id: number, active: boolean): Promise<void> {
+      await connection().runAsync('UPDATE platforms SET active = ? WHERE id = ?', active ? 1 : 0, id);
     },
   };
 }

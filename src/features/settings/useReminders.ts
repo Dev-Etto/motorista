@@ -1,6 +1,7 @@
 import { Reminder, reminderRepository } from '@data/repositories/reminderRepository';
 import { shiftRepository } from '@data/repositories/shiftRepository';
 import { vehicleRepository } from '@data/repositories/vehicleRepository';
+import { kmFor } from '@domain/reminder/reminder';
 import { useAsyncData } from '@shared/hooks/useAsyncData';
 import { today } from '@shared/utils/dates';
 import { cancelReminderNotification, scheduleDateReminder } from './reminderNotifications';
@@ -8,12 +9,12 @@ import { cancelReminderNotification, scheduleDateReminder } from './reminderNoti
 export type { Reminder };
 
 async function loadReminders() {
-  const [reminders, totalKm, { profile }] = await Promise.all([
+  const [reminders, totals, { vehicle, profile }] = await Promise.all([
     reminderRepository.list(),
-    shiftRepository.totalKmEver(),
+    shiftRepository.kmTotals(),
     vehicleRepository.getCostsAt(today()),
   ]);
-  return { reminders, totalKm, profile };
+  return { reminders, totals, vehicleId: vehicle?.id ?? null, profile };
 }
 
 export function useReminders() {
@@ -22,8 +23,9 @@ export function useReminders() {
 
   const add = async (title: string, dueDate: string | null, kmFromNow: number | null) => {
     const notificationId = dueDate ? await scheduleDateReminder(title, dueDate) : null;
-    const dueKm = kmFromNow === null ? null : (data?.totalKm ?? 0) + kmFromNow;
-    await reminderRepository.add({ title, dueDate: dueDate, dueKm: dueKm, notificationId: notificationId });
+    const vehicleId = kmFromNow === null ? null : (data?.vehicleId ?? null);
+    const dueKm = kmFromNow === null || !data ? kmFromNow : kmFor(vehicleId, data.totals) + kmFromNow;
+    await reminderRepository.add({ title, dueDate, dueKm, notificationId, vehicleId });
     await reload();
     return { notifies: !dueDate || notificationId !== null };
   };
@@ -40,5 +42,7 @@ export function useReminders() {
     await reload();
   };
 
-  return { state, reminders: data?.reminders ?? [], totalKm: data?.totalKm ?? 0, profile: data?.profile ?? null, add, complete, remove };
+  const kmOf = (reminder: Reminder) => (data ? kmFor(reminder.vehicleId, data.totals) : 0);
+
+  return { state, reminders: data?.reminders ?? [], kmOf, profile: data?.profile ?? null, add, complete, remove };
 }

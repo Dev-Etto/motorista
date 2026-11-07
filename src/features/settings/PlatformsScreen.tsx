@@ -1,60 +1,49 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSubmit } from '@shared/hooks/useSubmit';
+import { hasCopilot, type PlatformEntry } from '@application/platforms';
 import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
-import { confirmAction } from '@shared/ui/dialog';
-import { TextField } from '@shared/ui/fields';
-import { PlatformBadge } from '@shared/ui/PlatformBadge';
-import { AppText, Button, Card, ListRow, Notice, Screen } from '@shared/ui/primitives';
+import { AppText, Card, Notice, Screen, ToggleRow } from '@shared/ui/primitives';
 import { usePlatforms } from './usePlatforms';
 
+const OWN_HINT_KEYS = { private: 'platforms.hint.private', other: 'platforms.hint.other' } as const;
+
 export default function PlatformsScreen() {
-  const { t } = useTranslation(['settings', 'common']);
-  const { state: platforms, add, deactivate } = usePlatforms();
-  const [name, setName] = useState('');
+  const { t } = useTranslation('settings');
+  const { state: platforms, toggle } = usePlatforms();
 
-  const adding = useSubmit(async () => {
-    if (!name.trim()) return;
-    await add(name);
-    setName('');
-  });
-
-  const remove = (id: number, platformName: string) => {
-    confirmAction({
-      title: t('platforms.removeConfirm.title', { name: platformName }),
-      message: t('platforms.removeConfirm.message'),
-      actionLabel: t('common:actions.remove'),
-      onConfirm: async () => {
-        await deactivate(id);
-      },
-    });
+  const hintOf = (platform: PlatformEntry) => {
+    if (hasCopilot(platform.key)) return t('platforms.hint.copilot');
+    if (platform.key === 'private' || platform.key === 'other') return t(OWN_HINT_KEYS[platform.key]);
+    return t('platforms.hint.legacy');
   };
 
   return (
     <Screen>
       <AppText tone="muted">{t('platforms.intro')}</AppText>
-      <Card title={t('platforms.newTitle')}>
-        <TextField label={t('platforms.nameLabel')} placeholder={t('platforms.namePlaceholder')} value={name} onChangeText={setName} />
-        {adding.error ? <Notice tone="negative" message={adding.error} /> : null}
-        <Button label={t('common:actions.add')} busy={adding.busy} onPress={adding.submit} />
-      </Card>
       <AsyncBoundary state={platforms}>
-        {(list) => (
-          <>
-            {list.length === 1 ? <Notice tone="accent" message={t('platforms.keepOne')} /> : null}
-            <Card title={t('platforms.listTitle')}>
-              {list.map((platform) => (
-                <ListRow
-                  key={platform.id}
-                  leading={<PlatformBadge name={platform.name} />}
-                  value={list.length === 1 ? undefined : t('common:actions.remove')}
-                  valueTone="muted"
-                  onPress={list.length === 1 ? undefined : () => remove(platform.id, platform.name)}
-                />
-              ))}
-            </Card>
-          </>
-        )}
+        {(list) => {
+          const activeCount = list.filter((platform) => platform.active).length;
+          const rowOf = (platform: PlatformEntry) => (
+            <ToggleRow
+              key={platform.id}
+              label={platform.name}
+              hint={hintOf(platform)}
+              value={platform.active}
+              onChange={(active) => (active || activeCount > 1 ? toggle(platform.id, active) : undefined)}
+            />
+          );
+          const apps = list.filter((platform) => hasCopilot(platform.key));
+          const own = list.filter((platform) => platform.key === 'private' || platform.key === 'other');
+          const legacy = list.filter((platform) => platform.key === null);
+
+          return (
+            <>
+              {activeCount === 1 ? <Notice tone="accent" message={t('platforms.keepOne')} /> : null}
+              <Card title={t('platforms.appsTitle')}>{apps.map(rowOf)}</Card>
+              <Card title={t('platforms.ownTitle')}>{own.map(rowOf)}</Card>
+              {legacy.length > 0 ? <Card title={t('platforms.legacyTitle')}>{legacy.map(rowOf)}</Card> : null}
+            </>
+          );
+        }}
       </AsyncBoundary>
     </Screen>
   );

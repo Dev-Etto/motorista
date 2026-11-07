@@ -67,7 +67,10 @@
     "resetPosition": "Move the card back to the top"
   },
   "apps": {
-    "title": "Monitored apps"
+    "title": "Monitored apps",
+    "none": "No active app",
+    "hint": "The Copilot reads the apps active in Platforms.",
+    "manage": "Manage platforms"
   },
   "history": {
     "title": "Latest offers",

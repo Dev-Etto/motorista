@@ -2,13 +2,14 @@
   "more": {
     "section": {
       "work": "Seu trabalho",
+      "preferences": "Preferências",
       "copilot": "Copiloto e permissões",
       "data": "Seus dados",
       "help": "Ajuda"
     },
     "item": {
       "vehicle": {
-        "title": "Veículo e custos",
+        "title": "Veículos e custos",
         "subtitle": "Seu custo por {{unit}}"
       },
       "goal": {
@@ -140,15 +141,16 @@
     "shareMessage": "Resumo do app {{appName}}\nVersão: {{version}}\nJornadas: {{total}}\nDias com jornada: {{days}}\nPrimeira: {{first}}\nÚltima: {{last}}"
   },
   "platforms": {
-    "intro": "Estas plataformas aparecem no registro da jornada e nos relatórios.",
-    "newTitle": "Nova plataforma",
-    "nameLabel": "Nome",
-    "namePlaceholder": "iFood, Lalamove…",
-    "keepOne": "Mantenha pelo menos uma plataforma para registrar seus ganhos.",
-    "listTitle": "Suas plataformas",
-    "removeConfirm": {
-      "title": "Remover {{name}}?",
-      "message": "Jornadas antigas continuam com este nome."
+    "intro": "Ative as plataformas em que você trabalha. Só as ativas aparecem na jornada, nos relatórios e no Copiloto.",
+    "keepOne": "Mantenha pelo menos uma plataforma ativa para registrar seus ganhos.",
+    "appsTitle": "Apps com Copiloto",
+    "ownTitle": "Outros ganhos",
+    "legacyTitle": "Adicionadas por você",
+    "hint": {
+      "copilot": "O Copiloto lê as ofertas deste app",
+      "private": "Corridas combinadas direto com o passageiro",
+      "other": "Outro app de corrida ou entrega. Sem Copiloto",
+      "legacy": "Desativada, sai da lista. Jornadas antigas mantêm o nome"
     }
   },
   "privacy": {
@@ -263,38 +265,40 @@
     }
   },
   "region": {
+    "previewTitle": "Como os valores aparecem",
+    "languageAndFormat": "Idioma e formato",
     "language": {
       "title": "Idioma",
       "automatic": "Automático ({{language}})",
       "automaticHint": "Segue o idioma do celular."
     },
     "format": {
-      "title": "Formato de números e datas",
-      "automatic": "Automático",
-      "hint": "Separador de decimais, ordem da data e primeiro dia da semana."
+      "title": "Formato regional",
+      "automatic": "Automático ({{format}})",
+      "automaticHint": "Segue o formato do celular.",
+      "firstWeekday": "A semana começa em"
+    },
+    "market": {
+      "title": "País onde você dirige",
+      "hint": "A moeda e a leitura das ofertas seguem o país, porque os valores vêm das telas das plataformas de lá. Novos países entram quando a leitura das plataformas deles estiver pronta.",
+      "confirmTitle": "Trocar o país?",
+      "confirmMessage": "Os valores já salvos continuam com os mesmos números, agora em {{currency}}. O app não converte câmbio.",
+      "confirmAction": "Trocar",
+      "learnMore": "Por que a moeda segue o país?",
+      "soon": "Mais países em breve."
     },
     "units": {
       "title": "Unidades",
       "distance": "Distância",
       "volume": "Combustível",
       "consumption": "Consumo",
-      "firstWeekday": "A semana começa em",
       "km": "Quilômetros",
       "mi": "Milhas",
       "L": "Litros",
       "gal": "Galões",
-      "kmPerLiter": "km/l",
+      "kmPerLiter": "km/L",
       "litersPer100km": "L/100 km",
-      "mpg": "mpg",
-      "example": "Exemplo: {{distance}}, {{money}}"
-    },
-    "market": {
-      "title": "País onde você dirige",
-      "hint": "A moeda e a leitura das ofertas seguem o país, porque os valores vêm das telas das plataformas de lá. Novos países entram quando a leitura das plataformas deles estiver pronta.",
-      "currency": "Moeda: {{currency}}",
-      "confirmTitle": "Trocar o país?",
-      "confirmMessage": "Os valores já salvos continuam com os mesmos números, agora em {{currency}}. O app não converte câmbio.",
-      "confirmAction": "Trocar"
+      "mpg": "mpg"
     }
   }
 }

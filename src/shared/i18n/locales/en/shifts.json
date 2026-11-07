@@ -4,13 +4,15 @@
     "paused": "Shift paused"
   },
   "form": {
+    "newTitle": "New shift",
+    "editTitle": "Edit shift",
     "tip_km": "Log it with the car stopped. Just earnings, kilometers, and hours are enough to see your profit.",
     "tip_mi": "Log it with the car stopped. Just earnings, miles, and hours are enough to see your profit.",
     "measurePending_km": "You have a measurement in progress. Tap Use in log to bring over the time and kilometers, or discard the measurement.",
     "measurePending_mi": "You have a measurement in progress. Tap Use in log to bring over the time and miles, or discard the measurement.",
     "timeAndDistance": "Time and distance",
     "hoursLabel": "Hours worked",
-    "hoursSuffix": "h",
+    "hoursHint": "Hours and minutes, like 08:30",
     "kmMode": {
       "manual": "Total",
       "odometer": "Odometer"
@@ -30,11 +32,13 @@
     "tripsLabel": "Rides",
     "saveButton": "Save shift",
     "errors": {
+      "invalidHours": "Use hours and minutes, like 08:30.",
       "invalidStartHour": "The start time goes from 0 to 23.",
       "tooLong": "A shift can be 24 hours at most. Check the hours worked.",
       "noEarnings": "Enter earnings for at least one platform.",
       "odometerOrder": "The ending odometer must be greater than the starting one."
-    }
+    },
+    "vehicleLabel": "Vehicle"
   },
   "result": {
     "title": "Result",
@@ -68,6 +72,7 @@
     "notFoundTitle": "Shift not found",
     "notFoundMessage": "It may have been deleted.",
     "deleteTitle": "Delete shift?",
+    "deleteMessage": "The {{date}} shift, with {{value}} in earnings, will be deleted. This can't be undone.",
     "title": "Details",
     "time": "Time",
     "distance": "Distance",

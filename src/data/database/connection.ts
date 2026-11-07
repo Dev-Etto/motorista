@@ -48,6 +48,22 @@ export const SYSTEM_PLATFORMS_SQL = `
   UPDATE platforms SET system_key = 'other' WHERE name = 'Outros' AND system_key IS NULL;
 `;
 
+export const CATALOG_PLATFORMS_SQL = `
+  UPDATE platforms SET system_key = 'uber' WHERE name = 'Uber' AND system_key IS NULL;
+  UPDATE platforms SET system_key = 'ninetyNine' WHERE name = '99' AND system_key IS NULL;
+  UPDATE platforms SET system_key = 'inDrive' WHERE name = 'inDrive' AND system_key IS NULL;
+  INSERT OR IGNORE INTO platforms (name, sort, active, system_key)
+  SELECT catalog.name, catalog.sort, 0, catalog.system_key FROM (
+    SELECT 'Uber' AS name, 1 AS sort, 'uber' AS system_key
+    UNION ALL SELECT '99', 2, 'ninetyNine'
+    UNION ALL SELECT 'inDrive', 3, 'inDrive'
+    UNION ALL SELECT 'Particular', 4, 'private'
+    UNION ALL SELECT 'Outros', 5, 'other'
+  ) AS catalog
+  WHERE NOT EXISTS (SELECT 1 FROM platforms WHERE platforms.system_key = catalog.system_key);
+  CREATE UNIQUE INDEX IF NOT EXISTS platforms_system_key ON platforms (system_key);
+`;
+
 export const MIGRATIONS: string[] = [
   `
   CREATE TABLE vehicles (
@@ -155,6 +171,10 @@ export const MIGRATIONS: string[] = [
   ALTER TABLE platforms ADD COLUMN system_key TEXT;
   ${SYSTEM_PLATFORMS_SQL}
   `,
+  CATALOG_PLATFORMS_SQL,
+  `
+  ALTER TABLE reminders ADD COLUMN vehicle_id INTEGER REFERENCES vehicles(id) ON DELETE SET NULL;
+  `,
 ];
 
 export const SCHEMA_VERSION = MIGRATIONS.length;
@@ -162,6 +182,8 @@ export const SCHEMA_VERSION = MIGRATIONS.length;
 export const REGIONAL_SCHEMA_VERSION = MIGRATIONS.indexOf(LEGACY_REGIONAL_SQL) + 1;
 
 export const SYSTEM_PLATFORMS_SCHEMA_VERSION = MIGRATIONS.findIndex((migration) => migration.includes(SYSTEM_PLATFORMS_SQL)) + 1;
+
+export const CATALOG_PLATFORMS_SCHEMA_VERSION = MIGRATIONS.indexOf(CATALOG_PLATFORMS_SQL) + 1;
 
 export async function migrate(): Promise<void> {
   const db = getDb();

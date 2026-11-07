@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import {
   assertForeignKeys,
+  CATALOG_PLATFORMS_SCHEMA_VERSION,
+  CATALOG_PLATFORMS_SQL,
   getDb,
   LEGACY_REGIONAL_SQL,
   REGIONAL_SCHEMA_VERSION,
@@ -110,6 +112,7 @@ export async function restoreBackup(backup: BackupFile): Promise<void> {
     await settingsRepository.set(SETTING_KEYS.onboarded, '1', tx);
     if (backup.schemaVersion < REGIONAL_SCHEMA_VERSION) await tx.execAsync(LEGACY_REGIONAL_SQL);
     if (backup.schemaVersion < SYSTEM_PLATFORMS_SCHEMA_VERSION) await tx.execAsync(SYSTEM_PLATFORMS_SQL);
+    if (backup.schemaVersion < CATALOG_PLATFORMS_SCHEMA_VERSION) await tx.execAsync(CATALOG_PLATFORMS_SQL);
   });
 }
 

@@ -71,7 +71,7 @@ export default function GoalScreen() {
       <AppText tone="muted">{t('screen.intro')}</AppText>
       <Card title={t('screen.goalTitle')}>
         <MoneyField label={t('screen.desired')} value={desired} onChangeText={setDesired} error={error} />
-        <NumberField label={t('screen.hoursPerDay')} value={hoursPerDay} onChangeText={setHoursPerDay} suffix="h" />
+        <NumberField label={t('screen.hoursPerDay')} value={hoursPerDay} onChangeText={setHoursPerDay} suffix="h" decimals={1} />
         <AppText variant="caption" tone="muted">
           {t('screen.workDays')}
         </AppText>

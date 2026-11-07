@@ -46,7 +46,7 @@ describe('Money', () => {
   });
 
   it('mostra o valor no campo de edição', () => {
-    expect(Money.fromCents(123456).toInput(BRL)).toBe('1234,56');
+    expect(Money.fromCents(123456).toInput(BRL)).toBe('1.234,56');
     expect(Money.fromCents(5).toInput(BRL)).toBe('0,05');
     expect(Money.fromCents(1250).toInput(BRL)).toBe('12,50');
   });
@@ -54,17 +54,18 @@ describe('Money', () => {
 
 describe('dinheiro por região e moeda', () => {
   it.each<[MoneyFormat, string, string, string, string]>([
-    [BRL, 'R$ 1.234,56', '-R$ 12,34', 'R$ 92', '1234,56'],
-    [{ locale: 'en-US', currency: 'USD' }, '$1,234.56', '-$12.34', '$92', '1234.56'],
-    [{ locale: 'es-MX', currency: 'MXN' }, '$1,234.56', '-$12.34', '$92', '1234.56'],
+    [BRL, 'R$ 1.234,56', '-R$ 12,34', 'R$ 92', '1.234,56'],
+    [{ locale: 'en-US', currency: 'USD' }, '$1,234.56', '-$12.34', '$92', '1,234.56'],
+    [{ locale: 'es-MX', currency: 'MXN' }, '$1,234.56', '-$12.34', '$92', '1,234.56'],
     [{ locale: 'es-ES', currency: 'EUR' }, '1234,56 €', '-12,34 €', '92 €', '1234,56'],
-    [{ locale: 'es-CL', currency: 'CLP' }, '$1.235', '$-12', '$92', '1235'],
-    [{ locale: 'pt-BR', currency: 'USD' }, 'US$ 1.234,56', '-US$ 12,34', 'US$ 92', '1234,56'],
+    [{ locale: 'es-CL', currency: 'CLP' }, '$1.235', '$-12', '$92', '1.235'],
+    [{ locale: 'pt-BR', currency: 'USD' }, 'US$ 1.234,56', '-US$ 12,34', 'US$ 92', '1.234,56'],
   ])('%o', (spec, positive, negative, whole, input) => {
     expect(Money.fromCents(123456).format(spec)).toBe(positive);
     expect(Money.fromCents(-1234).format(spec)).toBe(negative);
     expect(Money.fromCents(9150).formatWhole(spec)).toBe(whole);
     expect(Money.fromCents(123456).toInput(spec)).toBe(input);
+    expect(Money.parse(input, spec)?.toInput(spec)).toBe(input);
   });
 
   it('lê o valor com o separador de cada região e ignora o símbolo', () => {

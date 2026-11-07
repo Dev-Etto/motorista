@@ -36,9 +36,11 @@
   "invalidNumber": "Check the numbers you entered. Use numbers only, like {{example}}.",
   "unit": {
     "km": "km",
-    "mi": "mi"
+    "mi": "mi",
+    "minutes": "min"
   },
   "screens": {
+    "vehicles": "Vehicles",
     "vehicle": "Vehicle and costs",
     "goal": "Goal and minimums",
     "copilot": "Offer Copilot",
@@ -56,7 +58,9 @@
     "shiftNew": "Shift",
     "shiftDetail": "Shift details",
     "expenseNew": "New expense",
-    "region": "Language and region"
+    "region": "Language and region",
+    "regionLanguage": "Language",
+    "regionFormat": "Regional format"
   },
   "tabs": {
     "home": "Home",
@@ -113,5 +117,17 @@
   },
   "marketName": {
     "BR": "Brazil"
+  },
+  "formatLocaleName": {
+    "pt-BR": "Português (Brasil)",
+    "pt-PT": "Português (Portugal)",
+    "en-US": "English (United States)",
+    "en-GB": "English (United Kingdom)",
+    "es-ES": "Español (España)",
+    "es-MX": "Español (México)",
+    "es-AR": "Español (Argentina)",
+    "es-CO": "Español (Colombia)",
+    "es-CL": "Español (Chile)",
+    "es-PE": "Español (Perú)"
   }
 }

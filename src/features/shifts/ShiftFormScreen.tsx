@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
@@ -10,7 +10,8 @@ import { useSubmit } from '@shared/hooks/useSubmit';
 import { useFormat } from '@shared/i18n/format';
 import { spacing } from '@shared/theme/theme';
 import { DateField } from '@shared/ui/DateField';
-import { MoneyField, NumberField } from '@shared/ui/fields';
+import { DurationField, IntegerField, MoneyField, NumberField } from '@shared/ui/fields';
+import { FilterChips } from '@shared/ui/FilterChips';
 import { PlatformBadge } from '@shared/ui/PlatformBadge';
 import { Button, Card, Collapsible, Notice, Screen, Segmented } from '@shared/ui/primitives';
 import { dayRange } from '@shared/utils/dates';
@@ -20,7 +21,6 @@ import { useLiveTracking } from './useLiveTracking';
 import { JOURNEY_EXPENSES, useShiftForm } from './useShiftForm';
 
 const KM_MODES: KmEntryMode[] = ['manual', 'odometer'];
-const EXAMPLE_HOURS = 8.5;
 
 export default function ShiftFormScreen() {
   const router = useRouter();
@@ -59,11 +59,24 @@ export default function ShiftFormScreen() {
 
   return (
     <Screen>
+      <Stack.Screen options={{ title: id ? t('form.editTitle') : t('form.newTitle') }} />
       <TipBanner id="shift" message={t('form.tip', { context: format.distanceUnit })} />
       {id ? null : <LiveTrackingCard live={live} />}
 
+      <Card>
+        <DateField label={t('form.dateLabel')} value={form.date} onChange={(date) => date && form.setDate(date)} maximumDate={new Date()} />
+        {form.vehicles.length > 1 ? (
+          <FilterChips
+            label={t('form.vehicleLabel')}
+            value={String(form.vehicleId)}
+            options={form.vehicles.map((vehicle) => ({ value: String(vehicle.id), label: vehicle.name }))}
+            onChange={(vehicleId) => form.setVehicleId(Number(vehicleId))}
+          />
+        ) : null}
+      </Card>
+
       <Card title={t('form.timeAndDistance')}>
-        <NumberField label={t('form.hoursLabel')} {...form.bind('hours')} suffix={t('form.hoursSuffix')} placeholder={format.decimalInput(EXAMPLE_HOURS)} />
+        <DurationField label={t('form.hoursLabel')} {...form.bind('hours')} hint={t('form.hoursHint')} error={form.fieldError('hours')} />
         <Segmented value={form.kmMode} options={kmOptions} onChange={form.setKmMode} />
         {form.kmMode === 'manual' ? (
           <NumberField
@@ -75,7 +88,7 @@ export default function ShiftFormScreen() {
         ) : (
           <>
             <NumberField label={t('form.odometerStart')} {...form.bind('odometerStart')} suffix={format.distanceUnit} />
-            <NumberField label={t('form.odometerEnd')} {...form.bind('odometerEnd')} suffix={format.distanceUnit} />
+            <NumberField label={t('form.odometerEnd')} {...form.bind('odometerEnd')} suffix={format.distanceUnit} error={form.fieldError('odometerEnd')} />
           </>
         )}
       </Card>
@@ -91,10 +104,6 @@ export default function ShiftFormScreen() {
         ))}
       </Card>
 
-      <Card>
-        <DateField label={t('form.dateLabel')} value={form.date} onChange={(date) => date && form.setDate(date)} maximumDate={new Date()} />
-      </Card>
-
       <Collapsible title={t('form.expensesTitle')}>
         {JOURNEY_EXPENSES.map((category) => (
           <MoneyField
@@ -106,9 +115,16 @@ export default function ShiftFormScreen() {
         ))}
       </Collapsible>
 
-      <Collapsible title={t('form.moreDetails')}>
-        <NumberField label={t('form.startHourLabel')} {...form.bind('startHour')} placeholder="8" hint={t('form.startHourHint')} />
-        <NumberField label={t('form.tripsLabel')} {...form.bind('trips')} />
+      <Collapsible title={t('form.moreDetails')} forceOpen={form.fieldError('startHour') !== null}>
+        <IntegerField
+          label={t('form.startHourLabel')}
+          {...form.bind('startHour')}
+          maxDigits={2}
+          placeholder="8"
+          hint={t('form.startHourHint')}
+          error={form.fieldError('startHour')}
+        />
+        <IntegerField label={t('form.tripsLabel')} {...form.bind('trips')} />
       </Collapsible>
 
       <ShiftResultCard result={form.preview} />

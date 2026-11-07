@@ -1,7 +1,5 @@
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Linking } from 'react-native';
-import { RELEASES_URL } from '@config/app';
 import { GoalProgressCard } from '@features/goals';
 import { InsightCard } from '@features/insights';
 import { NextStepCard } from '@features/onboarding';
@@ -9,7 +7,9 @@ import { ActiveShiftCard, NewShiftButton } from '@features/shifts';
 import { useFormat } from '@shared/i18n/format';
 import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
 import { LearnMore } from '@shared/ui/LearnMore';
-import { AppText, Button, Card, EmptyState, ListRow, Notice, Screen } from '@shared/ui/primitives';
+import { AppText, Button, Card, ListRow, Notice, Screen } from '@shared/ui/primitives';
+import { PendingCard } from './PendingCard';
+import { pendingItems } from './pendingItems';
 import { ProfitCard } from './ProfitCard';
 import { DashboardData, useDashboard } from './useDashboard';
 
@@ -25,22 +25,32 @@ export default function DashboardScreen() {
 
 function DashboardContent({ data, onReload }: { data: DashboardData; onReload: () => Promise<void> }) {
   const router = useRouter();
-  const { t } = useTranslation('dashboard');
+  const { t } = useTranslation(['dashboard', 'vehicle']);
   const format = useFormat();
   const unit = { context: format.distanceUnit };
 
   return (
     <>
       {data.copilotStopped ? (
-        <EmptyState
-          title={t('copilotStopped.title')}
-          message={t('copilotStopped.message')}
-          action={<Button label={t('copilotStopped.action')} variant="secondary" onPress={() => router.push('/copilot')} />}
-        />
+        <Card title={t('copilotStopped.title')}>
+          <Notice tone="negative" message={t('copilotStopped.message')} />
+          <Button label={t('copilotStopped.action')} variant="secondary" onPress={() => router.push('/copilot')} />
+        </Card>
       ) : null}
       {data.gpsRunning ? <Notice tone="accent" message={t('gpsRunning', unit)} /> : null}
       {data.gpsProblem ? <Notice tone="negative" message={t('gpsProblem', { ...unit, problem: data.gpsProblem })} /> : null}
       <ActiveShiftCard />
+      <NewShiftButton />
+      {data.currentVehicle ? (
+        <Card>
+          <ListRow
+            icon={data.currentVehicle.kind === 'motorcycle' ? 'motorcycle' : 'vehicle'}
+            title={t('vehicle:manage.currentRow')}
+            value={data.currentVehicle.name}
+            onPress={() => router.push('/vehicles')}
+          />
+        </Card>
+      ) : null}
       <NextStepCard step={data.nextStep} onDismiss={onReload} />
       <ProfitCard title={t('todayTitle')} summary={data.today} hero />
       {data.estimatedToday && data.estimatedToday.trips > 0 ? (
@@ -61,24 +71,9 @@ function DashboardContent({ data, onReload }: { data: DashboardData; onReload: (
           {data.costs ? <AppText variant="caption">{t('whyLess.costToday', { ...unit, cost: format.perDistance(data.costs.fullPerKm) })}</AppText> : null}
         </LearnMore>
       </Card>
-      <NewShiftButton />
       {data.goal ? <GoalProgressCard progress={data.goal} onOpenDetails={() => router.push('/goal')} /> : null}
       {data.topInsight ? <InsightCard insight={data.topInsight} /> : null}
-      {data.dueKmReminders.map((reminder) => (
-        <Notice key={reminder.id} message={t('reminder', { title: reminder.title })} />
-      ))}
-      {data.backupDue ? (
-        <>
-          <Notice tone="accent" message={t('backup.message')} />
-          <Button label={t('backup.action')} variant="secondary" onPress={() => router.push('/backup')} />
-        </>
-      ) : null}
-      {data.updateDue ? (
-        <>
-          <Notice tone="accent" message={t('update.message')} />
-          <Button label={t('update.action')} variant="secondary" onPress={() => Linking.openURL(RELEASES_URL)} />
-        </>
-      ) : null}
+      <PendingCard items={pendingItems(data)} />
       <ProfitCard title={t('weekTitle')} summary={data.week} />
       <ProfitCard title={t('monthTitle')} summary={data.month} />
     </>

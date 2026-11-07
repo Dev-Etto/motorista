@@ -55,8 +55,8 @@ describe('números digitados em formulário', () => {
 
 describe('valores preenchidos ao editar', () => {
   it('mostra as horas como H:MM', () => {
-    expect(hoursToInput(125)).toBe('2:05');
-    expect(hoursToInput(480)).toBe('8:00');
+    expect(hoursToInput(125)).toBe('02:05');
+    expect(hoursToInput(480)).toBe('08:00');
     expect(parseHours(hoursToInput(125), PT)).toBeCloseTo(125 / 60);
   });
 });
@@ -74,5 +74,11 @@ describe('planilha', () => {
 
   it('separa as colunas com ponto e vírgula', () => {
     expect(toCsv(['a', 'b'], [[1, '-2,50']])).toContain('1;-2,50');
+  });
+});
+
+describe('horas com minutos inválidos', () => {
+  it('recusa minutos acima de 59', () => {
+    expect(parseHours('08:75', 'pt-BR')).toBeNull();
   });
 });

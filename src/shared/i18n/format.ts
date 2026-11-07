@@ -13,7 +13,7 @@ import {
   weekdaysFrom,
 } from '@shared/utils/dates';
 import { PLACEHOLDER } from '@shared/utils/format';
-import { currencySymbolOf, Money, MoneyFormat } from '@shared/utils/money';
+import { currencySymbolOf, fractionDigitsOf, Money, MoneyFormat } from '@shared/utils/money';
 import { decimalToInput, formatNumber, formatPercent } from '@shared/utils/numbers';
 import { centsOrNull, centsOrZero, decimalOrNull, decimalOrZero, hasInvalidHour, hasInvalidNumber, intOrNull, parseHours } from '@shared/utils/parse';
 import {
@@ -70,6 +70,7 @@ export function createFormatter(format: RegionalFormat) {
     consumptionUnit,
 
     currencySymbol: currencySymbolOf(spec),
+    moneyDigits: fractionDigitsOf(spec),
     perDistanceLabel: `${currencySymbolOf(spec)}/${distanceUnit}`,
     money,
     moneyWhole: (cents: number) => Money.fromCents(cents).formatWhole(spec),

@@ -31,7 +31,7 @@ function ShiftDetailContent({ shiftId, detail }: { shiftId: number; detail: Shif
   const { t } = useTranslation(['shifts', 'expenses', 'common']);
   const format = useFormat();
   const router = useRouter();
-  const { shift, earnings, expenses, dayOffers } = detail;
+  const { shift, earnings, expenses, dayOffers, vehicleName } = detail;
   const result = computeShift({
     grossCents: earnings.reduce((total, earning) => total + earning.cents, 0),
     km: shift.km,
@@ -43,7 +43,7 @@ function ShiftDetailContent({ shiftId, detail }: { shiftId: number; detail: Shif
   const confirmDelete = () => {
     confirmAction({
       title: t('detail.deleteTitle'),
-      message: t('common:irreversible'),
+      message: t('detail.deleteMessage', { date: format.date(shift.date), value: format.money(result.grossCents) }),
       actionLabel: t('common:actions.delete'),
       onConfirm: async () => {
         await removeShift(shiftId);
@@ -59,6 +59,7 @@ function ShiftDetailContent({ shiftId, detail }: { shiftId: number; detail: Shif
       </AppText>
       <ShiftResultCard result={result} />
       <Card title={t('detail.title')}>
+        {vehicleName ? <ListRow title={t('form.vehicleLabel')} value={vehicleName} /> : null}
         <ListRow title={t('detail.time')} value={format.duration(shift.minutes)} />
         <ListRow title={t('detail.distance')} value={format.distance(shift.km)} />
         <ListRow title={t('detail.costPerKm', { context: format.distanceUnit })} value={format.perDistanceAmount(shift.costPerKm)} />

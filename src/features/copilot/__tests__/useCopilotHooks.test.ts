@@ -44,14 +44,6 @@ describe('preferências do Copiloto', () => {
     expect(notify).toHaveBeenCalledWith('Permita as notificações do app para usar este canal.');
     expect(result.current.current.notification).toBe(false);
   });
-
-  it('alterna um app monitorado e salva no módulo nativo', async () => {
-    const { result } = await renderHook(() => useCopilotPreferences(jest.fn(), jest.fn()));
-
-    await act(async () => result.current.toggleMonitored('com.app99'));
-
-    expect(copilot.setPreferences).toHaveBeenLastCalledWith(expect.objectContaining({ monitoredPackages: ['com.ubercab.driver', 'com.app99'] }));
-  });
 });
 
 describe('testes do Copiloto', () => {

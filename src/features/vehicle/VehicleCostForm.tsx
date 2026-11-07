@@ -79,7 +79,7 @@ export function VehicleCostForm({ form }: { form: VehicleFormState }) {
           {form.depreciationEnabled ? (
             <>
               <MoneyField label={t('form.vehicleValue')} {...bind('vehicleValue')} />
-              <NumberField label={t('form.depreciationPerYear')} suffix="%" {...bind('depreciationPct')} />
+              <NumberField label={t('form.depreciationPerYear')} suffix="%" decimals={1} {...bind('depreciationPct')} />
             </>
           ) : null}
         </Collapsible>

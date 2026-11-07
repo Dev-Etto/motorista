@@ -76,7 +76,7 @@ export default function ReportsScreen() {
                 ) : null}
                 <Card title={t('byPlatform')}>
                   {data.platforms.map((item) => (
-                    <ListRow key={item.platform} leading={<PlatformBadge name={item.platform} />} title="" value={format.money(item.cents)} />
+                    <ListRow key={item.platform} leading={<PlatformBadge name={item.platform} />} title={item.platform} value={format.money(item.cents)} />
                   ))}
                 </Card>
                 <ButtonRow>

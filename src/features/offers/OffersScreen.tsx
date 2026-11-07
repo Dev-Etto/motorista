@@ -4,13 +4,14 @@ import { DateField } from '@shared/ui/DateField';
 import { confirmAction } from '@shared/ui/dialog';
 import { FilterChips } from '@shared/ui/FilterChips';
 import { Button, Card, EmptyState, Notice, Screen, ToggleRow } from '@shared/ui/primitives';
+import { toJsDate } from '@shared/utils/dates';
 import { EstimateCard } from './EstimateCard';
 import { OFFER_PERIODS } from './offerPeriod';
 import { OfferRow } from './OfferRow';
 import { OutcomeSummaryCard } from './OutcomeSummaryCard';
 import { ALL_SOURCES, useOffers } from './useOffers';
 
-const OUTCOMES: OutcomeFilter[] = ['all', 'accepted', 'notAccepted'];
+const OUTCOMES: OutcomeFilter[] = ['accepted', 'notAccepted', 'all'];
 
 export default function OffersScreen() {
   const { t } = useTranslation(['offers', 'common']);
@@ -34,8 +35,19 @@ export default function OffersScreen() {
         <FilterChips label={t('screen.periodLabel')} value={offers.period} options={periodOptions} onChange={offers.setPeriod} />
         {offers.period === 'custom' ? (
           <>
-            <DateField label={t('screen.from')} value={offers.custom.start} onChange={(start) => start && offers.setCustom({ ...offers.custom, start })} />
-            <DateField label={t('screen.to')} value={offers.custom.end} onChange={(end) => end && offers.setCustom({ ...offers.custom, end })} />
+            <DateField
+              label={t('screen.from')}
+              value={offers.custom.start}
+              maximumDate={toJsDate(offers.custom.end)}
+              onChange={(start) => start && offers.setCustom({ ...offers.custom, start })}
+            />
+            <DateField
+              label={t('screen.to')}
+              value={offers.custom.end}
+              minimumDate={toJsDate(offers.custom.start)}
+              maximumDate={new Date()}
+              onChange={(end) => end && offers.setCustom({ ...offers.custom, end })}
+            />
           </>
         ) : null}
         {offers.sources.length > 1 ? (

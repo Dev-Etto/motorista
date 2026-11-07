@@ -14,6 +14,7 @@ import { AppText, Notice, Screen } from '@shared/ui/primitives';
 import { ThemedStatusBar } from '@shared/ui/ThemedStatusBar';
 
 const SCREENS = [
+  { name: 'vehicles', titleKey: 'screens.vehicles' },
   { name: 'vehicle', titleKey: 'screens.vehicle' },
   { name: 'goal', titleKey: 'screens.goal' },
   { name: 'copilot', titleKey: 'screens.copilot' },
@@ -25,6 +26,8 @@ const SCREENS = [
   { name: 'platforms', titleKey: 'screens.platforms' },
   { name: 'reminders', titleKey: 'screens.reminders' },
   { name: 'region', titleKey: 'screens.region' },
+  { name: 'region-language', titleKey: 'screens.regionLanguage' },
+  { name: 'region-format', titleKey: 'screens.regionFormat' },
   { name: 'backup', titleKey: 'screens.backup' },
   { name: 'report', titleKey: 'screens.report' },
   { name: 'privacy', titleKey: 'screens.privacy' },
