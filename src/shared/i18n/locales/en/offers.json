@@ -73,5 +73,22 @@
       "title": "Clear offers?",
       "message": "The history and the earnings estimate will be deleted. Saved shifts won't change."
     }
+  },
+  "hub": {
+    "copilotTitle": "Copilot",
+    "readOffers": "Read offers",
+    "readOffersHint": "Shows each ride's score while you drive",
+    "setupMessage": "The Copilot reads Uber, 99 and inDrive offers and shows whether the ride pays off. Set it up in 2 steps.",
+    "setupButton": "Set up the Copilot",
+    "settings": "Copilot settings",
+    "settingsSubtitle": "Card, voice, floating button and apps",
+    "recentTitle": "Latest offers",
+    "empty": "Offers read by the Copilot show up here.",
+    "seeAll": "See all offers",
+    "toolsTitle": "Tools",
+    "evaluate": "Evaluate an offer",
+    "evaluateSubtitle": "Enter fare, distance and time",
+    "quote": "Private ride quote",
+    "quoteSubtitle": "Work out the price and share it"
   }
 }

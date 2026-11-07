@@ -13,6 +13,12 @@ describe('menu Mais', () => {
     expect(preferences?.items.map((item) => item.id)).toEqual(['region', 'platforms', 'reminders']);
   });
 
+  it('Ofertas virou aba e saiu de Mais, mas os ajustes do Copiloto continuam', () => {
+    const ids = MORE_SECTIONS.flatMap((section) => section.items).map((item) => item.id);
+    expect(ids).not.toContain('offers');
+    expect(ids).toContain('copilot');
+  });
+
   it.each(ITEMS)('$title aponta para uma rota existente', ({ href }) => {
     expect(existsSync(join(ROUTES_DIR, `${href}.tsx`))).toBe(true);
   });

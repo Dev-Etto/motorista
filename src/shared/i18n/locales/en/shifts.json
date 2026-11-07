@@ -115,5 +115,13 @@
     "notificationTitle_km": "Tracking shift kilometers",
     "notificationTitle_mi": "Tracking shift miles",
     "notificationBody": "Your location stays on the device only. Pause it for personal trips."
+  },
+  "bar": {
+    "running": "Shift in progress",
+    "paused": "Shift paused",
+    "pause": "Pause",
+    "resume": "Resume",
+    "finish": "Finish",
+    "openHint": "Opens the shift tracking"
   }
 }

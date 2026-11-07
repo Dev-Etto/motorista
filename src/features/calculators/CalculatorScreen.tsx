@@ -1,3 +1,4 @@
+import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Screen, Segmented } from '@shared/ui/primitives';
@@ -12,7 +13,8 @@ type Tab = (typeof TABS)[number];
 
 export default function CalculatorScreen() {
   const { t } = useTranslation('calculators');
-  const [tab, setTab] = useState<Tab>('offer');
+  const params = useLocalSearchParams<{ tab?: string }>();
+  const [tab, setTab] = useState<Tab>(() => TABS.find((value) => value === params.tab) ?? 'offer');
   const costPerKm = useCostPerKm();
   const options = TABS.map((value) => ({ value, label: t(`tabs.${value}`) }));
 

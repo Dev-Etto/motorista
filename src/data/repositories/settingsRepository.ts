@@ -23,6 +23,7 @@ export const SETTING_KEYS = {
   firstWeekday: 'first_weekday',
   currentVehicle: 'current_vehicle',
   shiftVehicle: 'shift_vehicle',
+  offersSeenAt: 'offers_seen_at',
 } as const;
 
 export type SettingKey = (typeof SETTING_KEYS)[keyof typeof SETTING_KEYS];

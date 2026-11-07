@@ -115,5 +115,13 @@
     "notificationTitle_km": "Medindo os km da jornada",
     "notificationTitle_mi": "Medindo as milhas da jornada",
     "notificationBody": "A posição fica só no aparelho. Pause em deslocamentos pessoais."
+  },
+  "bar": {
+    "running": "Jornada em andamento",
+    "paused": "Jornada pausada",
+    "pause": "Pausar",
+    "resume": "Retomar",
+    "finish": "Encerrar",
+    "openHint": "Abre a medição da jornada"
   }
 }

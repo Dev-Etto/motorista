@@ -67,3 +67,40 @@ Hoje a jornada não sabe com qual veículo começou. Trocar o veículo no meio d
 | --- | --- | --- |
 | F1.5.1 | Cada erro aparece embaixo do próprio campo: lucro desejado, horas por dia, dias de trabalho e meta de hoje | Jest |
 | F1.5.2 | "Concluir" salva quando o lucro desejado está preenchido e volta só se salvar. Sem lucro preenchido, só volta | Jest |
+
+## Fase 2. Navegação
+
+O Copiloto, principal diferencial do app, fica dentro de Mais, e a calculadora ocupa uma aba. Iniciar, pausar e encerrar a jornada passa por um formulário longo.
+
+### F2.1 Abas
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F2.1.1 | As abas são Início, Jornadas, Ofertas, Relatórios e Mais | Jest |
+| F2.1.2 | A barra de abas é própria: cada aba tem papel `tab`, estado selecionado e altura mínima de 48. O indicador da aba ativa tem 64x32, e a barra tem uma linha fina no topo | Jest, Manual |
+| F2.1.3 | A aba Ofertas mostra um contador das ofertas lidas desde a última visita, até "9+". O leitor de tela diz "3 ofertas novas". Abrir a aba zera o contador | Jest |
+
+### F2.2 Aba Ofertas
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F2.2.1 | Sem a acessibilidade concedida, o topo explica o Copiloto e leva à configuração guiada. Com ela, mostra o interruptor de leitura e o atalho para os ajustes | Jest |
+| F2.2.2 | Mostra as 5 ofertas mais recentes e "Ver todas as ofertas". Sem ofertas, explica onde elas aparecem | Jest |
+| F2.2.3 | Mostra o resumo dos mínimos por corrida | Manual |
+| F2.2.4 | Ferramentas: "Avaliar uma oferta" e "Orçamento de corrida particular" abrem a calculadora no modo certo | Jest |
+
+### F2.3 Barra da jornada
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F2.3.1 | Com a jornada iniciada, uma barra acima das abas mostra o estado, o tempo e os km medidos | Jest |
+| F2.3.2 | A barra pausa e retoma a jornada, junto com o GPS, sem abrir o formulário | Jest |
+| F2.3.3 | "Encerrar" abre o encerramento, e tocar no resto da barra abre a medição | Jest |
+| F2.3.4 | Sem jornada iniciada, a barra não aparece | Jest |
+
+### F2.4 Mais
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F2.4.1 | Mais deixa de ter "Ofertas", que virou aba. Os ajustes do Copiloto continuam em Mais | Jest |
+| F2.4.2 | A calculadora vira uma tela do stack, com título, aberta pela aba Ofertas | Manual |
