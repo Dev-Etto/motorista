@@ -75,6 +75,14 @@ describe('perfil regional do app', () => {
     expect(store.current()).toMatchObject({ language: 'en', distanceUnit: 'km', volumeUnit: 'gal' });
   });
 
+  it('voltar ao app antes de carregar não aplica nem salva nada', async () => {
+    const { store, applied, saves } = setup(EMPTY_SAVED_REGIONAL, 'en');
+    await store.refresh();
+
+    expect(applied).toEqual([]);
+    expect(saves).toEqual([]);
+  });
+
   it('não reaplica nem avisa quando nada mudou', async () => {
     const { store, applied } = setup();
     await store.load();
