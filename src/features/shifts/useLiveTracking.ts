@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { syncCopilotTargets } from '@application/offerSettings';
 import { releaseShiftVehicle, shiftVehicle } from '@application/vehicleInUse';
 import { SETTING_KEYS, settingsRepository } from '@data/repositories/settingsRepository';
+import { minutesUntil } from '@domain/shift/forgotten';
 import { reportError } from '@shared/utils/reportError';
 import { useGpsTracking } from './useGpsTracking';
 import { useShiftTimer } from './useShiftTimer';
@@ -38,10 +39,10 @@ export function useLiveTracking(onApply: (minutes: number, startedAt: number, km
     if (!value) await gps.pause();
   };
 
-  const apply = async () => {
+  const apply = async (stopAt?: number) => {
     timer.pause();
     const km = await gps.pause();
-    onApply(timer.minutes, timer.startedAt, km);
+    onApply(stopAt ? minutesUntil(timer.startedAt, stopAt) : timer.minutes, timer.startedAt, km);
     setApplied(true);
   };
 

@@ -44,5 +44,12 @@
     "reminder": "Recordatorio: {{title}}",
     "backup": "Guarda tus datos también fuera del teléfono.",
     "update": "Esta versión tiene más de un mes. Una nueva puede corregir la lectura de ofertas."
+  },
+  "periodsTitle": "Semana y mes",
+  "periods": {
+    "week": "Esta semana",
+    "month": "Este mes",
+    "gross": "Facturó {{amount}}",
+    "time": "en {{duration}}"
   }
 }

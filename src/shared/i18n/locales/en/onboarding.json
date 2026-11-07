@@ -62,6 +62,11 @@
       "title": "Keep a copy of your data",
       "message": "Your data is stored only on this phone. With a backup, you can take it with you if you switch devices.",
       "action": "Back up now"
+    },
+    "copilot": {
+      "title": "Set up the Copilot",
+      "message": "It reads offers and shows right away whether the ride pays off. It takes 2 steps.",
+      "action": "Set up"
     }
   }
 }

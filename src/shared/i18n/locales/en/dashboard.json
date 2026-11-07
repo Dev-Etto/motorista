@@ -44,5 +44,12 @@
     "reminder": "Reminder: {{title}}",
     "backup": "Keep your data outside the phone too.",
     "update": "This version is over a month old. A new one may fix offer reading."
+  },
+  "periodsTitle": "Week and month",
+  "periods": {
+    "week": "This week",
+    "month": "This month",
+    "gross": "Earned {{amount}}",
+    "time": "in {{duration}}"
   }
 }

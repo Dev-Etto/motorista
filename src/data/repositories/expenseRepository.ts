@@ -26,6 +26,23 @@ export function createExpenseRepository(connection: () => SqlExecutor = getDb) {
       );
     },
 
+    find(id: number): Promise<ExpenseRow | null> {
+      return connection().getFirstAsync<ExpenseRow>('SELECT * FROM expenses WHERE id = ?', id);
+    },
+
+    async update(id: number, input: Omit<ExpenseRow, 'id' | 'shift_id'>): Promise<void> {
+      await connection().runAsync(
+        'UPDATE expenses SET date = ?, category = ?, cents = ?, liters = ?, odometer = ?, note = ? WHERE id = ?',
+        input.date,
+        input.category,
+        input.cents,
+        input.liters,
+        input.odometer,
+        input.note,
+        id,
+      );
+    },
+
     async remove(id: number): Promise<void> {
       await connection().runAsync('DELETE FROM expenses WHERE id = ?', id);
     },

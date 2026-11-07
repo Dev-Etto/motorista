@@ -62,10 +62,17 @@
     "shiftSubtitle": "{{gross}} in {{duration}}",
     "shiftSubtitlePartial": "{{gross}} in {{duration}} • partial",
     "looseTitle": "Standalone expenses",
-    "looseHint": "Tap an expense to delete it.",
+    "looseHint": "Tap an entry to edit or delete it.",
     "deleteExpense": {
       "title": "Delete {{label}}?",
       "message": "The {{amount}} expense will be removed from your results."
+    },
+    "add": {
+      "button": "Add",
+      "title": "What do you want to add?",
+      "shift": "Shift",
+      "fuel": "Refuel",
+      "other": "Other expense"
     }
   },
   "detail": {
@@ -99,6 +106,13 @@
       "message_km": "The time and kilometers measured will be deleted.",
       "message_mi": "The time and miles measured will be deleted.",
       "action": "Discard"
+    },
+    "forgotten": {
+      "message": "The shift has been open for more than 14 hours. Enter the time you stopped to log only the time you worked.",
+      "stopLabel": "What time did you stop?",
+      "stopInvalid": "Use the HH:MM format, like 22:30.",
+      "checkKm_km": "Check the km: GPS may have measured trips after you stopped.",
+      "checkKm_mi": "Check the miles: GPS may have measured trips after you stopped."
     }
   },
   "active": {
@@ -106,7 +120,9 @@
     "onePerTime": "One shift at a time. Finish this one to start another.",
     "finish": "End and log",
     "continue": "Continue shift",
-    "new": "New shift"
+    "new": "New shift",
+    "start": "Start shift",
+    "registerPast": "Log a past shift"
   },
   "gps": {
     "startError": "Couldn't start GPS. Check your phone's location and try again.",
@@ -122,6 +138,7 @@
     "pause": "Pause",
     "resume": "Resume",
     "finish": "Finish",
-    "openHint": "Opens the shift tracking"
+    "openHint": "Opens the shift tracking",
+    "forgotten": "Shift open for a long time"
   }
 }

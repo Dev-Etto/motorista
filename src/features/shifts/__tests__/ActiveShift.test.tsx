@@ -1,90 +1,39 @@
-import { act, fireEvent, render, screen } from '@testing-library/react-native';
-import { ActiveShiftCard, NewShiftButton } from '@features/shifts/ActiveShift';
-import { copilot } from '@modules/copilot';
+import { fireEvent, render, screen } from '@testing-library/react-native';
+import { StartShiftActions } from '@features/shifts/ActiveShift';
 
 const mockPush = jest.fn();
+const mockLive = { started: false, start: jest.fn().mockResolvedValue(undefined) };
+
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: mockPush }) }));
-jest.mock('@modules/copilot', () => ({ copilot: { getTimer: jest.fn() } }));
+jest.mock('@features/shifts/useLiveTracking', () => ({ useLiveTracking: () => mockLive }));
 
-const timer = jest.mocked(copilot.getTimer);
-const state = (started: boolean, running: boolean, elapsedMs = 8000) => ({ started, running, elapsedMs, startedAt: started ? 1 : 0 });
-const FOURTEEN_HOURS = 14 * 60 * 60 * 1000;
-
-describe('jornada em andamento', () => {
+describe('ações da jornada no Início', () => {
   beforeEach(() => {
-    jest.useFakeTimers();
-    mockPush.mockClear();
-  });
-  afterEach(() => jest.useRealTimers());
-
-  it('encerrar leva ao formulário já pedindo o fechamento', async () => {
-    timer.mockReturnValue(state(true, true));
-    await render(<ActiveShiftCard />);
-
-    await fireEvent.press(screen.getByText('Encerrar e registrar'));
-
-    expect(mockPush).toHaveBeenCalledWith({ pathname: '/shift/new', params: { finish: '1' } });
+    jest.clearAllMocks();
+    mockLive.started = false;
   });
 
-  it('sem jornada, mostra só o botão de nova jornada', async () => {
-    timer.mockReturnValue(state(false, false));
-    await render(
-      <>
-        <ActiveShiftCard />
-        <NewShiftButton />
-      </>,
-    );
+  it('iniciar liga a medição sem abrir o formulário', async () => {
+    await render(<StartShiftActions />);
 
-    expect(screen.getByText('Nova jornada')).toBeTruthy();
-    expect(screen.queryByText('Continuar jornada')).toBeNull();
+    await fireEvent.press(screen.getByText('Iniciar jornada'));
+
+    expect(mockLive.start).toHaveBeenCalled();
+    expect(mockPush).not.toHaveBeenCalled();
   });
 
-  it('com jornada, troca o botão pelo card e leva ao formulário', async () => {
-    timer.mockReturnValue(state(true, true));
-    await render(
-      <>
-        <ActiveShiftCard />
-        <NewShiftButton />
-      </>,
-    );
+  it('registrar uma jornada passada abre o formulário', async () => {
+    await render(<StartShiftActions />);
 
-    expect(screen.getByText('Jornada em andamento')).toBeTruthy();
-    expect(screen.getByText('00:00:08')).toBeTruthy();
-    expect(screen.queryByText('Nova jornada')).toBeNull();
+    await fireEvent.press(screen.getByText('Registrar jornada passada'));
 
-    await fireEvent.press(screen.getByText('Continuar jornada'));
     expect(mockPush).toHaveBeenCalledWith('/shift/new');
   });
 
-  it('percebe uma jornada iniciada pelo botão flutuante com a tela aberta', async () => {
-    timer.mockReturnValue(state(false, false));
-    await render(
-      <>
-        <ActiveShiftCard />
-        <NewShiftButton />
-      </>,
-    );
+  it('com jornada iniciada, não repete o cronômetro', async () => {
+    mockLive.started = true;
+    await render(<StartShiftActions />);
 
-    timer.mockReturnValue(state(true, true));
-    await act(async () => {
-      jest.advanceTimersByTime(1000);
-    });
-
-    expect(screen.getByText('Continuar jornada')).toBeTruthy();
-    expect(screen.queryByText('Nova jornada')).toBeNull();
-  });
-
-  it('indica jornada pausada', async () => {
-    timer.mockReturnValue(state(true, false));
-    await render(<ActiveShiftCard />);
-
-    expect(screen.getByText('Jornada pausada')).toBeTruthy();
-  });
-
-  it('avisa quando o cronômetro parece esquecido', async () => {
-    timer.mockReturnValue(state(true, true, FOURTEEN_HOURS));
-    await render(<ActiveShiftCard />);
-
-    expect(screen.getByText(/ligado há bastante tempo/)).toBeTruthy();
+    expect(screen.queryByText('Iniciar jornada')).toBeNull();
   });
 });

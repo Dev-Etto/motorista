@@ -104,3 +104,33 @@ O Copiloto, principal diferencial do app, fica dentro de Mais, e a calculadora o
 | --- | --- | --- |
 | F2.4.1 | Mais deixa de ter "Ofertas", que virou aba. Os ajustes do Copiloto continuam em Mais | Jest |
 | F2.4.2 | A calculadora vira uma tela do stack, com título, aberta pela aba Ofertas | Manual |
+
+## Fase 3. Início e Jornadas
+
+O Início repete o cronômetro que agora está na barra da jornada. Para começar o dia, o motorista entra num formulário. Sem dados, mostra zeros em verde e dois cards iguais para semana e mês. Em Jornadas, tocar num lançamento avulso abre a exclusão, e a jornada esquecida não tem saída guiada.
+
+### F3.1 Início
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F3.1.1 | Sem jornada iniciada, a ação principal é "Iniciar jornada": liga o cronômetro e, se a medição por GPS estiver ligada, o GPS, sem abrir o formulário. "Registrar jornada passada" abre o formulário | Jest |
+| F3.1.2 | Com jornada iniciada, o Início e Jornadas não repetem o cronômetro. O andamento fica na barra da jornada | Jest |
+| F3.1.3 | Lucro zero aparece em tom neutro, não em verde | Jest |
+| F3.1.4 | Semana e mês ficam num card só, com lucro, faturamento e tempo de cada período | Manual |
+| F3.1.5 | Sem acessibilidade concedida, o próximo passo depois do veículo é "Configurar o Copiloto", que leva à configuração guiada | Jest |
+
+### F3.2 Jornadas
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F3.2.1 | Um botão "Adicionar" oferece Jornada, Abastecimento e Outra despesa | Jest |
+| F3.2.2 | Tocar num lançamento avulso abre a edição dele. Excluir fica na edição, com confirmação | Jest |
+| F3.2.3 | Com um dia selecionado no calendário, os lançamentos avulsos também são filtrados | Jest |
+
+### F3.3 Encerramento
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F3.3.1 | Com a jornada aberta há 14 h ou mais, a barra da jornada avisa, e o card de medição pergunta "Que horas você parou?", com a hora sugerida pelo início mais as horas por dia da meta, ou 8 h. "Usar no registro" usa as horas até esse horário e pede para conferir os km | Jest |
+| F3.3.2 | A notificação de jornada esquecida abre o encerramento da jornada | Manual |
+| F3.3.3 | Salvar uma jornada nova abre o detalhe dela | Jest |

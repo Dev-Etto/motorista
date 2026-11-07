@@ -7,6 +7,7 @@ const t = i18n.getFixedT('pt-BR', 'onboarding');
 describe('texto do próximo passo em português', () => {
   it.each([
     ['vehicle', 'Descubra seu custo por km', 'Com ele, o app mostra quanto sobra de verdade em cada jornada.', 'Calcular custo'],
+    ['copilot', 'Configure o Copiloto', 'Ele lê as ofertas e mostra na hora se a corrida compensa. Leva 2 passos.', 'Configurar'],
     [
       'first-shift',
       'Registre sua primeira jornada',

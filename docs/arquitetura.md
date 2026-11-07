@@ -297,3 +297,5 @@ app -> features -> application -> data -> domain -> shared/utils
 - **Meta vigente:** `goalRepository.findInEffect` usa a meta mais recente até o mês pedido, sem copiar linhas. Salvar na tela da Meta grava o mês atual.
 - **Barra de abas própria:** `features/navigation/AppTabBar` substitui a barra padrão para juntar a barra da jornada, o contador de ofertas novas e o indicador de 64x32. As abas ficam em `features/navigation/tabs.ts`. A aba Ofertas se chama `offer-hub` porque `/offers` já é o histórico.
 - **Controle da jornada fora do formulário:** `ShiftBar` usa `useLiveTracking`, o mesmo hook do card de medição, então pausar e retomar mexem no cronômetro e no GPS juntos.
+- **Iniciar sem formulário:** o Início liga a medição direto por `StartShiftActions`, e o andamento fica só na barra da jornada. O formulário serve para encerrar ou registrar uma jornada passada.
+- **Jornada esquecida:** com 14 h ou mais, o encerramento não aplica a medição sozinho. O card pergunta a hora de parada, sugerida pelas horas por dia da meta, e `nextClockTime` acha essa hora depois do início, mesmo no dia seguinte. A notificação abre `motorista://shift/new?finish=1`.

@@ -27,4 +27,3 @@ export async function loadShiftDetail(shiftId: number) {
 export type ShiftDetail = NonNullable<Awaited<ReturnType<typeof loadShiftDetail>>>;
 
 export const removeShift = (id: number) => shiftRepository.remove(id);
-export const removeLooseExpense = (id: number) => expenseRepository.remove(id);

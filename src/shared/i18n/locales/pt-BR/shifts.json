@@ -62,10 +62,17 @@
     "shiftSubtitle": "{{gross}} em {{duration}}",
     "shiftSubtitlePartial": "{{gross}} em {{duration}} • parcial",
     "looseTitle": "Lançamentos avulsos",
-    "looseHint": "Toque em um lançamento para excluir.",
+    "looseHint": "Toque em um lançamento para editar ou excluir.",
     "deleteExpense": {
       "title": "Excluir {{label}}?",
       "message": "O lançamento de {{amount}} sai dos seus resultados."
+    },
+    "add": {
+      "button": "Adicionar",
+      "title": "O que você quer adicionar?",
+      "shift": "Jornada",
+      "fuel": "Abastecimento",
+      "other": "Outra despesa"
     }
   },
   "detail": {
@@ -99,6 +106,13 @@
       "message_km": "O tempo e os km medidos serão apagados.",
       "message_mi": "O tempo e as milhas medidas serão apagados.",
       "action": "Descartar"
+    },
+    "forgotten": {
+      "message": "A jornada está aberta há mais de 14 horas. Informe a hora em que você parou para registrar só o tempo trabalhado.",
+      "stopLabel": "Que horas você parou?",
+      "stopInvalid": "Use o formato HH:MM, como 22:30.",
+      "checkKm_km": "Confira os km: o GPS pode ter medido deslocamentos depois que você parou.",
+      "checkKm_mi": "Confira as milhas: o GPS pode ter medido deslocamentos depois que você parou."
     }
   },
   "active": {
@@ -106,7 +120,9 @@
     "onePerTime": "É uma jornada por vez. Finalize esta para começar outra.",
     "finish": "Encerrar e registrar",
     "continue": "Continuar jornada",
-    "new": "Nova jornada"
+    "new": "Nova jornada",
+    "start": "Iniciar jornada",
+    "registerPast": "Registrar jornada passada"
   },
   "gps": {
     "startError": "Não foi possível iniciar o GPS. Confira a localização do celular e tente de novo.",
@@ -122,6 +138,7 @@
     "pause": "Pausar",
     "resume": "Retomar",
     "finish": "Encerrar",
-    "openHint": "Abre a medição da jornada"
+    "openHint": "Abre a medição da jornada",
+    "forgotten": "Jornada aberta há muito tempo"
   }
 }

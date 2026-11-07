@@ -146,7 +146,7 @@ export function useShiftForm(shiftId?: number) {
     ...Object.values(expenses).map((text) => text ?? ''),
   ];
 
-  const save = async (): Promise<boolean> => {
+  const save = async (): Promise<number | null> => {
     const found = validateShiftForm({
       hasInvalidNumber: typedNumbers.some(format.hasInvalidNumber),
       hasInvalidHours: fields.hours.trim() !== '' && format.parseHours(fields.hours) === null,
@@ -158,9 +158,9 @@ export function useShiftForm(shiftId?: number) {
       odometerTyped: Boolean(fields.odometerStart || fields.odometerEnd),
     });
     setProblem(found);
-    if (found) return false;
+    if (found) return null;
 
-    await shiftRepository.save({
+    return shiftRepository.save({
       id: shiftId,
       vehicleId,
       date,
@@ -176,7 +176,6 @@ export function useShiftForm(shiftId?: number) {
         .filter((earning) => earning.cents > 0),
       expenses: JOURNEY_EXPENSES.map((category) => ({ category, cents: format.centsOrZero(expenses[category] ?? '') })).filter((expense) => expense.cents > 0),
     });
-    return true;
   };
 
   return {

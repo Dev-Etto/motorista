@@ -1,3 +1,8 @@
 export const PLACEHOLDER = '—';
 
-export const profitTone = (cents: number) => (cents < 0 ? 'negative' : 'positive') as 'negative' | 'positive';
+export type ProfitTone = 'negative' | 'positive' | 'default';
+
+export function profitTone(cents: number): ProfitTone {
+  if (cents < 0) return 'negative';
+  return cents > 0 ? 'positive' : 'default';
+}

@@ -128,3 +128,11 @@ export function workDaysInMonth(iso: string, workWeekdays: number[]): number {
 }
 
 export const today = () => isoOf(DateTime.local());
+
+export const clockOfMillis = (millis: number) => DateTime.fromMillis(millis).toFormat('HH:mm');
+
+export function nextClockTime(after: number, minutesOfDay: number): number {
+  const start = DateTime.fromMillis(after);
+  const candidate = start.startOf('day').plus({ minutes: minutesOfDay });
+  return (candidate <= start ? candidate.plus({ days: 1 }) : candidate).toMillis();
+}

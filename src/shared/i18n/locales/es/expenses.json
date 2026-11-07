@@ -20,7 +20,12 @@
     "litersLabel_L": "Litros (opcional)",
     "litersLabel_gal": "Galones (opcional)",
     "odometerLabel": "Odómetro (opcional)",
-    "noteLabel": "Nota (opcional)"
+    "noteLabel": "Nota (opcional)",
+    "editTitle": "Editar registro",
+    "deleteConfirm": {
+      "title": "¿Eliminar {{label}}?",
+      "message": "El registro de {{amount}} sale de tus resultados."
+    }
   },
   "alreadyInCost_km": "{{category}} ya está en el costo por km. El valor sirve para comparar lo previsto con lo pagado.",
   "alreadyInCost_mi": "{{category}} ya está en el costo por milla. El valor sirve para comparar lo previsto con lo pagado."

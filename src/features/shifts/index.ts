@@ -1,2 +1,2 @@
-export { ActiveShiftCard, NewShiftButton } from './ActiveShift';
+export { StartShiftActions } from './ActiveShift';
 export { useLiveTracking } from './useLiveTracking';
