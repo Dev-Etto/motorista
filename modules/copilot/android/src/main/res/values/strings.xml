@@ -2,4 +2,27 @@
 <resources>
   <string name="copilot_service_label">Copiloto de ofertas</string>
   <string name="copilot_service_description">Lê valor, distância, tempo e avaliação das ofertas nos apps de corrida para mostrar seus números, e nota quando você toca em aceitar ou recusar, para estimar seu faturamento. Se você ligar a opção, também pode ler a imagem da tela na Uber e na 99, no próprio aparelho e sem salvar. Não toca na tela, não aceita nem recusa corridas, e nada sai do aparelho.</string>
+  <string name="drop_to_close">Solte aqui para fechar</string>
+  <string name="drop_to_hide">Solte aqui para ocultar</string>
+  <string name="floating_channel_name">Botão flutuante</string>
+  <string name="floating_notification_title">Botão flutuante ativo</string>
+  <string name="floating_notification_text">Mostra o cronômetro e as ofertas sobre os outros apps.</string>
+  <string name="panel_hide_detail">Volta quando você abrir e sair do app</string>
+  <string name="panel_last_offer">Última oferta</string>
+  <string name="panel_open_app">Abrir o app</string>
+  <string name="panel_hide_button">Ocultar o botão</string>
+  <string name="panel_shift_running">Jornada em andamento</string>
+  <string name="panel_shift_paused">Jornada pausada</string>
+  <string name="panel_shift_idle">Nenhuma jornada iniciada</string>
+  <string name="panel_pause">Pausar</string>
+  <string name="panel_resume">Retomar</string>
+  <string name="panel_start">Iniciar cronômetro</string>
+  <string name="card_per_km">Por km</string>
+  <string name="card_per_hour">Por hora</string>
+  <string name="card_profit">Lucro</string>
+  <string name="forgotten_channel_name">Jornada</string>
+  <string name="forgotten_title">O cronômetro continua ligado</string>
+  <string name="forgotten_text">Se a jornada já acabou, abra o app e revise as horas.</string>
+  <string name="offers_channel_name">Ofertas</string>
+  <string name="offers_channel_description">Resultado das ofertas lidas pelo Copiloto</string>
 </resources>

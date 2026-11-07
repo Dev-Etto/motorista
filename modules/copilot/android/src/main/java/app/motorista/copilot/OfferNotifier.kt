@@ -55,8 +55,8 @@ class OfferNotifier(private val context: Context) : OfferChannel {
     context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
   private fun createChannel() {
-    val channel = NotificationChannel(CHANNEL_ID, "Ofertas", NotificationManager.IMPORTANCE_HIGH).apply {
-      description = "Resultado das ofertas lidas pelo Copiloto"
+    val channel = NotificationChannel(CHANNEL_ID, context.getString(R.string.offers_channel_name), NotificationManager.IMPORTANCE_HIGH).apply {
+      description = context.getString(R.string.offers_channel_description)
       setSound(null, null)
       enableVibration(false)
       setShowBadge(false)

@@ -35,11 +35,11 @@ class OfferMockReceiver(private val service: OfferAccessibilityService) : Broadc
       addAction(ACTION_FORGOTTEN)
       addAction(ACTION_TAP)
     }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      context.registerReceiver(this, filter, Context.RECEIVER_EXPORTED)
-    } else {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
       context.registerReceiver(this, filter)
+      return
     }
+    context.registerReceiver(this, filter, Context.RECEIVER_EXPORTED)
   }
 
   companion object {

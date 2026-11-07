@@ -129,11 +129,11 @@ Tipos de teste:
 
 | ID | Critério de aceite | Teste |
 | --- | --- | --- |
-| R10.1 | `FloatingTimerService` delega posição a `PillPositionStore`, cartão a `FloatingCardPresenter` e notificação a `ForegroundNotification`. Nenhum desses arquivos passa de 200 linhas | Revisão |
-| R10.2 | `dp()` existe uma vez, em `Dimens` | Revisão |
+| R10.1 | `FloatingTimerService` delega a janela a `FloatingWindow`, a posição a `PillPositionStore`, o cartão a `FloatingCardPresenter` e a notificação a `ForegroundNotification`. Nenhum desses arquivos passa de 200 linhas | Revisão |
+| R10.2 | `dp()` existe uma vez, como extensão de `Context` em `ScreenBounds.kt` | Revisão |
 | R10.3 | O ajuste à borda da tela é uma função pura `ScreenBounds.clamp`, usada pelo cartão e pelo botão | Kotlin |
 | R10.4 | As cores dos overlays vêm de `CardTheme`, sem literais `0xFF…` repetidos | Revisão |
-| R10.5 | O texto da interface em Kotlin vem de `strings.xml`. Os motivos de `OfferEvaluator` ficam no código, porque as fixtures os conferem | Revisão |
+| R10.5 | O texto da interface em Kotlin vem de `strings.xml`. `OfferEvaluator` e `OfferFormat` ficam no código, porque são testados sem Android e os motivos são conferidos pelas fixtures | Revisão |
 
 ## R11. Tipos
 

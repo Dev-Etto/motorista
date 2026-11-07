@@ -12,7 +12,14 @@ data class CardPalette(
   val negative: Int,
 )
 
-private val DAY_PALETTE = CardPalette(Color.WHITE, 0xFF171717.toInt(), 0xFF5E5E5E.toInt(), 0xFF0B6E3E.toInt(), 0xFFB3261E.toInt())
+object OverlayColors {
+  const val INK = 0xFF171717.toInt()
+  const val INK_TRANSLUCENT = 0xF2171717.toInt()
+  const val DANGER = 0xFFB3261E.toInt()
+  const val HAIRLINE = 0x3DFFFFFF
+}
+
+private val DAY_PALETTE = CardPalette(Color.WHITE, OverlayColors.INK, 0xFF5E5E5E.toInt(), 0xFF0B6E3E.toInt(), OverlayColors.DANGER)
 private val NIGHT_PALETTE = CardPalette(0xFF1C1C1C.toInt(), 0xFFF5F5F5.toInt(), 0xFFA8A8A8.toInt(), 0xFF4FD08D.toInt(), 0xFFFF8A80.toInt())
 
 class CardTheme(private val context: Context) {

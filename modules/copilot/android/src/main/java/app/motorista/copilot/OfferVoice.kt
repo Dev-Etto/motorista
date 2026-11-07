@@ -4,7 +4,6 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
-import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
@@ -16,12 +15,7 @@ class OfferVoice(context: Context) : OfferChannel {
     .setUsage(AudioAttributes.USAGE_ASSISTANCE_NAVIGATION_GUIDANCE)
     .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
     .build()
-  private val focusRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-    AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK).setAudioAttributes(attributes).build()
-  } else {
-    null
-  }
-  private val focusListener = AudioManager.OnAudioFocusChangeListener { }
+  private val focusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK).setAudioAttributes(attributes).build()
   private var ready = false
   private val brazil = Locale("pt", "BR")
 
@@ -63,19 +57,11 @@ class OfferVoice(context: Context) : OfferChannel {
   }
 
   private fun requestFocus() {
-    if (focusRequest != null) {
-      audioManager.requestAudioFocus(focusRequest)
-      return
-    }
-    audioManager.requestAudioFocus(focusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+    audioManager.requestAudioFocus(focusRequest)
   }
 
   private fun abandonFocus() {
-    if (focusRequest != null) {
-      audioManager.abandonAudioFocusRequest(focusRequest)
-      return
-    }
-    audioManager.abandonAudioFocus(focusListener)
+    audioManager.abandonAudioFocusRequest(focusRequest)
   }
 
   private companion object {

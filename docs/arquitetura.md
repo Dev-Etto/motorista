@@ -224,4 +224,10 @@ app -> features -> application -> data -> domain -> shared/utils
 - **API pública por `index.ts`:** componentes que dependem de tipos do domínio não podem ir para `shared/ui`, então ficam na funcionalidade dona e são expostos pelo `index.ts` dela.
 - **Repositórios por fábrica:** `createXRepository(connection = getDb)` devolve o repositório, e o módulo exporta uma instância padrão. `createShiftRepository` também recebe o repositório de veículo. `SqlExecutor` serve tanto para a conexão quanto para a transação.
 - **Canais do Copiloto testáveis:** `OfferChannels` escolhe os canais sem Android, e o botão flutuante é acessado pela interface `FloatingHost`.
+- **Botão flutuante dividido:** `FloatingTimerService` cuida do ciclo de vida, do menu e do cronômetro. `FloatingWindow` cuida da janela, `PillPositionStore` da posição salva, `FloatingCardPresenter` do cartão e da animação, e `ForegroundNotification` da notificação do serviço.
+- **Limites da tela em um lugar:** `ScreenBounds` é uma função pura, usada pelo cartão avulso e pelo botão. `Context.dp` substitui as cópias de `dp()`.
+- **Texto do Kotlin em `strings.xml`:** a exceção são `OfferEvaluator` e `OfferFormat`, que rodam nos testes sem Android.
+- **Cores dos overlays:** `OverlayColors`, em `CardTheme.kt`, guarda as cores repetidas no botão, na área de soltar e no cartão.
+- **Nós de acessibilidade reciclados:** abaixo do Android 13, os nós e janelas obtidos na leitura são reciclados. A raiz recebida de fora continua com quem a passou.
+- **Foco de áudio sem ramo antigo:** com `minSdk` 26, `AudioFocusRequest` sempre existe.
 

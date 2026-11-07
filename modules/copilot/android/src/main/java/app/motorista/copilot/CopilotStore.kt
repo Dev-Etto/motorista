@@ -48,10 +48,9 @@ class CopilotStore private constructor(context: Context) {
       return prefs.getInt(KEY_CARD_X, 0) to prefs.getInt(KEY_CARD_Y, 0)
     }
     set(value) {
-      val editor = prefs.edit()
-      if (value == null) editor.remove(KEY_CARD_X).remove(KEY_CARD_Y)
-      if (value != null) editor.putInt(KEY_CARD_X, value.first).putInt(KEY_CARD_Y, value.second)
-      editor.apply()
+      if (value == null) return prefs.edit().remove(KEY_CARD_X).remove(KEY_CARD_Y).apply()
+
+      prefs.edit().putInt(KEY_CARD_X, value.first).putInt(KEY_CARD_Y, value.second).apply()
     }
 
   val failedReads: Int

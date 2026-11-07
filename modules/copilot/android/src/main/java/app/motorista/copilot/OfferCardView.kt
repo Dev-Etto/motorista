@@ -14,24 +14,24 @@ import android.widget.TextView
 class OfferCardView(private val context: Context) {
   private val cardTheme = CardTheme(context)
 
-  fun width(): Int = minOf(context.resources.displayMetrics.widthPixels - dp(SCREEN_MARGIN_DP) * 2, dp(MAX_WIDTH_DP))
+  fun width(): Int = minOf(context.resources.displayMetrics.widthPixels - context.dp(SCREEN_MARGIN_DP) * 2, context.dp(MAX_WIDTH_DP))
 
   fun build(evaluation: OfferEvaluation, preferences: CopilotPreferences): View {
     val palette = cardTheme.palette(preferences.theme)
     val scale = preferences.cardSize.scale
     val body = LinearLayout(context).apply {
       orientation = LinearLayout.VERTICAL
-      setPadding(dp(PADDING_DP), dp(BODY_TOP_DP), dp(PADDING_DP), dp(PADDING_DP))
+      setPadding(context.dp(PADDING_DP), context.dp(BODY_TOP_DP), context.dp(PADDING_DP), context.dp(PADDING_DP))
     }
     if (preferences.cardLayout == CardLayout.SUMMARY) addSummary(body, evaluation, preferences, palette, scale) else addComplete(body, evaluation, palette, scale)
     return LinearLayout(context).apply {
       orientation = LinearLayout.VERTICAL
       background = GradientDrawable().apply {
         setColor(palette.surface)
-        cornerRadius = dp(CORNER_DP).toFloat()
+        cornerRadius = context.dp(CORNER_DP).toFloat()
       }
       clipToOutline = true
-      elevation = dp(ELEVATION_DP).toFloat()
+      elevation = context.dp(ELEVATION_DP).toFloat()
       addView(header(evaluation, preferences.theme, scale))
       addView(body)
     }
@@ -40,13 +40,13 @@ class OfferCardView(private val context: Context) {
   private fun header(evaluation: OfferEvaluation, theme: ThemeMode, scale: Float) = LinearLayout(context).apply {
     orientation = LinearLayout.HORIZONTAL
     gravity = Gravity.CENTER_VERTICAL
-    setPadding(dp(PADDING_DP), dp(PADDING_DP), dp(PADDING_DP), 0)
+    setPadding(context.dp(PADDING_DP), context.dp(PADDING_DP), context.dp(PADDING_DP), 0)
     addView(sourceColumn(evaluation, scale), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
     addView(scoreBadge(evaluation, theme, scale))
   }
 
   private fun scoreBadge(evaluation: OfferEvaluation, theme: ThemeMode, scale: Float) = ImageView(context).apply {
-    setImageBitmap(ScoreBadge.bitmap(context, evaluation, dp((BADGE_DP * scale).toInt()), cardTheme.isNight(theme)))
+    setImageBitmap(ScoreBadge.bitmap(context, evaluation, context.dp((BADGE_DP * scale).toInt()), cardTheme.isNight(theme)))
     contentDescription = OfferFormat.scoreDescription(evaluation)
   }
 
@@ -58,11 +58,11 @@ class OfferCardView(private val context: Context) {
   private fun sourceChip(sourceLabel: String, scale: Float): TextView {
     val style = OfferSources.style(sourceLabel)
     return label(sourceLabel, SOURCE_SP * scale, style.text).apply {
-      layoutParams = LinearLayout.LayoutParams(dp((SOURCE_WIDTH_DP * scale).toInt()), dp((SOURCE_HEIGHT_DP * scale).toInt()))
+      layoutParams = LinearLayout.LayoutParams(context.dp((SOURCE_WIDTH_DP * scale).toInt()), context.dp((SOURCE_HEIGHT_DP * scale).toInt()))
       gravity = Gravity.CENTER
       background = GradientDrawable().apply {
         setColor(style.background)
-        cornerRadius = dp(CHIP_CORNER_DP).toFloat()
+        cornerRadius = context.dp(CHIP_CORNER_DP).toFloat()
       }
     }
   }
@@ -76,10 +76,10 @@ class OfferCardView(private val context: Context) {
     }
     val metrics = LinearLayout(context).apply {
       orientation = LinearLayout.HORIZONTAL
-      setPadding(0, dp(METRICS_TOP_DP), 0, 0)
-      addView(metric("Por km", OfferFormat.money(evaluation.perKmCents), evaluation.kmOnTarget, palette, scale), columnParams())
-      addView(metric("Por hora", if (evaluation.offer.minutes > 0) OfferFormat.wholeMoney(evaluation.perHourCents) else "—", evaluation.hourOnTarget, palette, scale), columnParams())
-      evaluation.profitCents?.let { addView(metric("Lucro", OfferFormat.money(it), it >= 0, palette, scale, false), columnParams()) }
+      setPadding(0, context.dp(METRICS_TOP_DP), 0, 0)
+      addView(metric(context.getString(R.string.card_per_km), OfferFormat.money(evaluation.perKmCents), evaluation.kmOnTarget, palette, scale), columnParams())
+      addView(metric(context.getString(R.string.card_per_hour), if (evaluation.offer.minutes > 0) OfferFormat.wholeMoney(evaluation.perHourCents) else "—", evaluation.hourOnTarget, palette, scale), columnParams())
+      evaluation.profitCents?.let { addView(metric(context.getString(R.string.card_profit), OfferFormat.money(it), it >= 0, palette, scale, false), columnParams()) }
     }
     body.addView(offerRow)
     body.addView(metrics)
@@ -95,7 +95,11 @@ class OfferCardView(private val context: Context) {
       false -> palette.negative
       null -> palette.text
     }
-    val arrow = if (!showArrow || onTarget == null) "" else if (onTarget) " ▲" else " ▼"
+    val arrow = when {
+      !showArrow || onTarget == null -> ""
+      onTarget -> " ▲"
+      else -> " ▼"
+    }
     addView(label("$value$arrow", METRIC_SP * scale, tone))
   }
 
@@ -112,11 +116,6 @@ class OfferCardView(private val context: Context) {
     typeface = face
   }
 
-  private fun dp(value: Int) = TypedValue.applyDimension(
-    TypedValue.COMPLEX_UNIT_DIP,
-    value.toFloat(),
-    context.resources.displayMetrics,
-  ).toInt()
 
   private companion object {
     const val SCREEN_MARGIN_DP = 12

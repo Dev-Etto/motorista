@@ -39,18 +39,18 @@ class FloatingPanel(
   private val toggle = LinearLayout(context).apply {
     orientation = LinearLayout.HORIZONTAL
     gravity = Gravity.CENTER
-    minimumHeight = dp(ROW_DP)
-    addView(toggleIcon, LinearLayout.LayoutParams(dp(ICON_DP), dp(ICON_DP)).apply { marginEnd = dp(SPACE_S_DP) })
+    minimumHeight = context.dp(ROW_DP)
+    addView(toggleIcon, LinearLayout.LayoutParams(context.dp(ICON_DP), context.dp(ICON_DP)).apply { marginEnd = context.dp(SPACE_S_DP) })
     addView(toggleLabel)
     setOnClickListener { onToggle() }
   }
   private val lastOfferDetail = text(CAPTION_SP, bold = false)
-  private val hideDetail = text(CAPTION_SP, bold = false).apply { text = "Volta quando você abrir e sair do app" }
+  private val hideDetail = text(CAPTION_SP, bold = false).apply { text = context.getString(R.string.panel_hide_detail) }
   private val rowIcons = mutableListOf<ImageView>()
   private val rowLabels = mutableListOf<TextView>()
   private val lastOfferBadge = ImageView(context)
-  private val lastOfferRow = row(R.drawable.ic_panel_offer, "Última oferta", lastOfferDetail, lastOfferBadge, onLastOffer)
-  private val rows = listOf(lastOfferRow, row(R.drawable.ic_panel_open, "Abrir o app", null, null, onOpenApp), row(R.drawable.ic_panel_hide, "Ocultar o botão", hideDetail, null, onHide))
+  private val lastOfferRow = row(R.drawable.ic_panel_offer, context.getString(R.string.panel_last_offer), lastOfferDetail, lastOfferBadge, onLastOffer)
+  private val rows = listOf(lastOfferRow, row(R.drawable.ic_panel_open, context.getString(R.string.panel_open_app), null, null, onOpenApp), row(R.drawable.ic_panel_hide, context.getString(R.string.panel_hide_button), hideDetail, null, onHide))
   private val titles = LinearLayout(context).apply {
     orientation = LinearLayout.VERTICAL
     addView(title)
@@ -59,16 +59,16 @@ class FloatingPanel(
   val handle = LinearLayout(context).apply {
     orientation = LinearLayout.HORIZONTAL
     gravity = Gravity.CENTER_VERTICAL
-    minimumHeight = dp(HANDLE_DP)
-    minimumWidth = dp(HANDLE_DP)
-    addView(logo, LinearLayout.LayoutParams(dp(LOGO_DP), dp(LOGO_DP)))
+    minimumHeight = context.dp(HANDLE_DP)
+    minimumWidth = context.dp(HANDLE_DP)
+    addView(logo, LinearLayout.LayoutParams(context.dp(LOGO_DP), context.dp(LOGO_DP)))
     addView(titles, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-    addView(close, LinearLayout.LayoutParams(dp(ICON_DP), dp(ICON_DP)))
+    addView(close, LinearLayout.LayoutParams(context.dp(ICON_DP), context.dp(ICON_DP)))
   }
   private val menu = LinearLayout(context).apply {
     orientation = LinearLayout.VERTICAL
-    setPadding(0, dp(SPACE_S_DP), 0, 0)
-    addView(toggle, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = dp(SPACE_S_DP) })
+    setPadding(0, context.dp(SPACE_S_DP), 0, 0)
+    addView(toggle, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = context.dp(SPACE_S_DP) })
     rows.forEach { addView(it) }
   }
   val view = LinearLayout(context).apply {
@@ -91,14 +91,14 @@ class FloatingPanel(
   }
 
   private fun renderClosed() {
-    view.background = rounded(PILL_COLOR, CLOSED_CORNER_DP).apply { setStroke(dp(1), PILL_STROKE) }
-    view.elevation = dp(ELEVATION_DP).toFloat()
+    view.background = rounded(PILL_COLOR, CLOSED_CORNER_DP).apply { setStroke(context.dp(1), PILL_STROKE) }
+    view.elevation = context.dp(ELEVATION_DP).toFloat()
     view.setPadding(0, 0, 0, 0)
     view.minimumWidth = 0
     handle.gravity = Gravity.CENTER
-    handle.setPadding(dp(SPACE_M_DP), 0, dp(SPACE_L_DP), 0)
+    handle.setPadding(context.dp(SPACE_M_DP), 0, context.dp(SPACE_L_DP), 0)
     logo.visibility = View.VISIBLE
-    logo.layoutParams = LinearLayout.LayoutParams(dp(LOGO_WITH_CLOCK_DP), dp(LOGO_WITH_CLOCK_DP)).apply { marginEnd = dp(SPACE_S_DP) }
+    logo.layoutParams = LinearLayout.LayoutParams(context.dp(LOGO_WITH_CLOCK_DP), context.dp(LOGO_WITH_CLOCK_DP)).apply { marginEnd = context.dp(SPACE_S_DP) }
     logo.imageTintList = ColorStateList.valueOf(Color.WHITE)
     titles.visibility = View.VISIBLE
     titles.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -109,13 +109,13 @@ class FloatingPanel(
 
   private fun renderOpen(timer: TimerState, lastOffer: OfferEvaluation?, colors: CardPalette, night: Boolean) {
     view.background = rounded(colors.surface, OPEN_CORNER_DP)
-    view.elevation = dp(ELEVATION_DP).toFloat()
-    view.setPadding(dp(SPACE_M_DP), dp(SPACE_S_DP), dp(SPACE_M_DP), dp(SPACE_M_DP))
-    view.minimumWidth = dp(OPEN_WIDTH_DP)
+    view.elevation = context.dp(ELEVATION_DP).toFloat()
+    view.setPadding(context.dp(SPACE_M_DP), context.dp(SPACE_S_DP), context.dp(SPACE_M_DP), context.dp(SPACE_M_DP))
+    view.minimumWidth = context.dp(OPEN_WIDTH_DP)
     handle.gravity = Gravity.CENTER_VERTICAL
     handle.setPadding(0, 0, 0, 0)
     logo.visibility = View.VISIBLE
-    logo.layoutParams = LinearLayout.LayoutParams(dp(LOGO_DP), dp(LOGO_DP)).apply { marginEnd = dp(SPACE_S_DP) }
+    logo.layoutParams = LinearLayout.LayoutParams(context.dp(LOGO_DP), context.dp(LOGO_DP)).apply { marginEnd = context.dp(SPACE_S_DP) }
     logo.imageTintList = ColorStateList.valueOf(colors.text)
     titles.visibility = View.VISIBLE
     titles.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
@@ -130,13 +130,19 @@ class FloatingPanel(
   }
 
   private fun statusText(timer: TimerState) = when {
-    timer.running -> "Jornada em andamento"
-    timer.started -> "Jornada pausada"
-    else -> "Nenhuma jornada iniciada"
+    timer.running -> context.getString(R.string.panel_shift_running)
+    timer.started -> context.getString(R.string.panel_shift_paused)
+    else -> context.getString(R.string.panel_shift_idle)
   }
 
   private fun renderToggle(timer: TimerState, colors: CardPalette) {
-    toggleLabel.text = if (timer.running) "Pausar" else if (timer.started) "Retomar" else "Iniciar cronômetro"
+    toggleLabel.text = context.getString(
+      when {
+        timer.running -> R.string.panel_pause
+        timer.started -> R.string.panel_resume
+        else -> R.string.panel_start
+      },
+    )
     toggleLabel.setTextColor(colors.surface)
     toggleIcon.setImageResource(if (timer.running) R.drawable.ic_panel_pause else R.drawable.ic_panel_play)
     toggleIcon.imageTintList = ColorStateList.valueOf(colors.surface)
@@ -147,7 +153,7 @@ class FloatingPanel(
     lastOfferRow.visibility = if (lastOffer == null) View.GONE else View.VISIBLE
     lastOffer?.let {
       lastOfferDetail.text = "${it.sourceLabel} · ${OfferFormat.money(it.offer.valueCents.toDouble())}"
-      lastOfferBadge.setImageBitmap(ScoreBadge.bitmap(context, it, dp(BADGE_DP), night))
+      lastOfferBadge.setImageBitmap(ScoreBadge.bitmap(context, it, context.dp(BADGE_DP), night))
       lastOfferBadge.contentDescription = OfferFormat.scoreDescription(it)
     }
     lastOfferDetail.setTextColor(colors.muted)
@@ -168,9 +174,9 @@ class FloatingPanel(
     return LinearLayout(context).apply {
       orientation = LinearLayout.HORIZONTAL
       gravity = Gravity.CENTER_VERTICAL
-      minimumHeight = dp(ROW_DP)
-      setPadding(dp(SPACE_S_DP), 0, dp(SPACE_S_DP), 0)
-      addView(rowIcon, LinearLayout.LayoutParams(dp(ICON_DP), dp(ICON_DP)).apply { marginEnd = dp(SPACE_M_DP) })
+      minimumHeight = context.dp(ROW_DP)
+      setPadding(context.dp(SPACE_S_DP), 0, context.dp(SPACE_S_DP), 0)
+      addView(rowIcon, LinearLayout.LayoutParams(context.dp(ICON_DP), context.dp(ICON_DP)).apply { marginEnd = context.dp(SPACE_M_DP) })
       addView(column, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
       trailing?.let { addView(it) }
       setOnClickListener { onClick() }
@@ -185,13 +191,13 @@ class FloatingPanel(
 
   private fun rounded(fill: Int, cornerDp: Int) = GradientDrawable().apply {
     setColor(fill)
-    cornerRadius = dp(cornerDp).toFloat()
+    cornerRadius = context.dp(cornerDp).toFloat()
   }
 
   private fun icon(res: Int, sizeDp: Int) = ImageView(context).apply {
     setImageResource(res)
-    minimumWidth = dp(sizeDp)
-    minimumHeight = dp(sizeDp)
+    minimumWidth = context.dp(sizeDp)
+    minimumHeight = context.dp(sizeDp)
   }
 
   private fun text(sizeSp: Float, bold: Boolean) = TextView(context).apply {
@@ -199,15 +205,9 @@ class FloatingPanel(
     typeface = if (bold) AppFonts.bold(context) else AppFonts.regular(context)
   }
 
-  private fun dp(value: Int) = TypedValue.applyDimension(
-    TypedValue.COMPLEX_UNIT_DIP,
-    value.toFloat(),
-    context.resources.displayMetrics,
-  ).toInt()
-
   private companion object {
-    const val PILL_COLOR = 0xFF171717.toInt()
-    const val PILL_STROKE = 0x3DFFFFFF
+    const val PILL_COLOR = OverlayColors.INK
+    const val PILL_STROKE = OverlayColors.HAIRLINE
     const val RIPPLE_ALPHA = 0x33000000
     const val CLOSED_CORNER_DP = 18
     const val OPEN_CORNER_DP = 20

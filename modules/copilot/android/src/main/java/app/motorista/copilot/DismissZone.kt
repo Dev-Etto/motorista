@@ -32,17 +32,17 @@ class DismissZone(
   private val circleBackground = GradientDrawable().apply {
     shape = GradientDrawable.OVAL
     setColor(IDLE_COLOR)
-    setStroke(dp(1), STROKE_COLOR)
+    setStroke(context.dp(1), STROKE_COLOR)
   }
   private val circle = FrameLayout(context).apply {
     background = circleBackground
-    elevation = dp(ELEVATION_DP).toFloat()
+    elevation = context.dp(ELEVATION_DP).toFloat()
     addView(
       ImageView(context).apply {
         setImageResource(R.drawable.ic_panel_close)
         imageTintList = ColorStateList.valueOf(Color.WHITE)
       },
-      FrameLayout.LayoutParams(dp(ICON_DP), dp(ICON_DP), Gravity.CENTER),
+      FrameLayout.LayoutParams(context.dp(ICON_DP), context.dp(ICON_DP), Gravity.CENTER),
     )
   }
   private val caption = TextView(context).apply {
@@ -51,10 +51,10 @@ class DismissZone(
     setTextColor(Color.WHITE)
     setTextSize(TypedValue.COMPLEX_UNIT_SP, LABEL_SP)
     typeface = AppFonts.bold(context)
-    setPadding(dp(LABEL_PADDING_H_DP), dp(LABEL_PADDING_V_DP), dp(LABEL_PADDING_H_DP), dp(LABEL_PADDING_V_DP))
+    setPadding(context.dp(LABEL_PADDING_H_DP), context.dp(LABEL_PADDING_V_DP), context.dp(LABEL_PADDING_H_DP), context.dp(LABEL_PADDING_V_DP))
     background = GradientDrawable().apply {
       setColor(IDLE_COLOR)
-      cornerRadius = dp(LABEL_CORNER_DP).toFloat()
+      cornerRadius = context.dp(LABEL_CORNER_DP).toFloat()
     }
   }
   private val view: View = LinearLayout(context).apply {
@@ -62,12 +62,12 @@ class DismissZone(
     gravity = Gravity.CENTER_HORIZONTAL
     clipChildren = false
     clipToPadding = false
-    setPadding(0, dp(PADDING_TOP_DP), 0, dp(PADDING_BOTTOM_DP))
+    setPadding(0, context.dp(PADDING_TOP_DP), 0, context.dp(PADDING_BOTTOM_DP))
     background = GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, intArrayOf(SCRIM_COLOR, Color.TRANSPARENT))
-    addView(circle, LinearLayout.LayoutParams(dp(CIRCLE_DP), dp(CIRCLE_DP)))
+    addView(circle, LinearLayout.LayoutParams(context.dp(CIRCLE_DP), context.dp(CIRCLE_DP)))
     addView(
       caption,
-      LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(LABEL_GAP_DP) },
+      LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = context.dp(LABEL_GAP_DP) },
     )
   }
   private var hovering = false
@@ -79,7 +79,7 @@ class DismissZone(
     paint()
     windowManager.addView(view, layoutParams())
     view.alpha = 0f
-    view.translationY = dp(ENTER_OFFSET_DP).toFloat()
+    view.translationY = context.dp(ENTER_OFFSET_DP).toFloat()
     view.animate().alpha(1f).translationY(0f).setDuration(ENTER_MS).setInterpolator(DecelerateInterpolator())
   }
 
@@ -122,16 +122,10 @@ class DismissZone(
     PixelFormat.TRANSLUCENT,
   ).apply { gravity = Gravity.BOTTOM }
 
-  private fun dp(value: Int) = TypedValue.applyDimension(
-    TypedValue.COMPLEX_UNIT_DIP,
-    value.toFloat(),
-    context.resources.displayMetrics,
-  ).toInt()
-
   private companion object {
-    const val IDLE_COLOR = 0xF2171717.toInt()
-    const val ACTIVE_COLOR = 0xFFB3261E.toInt()
-    const val STROKE_COLOR = 0x3DFFFFFF
+    const val IDLE_COLOR = OverlayColors.INK_TRANSLUCENT
+    const val ACTIVE_COLOR = OverlayColors.DANGER
+    const val STROKE_COLOR = OverlayColors.HAIRLINE
     const val SCRIM_COLOR = 0xCC000000.toInt()
     const val ACTIVE_SCALE = 1.2f
     const val CIRCLE_DP = 64
