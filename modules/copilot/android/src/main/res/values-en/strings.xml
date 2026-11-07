@@ -79,4 +79,6 @@
   <string name="panel_handle_description">Motorista, %1$s, %2$s</string>
   <string name="panel_state_open">Open</string>
   <string name="panel_state_closed">Closed</string>
+  <string name="shift_channel_name">Shift in progress</string>
+  <string name="shift_finish">Finish</string>
 </resources>

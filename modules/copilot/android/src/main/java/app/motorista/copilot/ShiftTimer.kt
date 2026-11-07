@@ -24,6 +24,7 @@ class ShiftTimer(private val context: Context) {
       .putBoolean(KEY_RUNNING, true)
       .apply()
     ForgottenShiftAlarm.schedule(context, 0, now)
+    notifyState(now)
   }
 
   fun pause(now: Long = System.currentTimeMillis()) = synchronized(LOCK) {
@@ -31,21 +32,31 @@ class ShiftTimer(private val context: Context) {
     if (!current.running) return
     prefs.edit().putLong(KEY_ACCUMULATED, current.elapsedMs).putBoolean(KEY_RUNNING, false).apply()
     ForgottenShiftAlarm.cancel(context)
+    notifyState(now)
   }
 
   fun resume(now: Long = System.currentTimeMillis()) = synchronized(LOCK) {
     if (state(now).running) return
     prefs.edit().putLong(KEY_RESUMED_AT, now).putBoolean(KEY_RUNNING, true).apply()
     ForgottenShiftAlarm.schedule(context, prefs.getLong(KEY_ACCUMULATED, 0), now)
+    notifyState(now)
   }
 
   fun restoreAlarm() {
     if (state().running) ForgottenShiftAlarm.schedule(context, prefs.getLong(KEY_ACCUMULATED, 0), prefs.getLong(KEY_RESUMED_AT, 0))
+    notifyState(System.currentTimeMillis())
   }
 
   fun reset() = synchronized(LOCK) {
     prefs.edit().clear().apply()
     ForgottenShiftAlarm.cancel(context)
+    notifyState(System.currentTimeMillis())
+  }
+
+  fun refreshNotification() = notifyState(System.currentTimeMillis())
+
+  private fun notifyState(now: Long) {
+    runCatching { ShiftNotification.update(context, state(now), now) }
   }
 
   private companion object {

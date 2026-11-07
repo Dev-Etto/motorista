@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { GoalProgressCard } from '@features/goals';
 import { InsightCard } from '@features/insights';
 import { NextStepCard } from '@features/onboarding';
-import { StartShiftActions } from '@features/shifts';
+import { ShiftControls } from '@features/shifts';
 import { useFormat } from '@shared/i18n/format';
 import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
 import { LearnMore } from '@shared/ui/LearnMore';
@@ -40,7 +40,7 @@ function DashboardContent({ data, onReload }: { data: DashboardData; onReload: (
       ) : null}
       {data.gpsRunning ? <Notice tone="accent" message={t('gpsRunning', unit)} /> : null}
       {data.gpsProblem ? <Notice tone="negative" message={t('gpsProblem', { ...unit, problem: data.gpsProblem })} /> : null}
-      <StartShiftActions />
+      <ShiftControls />
       {data.currentVehicle ? (
         <Card>
           <ListRow

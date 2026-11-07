@@ -4,7 +4,6 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { fonts, MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@shared/theme/theme';
 import { AppIcon } from '@shared/ui/AppIcon';
 import { AppText } from '@shared/ui/primitives';
-import { ShiftBar } from './ShiftBar';
 import { iconOfTab, OFFERS_TAB } from './tabs';
 import { badgeText } from './unseenOffers';
 import { useUnseenOffers } from './useUnseenOffers';
@@ -26,7 +25,6 @@ export function AppTabBar({ state, descriptors, emitter, navigateToTab, insets }
 
   return (
     <View>
-      <ShiftBar />
       <View
         accessibilityRole="tablist"
         style={[styles.bar, { backgroundColor: colors.surface, borderTopColor: colors.border, paddingBottom: insets.bottom + spacing.xs }]}

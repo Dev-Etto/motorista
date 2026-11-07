@@ -28,6 +28,10 @@
       android:name=".ForgottenShiftReceiver"
       android:exported="false" />
 
+    <receiver
+      android:name=".ShiftActionReceiver"
+      android:exported="false" />
+
     <service
       android:name=".FloatingTimerService"
       android:exported="false"
