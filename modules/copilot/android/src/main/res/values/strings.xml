@@ -17,7 +17,7 @@
   <string name="panel_pause">Pausar</string>
   <string name="panel_resume">Retomar</string>
   <string name="panel_start">Iniciar cronômetro</string>
-  <string name="card_per_km">Por km</string>
+  <string name="card_per_distance">Por %1$s</string>
   <string name="card_per_hour">Por hora</string>
   <string name="card_profit">Lucro</string>
   <string name="forgotten_channel_name">Jornada</string>
@@ -25,4 +25,55 @@
   <string name="forgotten_text">Se a jornada já acabou, abra o app e revise as horas.</string>
   <string name="offers_channel_name">Ofertas</string>
   <string name="offers_channel_description">Resultado das ofertas lidas pelo Copiloto</string>
+  <string name="offer_score_of_five">Nota %1$s de 5</string>
+  <string name="offer_no_score">Sem nota</string>
+  <string name="offer_score_short">Nota %1$s</string>
+  <string name="offer_profit_line">Lucro %1$s</string>
+  <string name="reason_no_costs">Cadastre seus custos para ver a nota</string>
+  <string name="reason_below_cost">Não cobre seu custo por %1$s</string>
+  <string name="reason_targets">%1$s: %2$s · hora: %3$s</string>
+  <string name="reason_no_target">sem mínimo</string>
+  <string name="reason_at_target">no mínimo</string>
+  <string name="reason_above">%1$d%% acima do mínimo</string>
+  <string name="reason_below">%1$d%% abaixo do mínimo</string>
+  <string name="reason_no_time">sem tempo na oferta</string>
+  <string name="spoken_score">Nota %1$s.</string>
+  <string name="spoken_per_km">%1$s por quilômetro.</string>
+  <string name="spoken_per_mi">%1$s por milha.</string>
+  <string name="spoken_profit">%1$s de lucro.</string>
+  <string name="spoken_loss">%1$s de prejuízo.</string>
+  <string name="spoken_amount_with_minor">%1$s e %2$s</string>
+  <string name="spoken_amount_short">%1$d e %2$d</string>
+  <plurals name="currency_brl_major">
+    <item quantity="one">%d real</item>
+    <item quantity="other">%d reais</item>
+  </plurals>
+  <plurals name="currency_brl_minor">
+    <item quantity="one">%d centavo</item>
+    <item quantity="other">%d centavos</item>
+  </plurals>
+  <plurals name="currency_usd_major">
+    <item quantity="one">%d dólar</item>
+    <item quantity="other">%d dólares</item>
+  </plurals>
+  <plurals name="currency_usd_minor">
+    <item quantity="one">%d centavo</item>
+    <item quantity="other">%d centavos</item>
+  </plurals>
+  <plurals name="currency_eur_major">
+    <item quantity="one">%d euro</item>
+    <item quantity="other">%d euros</item>
+  </plurals>
+  <plurals name="currency_eur_minor">
+    <item quantity="one">%d cêntimo</item>
+    <item quantity="other">%d cêntimos</item>
+  </plurals>
+  <plurals name="currency_mxn_major">
+    <item quantity="one">%d peso</item>
+    <item quantity="other">%d pesos</item>
+  </plurals>
+  <plurals name="currency_mxn_minor">
+    <item quantity="one">%d centavo</item>
+    <item quantity="other">%d centavos</item>
+  </plurals>
 </resources>

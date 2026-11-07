@@ -1,16 +1,18 @@
 import { z } from 'zod';
-import { loadGoalProgress } from '@/application/goalProgress';
-import { getDb, MIGRATIONS } from '@/data/database/connection';
-import { expenseRepository } from '@/data/repositories/expenseRepository';
-import { goalRepository } from '@/data/repositories/goalRepository';
-import { gpsSessionRepository } from '@/data/repositories/gpsSessionRepository';
-import { platformRepository } from '@/data/repositories/platformRepository';
-import { reminderRepository } from '@/data/repositories/reminderRepository';
-import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
-import { createShiftRepository, shiftRepository } from '@/data/repositories/shiftRepository';
-import { vehicleRepository } from '@/data/repositories/vehicleRepository';
-import { summarizeShifts, withLooseExpenses } from '@/domain/shift/summary';
-import { computeCosts, CostProfile } from '@/domain/vehicle/costs';
+import { loadGoalProgress } from '@application/goalProgress';
+import { getDb, MIGRATIONS } from '@data/database/connection';
+import { expenseRepository } from '@data/repositories/expenseRepository';
+import { goalRepository } from '@data/repositories/goalRepository';
+import { gpsSessionRepository } from '@data/repositories/gpsSessionRepository';
+import { platformRepository } from '@data/repositories/platformRepository';
+import { regionalSettings } from '@data/repositories/regionalSettings';
+import { reminderRepository } from '@data/repositories/reminderRepository';
+import { SETTING_KEYS, settingsRepository } from '@data/repositories/settingsRepository';
+import { createShiftRepository, shiftRepository } from '@data/repositories/shiftRepository';
+import { vehicleRepository } from '@data/repositories/vehicleRepository';
+import { EMPTY_SAVED_REGIONAL, LEGACY_REGIONAL } from '@domain/regional/regional';
+import { summarizeShifts, withLooseExpenses } from '@domain/shift/summary';
+import { computeCosts, CostProfile } from '@domain/vehicle/costs';
 import { openTestDatabase } from './sqliteHarness';
 
 jest.mock('expo-sqlite', () => jest.requireActual('./sqliteHarness').expoSqliteMock);
@@ -185,6 +187,14 @@ describe('veículo e custos', () => {
 });
 
 describe('plataformas', () => {
+  it('traduz só as plataformas padrão e não briga com um nome já usado', async () => {
+    await platformRepository.add('Private');
+    await platformRepository.localizeSystemNames({ private: 'Private', other: 'Other' });
+    const names = (await platformRepository.list()).map((platform) => platform.name);
+    expect(names).toEqual(expect.arrayContaining(['Uber', 'Particular', 'Other', 'Private']));
+    expect(names).not.toContain('Outros');
+  });
+
   it('remover esconde e adicionar de novo reativa, sem perder o histórico', async () => {
     await createVehicle();
     const id = await shiftRepository.save(shiftInput());
@@ -292,6 +302,32 @@ describe('metas, lembretes e ajustes', () => {
 
     await settingsRepository.set(SETTING_KEYS.theme, 'dark');
     expect(await settingsRepository.getEnum(SETTING_KEYS.theme, modes, 'system')).toBe('dark');
+  });
+});
+
+describe('idioma e região salvos', () => {
+  it('sem escolha, tudo segue o aparelho', async () => {
+    expect(await regionalSettings.load()).toEqual(EMPTY_SAVED_REGIONAL);
+  });
+
+  it('guarda e lê cada campo', async () => {
+    await regionalSettings.save(LEGACY_REGIONAL);
+    expect(await regionalSettings.load()).toEqual(LEGACY_REGIONAL);
+  });
+
+  it('nulo volta a seguir o aparelho sem mexer nos outros campos', async () => {
+    await regionalSettings.save(LEGACY_REGIONAL);
+    await regionalSettings.save({ language: null, market: null });
+    expect(await regionalSettings.load()).toEqual({ ...LEGACY_REGIONAL, language: null, market: null });
+  });
+
+  it('descarta valores fora do formato', async () => {
+    await settingsRepository.set(SETTING_KEYS.language, 'fr');
+    await settingsRepository.set(SETTING_KEYS.formatLocale, 'system');
+    await settingsRepository.set(SETTING_KEYS.market, 'Marte');
+    await settingsRepository.set(SETTING_KEYS.distanceUnit, 'léguas');
+    await settingsRepository.set(SETTING_KEYS.firstWeekday, '9');
+    expect(await regionalSettings.load()).toEqual(EMPTY_SAVED_REGIONAL);
   });
 });
 

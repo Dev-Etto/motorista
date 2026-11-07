@@ -17,6 +17,7 @@ object OfferParser {
   private const val BONUS_MARK = "+"
   private const val NUMBER = """\d{1,3}(?:\.\d{3})+,\d{2}|\d+(?:[.,]\d{1,2})?"""
   private val money = Regex("""(?<!\+)(?<!\+\s)R\$\s*($NUMBER)(?![.,]?\d)(?!\s*(?:/|por\s)\s*(?:km|h\b|hora|min))""", RegexOption.IGNORE_CASE)
+  private val foreignMarket = Regex("""(?:(?<![Rr])\$\s*\d|US\$|MX\$|€|£|\d\s*(?:mi|miles|milhas|millas)\b)""", RegexOption.IGNORE_CASE)
   private val exactMoney = Regex("""R\$\s*[\d.,]+""")
   private val acceptedPrice = Regex("""(?:aceitar|accept)\s+por\s+R\$\s*($NUMBER)""", RegexOption.IGNORE_CASE)
   private val notRideValue = Regex("""b[oô]nus|promo|ganhos?|saldo|total|hoje|semana|gorjeta""", RegexOption.IGNORE_CASE)
@@ -63,7 +64,7 @@ object OfferParser {
   fun parse(rawText: String): ParsedOffer? {
     val text = normalize(rawText)
     val parts = segments(text)
-    if (!looksLikeOffer(text, parts) || isPickupOnly(text)) return null
+    if (!looksLikeOffer(text, parts) || isPickupOnly(text) || foreignMarket.containsMatchIn(text)) return null
 
     val value = acceptedValue(text) ?: valueOf(parts) ?: return null
     val rate = parseRate(text)

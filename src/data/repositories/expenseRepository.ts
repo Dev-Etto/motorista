@@ -1,5 +1,5 @@
-import { getDb, SqlExecutor } from '@/data/database/connection';
-import { countsAgainstProfit, ExpenseCategory } from '@/domain/expense/expense';
+import { getDb, SqlExecutor } from '@data/database/connection';
+import { countsAgainstProfit, ExpenseCategory } from '@domain/expense/expense';
 
 export interface ExpenseRow {
   id: number;

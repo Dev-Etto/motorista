@@ -1,0 +1,91 @@
+{
+  "fuel": {
+    "gasoline": "Gasoline",
+    "ethanol": "Ethanol",
+    "cng": "CNG",
+    "electric": "Electric"
+  },
+  "kind": {
+    "car": "Car",
+    "motorcycle": "Motorcycle"
+  },
+  "ownership": {
+    "owned": "Paid off",
+    "financed": "Financed",
+    "rented": "Rented"
+  },
+  "defaultName": "My vehicle",
+  "problem": {
+    "consumption": "Enter the vehicle's fuel economy.",
+    "plannedDistance_km": "Enter how many kilometers you drive per month.",
+    "plannedDistance_mi": "Enter how many miles you drive per month.",
+    "fuelPrice": "Enter the fuel price.",
+    "fuelPriceTooHigh": "Check the fuel price. Use the format {{example}}."
+  },
+  "costExample": {
+    "title": "In practice",
+    "intro": "A {{value}} ride covering {{distance}}:",
+    "received": "You get",
+    "vehicle": "Goes to the car",
+    "vehicleDetail": "Fuel, wear and tear, and other costs",
+    "left": "What you keep"
+  },
+  "costSummary": {
+    "title": "Your cost per {{unit}}",
+    "fullPerDistance": "Total cost per {{unit}}",
+    "variable": "Fuel and wear",
+    "fixedMonthly": "Fixed bills per month",
+    "fixedPerDistance": "Fixed bills per {{unit}}",
+    "detailsTitle": "See where this cost comes from",
+    "fuel": "Fuel",
+    "oil": "Oil",
+    "tires": "Tires",
+    "maintenance": "Maintenance",
+    "insurance": "Insurance",
+    "taxes": "Vehicle tax and registration",
+    "payment": "Loan payment or rent",
+    "depreciation": "Depreciation",
+    "perMonth": "{{amount}}/month"
+  },
+  "quickForm": {
+    "title": "The basics"
+  },
+  "form": {
+    "estimateNotice": "The suggested amounts are estimates. Replace them with your own for a real result.",
+    "vehicleTitle": "Vehicle",
+    "name": "Name",
+    "kind": "Type",
+    "fuel": "Fuel",
+    "ownership": "Vehicle status",
+    "usageTitle": "Usage and fuel",
+    "plannedDistance_km": "Kilometers planned per month",
+    "plannedDistance_mi": "Miles planned per month",
+    "plannedDistanceHint": "The more you drive, the more your fixed costs are spread out.",
+    "fuelPrice": "Fuel price",
+    "consumption": "Fuel economy",
+    "consumptionHint": {
+      "kmPerLiter": "How many kilometers the vehicle goes on one liter.",
+      "litersPer100km": "How many liters the vehicle uses every 100 km.",
+      "mpg": "How many miles the vehicle goes on one gallon."
+    },
+    "wearTitle": "Wear and tear",
+    "oilChange": "Oil change",
+    "oilInterval": "Change interval",
+    "tires": "Set of tires",
+    "tiresLife": "Tire lifespan",
+    "maintenance": "Maintenance per month",
+    "fixedTitle": "Fixed costs",
+    "insurance": "Insurance per month",
+    "ipva": "Vehicle tax per year",
+    "licensing": "Registration per year",
+    "rent": "Rent per month",
+    "installment": "Loan payment per month",
+    "otherFixed": "Other fixed costs per month",
+    "depreciationTitle": "Depreciation",
+    "depreciationToggle": "Include depreciation",
+    "depreciationHint": "How much value the vehicle loses over time.",
+    "depreciationHintFinanced": "Off by default, so it doesn't add up with the loan payment.",
+    "vehicleValue": "Vehicle value",
+    "depreciationPerYear": "Depreciation per year"
+  }
+}

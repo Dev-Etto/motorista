@@ -1,0 +1,114 @@
+{
+  "status": {
+    "running": "Jornada em andamento",
+    "paused": "Jornada pausada"
+  },
+  "form": {
+    "tip_km": "Registre com o carro parado. Só ganhos, km e horas já bastam para ver o lucro.",
+    "tip_mi": "Registre com o carro parado. Só ganhos, milhas e horas já bastam para ver o lucro.",
+    "measurePending_km": "Você tem uma medição em andamento. Toque em Usar no registro para levar o tempo e os km, ou descarte a medição.",
+    "measurePending_mi": "Você tem uma medição em andamento. Toque em Usar no registro para levar o tempo e as milhas, ou descarte a medição.",
+    "timeAndDistance": "Tempo e distância",
+    "hoursLabel": "Horas trabalhadas",
+    "hoursSuffix": "h",
+    "kmMode": {
+      "manual": "Total",
+      "odometer": "Odômetro"
+    },
+    "kmLabel_km": "Km rodados",
+    "kmLabel_mi": "Milhas rodadas",
+    "kmMeasured": "Medido por GPS. Você pode ajustar.",
+    "odometerStart": "Odômetro inicial",
+    "odometerEnd": "Odômetro final",
+    "earningsTitle": "Ganhos por plataforma",
+    "dateLabel": "Data",
+    "expensesTitle": "Despesas do dia",
+    "otherExpenses": "Outras despesas",
+    "moreDetails": "Mais detalhes",
+    "startHourLabel": "Hora de início",
+    "startHourHint": "Ajuda a descobrir seu melhor período.",
+    "tripsLabel": "Corridas",
+    "saveButton": "Salvar jornada",
+    "errors": {
+      "invalidStartHour": "A hora de início vai de 0 a 23.",
+      "tooLong": "Uma jornada tem no máximo 24 horas. Confira as horas trabalhadas.",
+      "noEarnings": "Informe o ganho de pelo menos uma plataforma.",
+      "odometerOrder": "O odômetro final precisa ser maior que o inicial."
+    }
+  },
+  "result": {
+    "title": "Resultado",
+    "partial_km": "Resultado parcial: falta informar os km ou os custos do veículo.",
+    "partial_mi": "Resultado parcial: falta informar as milhas ou os custos do veículo.",
+    "gross": "Faturamento",
+    "vehicleCost": "Custo do veículo",
+    "expenses": "Despesas da jornada",
+    "grossPerKm_km": "Faturamento por km",
+    "grossPerKm_mi": "Faturamento por milha",
+    "grossPerHour": "Faturamento por hora",
+    "profitPerHour": "Lucro por hora"
+  },
+  "list": {
+    "addExpense": "Lançar despesa ou abastecimento",
+    "emptyDay": "Nenhuma jornada neste dia",
+    "emptyMonth": "Nenhuma jornada neste mês",
+    "emptyMessage": "Registre sua primeira jornada para ver seu lucro real.",
+    "title": "Jornadas",
+    "dayTitle": "Jornadas de {{date}}",
+    "shiftSubtitle": "{{gross}} em {{duration}}",
+    "shiftSubtitlePartial": "{{gross}} em {{duration}} • parcial",
+    "looseTitle": "Lançamentos avulsos",
+    "looseHint": "Toque em um lançamento para excluir.",
+    "deleteExpense": {
+      "title": "Excluir {{label}}?",
+      "message": "O lançamento de {{amount}} sai dos seus resultados."
+    }
+  },
+  "detail": {
+    "notFoundTitle": "Jornada não encontrada",
+    "notFoundMessage": "Ela pode ter sido excluída.",
+    "deleteTitle": "Excluir jornada?",
+    "title": "Detalhes",
+    "time": "Tempo",
+    "distance": "Distância",
+    "costPerKm_km": "Custo por km do dia",
+    "costPerKm_mi": "Custo por milha do dia",
+    "dayOffers": "Ofertas do dia",
+    "edit": "Editar"
+  },
+  "live": {
+    "idleTitle": "Medir agora",
+    "time": "Tempo",
+    "distance": "Distância",
+    "measureKm_km": "Medir km por GPS",
+    "measureKm_mi": "Medir milhas por GPS",
+    "measureHint": "A posição fica só no celular. Em deslocamentos pessoais, é só pausar.",
+    "applied": "Medição levada para o registro abaixo. Ela só é apagada depois de salvar a jornada.",
+    "pause": "Pausar",
+    "resume": "Retomar",
+    "start": "Iniciar",
+    "apply": "Usar no registro",
+    "discardButton": "Descartar medição",
+    "discard": {
+      "title": "Descartar medição?",
+      "message_km": "O tempo e os km medidos serão apagados.",
+      "message_mi": "O tempo e as milhas medidas serão apagados.",
+      "action": "Descartar"
+    }
+  },
+  "active": {
+    "forgotten": "O cronômetro está ligado há bastante tempo. Se você já terminou, é só revisar as horas.",
+    "onePerTime": "É uma jornada por vez. Finalize esta para começar outra.",
+    "finish": "Encerrar e registrar",
+    "continue": "Continuar jornada",
+    "new": "Nova jornada"
+  },
+  "gps": {
+    "startError": "Não foi possível iniciar o GPS. Confira a localização do celular e tente de novo.",
+    "stopped_km": "A medição de km parou. Ligue o GPS de novo para continuar.",
+    "stopped_mi": "A medição de milhas parou. Ligue o GPS de novo para continuar.",
+    "notificationTitle_km": "Medindo os km da jornada",
+    "notificationTitle_mi": "Medindo as milhas da jornada",
+    "notificationBody": "A posição fica só no aparelho. Pause em deslocamentos pessoais."
+  }
+}

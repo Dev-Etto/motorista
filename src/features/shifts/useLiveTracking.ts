@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
-import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
-import { reportError } from '@/shared/utils/reportError';
+import { SETTING_KEYS, settingsRepository } from '@data/repositories/settingsRepository';
+import { reportError } from '@shared/utils/reportError';
 import { useGpsTracking } from './useGpsTracking';
 import { useShiftTimer } from './useShiftTimer';
 

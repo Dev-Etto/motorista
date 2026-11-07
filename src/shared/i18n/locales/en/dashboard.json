@@ -1,0 +1,45 @@
+{
+  "copilotStopped": {
+    "title": "Copilot paused",
+    "message": "The accessibility permission was turned off. Turn it back on to evaluate offers again.",
+    "action": "Turn Copilot back on"
+  },
+  "gpsRunning_km": "Tracking your kilometers by GPS. For personal trips, just pause it.",
+  "gpsRunning_mi": "Tracking your miles by GPS. For personal trips, just pause it.",
+  "gpsProblem_km": "Kilometers aren't being tracked. {{problem}}",
+  "gpsProblem_mi": "Miles aren't being tracked. {{problem}}",
+  "todayTitle": "Today's profit",
+  "weekTitle": "This week",
+  "monthTitle": "This month",
+  "estimated": {
+    "title": "Estimated earnings today",
+    "subtitle": "Based on accepted rides. Check it when you log the shift."
+  },
+  "missingFixedCosts": "This profit doesn't include insurance, vehicle tax, loan payments, or rent yet. Add them in Vehicle and costs to see the real amount.",
+  "whyLess": {
+    "title": "Why is my profit lower than what I got paid?",
+    "body": "Part of what you get paid covers the car: fuel, wear and tear, insurance, and other costs. Profit is what's left after that.",
+    "costToday_km": "Right now, each kilometer costs about {{cost}}.",
+    "costToday_mi": "Right now, each mile costs about {{cost}}."
+  },
+  "reminder": "Reminder: {{title}}",
+  "backup": {
+    "message": "How about making a backup? That way your data is also stored outside your phone.",
+    "action": "Back up now"
+  },
+  "update": {
+    "message": "This version of the app is more than a month old. A new version may improve offer reading.",
+    "action": "Check for updates"
+  },
+  "profitCard": {
+    "gross": "Earnings",
+    "time": "Time",
+    "perKm_km": "Per km",
+    "perKm_mi": "Per mile",
+    "profitPerHour": "Profit per hour",
+    "partial_km_one": "{{count}} shift has no kilometers or no cost: the vehicle cost wasn't deducted from it.",
+    "partial_km_other": "{{count}} shifts have no kilometers or no cost: the vehicle cost wasn't deducted from them.",
+    "partial_mi_one": "{{count}} shift has no miles or no cost: the vehicle cost wasn't deducted from it.",
+    "partial_mi_other": "{{count}} shifts have no miles or no cost: the vehicle cost wasn't deducted from them."
+  }
+}

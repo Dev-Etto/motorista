@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="copilot_service_label">Offer Copilot</string>
+  <string name="copilot_service_description">Reads the fare, distance, time, and rating of offers in ride-hailing apps to show your numbers, and notes when you tap accept or decline, to estimate your earnings. If you turn on the option, it can also read the screen image on Uber and 99, on the device itself and without saving it. It doesn\'t touch the screen, doesn\'t accept or decline rides, and nothing leaves the device.</string>
+  <string name="drop_to_close">Drop here to close</string>
+  <string name="drop_to_hide">Drop here to hide</string>
+  <string name="floating_channel_name">Floating button</string>
+  <string name="floating_notification_title">Floating button on</string>
+  <string name="floating_notification_text">Shows the timer and offers on top of other apps.</string>
+  <string name="panel_hide_detail">Comes back when you open and leave the app</string>
+  <string name="panel_last_offer">Last offer</string>
+  <string name="panel_open_app">Open the app</string>
+  <string name="panel_hide_button">Hide the button</string>
+  <string name="panel_shift_running">Shift in progress</string>
+  <string name="panel_shift_paused">Shift paused</string>
+  <string name="panel_shift_idle">No shift started</string>
+  <string name="panel_pause">Pause</string>
+  <string name="panel_resume">Resume</string>
+  <string name="panel_start">Start timer</string>
+  <string name="card_per_distance">Per %1$s</string>
+  <string name="card_per_hour">Per hour</string>
+  <string name="card_profit">Profit</string>
+  <string name="forgotten_channel_name">Shift</string>
+  <string name="forgotten_title">The timer is still running</string>
+  <string name="forgotten_text">If your shift is already over, open the app and review the hours.</string>
+  <string name="offers_channel_name">Offers</string>
+  <string name="offers_channel_description">Results for offers read by Copilot</string>
+  <string name="offer_score_of_five">Score %1$s out of 5</string>
+  <string name="offer_no_score">No score</string>
+  <string name="offer_score_short">Score %1$s</string>
+  <string name="offer_profit_line">Profit %1$s</string>
+  <string name="reason_no_costs">Set up your costs to see the score</string>
+  <string name="reason_below_cost">Doesn\'t cover your cost per %1$s</string>
+  <string name="reason_targets">%1$s: %2$s · hour: %3$s</string>
+  <string name="reason_no_target">no minimum</string>
+  <string name="reason_at_target">at minimum</string>
+  <string name="reason_above">%1$d%% above minimum</string>
+  <string name="reason_below">%1$d%% below minimum</string>
+  <string name="reason_no_time">no time in the offer</string>
+  <string name="spoken_score">Score %1$s.</string>
+  <string name="spoken_per_km">%1$s per kilometer.</string>
+  <string name="spoken_per_mi">%1$s per mile.</string>
+  <string name="spoken_profit">%1$s profit.</string>
+  <string name="spoken_loss">%1$s loss.</string>
+  <string name="spoken_amount_with_minor">%1$s and %2$s</string>
+  <string name="spoken_amount_short">%1$d %2$d</string>
+  <plurals name="currency_brl_major">
+    <item quantity="one">%d real</item>
+    <item quantity="other">%d reais</item>
+  </plurals>
+  <plurals name="currency_brl_minor">
+    <item quantity="one">%d centavo</item>
+    <item quantity="other">%d centavos</item>
+  </plurals>
+  <plurals name="currency_usd_major">
+    <item quantity="one">%d dollar</item>
+    <item quantity="other">%d dollars</item>
+  </plurals>
+  <plurals name="currency_usd_minor">
+    <item quantity="one">%d cent</item>
+    <item quantity="other">%d cents</item>
+  </plurals>
+  <plurals name="currency_eur_major">
+    <item quantity="one">%d euro</item>
+    <item quantity="other">%d euros</item>
+  </plurals>
+  <plurals name="currency_eur_minor">
+    <item quantity="one">%d cent</item>
+    <item quantity="other">%d cents</item>
+  </plurals>
+  <plurals name="currency_mxn_major">
+    <item quantity="one">%d peso</item>
+    <item quantity="other">%d pesos</item>
+  </plurals>
+  <plurals name="currency_mxn_minor">
+    <item quantity="one">%d centavo</item>
+    <item quantity="other">%d centavos</item>
+  </plurals>
+</resources>

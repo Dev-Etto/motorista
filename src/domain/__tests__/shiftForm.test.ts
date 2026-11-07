@@ -1,4 +1,4 @@
-import { kmFromEntry, validateShiftForm } from '../shift/shiftForm';
+import { kmFromEntry, validateShiftForm } from '@domain/shift/shiftForm';
 
 const valid = { hasInvalidNumber: false, hasInvalidHour: false, minutes: 480, grossCents: 20000, kmMode: 'manual' as const, km: 100, odometerTyped: false };
 

@@ -28,6 +28,26 @@ export async function assertForeignKeys(tx: SqlExecutor): Promise<void> {
   const broken = await tx.getAllAsync('PRAGMA foreign_key_check');
   if (broken.length > 0) throw new Error('foreign_key_check');
 }
+export const LEGACY_REGIONAL_SQL = `
+  INSERT INTO settings (key, value)
+  SELECT legacy.key, legacy.value FROM (
+    SELECT 'language' AS key, 'pt-BR' AS value
+    UNION ALL SELECT 'format_locale', 'pt-BR'
+    UNION ALL SELECT 'market', 'BR'
+    UNION ALL SELECT 'distance_unit', 'km'
+    UNION ALL SELECT 'volume_unit', 'L'
+    UNION ALL SELECT 'consumption_unit', 'km/L'
+    UNION ALL SELECT 'first_weekday', '1'
+  ) AS legacy
+  WHERE EXISTS (SELECT 1 FROM settings WHERE key = 'onboarded')
+  ON CONFLICT(key) DO NOTHING;
+  `;
+
+export const SYSTEM_PLATFORMS_SQL = `
+  UPDATE platforms SET system_key = 'private' WHERE name = 'Particular' AND system_key IS NULL;
+  UPDATE platforms SET system_key = 'other' WHERE name = 'Outros' AND system_key IS NULL;
+`;
+
 export const MIGRATIONS: string[] = [
   `
   CREATE TABLE vehicles (
@@ -130,9 +150,18 @@ export const MIGRATIONS: string[] = [
   `
   ALTER TABLE gps_session ADD COLUMN cycle INTEGER NOT NULL DEFAULT 0;
   `,
+  LEGACY_REGIONAL_SQL,
+  `
+  ALTER TABLE platforms ADD COLUMN system_key TEXT;
+  ${SYSTEM_PLATFORMS_SQL}
+  `,
 ];
 
 export const SCHEMA_VERSION = MIGRATIONS.length;
+
+export const REGIONAL_SCHEMA_VERSION = MIGRATIONS.indexOf(LEGACY_REGIONAL_SQL) + 1;
+
+export const SYSTEM_PLATFORMS_SCHEMA_VERSION = MIGRATIONS.findIndex((migration) => migration.includes(SYSTEM_PLATFORMS_SQL)) + 1;
 
 export async function migrate(): Promise<void> {
   const db = getDb();

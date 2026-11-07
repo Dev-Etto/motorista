@@ -1,0 +1,91 @@
+{
+  "fuel": {
+    "gasoline": "Gasolina",
+    "ethanol": "Etanol",
+    "cng": "GNV",
+    "electric": "Elétrico"
+  },
+  "kind": {
+    "car": "Carro",
+    "motorcycle": "Moto"
+  },
+  "ownership": {
+    "owned": "Quitado",
+    "financed": "Financiado",
+    "rented": "Alugado"
+  },
+  "defaultName": "Meu veículo",
+  "problem": {
+    "consumption": "Informe o consumo do veículo.",
+    "plannedDistance_km": "Informe quantos km você roda por mês.",
+    "plannedDistance_mi": "Informe quantas milhas você roda por mês.",
+    "fuelPrice": "Informe o preço do combustível.",
+    "fuelPriceTooHigh": "Confira o preço do combustível. Use o formato {{example}}."
+  },
+  "costExample": {
+    "title": "Na prática",
+    "intro": "Uma corrida de {{value}} com {{distance}}:",
+    "received": "Você recebe",
+    "vehicle": "Vai para o carro",
+    "vehicleDetail": "Combustível, desgaste e outros custos",
+    "left": "Sobra para você"
+  },
+  "costSummary": {
+    "title": "Seu custo por {{unit}}",
+    "fullPerDistance": "Custo total por {{unit}}",
+    "variable": "Combustível e desgaste",
+    "fixedMonthly": "Contas fixas no mês",
+    "fixedPerDistance": "Contas fixas por {{unit}}",
+    "detailsTitle": "Ver de onde vem esse custo",
+    "fuel": "Combustível",
+    "oil": "Óleo",
+    "tires": "Pneus",
+    "maintenance": "Manutenção",
+    "insurance": "Seguro",
+    "taxes": "IPVA e licenciamento",
+    "payment": "Parcela ou aluguel",
+    "depreciation": "Depreciação",
+    "perMonth": "{{amount}}/mês"
+  },
+  "quickForm": {
+    "title": "O básico"
+  },
+  "form": {
+    "estimateNotice": "Os valores sugeridos são estimativas. Troque pelos seus para ter um resultado real.",
+    "vehicleTitle": "Veículo",
+    "name": "Nome",
+    "kind": "Tipo",
+    "fuel": "Combustível",
+    "ownership": "Situação do veículo",
+    "usageTitle": "Uso e combustível",
+    "plannedDistance_km": "Km previstos por mês",
+    "plannedDistance_mi": "Milhas previstas por mês",
+    "plannedDistanceHint": "Quanto mais você roda, mais os custos fixos se diluem.",
+    "fuelPrice": "Preço do combustível",
+    "consumption": "Consumo",
+    "consumptionHint": {
+      "kmPerLiter": "Quantos km o veículo faz com um litro.",
+      "litersPer100km": "Quantos litros o veículo gasta a cada 100 km.",
+      "mpg": "Quantas milhas o veículo faz com um galão."
+    },
+    "wearTitle": "Desgaste",
+    "oilChange": "Troca de óleo",
+    "oilInterval": "Intervalo da troca",
+    "tires": "Jogo de pneus",
+    "tiresLife": "Vida útil dos pneus",
+    "maintenance": "Manutenção por mês",
+    "fixedTitle": "Custos fixos",
+    "insurance": "Seguro por mês",
+    "ipva": "IPVA por ano",
+    "licensing": "Licenciamento por ano",
+    "rent": "Aluguel por mês",
+    "installment": "Parcela por mês",
+    "otherFixed": "Outros custos fixos por mês",
+    "depreciationTitle": "Depreciação",
+    "depreciationToggle": "Considerar a depreciação",
+    "depreciationHint": "O quanto o veículo perde de valor com o tempo.",
+    "depreciationHintFinanced": "Desligada por padrão, para não somar com a parcela.",
+    "vehicleValue": "Valor do veículo",
+    "depreciationPerYear": "Depreciação por ano"
+  }
+}

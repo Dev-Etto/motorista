@@ -1,0 +1,27 @@
+{
+  "category": {
+    "fuel": "Carga de combustible",
+    "maintenance": "Mantenimiento",
+    "toll": "Peaje",
+    "parking": "Estacionamiento",
+    "wash": "Lavado",
+    "food": "Comida",
+    "other": "Otro gasto"
+  },
+  "form": {
+    "option": {
+      "fuel": "Cargar combustible",
+      "maintenance": "Mantenimiento",
+      "other": "Otro"
+    },
+    "valueRequired": "Ingresa un valor mayor que cero.",
+    "dateLabel": "Fecha",
+    "valueLabel": "Valor",
+    "litersLabel_L": "Litros (opcional)",
+    "litersLabel_gal": "Galones (opcional)",
+    "odometerLabel": "Odómetro (opcional)",
+    "noteLabel": "Nota (opcional)"
+  },
+  "alreadyInCost_km": "{{category}} ya está en el costo por km. El valor sirve para comparar lo previsto con lo pagado.",
+  "alreadyInCost_mi": "{{category}} ya está en el costo por milla. El valor sirve para comparar lo previsto con lo pagado."
+}

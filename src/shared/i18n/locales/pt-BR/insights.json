@@ -1,0 +1,78 @@
+{
+  "realProfit": {
+    "title": "Lucro real",
+    "messageKept": "De cada {{hundred}} faturados, {{share}} ficaram com você.",
+    "messageMissing": "Para cada {{hundred}} faturados, faltaram {{share}} para cobrir os custos.",
+    "basis_one": "Faturamento {{gross}} e lucro {{profit}} em {{count}} jornada.",
+    "basis_other": "Faturamento {{gross}} e lucro {{profit}} em {{count}} jornadas."
+  },
+  "bestWeekday": {
+    "title": "Melhor dia",
+    "message": "{{weekday}} rendeu o maior lucro por hora nas últimas 4 semanas.",
+    "basis_one": "{{perHour}} em {{count}} jornada.",
+    "basis_other": "{{perHour}} em {{count}} jornadas."
+  },
+  "bestPeriod": {
+    "title": "Melhor período",
+    "message": "Jornadas iniciadas {{best}} rendem {{gap}} a mais do que as {{worst}}.",
+    "basis": "{{bestName}}: {{bestRate}}. {{worstName}}: {{worstRate}}."
+  },
+  "period": {
+    "dawn": "madrugada",
+    "morning": "manhã",
+    "afternoon": "tarde",
+    "night": "noite"
+  },
+  "periodStart": {
+    "dawn": "de madrugada",
+    "morning": "de manhã",
+    "afternoon": "de tarde",
+    "night": "de noite"
+  },
+  "platform": {
+    "title": "Plataforma",
+    "message": "{{platform}} trouxe {{share}} do seu faturamento.",
+    "basis": "{{cents}} de {{gross}}."
+  },
+  "biggestCost": {
+    "title": "Maior custo",
+    "basis": "{{value}} de {{full}}.",
+    "message_km": "{{part}} é {{share}} do seu custo por km.",
+    "message_mi": "{{part}} é {{share}} do seu custo por milha."
+  },
+  "costPart": {
+    "fuel": "Combustível",
+    "oil": "Óleo",
+    "tires": "Pneus",
+    "maintenance": "Manutenção",
+    "fixed": "Custos fixos"
+  },
+  "efficiency": {
+    "title": "Eficiência",
+    "message": "Seu lucro subiu, mas o lucro por hora caiu: você trabalhou mais para chegar lá.",
+    "basis": "Por hora: {{previous}} para {{last}} nos últimos 7 dias."
+  },
+  "breakEven": {
+    "title": "Ponto de equilíbrio",
+    "message": "Você precisa faturar {{daily}} por dia só para cobrir os custos.",
+    "basis_one": "{{count}} dia por mês e {{distance}} por dia, em média.",
+    "basis_other": "{{count}} dias por mês e {{distance}} por dia, em média."
+  },
+  "projection": {
+    "title": "Projeção do mês",
+    "message": "Nesse ritmo, você fecha o mês com {{projected}} de lucro.",
+    "basis_one": "{{profit}} em {{count}} dia do mês.",
+    "basis_other": "{{profit}} em {{count}} dias do mês."
+  },
+  "fuelGap": {
+    "title": "Combustível",
+    "messageAbove": "Você gastou {{gap}} a mais do que o previsto. Vale revisar o consumo.",
+    "messageBelow": "Você gastou {{gap}} a menos do que o previsto. Vale revisar o consumo.",
+    "basis": "Previsto {{expected}} e pago {{paid}}."
+  },
+  "fixedWeight": {
+    "title": "Peso do custo fixo",
+    "message": "Rodando {{extra}} a mais por mês, seu custo cairia {{saving}}.",
+    "basis": "Fixos de {{fixed}}/mês em {{planned}} previstos."
+  }
+}

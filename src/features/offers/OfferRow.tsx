@@ -1,27 +1,30 @@
+import type { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
-import { OfferStatus, statusOf } from '@/domain/offer/offerLog';
-import { spacing, useTheme } from '@/shared/theme/theme';
-import { PlatformBadge } from '@/shared/ui/PlatformBadge';
-import { AppText } from '@/shared/ui/primitives';
-import { ScoreBadge } from '@/shared/ui/ScoreBadge';
-import { formatPerHour, formatPerKm } from '@/shared/utils/format';
-import { formatBRL, formatNumber } from '@/shared/utils/money';
+import { OfferStatus, statusOf } from '@domain/offer/offerLog';
 import { OfferHistoryEntry } from '@modules/copilot';
+import { Formatter, useFormat } from '@shared/i18n/format';
+import { spacing, useTheme } from '@shared/theme/theme';
+import { PlatformBadge } from '@shared/ui/PlatformBadge';
+import { AppText } from '@shared/ui/primitives';
+import { ScoreBadge } from '@shared/ui/ScoreBadge';
 
 const REASON_SEPARATOR = ' · ';
 
-function describeStatus(entry: OfferHistoryEntry): string {
+function describeStatus(entry: OfferHistoryEntry, t: TFunction<'offers'>, format: Formatter): string {
   const labels: Record<OfferStatus, string> = {
-    accepted: 'Aceita',
-    declined: 'Recusada',
-    countered: `Contraoferta de ${formatBRL(entry.counterCents ?? entry.valueCents)}`,
-    unanswered: 'Sem resposta',
+    accepted: t('status.accepted'),
+    declined: t('status.declined'),
+    countered: t('status.countered', { amount: format.money(entry.counterCents ?? entry.valueCents) }),
+    unanswered: t('status.unanswered'),
   };
   return labels[statusOf(entry)];
 }
 
 export function OfferRow({ entry }: { entry: OfferHistoryEntry }) {
+  const { t } = useTranslation('offers');
   const colors = useTheme();
+  const format = useFormat();
 
   return (
     <View style={[styles.row, { borderBottomColor: colors.border }]}>
@@ -30,13 +33,15 @@ export function OfferRow({ entry }: { entry: OfferHistoryEntry }) {
           <PlatformBadge name={entry.source} />
         </View>
         <AppText variant="subtitle" bold style={styles.value}>
-          {formatBRL(entry.valueCents)}
+          {format.money(entry.valueCents)}
         </AppText>
         <ScoreBadge score={entry.score} color={entry.color} />
       </View>
-      <AppText>{entry.minutes > 0 ? `${formatNumber(entry.km)} km • ${entry.minutes} min` : `${formatNumber(entry.km)} km`}</AppText>
+      <AppText>
+        {entry.minutes > 0 ? t('row.distanceWithTime', { distance: format.distance(entry.km), minutes: entry.minutes }) : format.distance(entry.km)}
+      </AppText>
       <AppText variant="caption" tone="muted">
-        {entry.minutes > 0 ? `${formatPerKm(entry.perKmCents)} • ${formatPerHour(entry.perHourCents)}` : formatPerKm(entry.perKmCents)}
+        {entry.minutes > 0 ? `${format.perDistance(entry.perKmCents)} • ${format.perHour(entry.perHourCents)}` : format.perDistance(entry.perKmCents)}
       </AppText>
       {entry.reason ? (
         <AppText variant="caption" tone="muted">
@@ -44,7 +49,7 @@ export function OfferRow({ entry }: { entry: OfferHistoryEntry }) {
         </AppText>
       ) : null}
       <AppText bold tone={statusOf(entry) === 'accepted' ? 'positive' : 'muted'}>
-        {describeStatus(entry)}
+        {describeStatus(entry, t, format)}
       </AppText>
     </View>
   );

@@ -1,1 +1,1 @@
-export { default } from '@/features/settings/TermsScreen';
+export { default } from '@features/settings/TermsScreen';

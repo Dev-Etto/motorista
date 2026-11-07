@@ -1,0 +1,76 @@
+{
+  "reason": {
+    "noCosts": "Cadastre seus custos para ver a nota",
+    "belowCost": "Não cobre seu custo por {{unit}}",
+    "targets": "{{unit}}: {{perKm}} · hora: {{perHour}}",
+    "noTarget": "sem mínimo",
+    "atTarget": "no mínimo",
+    "above": "{{percent}}% acima do mínimo",
+    "below": "{{percent}}% abaixo do mínimo",
+    "noTime": "sem tempo na oferta"
+  },
+  "status": {
+    "accepted": "Aceita",
+    "declined": "Recusada",
+    "countered": "Contraoferta de {{amount}}",
+    "unanswered": "Sem resposta"
+  },
+  "row": {
+    "distanceWithTime": "{{distance}} • {{minutes}} min"
+  },
+  "estimate": {
+    "title": "Faturamento estimado",
+    "disclaimer": "É uma sugestão, feita com as corridas que o app viu você aceitar. O valor real pode mudar com cancelamentos, gorjetas e taxas. Se precisar, corrija ao registrar a jornada.",
+    "trips_one": "1 corrida aceita",
+    "trips_other": "{{count}} corridas aceitas"
+  },
+  "outcomeSummary": {
+    "received": "Recebidas",
+    "accepted": "Aceitas",
+    "notAccepted": "Não aceitas",
+    "perDistanceAccepted": "{{label}} das aceitas",
+    "perDistanceNotAccepted": "{{label}} das não aceitas"
+  },
+  "shiftEstimate": {
+    "title": "Sugestão pelos aceites",
+    "intro": "Pelas corridas que o app viu você aceitar, estimamos este faturamento:",
+    "total": "Total estimado",
+    "unmatched": "{{platforms}} não está em Plataformas. Inclua para usar este valor.",
+    "applied": "Valores preenchidos abaixo. Confira e ajuste antes de salvar.",
+    "apply": "Usar estes valores"
+  },
+  "screen": {
+    "periodLabel": "Período",
+    "period": {
+      "today": "Hoje",
+      "yesterday": "Ontem",
+      "week": "7 dias",
+      "month": "30 dias",
+      "custom": "Escolher datas"
+    },
+    "from": "De",
+    "to": "Até",
+    "appLabel": "App",
+    "allSources": "Todos",
+    "outcomeTitle": "Aceitas e não aceitas",
+    "listTitle": "Ofertas",
+    "outcomeLabel": "Resultado",
+    "outcome": {
+      "all": "Todas",
+      "accepted": "Aceitas",
+      "notAccepted": "Não aceitas"
+    },
+    "seeMore": "Ver mais",
+    "emptyTitle": "Nenhuma oferta aqui",
+    "emptyMessage": "Troque os filtros ou aguarde as próximas ofertas lidas pelo Copiloto.",
+    "autoRecord": "O app registra sozinho o que você aceita. Se o valor sugerido estiver diferente do que recebeu, é só corrigir ao registrar a jornada.",
+    "settingsTitle": "Ajustes",
+    "estimating": "Estimar faturamento pelos aceites",
+    "estimatingHint": "Nota quando você toca em aceitar ou recusar nos apps de corrida. Nada sai do celular.",
+    "clearButton": "Limpar as ofertas",
+    "clearConfirm": {
+      "title": "Limpar as ofertas?",
+      "message": "O histórico e a estimativa de faturamento serão apagados. As jornadas salvas não mudam."
+    }
+  }
+}

@@ -1,0 +1,300 @@
+{
+  "more": {
+    "section": {
+      "work": "Seu trabalho",
+      "copilot": "Copiloto e permissões",
+      "data": "Seus dados",
+      "help": "Ajuda"
+    },
+    "item": {
+      "vehicle": {
+        "title": "Veículo e custos",
+        "subtitle": "Seu custo por {{unit}}"
+      },
+      "goal": {
+        "title": "Meta e mínimos",
+        "subtitle": "Seu lucro e o mínimo por corrida"
+      },
+      "offers": {
+        "title": "Ofertas e faturamento",
+        "subtitle": "Aceitas, não aceitas e o valor estimado"
+      },
+      "platforms": {
+        "title": "Plataformas",
+        "subtitle": "Apps em que você trabalha"
+      },
+      "reminders": {
+        "title": "Lembretes",
+        "subtitle": "Óleo, pneus, revisões e fim do dia"
+      },
+      "copilot": {
+        "title": "Copiloto de ofertas",
+        "subtitle": "Leitura, cartão, voz e botão flutuante"
+      },
+      "permissions": {
+        "title": "Permissões",
+        "subtitle": "O que o app pode usar"
+      },
+      "backup": {
+        "title": "Backup",
+        "subtitle": "Salvar e restaurar seus dados"
+      },
+      "summary": {
+        "title": "Meu resumo",
+        "subtitle": "Números de uso para compartilhar"
+      },
+      "privacy": {
+        "title": "Privacidade",
+        "subtitle": "O que acontece com seus dados"
+      },
+      "help": {
+        "title": "Ajuda",
+        "subtitle": "Como o app funciona"
+      },
+      "report": {
+        "title": "Relatar um problema",
+        "subtitle": "Ou sugerir uma melhoria"
+      },
+      "terms": {
+        "title": "Termos de uso",
+        "subtitle": "As regras para usar o app"
+      },
+      "region": {
+        "title": "Idioma e região",
+        "subtitle": "Idioma, moeda, unidades e formato de datas"
+      }
+    },
+    "about": {
+      "title": "Sobre o app",
+      "donateTitle": "Apoiar o projeto",
+      "donateSubtitle": "O app é gratuito. Ajude a mantê-lo.",
+      "updateTitle": "Verificar atualização",
+      "updateSubtitle": "Abre a página de versões no navegador.",
+      "versionTitle": "Versão {{version}}",
+      "versionSubtitle": "Ver o código e as novidades."
+    }
+  },
+  "appearance": {
+    "title": "Tema",
+    "system": "Automático",
+    "light": "Claro",
+    "dark": "Escuro"
+  },
+  "backup": {
+    "never": "Nunca",
+    "tip": "Guarde o arquivo fora do celular, como no Drive ou em seu e-mail. Na troca de aparelho, use Restaurar.",
+    "intro": "Seus dados ficam só neste celular. Com um backup, você os leva para onde quiser, inclusive se trocar de aparelho ou reinstalar o app. O arquivo não tem senha: guarde em um lugar só seu.",
+    "cardTitle": "Backup",
+    "lastBackup": "Último backup",
+    "exportButton": "Fazer backup",
+    "restoreButton": "Restaurar de um arquivo",
+    "undoButton": "Desfazer a última restauração",
+    "restoreConfirm": {
+      "title": "Restaurar backup?",
+      "message": "Os dados atuais serão substituídos pelos do arquivo.",
+      "action": "Restaurar"
+    },
+    "undoConfirm": {
+      "title": "Desfazer a restauração?",
+      "message": "Os dados voltam a ser os de antes da última restauração.",
+      "action": "Desfazer"
+    },
+    "exported": "Backup gerado. Confira se o arquivo foi salvo onde você escolheu.",
+    "exportFailed": "Não foi possível gerar o backup.",
+    "restoreFailed": "A restauração falhou e seus dados atuais foram mantidos.",
+    "restored": "Dados restaurados com sucesso.",
+    "restoredPartial": "Dados restaurados com sucesso. Confira os lembretes e o Copiloto.",
+    "undone": "Restauração desfeita. Seus dados anteriores voltaram.",
+    "undonePartial": "Restauração desfeita. Seus dados anteriores voltaram. Confira os lembretes e o Copiloto.",
+    "invalid": {
+      "corrupted": "O arquivo está corrompido ou não é um backup do app.",
+      "notBackup": "Este arquivo não é um backup válido do app.",
+      "newerVersion": "Este backup veio de uma versão mais nova do app. Atualize o app e tente de novo."
+    },
+    "marketConfirm": {
+      "title": "Restaurar de outro país?",
+      "message": "Este backup é de {{country}}. A moeda e a leitura das ofertas passam a seguir {{country}}, e os valores voltam com os mesmos números, sem conversão de câmbio.",
+      "action": "Restaurar"
+    }
+  },
+  "dailyReminder": {
+    "title": "Fim do dia",
+    "toggleLabel": "Lembrar de registrar a jornada",
+    "toggleHint": "Um aviso por dia, no horário que você escolher.",
+    "denied": "Permita as notificações do app para receber o lembrete."
+  },
+  "notifications": {
+    "maintenanceTitle": "Lembrete de manutenção",
+    "dailyTitle": "Registrou sua jornada de hoje?",
+    "dailyBody": "Em menos de um minuto você vê quanto sobrou."
+  },
+  "summary": {
+    "cardTitle": "Uso do app",
+    "shifts": "Jornadas registradas",
+    "days": "Dias com jornada",
+    "first": "Primeira jornada",
+    "last": "Última jornada",
+    "version": "Versão",
+    "disclaimer": "Só estes números são compartilhados, sem valores, locais ou dados pessoais. O envio só acontece se você quiser.",
+    "shareButton": "Compartilhar resumo",
+    "shareMessage": "Resumo do app {{appName}}\nVersão: {{version}}\nJornadas: {{total}}\nDias com jornada: {{days}}\nPrimeira: {{first}}\nÚltima: {{last}}"
+  },
+  "platforms": {
+    "intro": "Estas plataformas aparecem no registro da jornada e nos relatórios.",
+    "newTitle": "Nova plataforma",
+    "nameLabel": "Nome",
+    "namePlaceholder": "iFood, Lalamove…",
+    "keepOne": "Mantenha pelo menos uma plataforma para registrar seus ganhos.",
+    "listTitle": "Suas plataformas",
+    "removeConfirm": {
+      "title": "Remover {{name}}?",
+      "message": "Jornadas antigas continuam com este nome."
+    }
+  },
+  "privacy": {
+    "data": {
+      "title": "Seus dados",
+      "body": "Tudo fica no seu celular. O app não tem conta, servidor nem permissão de internet. Os links do projeto abrem no seu navegador."
+    },
+    "permissions": {
+      "title": "Permissões",
+      "body": "Localização, notificações, sobreposição de tela e acessibilidade são opcionais e só são usadas nas funções que você ligar. Se você ligar a leitura da imagem da tela no Copiloto, o app pode usá-la na Uber e na 99 para achar a oferta. A imagem é lida no celular e descartada na hora, sem ser salva ou enviada."
+    },
+    "copilot": {
+      "title": "Copiloto",
+      "body": "Lê valor, distância, tempo e avaliação das ofertas. Guarda só os números, o resultado e se você tocou em aceitar ou recusar, sem a avaliação, nomes, endereços, conversas ou imagens. Não toca na tela. As ofertas ficam guardadas por até 12 meses, e a estimativa de faturamento pode ser desligada em Ofertas e faturamento. A notificação da oferta não aparece na tela de bloqueio."
+    },
+    "backup": {
+      "title": "Backup",
+      "body": "Só sai do aparelho quando você compartilha o arquivo. Ele traz seus dados financeiros e não tem senha, então guarde em um lugar só seu."
+    },
+    "estimates": {
+      "title": "Estimativas",
+      "body": "Os resultados são estimativas feitas com os dados que você informa. Não são aconselhamento financeiro nem fiscal."
+    }
+  },
+  "terms": {
+    "about": {
+      "title": "O que é o app",
+      "body": "O {{appName}} ajuda você a entender custos, lucro e ofertas. É gratuito, não pede conta e funciona sem internet."
+    },
+    "estimates": {
+      "title": "Estimativas",
+      "body": "Os resultados são estimativas feitas com os dados que você informa e com o que o app consegue ler na tela. Eles podem ter erros, não garantem ganhos e não são aconselhamento financeiro, fiscal ou jurídico."
+    },
+    "decisions": {
+      "title": "Suas decisões",
+      "body": "O app só informa. Ele não aceita nem recusa corridas, e toda decisão é sua."
+    },
+    "traffic": {
+      "title": "No trânsito",
+      "body": "Configure e consulte o app só com o carro parado. Dirigindo, use a voz. Você é responsável por cumprir as leis de trânsito."
+    },
+    "platforms": {
+      "title": "Plataformas",
+      "body": "O {{appName}} é independente e não tem vínculo com Uber, 99, inDrive ou outras plataformas. Cada uma tem regras próprias sobre apps de apoio, e cabe a você conhecê-las antes de usar o Copiloto. As plataformas podem identificar apps que usam acessibilidade ou sobreposição, e o uso pode ter consequências na sua conta."
+    },
+    "data": {
+      "title": "Seus dados",
+      "body": "Seus dados ficam no seu celular, sem cópia em nossos servidores. Se você perder o aparelho ou desinstalar o app, eles se perdem. Por isso, faça backups e guarde o arquivo em um lugar só seu."
+    },
+    "warranty": {
+      "title": "Sem garantia",
+      "body": "O app é oferecido como está, sem garantia de funcionamento contínuo ou de compatibilidade com as plataformas. Na medida permitida pela lei, os responsáveis pelo projeto não respondem por perdas decorrentes do uso."
+    },
+    "license": {
+      "title": "Licença",
+      "body": "Você pode usar o app no seu trabalho de motorista. É proibido vender o app ou versões derivadas, cobrar por ele ou exibir anúncios nele. O texto completo está no arquivo LICENSE do repositório do projeto."
+    },
+    "changes": {
+      "title": "Mudanças",
+      "body": "Estes termos podem mudar em novas versões do app. Dúvidas e problemas podem ser enviados pela opção Relatar um problema, em Mais."
+    },
+    "updatedAt": "Atualizados em 5 de novembro de 2026."
+  },
+  "reminders": {
+    "newTitle": "Novo lembrete",
+    "oilButton": "Troca de óleo",
+    "oilTask": "Trocar o óleo",
+    "tiresButton": "Pneus",
+    "tiresTask": "Trocar os pneus",
+    "titleLabel": "O que fazer",
+    "titlePlaceholder": "Trocar o óleo",
+    "dateLabel": "Data (opcional)",
+    "distanceLabel_km": "Daqui a quantos km (opcional)",
+    "distanceLabel_mi": "Daqui a quantas milhas (opcional)",
+    "distanceHint_km": "O app soma os km das suas jornadas e avisa no início.",
+    "distanceHint_mi": "O app soma as milhas das suas jornadas e avisa no início.",
+    "missingTitle": "Informe o que precisa ser feito.",
+    "invalidDistance_km": "Confira os km. Use só números, como {{example}}.",
+    "invalidDistance_mi": "Confira as milhas. Use só números, como {{example}}.",
+    "missingDue_km": "Informe uma data ou os km.",
+    "missingDue_mi": "Informe uma data ou as milhas.",
+    "noNotification": "Lembrete salvo, mas sem aviso no celular. Permita as notificações do app ou escolha uma data futura.",
+    "emptyTitle": "Nenhum lembrete",
+    "emptyMessage": "Crie lembretes para troca de óleo, pneus e revisões.",
+    "pendingTitle": "Pendentes",
+    "due": {
+      "remaining": "faltam {{distance}}",
+      "reached": "já chegou a hora",
+      "dateOrDistance": "{{date}} ou {{distance}}"
+    }
+  },
+  "report": {
+    "cardTitle": "O que aconteceu?",
+    "descriptionLabel": "Conte com suas palavras",
+    "descriptionPlaceholder": "A oferta da Uber não apareceu",
+    "sendButton": "Enviar relato",
+    "sendHint": "Você escolhe para onde enviar, como o WhatsApp ou o e-mail. Nada sai do celular sem você enviar.",
+    "previewTitle": "O que será enviado",
+    "maskedNotice": "As palavras lidas pelo Copiloto vão mascaradas, mas os números ficam. Confira o texto acima antes de enviar.",
+    "githubButton": "Abrir no GitHub",
+    "unknownDevice": "não identificado",
+    "body": {
+      "heading": "Relato do app {{appName}}",
+      "noDescription": "(sem descrição)",
+      "version": "Versão: {{version}}",
+      "android": "Android: {{android}}",
+      "device": "Aparelho: {{device}}",
+      "accessibilityOn": "Acessibilidade: ativa",
+      "accessibilityOff": "Acessibilidade: desativada",
+      "failedReads": "Leituras incompletas: {{failedReads}}",
+      "readingsHeading": "O que o Copiloto leu (palavras mascaradas):"
+    }
+  },
+  "region": {
+    "language": {
+      "title": "Idioma",
+      "automatic": "Automático ({{language}})",
+      "automaticHint": "Segue o idioma do celular."
+    },
+    "format": {
+      "title": "Formato de números e datas",
+      "automatic": "Automático",
+      "hint": "Separador de decimais, ordem da data e primeiro dia da semana."
+    },
+    "units": {
+      "title": "Unidades",
+      "distance": "Distância",
+      "volume": "Combustível",
+      "consumption": "Consumo",
+      "firstWeekday": "A semana começa em",
+      "km": "Quilômetros",
+      "mi": "Milhas",
+      "L": "Litros",
+      "gal": "Galões",
+      "kmPerLiter": "km/l",
+      "litersPer100km": "L/100 km",
+      "mpg": "mpg",
+      "example": "Exemplo: {{distance}}, {{money}}"
+    },
+    "market": {
+      "title": "País onde você dirige",
+      "hint": "A moeda e a leitura das ofertas seguem o país, porque os valores vêm das telas das plataformas de lá. Novos países entram quando a leitura das plataformas deles estiver pronta.",
+      "currency": "Moeda: {{currency}}",
+      "confirmTitle": "Trocar o país?",
+      "confirmMessage": "Os valores já salvos continuam com os mesmos números, agora em {{currency}}. O app não converte câmbio.",
+      "confirmAction": "Trocar"
+    }
+  }
+}

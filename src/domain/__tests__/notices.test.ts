@@ -1,4 +1,4 @@
-import { isBackupDue, isUpdateDue } from '../maintenance/notices';
+import { isBackupDue, isUpdateDue } from '@domain/maintenance/notices';
 
 const DAY = 86400000;
 const NOW = Date.parse('2026-11-05');

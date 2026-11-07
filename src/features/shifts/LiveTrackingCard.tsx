@@ -1,32 +1,36 @@
+import type { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
-import { confirmAction } from '@/shared/platform/confirm';
-import { spacing } from '@/shared/theme/theme';
-import { AppText, Button, ButtonRow, Card, Notice, ToggleRow } from '@/shared/ui/primitives';
-import { formatClock } from '@/shared/utils/dates';
-import { formatNumber } from '@/shared/utils/money';
+import { useFormat } from '@shared/i18n/format';
+import { spacing } from '@shared/theme/theme';
+import { confirmAction } from '@shared/ui/dialog';
+import { AppText, Button, ButtonRow, Card, Notice, ToggleRow } from '@shared/ui/primitives';
+import { formatClock } from '@shared/utils/dates';
 import { LiveTrackingState } from './useLiveTracking';
 
-function cardTitle({ started, running }: LiveTrackingState) {
-  if (!started) return 'Medir agora';
-  return running ? 'Jornada em andamento' : 'Jornada pausada';
+function cardTitle({ started, running }: LiveTrackingState, t: TFunction<'shifts'>) {
+  if (!started) return t('live.idleTitle');
+  return running ? t('status.running') : t('status.paused');
 }
 
 export function LiveTrackingCard({ live }: { live: LiveTrackingState }) {
+  const { t } = useTranslation('shifts');
+  const format = useFormat();
   const confirmDiscard = () => {
     confirmAction({
-      title: 'Descartar medição?',
-      message: 'O tempo e os km medidos serão apagados.',
-      actionLabel: 'Descartar',
+      title: t('live.discard.title'),
+      message: t('live.discard.message', { context: format.distanceUnit }),
+      actionLabel: t('live.discard.action'),
       onConfirm: live.discard,
     });
   };
 
   return (
-    <Card title={cardTitle(live)}>
+    <Card title={cardTitle(live, t)}>
       <View style={styles.measures}>
         <View style={styles.measure}>
           <AppText variant="caption" tone="muted" center>
-            Tempo
+            {t('live.time')}
           </AppText>
           <AppText variant="title" bold center>
             {formatClock(live.elapsedMs)}
@@ -34,32 +38,32 @@ export function LiveTrackingCard({ live }: { live: LiveTrackingState }) {
         </View>
         <View style={styles.measure}>
           <AppText variant="caption" tone="muted" center>
-            Distância
+            {t('live.distance')}
           </AppText>
           <AppText variant="title" bold center>
-            {formatNumber(live.km)} km
+            {format.distance(live.km)}
           </AppText>
         </View>
       </View>
       {live.started && !live.running ? null : (
         <ToggleRow
-          label="Medir km por GPS"
-          hint="A posição fica só no celular. Em deslocamentos pessoais, é só pausar."
+          label={t('live.measureKm', { context: format.distanceUnit })}
+          hint={t('live.measureHint')}
           value={live.measureKm}
           onChange={live.toggleMeasureKm}
         />
       )}
       {live.gpsError ? <Notice message={live.gpsError} /> : null}
-      {live.applied ? <Notice tone="positive" message="Medição levada para o registro abaixo. Ela só é apagada depois de salvar a jornada." /> : null}
+      {live.applied ? <Notice tone="positive" message={t('live.applied')} /> : null}
       <ButtonRow>
         {live.running ? (
-          <Button label="Pausar" variant="secondary" onPress={live.pause} />
+          <Button label={t('live.pause')} variant="secondary" onPress={live.pause} />
         ) : (
-          <Button label={live.started ? 'Retomar' : 'Iniciar'} variant={live.started ? 'secondary' : 'primary'} onPress={live.start} />
+          <Button label={live.started ? t('live.resume') : t('live.start')} variant={live.started ? 'secondary' : 'primary'} onPress={live.start} />
         )}
-        {live.started ? <Button label="Usar no registro" onPress={live.apply} /> : null}
+        {live.started ? <Button label={t('live.apply')} onPress={live.apply} /> : null}
       </ButtonRow>
-      {live.started ? <Button label="Descartar medição" variant="danger" onPress={confirmDiscard} /> : null}
+      {live.started ? <Button label={t('live.discardButton')} variant="danger" onPress={confirmDiscard} /> : null}
     </Card>
   );
 }

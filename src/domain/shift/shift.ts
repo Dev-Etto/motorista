@@ -1,4 +1,4 @@
-import { MINUTES_PER_HOUR } from '@/shared/utils/time';
+import { MINUTES_PER_HOUR } from '@shared/utils/time';
 
 export interface ShiftInput {
   grossCents: number;

@@ -1,8 +1,8 @@
-import { Reminder, reminderRepository } from '@/data/repositories/reminderRepository';
-import { shiftRepository } from '@/data/repositories/shiftRepository';
-import { vehicleRepository } from '@/data/repositories/vehicleRepository';
-import { useAsyncData } from '@/shared/hooks/useAsyncData';
-import { today } from '@/shared/utils/dates';
+import { Reminder, reminderRepository } from '@data/repositories/reminderRepository';
+import { shiftRepository } from '@data/repositories/shiftRepository';
+import { vehicleRepository } from '@data/repositories/vehicleRepository';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
+import { today } from '@shared/utils/dates';
 import { cancelReminderNotification, scheduleDateReminder } from './reminderNotifications';
 
 export type { Reminder };

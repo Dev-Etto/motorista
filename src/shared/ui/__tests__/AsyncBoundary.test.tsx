@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Text } from 'react-native';
-import { AsyncBoundary } from '../AsyncBoundary';
+import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
 
 const state = <T,>(over: { data: T | null; loading?: boolean; error?: string | null; reload?: () => Promise<void> }) => ({
   loading: false,

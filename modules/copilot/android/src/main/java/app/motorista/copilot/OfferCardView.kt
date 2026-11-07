@@ -19,11 +19,12 @@ class OfferCardView(private val context: Context) {
   fun build(evaluation: OfferEvaluation, preferences: CopilotPreferences): View {
     val palette = cardTheme.palette(preferences.theme)
     val scale = preferences.cardSize.scale
+    val format = OfferFormat.of(context, preferences.regional)
     val body = LinearLayout(context).apply {
       orientation = LinearLayout.VERTICAL
       setPadding(context.dp(PADDING_DP), context.dp(BODY_TOP_DP), context.dp(PADDING_DP), context.dp(PADDING_DP))
     }
-    if (preferences.cardLayout == CardLayout.SUMMARY) addSummary(body, evaluation, preferences, palette, scale) else addComplete(body, evaluation, palette, scale)
+    if (preferences.cardLayout == CardLayout.SUMMARY) addSummary(body, evaluation, preferences, format, palette, scale) else addComplete(body, evaluation, format, palette, scale)
     return LinearLayout(context).apply {
       orientation = LinearLayout.VERTICAL
       background = GradientDrawable().apply {
@@ -32,22 +33,22 @@ class OfferCardView(private val context: Context) {
       }
       clipToOutline = true
       elevation = context.dp(ELEVATION_DP).toFloat()
-      addView(header(evaluation, preferences.theme, scale))
+      addView(header(evaluation, format, preferences.theme, scale))
       addView(body)
     }
   }
 
-  private fun header(evaluation: OfferEvaluation, theme: ThemeMode, scale: Float) = LinearLayout(context).apply {
+  private fun header(evaluation: OfferEvaluation, format: OfferFormat, theme: ThemeMode, scale: Float) = LinearLayout(context).apply {
     orientation = LinearLayout.HORIZONTAL
     gravity = Gravity.CENTER_VERTICAL
     setPadding(context.dp(PADDING_DP), context.dp(PADDING_DP), context.dp(PADDING_DP), 0)
     addView(sourceColumn(evaluation, scale), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-    addView(scoreBadge(evaluation, theme, scale))
+    addView(scoreBadge(evaluation, format, theme, scale))
   }
 
-  private fun scoreBadge(evaluation: OfferEvaluation, theme: ThemeMode, scale: Float) = ImageView(context).apply {
-    setImageBitmap(ScoreBadge.bitmap(context, evaluation, context.dp((BADGE_DP * scale).toInt()), cardTheme.isNight(theme)))
-    contentDescription = OfferFormat.scoreDescription(evaluation)
+  private fun scoreBadge(evaluation: OfferEvaluation, format: OfferFormat, theme: ThemeMode, scale: Float) = ImageView(context).apply {
+    setImageBitmap(ScoreBadge.bitmap(context, evaluation, format, context.dp((BADGE_DP * scale).toInt()), cardTheme.isNight(theme)))
+    contentDescription = format.scoreDescription(evaluation)
   }
 
   private fun sourceColumn(evaluation: OfferEvaluation, scale: Float) = LinearLayout(context).apply {
@@ -67,19 +68,19 @@ class OfferCardView(private val context: Context) {
     }
   }
 
-  private fun addComplete(body: LinearLayout, evaluation: OfferEvaluation, palette: CardPalette, scale: Float) {
+  private fun addComplete(body: LinearLayout, evaluation: OfferEvaluation, format: OfferFormat, palette: CardPalette, scale: Float) {
     val offerRow = LinearLayout(context).apply {
       orientation = LinearLayout.HORIZONTAL
       gravity = Gravity.CENTER_VERTICAL
-      addView(label(OfferFormat.money(evaluation.offer.valueCents.toDouble()), VALUE_SP * scale, palette.text), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-      addView(label(OfferFormat.distanceAndTime(evaluation), DETAIL_SP * scale, palette.muted, AppFonts.regular(context)))
+      addView(label(format.money(evaluation.offer.valueCents.toDouble()), VALUE_SP * scale, palette.text), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+      addView(label(format.distanceAndTime(evaluation), DETAIL_SP * scale, palette.muted, AppFonts.regular(context)))
     }
     val metrics = LinearLayout(context).apply {
       orientation = LinearLayout.HORIZONTAL
       setPadding(0, context.dp(METRICS_TOP_DP), 0, 0)
-      addView(metric(context.getString(R.string.card_per_km), OfferFormat.money(evaluation.perKmCents), evaluation.kmOnTarget, palette, scale), columnParams())
-      addView(metric(context.getString(R.string.card_per_hour), if (evaluation.offer.minutes > 0) OfferFormat.wholeMoney(evaluation.perHourCents) else "—", evaluation.hourOnTarget, palette, scale), columnParams())
-      evaluation.profitCents?.let { addView(metric(context.getString(R.string.card_profit), OfferFormat.money(it), it >= 0, palette, scale, false), columnParams()) }
+      addView(metric(format.perDistanceLabel(), format.perDistance(evaluation.perKmCents), evaluation.kmOnTarget, palette, scale), columnParams())
+      addView(metric(format.text(R.string.card_per_hour), if (evaluation.offer.minutes > 0) format.wholeMoney(evaluation.perHourCents) else "—", evaluation.hourOnTarget, palette, scale), columnParams())
+      evaluation.profitCents?.let { addView(metric(format.text(R.string.card_profit), format.money(it), it >= 0, palette, scale, false), columnParams()) }
     }
     body.addView(offerRow)
     body.addView(metrics)
@@ -103,10 +104,8 @@ class OfferCardView(private val context: Context) {
     addView(label("$value$arrow", METRIC_SP * scale, tone))
   }
 
-  private fun addSummary(body: LinearLayout, evaluation: OfferEvaluation, preferences: CopilotPreferences, palette: CardPalette, scale: Float) {
-    val profit = evaluation.profitCents
-    val main = if (preferences.primaryMetric == PrimaryMetric.PROFIT && profit != null) OfferFormat.signedMoney(profit) else "${OfferFormat.money(evaluation.perKmCents)}/km"
-    body.addView(label(main, SUMMARY_SP * scale, palette.text))
+  private fun addSummary(body: LinearLayout, evaluation: OfferEvaluation, preferences: CopilotPreferences, format: OfferFormat, palette: CardPalette, scale: Float) {
+    body.addView(label(format.summary(evaluation, preferences.primaryMetric), SUMMARY_SP * scale, palette.text))
   }
 
   private fun label(value: String, sizeSp: Float, color: Int, face: Typeface = AppFonts.bold(context)) = TextView(context).apply {

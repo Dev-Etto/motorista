@@ -1,1 +1,1 @@
-export { default } from '@/features/settings/PlatformsScreen';
+export { default } from '@features/settings/PlatformsScreen';

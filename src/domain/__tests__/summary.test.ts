@@ -1,6 +1,6 @@
-import { centsToCsv, csvField, toCsv } from '@/shared/utils/csv';
-import { countsAgainstProfit } from '../expense/expense';
-import { summarizeShifts, totalsByPlatform, withLooseExpenses } from '../shift/summary';
+import { countsAgainstProfit } from '@domain/expense/expense';
+import { summarizeShifts, totalsByPlatform, withLooseExpenses } from '@domain/shift/summary';
+import { centsToCsv, csvField, toCsv } from '@shared/utils/csv';
 
 describe('despesas', () => {
   it('combustível e manutenção não saem do lucro de novo', () => {
@@ -50,7 +50,7 @@ describe('csv', () => {
   it('neutraliza fórmulas e escapa separadores', () => {
     expect(csvField('=SOMA(A1)')).toBe("'=SOMA(A1)");
     expect(csvField('a;b')).toBe('"a;b"');
-    expect(centsToCsv(1234)).toBe('12,34');
+    expect(centsToCsv(1234, { locale: 'pt-BR', currency: 'BRL' })).toBe('12,34');
     expect(toCsv(['A'], [[1]])).toBe('﻿A\r\n1');
   });
 });

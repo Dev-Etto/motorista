@@ -18,6 +18,15 @@ export const offerHistoryEntrySchema = z.object({
   counterCents: z.number().optional(),
 });
 
+export const copilotRegionalSchema = z.object({
+  languageTag: z.string().min(2),
+  formatLocale: z.string().min(2),
+  currencyCode: z.string().regex(/^[A-Z]{3}$/),
+  distanceUnit: z.enum(['km', 'mi']),
+});
+
+export type CopilotRegional = z.infer<typeof copilotRegionalSchema>;
+
 export const copilotPreferencesSchema = z.object({
   voice: z.boolean(),
   card: z.boolean(),

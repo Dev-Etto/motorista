@@ -1,0 +1,63 @@
+{
+  "day": {
+    "reached": "Meta batida.",
+    "reachedWithSurplus": "Meta batida. Você já lucrou {{surplus}} acima dela.",
+    "noDaysLeft": "Não há mais dias de trabalho na sua meta neste mês. Faltaram {{remaining}} para chegar nela.",
+    "notWorkDay": "Hoje não é dia de trabalho na sua meta.",
+    "planLastDay": "No último dia de trabalho do mês, o objetivo é lucrar {{target}}.",
+    "planNextDays_one": "No próximo {{count}} dia de trabalho, o objetivo é lucrar {{target}} por dia.",
+    "planNextDays_other": "Nos próximos {{count}} dias de trabalho, o objetivo é lucrar {{target}} por dia.",
+    "todayReached": "Meta de hoje batida. O que você lucrar a mais diminui o que falta nos próximos dias.",
+    "leftToday": "Faltam {{amount}} de lucro hoje.",
+    "effort": "Isso pede cerca de {{gross}} de faturamento no dia, rodando {{distance}}.",
+    "lastDay": "Hoje é o último dia de trabalho do mês.",
+    "daysLeft_one": "Resta {{count}} dia de trabalho no mês, contando hoje.",
+    "daysLeft_other": "Restam {{count}} dias de trabalho no mês, contando hoje."
+  },
+  "partialShifts_one": "{{count}} jornada sem km ou sem custo: o custo do veículo não foi descontado dela, então seu lucro real pode ser menor.",
+  "partialShifts_other": "{{count}} jornadas sem km ou sem custo: o custo do veículo não foi descontado delas, então seu lucro real pode ser menor.",
+  "plan": {
+    "noVehicle": "Cadastre seu veículo para ver quanto faturar e quanto cada corrida precisa pagar.",
+    "title": "Seu plano para o mês",
+    "caption_km": "É uma previsão feita no começo, com os km que você informou. Os mínimos por corrida saem dela.",
+    "caption_mi": "É uma previsão feita no começo, com as milhas que você informou. Os mínimos por corrida saem dela.",
+    "gross": "Faturamento previsto no mês",
+    "perWorkDay": "Por dia de trabalho",
+    "plannedDistance_km": "Km previstos por dia",
+    "plannedDistance_mi": "Milhas previstas por dia"
+  },
+  "progress": {
+    "title": "Meta do mês",
+    "ofProfit": "de {{goal}} de lucro",
+    "todayTarget": "Meta de lucro hoje",
+    "todayTargetAdjusted": "Meta de hoje, ajustada por você",
+    "profitToday": "Lucro de hoje",
+    "remaining": "Falta lucrar no mês",
+    "openDetails": "Ver meta e plano",
+    "howTitle": "Como essa conta funciona?",
+    "howProfit": "O lucro é o mesmo de \"Neste mês\" no início: o que você faturou menos o custo por {{unit}} das jornadas e as despesas.",
+    "howFixed_km": "O custo fixo, como seguro e parcela, entra diluído em cada km, pelos km que você prevê rodar no mês.",
+    "howFixed_mi": "O custo fixo, como seguro e parcela, entra diluído em cada milha, pelas milhas que você prevê rodar no mês.",
+    "howClosedMonth": "Por isso, o Mês fechado, em Relatórios, pode dar um valor diferente: ele desconta o custo fixo inteiro. Se você rodar menos que o previsto, ele será menor que o lucro daqui.",
+    "howToday": "A meta de hoje divide o que faltava no começo do dia pelos dias de trabalho restantes. Ela não muda durante o dia."
+  },
+  "screen": {
+    "title": "Meta de {{month}}",
+    "intro": "Diga quanto quer lucrar no mês. O app acompanha seu lucro real e mostra o que falta, hoje e até o fim do mês.",
+    "goalTitle": "Sua meta",
+    "desired": "Quanto quer lucrar no mês",
+    "hoursPerDay": "Horas de trabalho por dia",
+    "workDays": "Dias de trabalho",
+    "update": "Atualizar meta",
+    "calculate": "Calcular meu plano",
+    "adjustToday": "Ajustar a meta de hoje",
+    "todayProfit": "Lucro que quer fazer hoje",
+    "todayProfitHint": "Vale só para hoje. Em branco, o app calcula.",
+    "errors": {
+      "desired": "Informe quanto você quer lucrar.",
+      "weekdays": "Selecione pelo menos um dia de trabalho.",
+      "hours": "Informe as horas por dia, de {{min}} a {{max}}.",
+      "dayTarget": "Confira o lucro de hoje. Use só números, como {{example}}."
+    }
+  }
+}

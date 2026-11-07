@@ -1,0 +1,67 @@
+{
+  "welcome": {
+    "tagline": "Find out how much you really keep from your work as a ride-hailing driver.",
+    "promise": "No account. No fees. No ads.",
+    "privacy": "Your data stays on your phone only.",
+    "start": "Get started",
+    "skipIntro": "Skip introduction",
+    "terms": "By continuing, you agree to the <bold>Terms of use</bold>.",
+    "region": "{{language}} · {{currency}} · {{unit}}. Tap to change language and region."
+  },
+  "intro": {
+    "registerTitle": "Log your day in under a minute",
+    "registerBody_km": "Enter what you earned, the kilometers, and the hours. The app deducts your costs and shows how much you really kept.",
+    "registerBody_mi": "Enter what you earned, the miles, and the hours. The app deducts your costs and shows how much you really kept.",
+    "offersTitle": "Evaluate offers with your own numbers",
+    "offersBody": "See where each offer comes from, how much you keep, and a score from 0 to 5. You decide with more clarity.",
+    "skip": "Skip"
+  },
+  "setup": {
+    "title": "Your cost in a few details",
+    "hint": "Oil, tires, and maintenance start with estimates. You can add insurance, vehicle tax, and loan payments later.",
+    "seeCost": "See my cost"
+  },
+  "result": {
+    "caption_km": "Each kilometer costs you",
+    "caption_mi": "Each mile costs you",
+    "firstEstimate": "This is a first estimate. Add insurance, vehicle tax, loan payments, or rent to see the full amount.",
+    "addOtherCosts": "Add the other costs"
+  },
+  "permissions": {
+    "title": "Get everything ready to use",
+    "hint": "That way you don't need to stop in the middle of your shift. Everything stays on your phone, and you can change it later.",
+    "notice": "You always decide on the rides: the app doesn't touch the screen. Each platform has its own rules about helper apps, and it's worth knowing them. While driving, the voice tells you: only touch your phone when the car is stopped."
+  },
+  "done": {
+    "title": "All set",
+    "message": "Log your first shift and see how much you really kept.",
+    "registerShift": "Log a shift",
+    "backHome": "Back to home",
+    "seeHome": "Go to home"
+  },
+  "nextStep": {
+    "caption": "Your next step",
+    "vehicle": {
+      "title_km": "Find out your cost per km",
+      "title_mi": "Find out your cost per mile",
+      "message": "With it, the app shows how much you really keep from each shift.",
+      "action": "Calculate cost"
+    },
+    "firstShift": {
+      "title": "Log your first shift",
+      "message_km": "Enter how much you earned, the kilometers, and the hours. In under a minute, you see your real profit.",
+      "message_mi": "Enter how much you earned, the miles, and the hours. In under a minute, you see your real profit.",
+      "action": "Log shift"
+    },
+    "goal": {
+      "title": "Set your monthly goal",
+      "message": "Tell us how much profit you want to make and see what's left today and until the end of the month.",
+      "action": "Set goal"
+    },
+    "firstBackup": {
+      "title": "Keep a copy of your data",
+      "message": "Your data is stored only on this phone. With a backup, you can take it with you if you switch devices.",
+      "action": "Back up now"
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "welcome": {
+    "tagline": "Descubra quanto sobra de verdade no seu trabalho como motorista de aplicativo.",
+    "promise": "Sem conta. Sem cobrança. Sem anúncios.",
+    "privacy": "Seus dados ficam só no seu celular.",
+    "start": "Começar",
+    "skipIntro": "Pular introdução",
+    "terms": "Ao continuar, você concorda com os <bold>Termos de uso</bold>.",
+    "region": "{{language}} · {{currency}} · {{unit}}. Toque para alterar idioma e região."
+  },
+  "intro": {
+    "registerTitle": "Registre o dia em menos de um minuto",
+    "registerBody_km": "Informe o que ganhou, os km e as horas. O app desconta seus custos e mostra quanto sobrou de verdade.",
+    "registerBody_mi": "Informe o que ganhou, as milhas e as horas. O app desconta seus custos e mostra quanto sobrou de verdade.",
+    "offersTitle": "Avalie as ofertas com seus números",
+    "offersBody": "Veja de onde vem cada oferta, quanto sobra e uma nota de 0 a 5. Você decide com mais clareza.",
+    "skip": "Pular"
+  },
+  "setup": {
+    "title": "Seu custo em poucos dados",
+    "hint": "Óleo, pneus e manutenção começam com estimativas. Seguro, IPVA e parcela você inclui depois.",
+    "seeCost": "Ver meu custo"
+  },
+  "result": {
+    "caption_km": "Cada km custa para você",
+    "caption_mi": "Cada milha custa para você",
+    "firstEstimate": "É uma primeira conta. Inclua seguro, IPVA, parcela ou aluguel para ver o valor completo.",
+    "addOtherCosts": "Incluir os outros custos"
+  },
+  "permissions": {
+    "title": "Deixe tudo pronto para usar",
+    "hint": "Assim você não precisa parar no meio da jornada. Tudo fica no seu celular, e você pode mudar depois.",
+    "notice": "Quem decide as corridas é sempre você: o app não toca na tela. Cada plataforma tem suas regras sobre apps de apoio, e vale conhecê-las. Dirigindo, a voz avisa: toque no celular só com o carro parado."
+  },
+  "done": {
+    "title": "Tudo pronto",
+    "message": "Registre sua primeira jornada e veja quanto sobrou de verdade.",
+    "registerShift": "Registrar uma jornada",
+    "backHome": "Voltar ao início",
+    "seeHome": "Ver o início"
+  },
+  "nextStep": {
+    "caption": "Seu próximo passo",
+    "vehicle": {
+      "title_km": "Descubra seu custo por km",
+      "title_mi": "Descubra seu custo por milha",
+      "message": "Com ele, o app mostra quanto sobra de verdade em cada jornada.",
+      "action": "Calcular custo"
+    },
+    "firstShift": {
+      "title": "Registre sua primeira jornada",
+      "message_km": "Informe quanto ganhou, os km e as horas. Em menos de um minuto você vê seu lucro real.",
+      "message_mi": "Informe quanto ganhou, as milhas e as horas. Em menos de um minuto você vê seu lucro real.",
+      "action": "Registrar jornada"
+    },
+    "goal": {
+      "title": "Defina sua meta do mês",
+      "message": "Diga quanto quer lucrar e veja quanto falta hoje e até o fim do mês.",
+      "action": "Definir meta"
+    },
+    "firstBackup": {
+      "title": "Guarde uma cópia dos seus dados",
+      "message": "Seus dados ficam só neste celular. Com um backup, você os leva junto se trocar de aparelho.",
+      "action": "Fazer backup"
+    }
+  }
+}

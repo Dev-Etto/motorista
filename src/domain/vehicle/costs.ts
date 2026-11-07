@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { MONTHS_PER_YEAR } from '@/shared/utils/time';
+import { MONTHS_PER_YEAR } from '@shared/utils/time';
 
 export type VehicleKind = 'car' | 'motorcycle';
 export type FuelType = 'gasoline' | 'ethanol' | 'diesel' | 'cng' | 'electric';

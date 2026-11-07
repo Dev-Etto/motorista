@@ -1,6 +1,6 @@
-import { getDb, SqlExecutor } from '@/data/database/connection';
-import { parseJsonColumnOr } from '@/data/database/jsonColumn';
-import { GpsPoint, gpsPointSchema } from '@/domain/gps/gps';
+import { getDb, SqlExecutor } from '@data/database/connection';
+import { parseJsonColumnOr } from '@data/database/jsonColumn';
+import { GpsPoint, gpsPointSchema } from '@domain/gps/gps';
 
 export interface GpsSession {
   meters: number;

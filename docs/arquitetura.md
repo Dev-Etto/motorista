@@ -29,8 +29,9 @@ app -> features -> application -> data -> domain -> shared/utils
 - `domain` não conhece `features`, `application`, `data` nem React.
 - `shared` não conhece `features`, `application`, `data` nem `domain`.
 - `shared/utils` e `domain` são funções puras. Efeitos do Expo ficam em `shared/platform`: notificações, localização, confirmação e compartilhamento.
-- Um componente `.tsx` de `features` nunca importa `@/data`: ele chama um hook ou serviço `.ts` da funcionalidade.
+- Um componente `.tsx` de `features` nunca importa `@data`: ele chama um hook ou serviço `.ts` da funcionalidade.
 - Uma funcionalidade só importa outra pelo `index.ts` dela, que lista o que é público.
+- Imports entre pastas usam o alias da camada: `@app`, `@application`, `@config`, `@data`, `@domain`, `@features`, `@shared` e `@modules`. Caminho relativo só vale na mesma pasta, como `./useReport`. `../` e o antigo `@/` são recusados.
 - Essas regras são conferidas pelo `npm run lint`, em `eslint.config.js`.
 
 ## Princípios
@@ -243,3 +244,34 @@ app -> features -> application -> data -> domain -> shared/utils
 - **Datas com Luxon:** `DateTime` faz soma de dias e meses, início de semana e fim de mês no fuso do aparelho, inclusive na troca de horário de verão. `fromISODate` saiu: quem precisa do dia da semana usa `weekdayOf`, quem precisa de intervalo usa `daysBetween`, e o seletor nativo recebe `toJsDate`.
 - **Bibliotecas puras no domínio:** além do zod, `luxon` e `currency.js` podem ser usados em `domain` e `shared/utils`, porque não têm efeito colateral nem dependem de internet.
 
+
+## Decisões da versão 0.11.0
+
+- **Perfil regional:** idioma, formato regional, moeda e unidades são independentes e ficam em `RegionalProfile`, em `domain/regional`. `resolveRegionalProfile` é pura: a escolha salva vence o aparelho, campo a campo. O ciclo de hora sempre vem do aparelho.
+- **Uma fonte de verdade:** `regionalStore`, em `application/regional`, carrega as escolhas, lê o aparelho por `shared/platform/locale` e aplica o perfil. As telas usam `useRegional`. O aparelho é relido quando o app volta ao primeiro plano.
+- **Instalações antigas fixadas:** a migração 5 grava `pt-BR`, `BRL`, `km`, `L`, `km/L` e semana na segunda só onde já houve onboarding, para quem usa o app não ver diferença. Instalação nova segue o aparelho.
+- **Dia da semana ISO:** `firstWeekday` usa 1 para segunda e 7 para domingo, como o Luxon. O `expo-localization` usa 1 para domingo, e a conversão fica em `resolveRegionalProfile`.
+- **Traduções com `i18next`:** `shared/i18n` cria uma instância própria, com `pt-BR` como origem e reserva. As chaves são tipadas pelo JSON do `pt-BR`, então chave inexistente não compila. O Jest inicia o i18n em `jest.setup.ts`.
+- **Domínio sem texto:** insights devolvem uma união discriminada por `id` com números e códigos, `classifyOffer` devolve `OfferReason`, e `buildChart` devolve datas. O texto é montado na funcionalidade por `describeInsight`, `describeOfferReason` e os formatadores. Uma regra de lint recusa frases em `domain`, e `domain` e `shared/utils` não importam traduções.
+- **Plataformas padrão traduzidas no banco:** `platforms.system_key` marca `Particular` e `Outros`. Ao aplicar o idioma, `localizeSystemNames` grava a tradução no próprio nome, então toda tela, relatório e backup já leem o nome certo. `UPDATE OR IGNORE` preserva um nome igual que o usuário tenha criado.
+- **Formatação em duas camadas:** `shared/utils` tem funções puras que recebem locale, moeda e unidade (`Money`, `numbers`, `parse`, `dates`, `units`). `shared/i18n/format` cria o formatador do perfil ativo, com dinheiro, números, distância, volume, consumo, datas e semana. Telas usam `useFormat()`, que redesenha quando o perfil muda. Código fora do React, como exportação e mensagens, recebe o formatador por parâmetro.
+- **Canônico no banco, unidade na borda:** distância em km, volume em litros, consumo em km por litro e preço em centésimos por km ou por litro. O formatador converte ao mostrar e ao ler o campo. Combustíveis líquidos usam a unidade de volume e de consumo. GNV e elétrico só convertem a distância.
+- **Agrupamento de milhar pela região:** os números usam a regra de cada locale, então `es-ES` mostra `1234,5` e `pt-BR` mostra `1.234,5`. Espaços especiais do `Intl` viram espaço comum, para o texto ficar igual ao do Kotlin.
+- **Sem valor fixo de região:** o lint recusa `R$`, `pt-BR`, `BRL`, `toFixed` e `toLocaleString` fora de `shared/i18n`, `shared/utils`, `domain/regional` e das migrações. Os textos de exemplo do teste do Copiloto ficam em real porque imitam a tela das plataformas no Brasil.
+- **Textos por namespace:** cada funcionalidade tem seu JSON em `shared/i18n/locales/pt-BR`, e `common` guarda ações, rotas, abas e `shared/ui`. Constantes com rótulo guardam só o valor, e o componente monta o rótulo com `t`. Funções que montam frase recebem `t` e `format`, como `describeGoalDay`, `describeFormError` e `helpSections`. Frases que mudam com a unidade usam contexto `_km`/`_mi` ou `_L`/`_gal`. O lint recusa texto fixo em `.tsx` pela regra `i18next/no-literal-string`.
+- **Erros como código na fronteira:** `parseBackup` devolve `BackupProblem`, e `validateProfile` devolve `ProfileProblem`. A tela traduz.
+- **Imports por camada:** `@app`, `@application`, `@config`, `@data`, `@domain`, `@features`, `@shared` e `@modules`, no `tsconfig.json` e no Jest. O Metro lê os mesmos `paths`.
+- **Perfil no Kotlin:** `RegionalSettings` vai dentro de `CopilotPreferences` e chega por `copilot.setRegional`, chamado em toda aplicação do perfil. `setPreferences` sem `regional` mantém o perfil atual, porque o schema do JS não conhece o campo.
+- **`OfferFormat` como classe:** recebe o perfil e um `OfferTexts`. No Android, `OfferFormat.of(context, regional)` usa os recursos de um `Context` com o idioma do perfil, então o serviço fala e escreve no idioma do app mesmo fechado. Nos testes, `XmlOfferTexts` lê o próprio `strings.xml`, e os testes conferem o texto real do recurso.
+- **Motivo da nota estruturado nos dois lados:** `OfferReason` no TypeScript e no Kotlin. O histórico guarda o texto já montado no idioma do momento, porque é um registro do que foi mostrado.
+- **Nome da moeda na voz:** real, dólar, euro e peso têm singular e plural nos recursos. Outra moeda, ou moeda sem centavos, é falada pelo valor formatado.
+- **Agrupamento diferente entre Java e Intl:** o `NumberFormat` do Java agrupa milhar em `es-ES` a partir de 4 dígitos, e o `Intl` não. A diferença é só visual e fica registrada nos testes.
+- **Idioma por app no Android 13+:** `AppLanguage` usa o `LocaleManager`. Escolher na tela grava no sistema, e `regionalStore` adota a escolha feita nas configurações do sistema ao voltar ao primeiro plano. `allowDynamicLocaleChangesAndroid` evita recriar a tela na troca.
+- **Troca de moeda sem câmbio:** trocar a moeda ou restaurar um backup com outra moeda pede confirmação quando há dados, porque os números ficam iguais. `backupCurrency` diz a moeda de um backup, e backup de antes do perfil regional é tratado como real.
+- **Backup antigo:** `LEGACY_REGIONAL_SQL` e `SYSTEM_PLATFORMS_SQL` são as mesmas instruções da migração, repetidas na restauração de um backup de versão anterior.
+- **CSV pela região:** o separador de colunas é `;` quando o decimal é vírgula e `,` nos demais casos. Distância e custo saem na unidade do usuário, e o cabeçalho diz a moeda e a unidade.
+- **Pseudo-idioma em desenvolvimento:** `pseudo` acentua e alonga os textos do português, preservando interpolação e tags. Aparece só em `__DEV__`, na tela Idioma e região.
+- **Diálogo próprio:** confirmações e escolhas usam `showDialog` e `confirmAction`, de `shared/ui/dialog`, desenhados por `DialogHost`, montado uma vez na raiz com as cores, o raio e os botões do app. Fundo escurecido e botão voltar fecham o diálogo. Duas ações ficam lado a lado, e três ou mais ficam empilhadas. Erro dentro da ação é registrado e não derruba o app. O lint recusa importar `Alert` do `react-native`.
+- **Traduções registradas:** `pt-BR`, `en` e `es` em `resources.ts`. O teste do catálogo confere chaves, parâmetros e plurais, e `StringResourcesTest` confere os nomes e especificadores dos `strings.xml` do Kotlin.
+- **País no lugar de moeda:** o que vem das plataformas segue o país, e o que é só exibição segue o motorista. `market` define a moeda (`MARKET_CURRENCY`) e as regras do leitor. Só entram países com leitor pronto, e por isso hoje a lista tem só o Brasil. Idioma, formato de data e número e unidade de exibição continuam livres, porque o banco guarda sempre em km, litros e centésimos. `isSameMarket` compara países sem que o TypeScript estreite o tipo enquanto existe um único país.
+- **Leitor recusa outro mercado:** `OfferParser` não avalia texto com `$`, `US$`, `€`, `£` ou distância em milhas. As fixtures guardam esses casos.

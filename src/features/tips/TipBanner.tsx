@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { AppText, Button, Card } from '@/shared/ui/primitives';
+import { useTranslation } from 'react-i18next';
+import { AppText, Button, Card } from '@shared/ui/primitives';
 import { dismissTip, isTipDismissed } from './tipsDismissal';
 
 export function TipBanner({ id, message }: { id: string; message: string }) {
+  const { t } = useTranslation(['tips', 'common']);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -19,10 +21,10 @@ export function TipBanner({ id, message }: { id: string; message: string }) {
   return (
     <Card>
       <AppText variant="caption" tone="accent" bold>
-        Dica
+        {t('banner.label')}
       </AppText>
       <AppText>{message}</AppText>
-      <Button label="Entendi" variant="secondary" onPress={close} />
+      <Button label={t('common:actions.gotIt')} variant="secondary" onPress={close} />
     </Card>
   );
 }

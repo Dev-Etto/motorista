@@ -1,7 +1,8 @@
-import { reminderRepository } from '@/data/repositories/reminderRepository';
-import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
-import { cancelAllScheduled, cancelScheduled, ensureNotifications, scheduleAt, scheduleDaily } from '@/shared/platform/notifications';
-import { toJsDate } from '@/shared/utils/dates';
+import { reminderRepository } from '@data/repositories/reminderRepository';
+import { SETTING_KEYS, settingsRepository } from '@data/repositories/settingsRepository';
+import { i18n } from '@shared/i18n';
+import { cancelAllScheduled, cancelScheduled, ensureNotifications, scheduleAt, scheduleDaily } from '@shared/platform/notifications';
+import { toJsDate } from '@shared/utils/dates';
 
 const REMINDER_HOUR = 8;
 
@@ -11,7 +12,7 @@ export async function scheduleDateReminder(title: string, isoDate: string): Prom
   const date = toJsDate(isoDate, REMINDER_HOUR);
   if (date.getTime() <= Date.now()) return null;
 
-  return scheduleAt({ title: 'Lembrete de manutenção', body: title }, date);
+  return scheduleAt({ title: i18n.t('settings:notifications.maintenanceTitle'), body: title }, date);
 }
 
 export async function cancelReminderNotification(notificationId: string | null) {
@@ -23,7 +24,7 @@ export async function scheduleDailyReminder(hour: number): Promise<boolean> {
   await cancelDailyReminder();
   if (!(await ensureNotifications())) return false;
 
-  const id = await scheduleDaily({ title: 'Registrou sua jornada de hoje?', body: 'Em menos de um minuto você vê quanto sobrou.' }, hour);
+  const id = await scheduleDaily({ title: i18n.t('settings:notifications.dailyTitle'), body: i18n.t('settings:notifications.dailyBody') }, hour);
   await settingsRepository.set(SETTING_KEYS.dailyReminderId, id);
   await settingsRepository.set(SETTING_KEYS.dailyReminderHour, String(hour));
   return true;

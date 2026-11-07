@@ -1,4 +1,4 @@
-import { isDueByKm, kmRemaining } from '../reminder/reminder';
+import { isDueByKm, kmRemaining } from '@domain/reminder/reminder';
 
 describe('lembrete por km', () => {
   it('vence quando o total de km chega ao combinado', () => {

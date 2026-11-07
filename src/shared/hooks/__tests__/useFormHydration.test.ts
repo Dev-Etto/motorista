@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react-native';
-import { useFormHydration } from '../useFormHydration';
+import { useFormHydration } from '@shared/hooks/useFormHydration';
 
 describe('useFormHydration', () => {
   it('preenche o formulário só na primeira vez que o dado chega', async () => {

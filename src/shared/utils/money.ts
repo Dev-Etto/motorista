@@ -1,27 +1,55 @@
 import currency from 'currency.js';
+import { formatNumber, parseDecimal } from './numbers';
 
-const CENTS_PER_REAL = 100;
+const CENTS_PER_UNIT = 100;
 const EXACT_PRECISION = 6;
 const CENT_DIGITS = 2;
 const EXACT = { precision: EXACT_PRECISION };
-const DISPLAY = { symbol: 'R$ ', separator: '.', decimal: ',', precision: CENT_DIGITS, pattern: '!#', negativePattern: '-!#' };
-const WHOLE = { ...DISPLAY, precision: 0 };
-const INPUT = { symbol: '', separator: '', decimal: ',', precision: CENT_DIGITS };
+const WIDE_SPACES = /[\u00A0\u202F]/g;
+
+export interface MoneyFormat {
+  locale: string;
+  currency: string;
+}
+
+const currencyFormats = new Map<string, Intl.NumberFormat>();
+
+function currencyFormat(spec: MoneyFormat, whole: boolean): Intl.NumberFormat {
+  const key = `${spec.locale}|${spec.currency}|${whole}`;
+  const cached = currencyFormats.get(key);
+  if (cached) return cached;
+
+  const digits = whole ? { minimumFractionDigits: 0, maximumFractionDigits: 0 } : {};
+  const created = new Intl.NumberFormat(spec.locale, { style: 'currency', currency: spec.currency, ...digits });
+  currencyFormats.set(key, created);
+  return created;
+}
+
+export const fractionDigitsOf = (spec: MoneyFormat) => currencyFormat(spec, false).resolvedOptions().maximumFractionDigits ?? CENT_DIGITS;
+
+export const currencySymbolOf = (spec: MoneyFormat) =>
+  currencyFormat(spec, true)
+    .format(0)
+    .replace(/[\d\s\u00A0\u202F.,-]/g, '');
+
+const withPlainSpaces = (text: string) => text.replace(WIDE_SPACES, ' ');
+
+const withoutNegativeZero = (value: number) => value || 0;
 
 export class Money {
   private constructor(private readonly amount: currency) {}
 
   static fromCents(cents: number): Money {
-    return new Money(currency(cents / CENTS_PER_REAL, EXACT));
+    return new Money(currency(cents / CENTS_PER_UNIT, EXACT));
   }
 
   static zero(): Money {
     return Money.fromCents(0);
   }
 
-  static parse(text: string): Money | null {
-    const reais = parseDecimal(text);
-    return reais === null ? null : new Money(currency(reais, EXACT));
+  static parse(text: string, spec: MoneyFormat): Money | null {
+    const units = parseDecimal(text.replace(currencySymbolOf(spec), ''), spec.locale);
+    return units === null ? null : new Money(currency(units, EXACT));
   }
 
   get cents(): number {
@@ -29,7 +57,7 @@ export class Money {
   }
 
   get wholeCents(): number {
-    return Math.round(this.cents);
+    return withoutNegativeZero(Math.round(this.cents));
   }
 
   plus(other: Money): Money {
@@ -52,45 +80,16 @@ export class Money {
     return this.wholeCents < 0;
   }
 
-  format(): string {
-    return currency(this.wholeCents / CENTS_PER_REAL, DISPLAY).format();
+  format(spec: MoneyFormat): string {
+    return withPlainSpaces(currencyFormat(spec, false).format(this.wholeCents / CENTS_PER_UNIT));
   }
 
-  formatWhole(): string {
-    return currency(Math.round(this.cents / CENTS_PER_REAL), WHOLE).format();
+  formatWhole(spec: MoneyFormat): string {
+    return withPlainSpaces(currencyFormat(spec, true).format(withoutNegativeZero(Math.round(this.cents / CENTS_PER_UNIT))));
   }
 
-  toInput(): string {
-    return currency(this.wholeCents / CENTS_PER_REAL, INPUT).format();
+  toInput(spec: MoneyFormat): string {
+    const digits = fractionDigitsOf(spec);
+    return formatNumber(this.wholeCents / CENTS_PER_UNIT, spec.locale, { decimals: digits, grouping: false });
   }
 }
-
-export const formatBRL = (cents: number) => Money.fromCents(cents).format();
-
-export const parseBRL = (input: string) => Money.parse(input)?.wholeCents ?? null;
-
-const THOUSANDS_ONLY = /^-?\d{1,3}(\.\d{3})+$/;
-
-function normalizeDecimal(clean: string): string {
-  if (clean.includes(',')) return clean.replace(/\./g, '').replace(',', '.');
-  if (THOUSANDS_ONLY.test(clean)) return clean.replace(/\./g, '');
-  return clean;
-}
-
-export function parseDecimal(input: string): number | null {
-  const clean = input.replace(/R\$|\s/g, '').replace(/[.,]$/, '');
-  if (!clean) return null;
-  const normalized = normalizeDecimal(clean);
-  if (!/^-?\d*\.?\d+$/.test(normalized)) return null;
-  const value = Number(normalized);
-  return Number.isFinite(value) ? value : null;
-}
-
-export function formatNumber(value: number, decimals = 1): string {
-  const fixed = value.toFixed(decimals);
-  const [int = '', frac] = fixed.split('.');
-  const grouped = int.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  return frac ? `${grouped},${frac}` : grouped;
-}
-
-export const centsToInput = (cents: number) => Money.fromCents(cents).toInput();

@@ -1,0 +1,76 @@
+{
+  "reason": {
+    "noCosts": "Set up your costs to see the score",
+    "belowCost": "Doesn't cover your cost per {{unit}}",
+    "targets": "{{unit}}: {{perKm}} · hour: {{perHour}}",
+    "noTarget": "no minimum",
+    "atTarget": "at minimum",
+    "above": "{{percent}}% above minimum",
+    "below": "{{percent}}% below minimum",
+    "noTime": "no time in the offer"
+  },
+  "status": {
+    "accepted": "Accepted",
+    "declined": "Declined",
+    "countered": "Counteroffer of {{amount}}",
+    "unanswered": "No response"
+  },
+  "row": {
+    "distanceWithTime": "{{distance}} • {{minutes}} min"
+  },
+  "estimate": {
+    "title": "Estimated earnings",
+    "disclaimer": "It's a suggestion, based on the rides the app saw you accept. The real amount may change with cancellations, tips, and fees. If needed, correct it when you log the shift.",
+    "trips_one": "1 accepted ride",
+    "trips_other": "{{count}} accepted rides"
+  },
+  "outcomeSummary": {
+    "received": "Received",
+    "accepted": "Accepted",
+    "notAccepted": "Not accepted",
+    "perDistanceAccepted": "{{label}} of accepted",
+    "perDistanceNotAccepted": "{{label}} of not accepted"
+  },
+  "shiftEstimate": {
+    "title": "Suggestion from accepted rides",
+    "intro": "Based on the rides the app saw you accept, we estimate these earnings:",
+    "total": "Estimated total",
+    "unmatched": "{{platforms}} isn't in Platforms. Add it to use this amount.",
+    "applied": "Amounts filled in below. Check and adjust them before saving.",
+    "apply": "Use these amounts"
+  },
+  "screen": {
+    "periodLabel": "Period",
+    "period": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "week": "7 days",
+      "month": "30 days",
+      "custom": "Choose dates"
+    },
+    "from": "From",
+    "to": "To",
+    "appLabel": "App",
+    "allSources": "All",
+    "outcomeTitle": "Accepted and not accepted",
+    "listTitle": "Offers",
+    "outcomeLabel": "Outcome",
+    "outcome": {
+      "all": "All",
+      "accepted": "Accepted",
+      "notAccepted": "Not accepted"
+    },
+    "seeMore": "See more",
+    "emptyTitle": "No offers here",
+    "emptyMessage": "Change the filters or wait for the next offers read by Copilot.",
+    "autoRecord": "The app automatically records what you accept. If the suggested amount differs from what you got paid, just correct it when you log the shift.",
+    "settingsTitle": "Settings",
+    "estimating": "Estimate earnings from accepted rides",
+    "estimatingHint": "Notes when you tap accept or decline in ride-hailing apps. Nothing leaves your phone.",
+    "clearButton": "Clear offers",
+    "clearConfirm": {
+      "title": "Clear offers?",
+      "message": "The history and the earnings estimate will be deleted. Saved shifts won't change."
+    }
+  }
+}

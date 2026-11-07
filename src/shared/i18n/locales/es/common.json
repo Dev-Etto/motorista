@@ -1,0 +1,117 @@
+{
+  "platform": {
+    "private": "Particular",
+    "other": "Otras"
+  },
+  "app": {
+    "loading": "Cargando…",
+    "openFailed": "No se pudieron abrir los datos de la app. Reiníciala e inténtalo de nuevo."
+  },
+  "weekday": {
+    "0": "Domingo",
+    "1": "Lunes",
+    "2": "Martes",
+    "3": "Miércoles",
+    "4": "Jueves",
+    "5": "Viernes",
+    "6": "Sábado"
+  },
+  "hourOfDay": "{{hour}} h",
+  "perUnit": "{{amount}}/{{unit}}",
+  "actions": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "remove": "Quitar",
+    "done": "Listo",
+    "continue": "Continuar",
+    "add": "Agregar",
+    "gotIt": "Entendido",
+    "notNow": "Ahora no",
+    "later": "Hacerlo después",
+    "clear": "Borrar",
+    "retry": "Intentar de nuevo"
+  },
+  "irreversible": "Esta acción no se puede deshacer.",
+  "invalidNumber": "Revisa los números que escribiste. Usa solo números, como {{example}}.",
+  "unit": {
+    "km": "km",
+    "mi": "mi"
+  },
+  "screens": {
+    "vehicle": "Vehículo y costos",
+    "goal": "Meta y mínimos",
+    "copilot": "Copiloto de ofertas",
+    "offers": "Ofertas e ingresos",
+    "copilotSetup": "Configurar el Copiloto",
+    "help": "Ayuda",
+    "permissions": "Permisos",
+    "summary": "Mi resumen",
+    "platforms": "Plataformas",
+    "reminders": "Recordatorios",
+    "backup": "Copia de seguridad",
+    "report": "Reportar un problema",
+    "privacy": "Privacidad",
+    "terms": "Términos de uso",
+    "shiftNew": "Jornada",
+    "shiftDetail": "Detalles de la jornada",
+    "expenseNew": "Nuevo gasto suelto",
+    "region": "Idioma y región"
+  },
+  "tabs": {
+    "home": "Inicio",
+    "shifts": "Jornadas",
+    "calculator": "Calculadora",
+    "reports": "Informes",
+    "more": "Más"
+  },
+  "location": {
+    "permissionNeeded_km": "Permite la ubicación para medir los km por GPS.",
+    "permissionNeeded_mi": "Permite la ubicación para medir las millas por GPS.",
+    "servicesOff_km": "Activa la ubicación del celular para medir los km por GPS.",
+    "servicesOff_mi": "Activa la ubicación del celular para medir las millas por GPS."
+  },
+  "errors": {
+    "load": "No se pudieron cargar los datos.",
+    "save": "No se pudo guardar. Inténtalo de nuevo."
+  },
+  "loading": "Cargando",
+  "scoreBadge": {
+    "label": "Puntuación {{score}} de 5",
+    "empty": "Sin puntuación"
+  },
+  "periodSwitcher": {
+    "previous_week": "Semana anterior",
+    "previous_month": "Mes anterior",
+    "previous_year": "Año anterior",
+    "next_week": "Próximo período: semana",
+    "next_month": "Próximo período: mes",
+    "next_year": "Próximo período: año"
+  },
+  "dateField": {
+    "placeholder": "Elegir fecha",
+    "accessibilityLabel": "{{label}}: {{value}}",
+    "clearLabel": "Borrar {{label}}"
+  },
+  "monthCalendar": {
+    "dayEmpty": "Día {{day}}, sin jornada",
+    "dayProfit": "Día {{day}}, ganancia de {{profit}}"
+  },
+  "progressBar": {
+    "label": "{{percent}} completado"
+  },
+  "stepDots": {
+    "label": "Paso {{current}} de {{total}}"
+  },
+  "languageName": {
+    "pt-BR": "Português",
+    "en": "English",
+    "es": "Español"
+  },
+  "dialog": {
+    "dismiss": "Cerrar aviso"
+  },
+  "marketName": {
+    "BR": "Brasil"
+  }
+}

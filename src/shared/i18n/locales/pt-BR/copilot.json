@@ -1,0 +1,127 @@
+{
+  "messages": {
+    "notificationsForChannel": "Permita as notificações do app para usar este canal.",
+    "notificationsForExample": "Permita as notificações do app para ver o exemplo.",
+    "accessibilityForTest": "Ative o serviço de acessibilidade para testar.",
+    "overlayForFloating": "Permita a sobreposição de tela para usar o botão flutuante.",
+    "testSent": "Teste enviado. Toque de novo para ver outra plataforma e outra nota.",
+    "exampleSent": "Exemplo enviado. Veja no topo da tela ou deslize o painel de notificações.",
+    "outsideTestSent": "Saia do app agora. A oferta de exemplo aparece em {{seconds}} segundos."
+  },
+  "screen": {
+    "inControl": "Você no controle: o Copiloto só lê e informa, e quem aceita ou recusa é sempre você. Dirigindo, a voz avisa: toque no celular só com o carro parado. Cada plataforma tem suas regras sobre apps de apoio, e vale conhecê-las.",
+    "reviewSetup": "Rever a configuração guiada"
+  },
+  "status": {
+    "title": "Copiloto",
+    "readOffers": "Ler ofertas",
+    "readOffersHint": "Avalia cada oferta reconhecida.",
+    "imageReading": "Ler a imagem da tela",
+    "imageReadingHint": "Reforço na Uber e na 99, para quando o texto da oferta não está disponível. A imagem é lida no celular e descartada na hora.",
+    "platformRules": "As plataformas podem identificar apps que usam acessibilidade ou sobreposição, e as regras delas podem prever punições na conta. Usar o Copiloto é decisão sua, e a leitura pode não funcionar em todos os aparelhos.",
+    "accessibilityOn": "Acessibilidade ativa",
+    "accessibilityOff": "Acessibilidade desativada",
+    "enableAccessibility": "Ativar acessibilidade",
+    "shortcutNotice": "O ícone na lateral é um atalho do Android, e o Copiloto funciona sem ele. Para tirá-lo, abra Copiloto de ofertas na próxima tela e desligue a opção de atalho.",
+    "removeShortcut": "Remover o ícone da lateral",
+    "batteryNotice_km": "O Android pode pausar o Copiloto e a medição de km para economizar bateria. Se as ofertas pararem de aparecer, escolha Motorista na próxima tela e marque Não otimizar.",
+    "batteryNotice_mi": "O Android pode pausar o Copiloto e a medição de milhas para economizar bateria. Se as ofertas pararem de aparecer, escolha Motorista na próxima tela e marque Não otimizar.",
+    "openBattery": "Abrir ajustes de bateria",
+    "failedReads_one": "1 leitura ficou incompleta e não foi mostrada, para você só ver números confiáveis.",
+    "failedReads_other": "{{count}} leituras ficaram incompletas e não foram mostradas, para você só ver números confiáveis."
+  },
+  "channels": {
+    "title": "Como receber a oferta",
+    "voice": "Voz",
+    "voiceHint": "Recomendado ao dirigir: não exige olhar para a tela.",
+    "installVoice": "Instale uma voz em português no Android para ouvir as ofertas.",
+    "openVoiceSettings": "Abrir configurações de voz",
+    "card": "Cartão na tela",
+    "cardHint": "Com o carro parado, arraste para onde preferir. O app guarda a posição.",
+    "floating": "Botão flutuante",
+    "floatingHint": "Fica sobre os outros apps, com o cronômetro. A oferta abre dentro dele. Só esta opção desliga o botão de vez. A plataforma pode escondê-lo durante a oferta, então deixe a voz ligada.",
+    "notification": "Notificação",
+    "notificationHint": "Fica no painel do Android para consultar depois.",
+    "notificationExample": "Ver exemplo da notificação",
+    "testCard": "Testar cartão",
+    "testOutside": "Testar fora do app"
+  },
+  "display": {
+    "title": "Aparência do cartão",
+    "intro": "Vale para o cartão na tela e para a oferta dentro do botão flutuante.",
+    "layoutLabel": "Formato",
+    "layout": {
+      "complete": "Completo",
+      "summary": "Resumido"
+    },
+    "primaryMetricLabel": "Número principal (voz e formato resumido)",
+    "profit": "Lucro",
+    "sizeLabel": "Tamanho",
+    "size": {
+      "compact": "Compacto",
+      "large": "Grande",
+      "extra": "Extra"
+    },
+    "durationLabel": "Tempo máximo na tela",
+    "durationOption": "{{seconds}} s",
+    "resetPosition": "Voltar o cartão para o topo"
+  },
+  "apps": {
+    "title": "Apps monitorados"
+  },
+  "history": {
+    "title": "Últimas ofertas",
+    "seeAll": "Ver todas as ofertas"
+  },
+  "calibration": {
+    "title": "Calibração",
+    "showReading": "Ver o que o Copiloto lê",
+    "showReadingHint": "Mostra o texto da tela com as palavras mascaradas. Fica só na memória.",
+    "sendReadings": "Enviar estas leituras"
+  },
+  "targets": {
+    "title": "Mínimos por corrida",
+    "mode": {
+      "normal": "Normal",
+      "low": "Período fraco"
+    },
+    "minPerDistance_km": "Mínimo por km",
+    "minPerDistance_mi": "Mínimo por milha",
+    "minPerHour": "Mínimo por hora",
+    "editorIntro": "O menor valor que você quer receber em cada corrida. A nota das ofertas usa estes valores.",
+    "followGoal": "Calcular pela minha meta",
+    "followGoalHint": "Sua meta pede {{perDistance}} e {{perHour}}. Ligado, acompanha a meta quando ela mudar.",
+    "belowCostHint": "Oferta abaixo do seu custo fica vermelha em qualquer modo.",
+    "summaryIntro": "A nota das ofertas compara cada corrida com estes valores.",
+    "change": "Alterar"
+  },
+  "setup": {
+    "permission": {
+      "title": "Permitir a leitura das ofertas",
+      "explanation": "O Android chama essa permissão de acessibilidade. Com ela, o app lê valor, distância, tempo e avaliação das ofertas.",
+      "privacy": "Nomes, endereços e conversas não são guardados, e nada sai do seu celular.",
+      "openAccessibility": "Abrir acessibilidade",
+      "stepsTitle": "Na tela que abrir",
+      "step1": "1. Procure Copiloto de ofertas, em Apps baixados ou instalados.",
+      "step2": "2. Ligue a primeira opção, Usar Copiloto de ofertas.",
+      "step3": "3. Confirme em Permitir e volte para cá. Esta tela avança sozinha.",
+      "fullControlTitle": "O Android vai falar em controle total",
+      "fullControl": "Esse aviso é padrão e aparece para qualquer app com essa permissão. O Copiloto usa a leitura da tela e mostra o cartão, sem tocar em nada por você.",
+      "shortcut": "A opção de atalho pode ficar desligada: ela só colocaria um ícone na lateral da tela.",
+      "blockedTitle": "A opção apareceu bloqueada?",
+      "blocked": "É uma proteção do Android para apps instalados fora da loja, e é rápido liberar. Nos detalhes do app, toque nos três pontos e escolha permitir configurações restritas. O caminho pode mudar um pouco conforme o aparelho.",
+      "openAppSettings": "Abrir detalhes do app"
+    },
+    "ready": {
+      "title": "Tudo certo para testar",
+      "explanation": "Vamos ligar a voz e o cartão, os canais mais indicados, e mostrar um exemplo.",
+      "activate": "Ligar e testar"
+    },
+    "active": {
+      "title": "Copiloto ativo",
+      "explanation": "A cada oferta reconhecida, você ouve e vê de onde ela vem, a nota e seus números. Se alguma não aparecer, a Calibração ajuda a ajustar.",
+      "driving": "Dirigindo, a voz avisa por você. Toque no celular só com o carro parado.",
+      "testAgain": "Testar de novo"
+    }
+  }
+}

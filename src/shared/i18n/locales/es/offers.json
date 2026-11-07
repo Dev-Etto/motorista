@@ -1,0 +1,76 @@
+{
+  "reason": {
+    "noCosts": "Registra tus costos para ver la puntuación",
+    "belowCost": "No cubre tu costo por {{unit}}",
+    "targets": "{{unit}}: {{perKm}} · hora: {{perHour}}",
+    "noTarget": "sin mínimo",
+    "atTarget": "en el mínimo",
+    "above": "{{percent}}% por encima del mínimo",
+    "below": "{{percent}}% por debajo del mínimo",
+    "noTime": "sin tiempo en la oferta"
+  },
+  "status": {
+    "accepted": "Aceptada",
+    "declined": "Rechazada",
+    "countered": "Contraoferta de {{amount}}",
+    "unanswered": "Sin respuesta"
+  },
+  "row": {
+    "distanceWithTime": "{{distance}} • {{minutes}} min"
+  },
+  "estimate": {
+    "title": "Ingresos estimados",
+    "disclaimer": "Es una sugerencia, hecha con los viajes que la app te vio aceptar. El valor real puede cambiar por cancelaciones, propinas y tarifas. Si hace falta, corrígelo al registrar la jornada.",
+    "trips_one": "1 viaje aceptado",
+    "trips_other": "{{count}} viajes aceptados"
+  },
+  "outcomeSummary": {
+    "received": "Recibidas",
+    "accepted": "Aceptadas",
+    "notAccepted": "No aceptadas",
+    "perDistanceAccepted": "{{label}} de las aceptadas",
+    "perDistanceNotAccepted": "{{label}} de las no aceptadas"
+  },
+  "shiftEstimate": {
+    "title": "Sugerencia según lo aceptado",
+    "intro": "Según los viajes que la app te vio aceptar, estimamos estos ingresos:",
+    "total": "Total estimado",
+    "unmatched": "{{platforms}} no está en Plataformas. Agrégala para usar este valor.",
+    "applied": "Valores completados abajo. Revísalos y ajústalos antes de guardar.",
+    "apply": "Usar estos valores"
+  },
+  "screen": {
+    "periodLabel": "Período",
+    "period": {
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "week": "7 días",
+      "month": "30 días",
+      "custom": "Elegir fechas"
+    },
+    "from": "Desde",
+    "to": "Hasta",
+    "appLabel": "App",
+    "allSources": "Todas",
+    "outcomeTitle": "Aceptadas y no aceptadas",
+    "listTitle": "Ofertas",
+    "outcomeLabel": "Resultado",
+    "outcome": {
+      "all": "Todas",
+      "accepted": "Aceptadas",
+      "notAccepted": "No aceptadas"
+    },
+    "seeMore": "Ver más",
+    "emptyTitle": "No hay ofertas aquí",
+    "emptyMessage": "Cambia los filtros o espera las próximas ofertas que lea el Copiloto.",
+    "autoRecord": "La app registra sola lo que aceptas. Si el valor sugerido es distinto de lo que recibiste, solo tienes que corregirlo al registrar la jornada.",
+    "settingsTitle": "Ajustes",
+    "estimating": "Estimar ingresos según lo aceptado",
+    "estimatingHint": "Anota cuando tocas aceptar o rechazar en las apps de viajes. Nada sale del celular.",
+    "clearButton": "Borrar las ofertas",
+    "clearConfirm": {
+      "title": "¿Borrar las ofertas?",
+      "message": "Se borrarán el historial y la estimación de ingresos. Las jornadas guardadas no cambian."
+    }
+  }
+}

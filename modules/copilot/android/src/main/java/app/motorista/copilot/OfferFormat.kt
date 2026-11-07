@@ -1,75 +1,148 @@
 package app.motorista.copilot
 
-import java.util.Locale
+import android.content.Context
+import java.text.NumberFormat
 import kotlin.math.abs
 
-object OfferFormat {
-  private val brazil = Locale("pt", "BR")
+class OfferFormat(private val regional: RegionalSettings, private val texts: OfferTexts) {
+  private val locale = regional.locale
+  private val unit = regional.distanceUnit
+  private val currencyDigits = regional.currency.defaultFractionDigits.coerceAtLeast(0)
+  private val minorPerMajor = Math.pow(10.0, currencyDigits.toDouble()).toLong()
 
-  fun money(cents: Double): String = String.format(brazil, "R$ %.2f", cents / 100)
+  fun text(resId: Int, vararg args: Any): String = texts.text(resId, *args)
 
-  fun wholeMoney(cents: Double): String = "R$ ${Math.round(cents / 100)}"
+  fun money(cents: Double): String = currencyFormat(currencyDigits).format(cents / CENTS_PER_UNIT).plain()
+
+  fun wholeMoney(cents: Double): String = currencyFormat(0).format(Math.round(cents / CENTS_PER_UNIT).toDouble()).plain()
 
   fun signedMoney(cents: Double): String = "${if (cents < 0) "-" else "+"} ${money(abs(cents))}"
 
-  fun clock(elapsedMs: Long): String {
-    val totalSeconds = elapsedMs / 1000
-    return "%02d:%02d:%02d".format(totalSeconds / 3600, totalSeconds % 3600 / 60, totalSeconds % 60)
-  }
+  fun decimal(value: Double, decimals: Int = 1): String = NumberFormat.getNumberInstance(locale).apply {
+    minimumFractionDigits = decimals
+    maximumFractionDigits = decimals
+  }.format(value).plain()
 
-  fun decimal(value: Double, decimals: Int = 1): String = String.format(brazil, "%.${decimals}f", value)
+  fun perDistance(centsPerKm: Double): String = money(centsPerKm * unit.kmPerUnit)
 
-  fun scoreDescription(evaluation: OfferEvaluation): String {
-    val score = evaluation.score ?: return "Sem nota"
-    return "Nota ${decimal(score)} de 5"
-  }
+  fun perDistanceLabel(): String = texts.text(R.string.card_per_distance, unit.id)
 
   fun distanceAndTime(evaluation: OfferEvaluation): String {
-    val km = "${decimal(evaluation.offer.km)} km"
-    return if (evaluation.offer.minutes > 0) "$km • ${evaluation.offer.minutes} min" else km
+    val distance = "${decimal(evaluation.offer.km / unit.kmPerUnit)} ${unit.id}"
+    return if (evaluation.offer.minutes > 0) "$distance • ${evaluation.offer.minutes} min" else distance
   }
 
   fun rates(evaluation: OfferEvaluation): String {
-    val perKm = "${money(evaluation.perKmCents)}/km"
-    return if (evaluation.offer.minutes > 0) "$perKm • ${wholeMoney(evaluation.perHourCents)}/h" else perKm
+    val perDistance = "${perDistance(evaluation.perKmCents)}/${unit.id}"
+    return if (evaluation.offer.minutes > 0) "$perDistance • ${wholeMoney(evaluation.perHourCents)}/h" else perDistance
   }
 
-  fun profitLine(evaluation: OfferEvaluation): String = evaluation.profitCents?.let { "Lucro ${signedMoney(it)}" }.orEmpty()
+  fun summary(evaluation: OfferEvaluation, metric: PrimaryMetric): String {
+    val profit = evaluation.profitCents
+    if (metric == PrimaryMetric.PROFIT && profit != null) return signedMoney(profit)
+    return "${perDistance(evaluation.perKmCents)}/${unit.id}"
+  }
+
+  fun profitLine(evaluation: OfferEvaluation): String = evaluation.profitCents?.let { texts.text(R.string.offer_profit_line, signedMoney(it)) }.orEmpty()
+
+  fun scoreDescription(evaluation: OfferEvaluation): String {
+    val score = evaluation.score ?: return texts.text(R.string.offer_no_score)
+    return texts.text(R.string.offer_score_of_five, decimal(score))
+  }
+
+  fun reason(evaluation: OfferEvaluation): String = when (val reason = evaluation.reason) {
+    OfferReason.NoCosts -> texts.text(R.string.reason_no_costs)
+    OfferReason.BelowCost -> texts.text(R.string.reason_below_cost, unit.id)
+    is OfferReason.Targets -> texts.text(
+      R.string.reason_targets,
+      unit.id,
+      comparison(reason.perKm),
+      reason.perHour?.let { comparison(it) } ?: texts.text(R.string.reason_no_time),
+    )
+  }
 
   fun spokenPhrase(evaluation: OfferEvaluation, metric: PrimaryMetric): String {
-    val intro = spokenIntro(evaluation)
-    val profit = evaluation.profitCents
-    if (metric == PrimaryMetric.PROFIT && profit != null) {
-      return "$intro ${spokenAmount(abs(profit))} de ${if (profit < 0) "prejuízo" else "lucro"}."
-    }
-    return "$intro ${spokenAmount(evaluation.perKmCents)} por quilômetro."
-  }
-
-  private fun spokenIntro(evaluation: OfferEvaluation): String {
-    val source = evaluation.sourceLabel.takeIf { it.isNotEmpty() }?.let { "$it. " }.orEmpty()
-    val score = evaluation.score ?: return source.trim()
-    return "${source}Nota ${decimal(score)}."
-  }
-
-  private fun spokenAmount(cents: Double): String {
-    val total = Math.round(cents)
-    val reais = total / 100
-    val centavos = total % 100
-    if (centavos == 0L) return "$reais reais"
-    if (centavos < 10) return "$reais reais e $centavos centavos"
-    return "$reais e $centavos"
+    val source = evaluation.sourceLabel.takeIf { it.isNotEmpty() }?.let { "$it." }
+    val score = evaluation.score?.let { texts.text(R.string.spoken_score, decimal(it)) }
+    return listOfNotNull(source, score, spokenMetric(evaluation, metric)).joinToString(" ")
   }
 
   fun notificationTitle(evaluation: OfferEvaluation): String {
-    val score = evaluation.score?.let { "Nota ${decimal(it)} • " }.orEmpty()
+    val score = evaluation.score?.let { "${texts.text(R.string.offer_score_short, decimal(it))} • " }.orEmpty()
     return "${evaluation.sourceLabel} • $score${money(evaluation.offer.valueCents.toDouble())}"
   }
 
-  fun notificationText(evaluation: OfferEvaluation) =
-    "${distanceAndTime(evaluation)} • ${rates(evaluation)}"
+  fun notificationText(evaluation: OfferEvaluation) = "${distanceAndTime(evaluation)} • ${rates(evaluation)}"
 
   fun notificationDetails(evaluation: OfferEvaluation) =
-    listOf(notificationText(evaluation), profitLine(evaluation), evaluation.reason)
+    listOf(notificationText(evaluation), profitLine(evaluation), reason(evaluation))
       .filter { it.isNotEmpty() }
       .joinToString("\n")
+
+  private fun comparison(comparison: TargetComparison): String = when (comparison) {
+    TargetComparison.NoTarget -> texts.text(R.string.reason_no_target)
+    TargetComparison.AtTarget -> texts.text(R.string.reason_at_target)
+    is TargetComparison.Above -> texts.text(R.string.reason_above, comparison.percent)
+    is TargetComparison.Below -> texts.text(R.string.reason_below, comparison.percent)
+  }
+
+  private fun spokenMetric(evaluation: OfferEvaluation, metric: PrimaryMetric): String {
+    val profit = evaluation.profitCents
+    if (metric == PrimaryMetric.PROFIT && profit != null) {
+      return texts.text(if (profit < 0) R.string.spoken_loss else R.string.spoken_profit, spokenAmount(abs(profit)))
+    }
+    val perDistance = if (unit == DistanceUnit.MI) R.string.spoken_per_mi else R.string.spoken_per_km
+    return texts.text(perDistance, spokenAmount(evaluation.perKmCents * unit.kmPerUnit))
+  }
+
+  private fun spokenAmount(cents: Double): String {
+    val names = CURRENCY_NAMES[regional.currency.currencyCode]
+    if (names == null || currencyDigits != CENT_DIGITS) return money(cents)
+
+    val total = Math.round(cents)
+    val major = total / minorPerMajor
+    val minor = total % minorPerMajor
+    val majorText = texts.quantity(names.first, major.toInt(), major)
+    if (minor == 0L) return majorText
+    if (minor < SHORT_MINOR_FROM) return texts.text(R.string.spoken_amount_with_minor, majorText, texts.quantity(names.second, minor.toInt(), minor))
+    return texts.text(R.string.spoken_amount_short, major, minor)
+  }
+
+  private fun currencyFormat(digits: Int): NumberFormat = NumberFormat.getCurrencyInstance(locale).apply {
+    currency = regional.currency
+    minimumFractionDigits = digits
+    maximumFractionDigits = digits
+  }
+
+  private fun String.plain() = replace(WIDE_SPACES, " ")
+
+  companion object {
+    private const val CENTS_PER_UNIT = 100.0
+    private const val CENT_DIGITS = 2
+    private const val SHORT_MINOR_FROM = 10
+    private const val MS_PER_SECOND = 1000
+    private const val SECONDS_PER_MINUTE = 60
+    private const val SECONDS_PER_HOUR = 3600
+    private val WIDE_SPACES = Regex("[\\u00A0\\u202F]")
+    private val CURRENCY_NAMES = mapOf(
+      "BRL" to (R.plurals.currency_brl_major to R.plurals.currency_brl_minor),
+      "USD" to (R.plurals.currency_usd_major to R.plurals.currency_usd_minor),
+      "EUR" to (R.plurals.currency_eur_major to R.plurals.currency_eur_minor),
+      "MXN" to (R.plurals.currency_mxn_major to R.plurals.currency_mxn_minor),
+    )
+
+    @Volatile private var cached: Pair<RegionalSettings, OfferFormat>? = null
+
+    fun of(context: Context, regional: RegionalSettings): OfferFormat {
+      cached?.takeIf { it.first == regional }?.let { return it.second }
+      val format = OfferFormat(regional, ResourceOfferTexts(context.localized(regional).resources))
+      cached = regional to format
+      return format
+    }
+
+    fun clock(elapsedMs: Long): String {
+      val totalSeconds = elapsedMs / MS_PER_SECOND
+      return "%02d:%02d:%02d".format(totalSeconds / SECONDS_PER_HOUR, totalSeconds % SECONDS_PER_HOUR / SECONDS_PER_MINUTE, totalSeconds % SECONDS_PER_MINUTE)
+    }
+  }
 }

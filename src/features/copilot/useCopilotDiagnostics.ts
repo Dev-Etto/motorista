@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useInterval } from '@/shared/hooks/useInterval';
 import { copilot } from '@modules/copilot';
+import { useInterval } from '@shared/hooks/useInterval';
 
 const DIAGNOSTICS_REFRESH_MS = 2000;
 

@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react-native';
-import { useSubmit } from '../useSubmit';
+import { useSubmit } from '@shared/hooks/useSubmit';
 
 describe('useSubmit', () => {
   it('dois toques seguidos gravam uma vez só', async () => {

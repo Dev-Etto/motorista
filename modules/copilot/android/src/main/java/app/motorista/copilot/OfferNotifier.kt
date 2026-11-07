@@ -21,14 +21,15 @@ class OfferNotifier(private val context: Context) : OfferChannel {
     if (!enabled) return
 
     createChannel()
+    val format = OfferFormat.of(context, preferences.regional)
     val notification = Notification.Builder(context, CHANNEL_ID)
       .setSmallIcon(R.drawable.ic_stat_motorista)
       .setColor(evaluation.color.dayBackground)
-      .setContentTitle(OfferFormat.notificationTitle(evaluation))
-      .setContentText(OfferFormat.notificationText(evaluation))
+      .setContentTitle(format.notificationTitle(evaluation))
+      .setContentText(format.notificationText(evaluation))
       .setStyle(Notification.DecoratedCustomViewStyle())
-      .setCustomContentView(contentView(evaluation, OfferFormat.notificationText(evaluation)))
-      .setCustomBigContentView(contentView(evaluation, OfferFormat.notificationDetails(evaluation)))
+      .setCustomContentView(contentView(evaluation, format, format.notificationText(evaluation)))
+      .setCustomBigContentView(contentView(evaluation, format, format.notificationDetails(evaluation)))
       .setContentIntent(historyIntent())
       .setAutoCancel(true)
       .setLocalOnly(true)
@@ -40,14 +41,14 @@ class OfferNotifier(private val context: Context) : OfferChannel {
 
   override fun hide() = manager.cancel(NOTIFICATION_ID)
 
-  private fun contentView(evaluation: OfferEvaluation, text: String) = RemoteViews(context.packageName, R.layout.notification_offer).apply {
+  private fun contentView(evaluation: OfferEvaluation, format: OfferFormat, text: String) = RemoteViews(context.packageName, R.layout.notification_offer).apply {
     val source = OfferSources.style(evaluation.sourceLabel)
     setTextViewText(R.id.offer_source, source.label)
     setTextColor(R.id.offer_source, source.text)
     setInt(R.id.offer_source, "setBackgroundColor", source.background)
-    setTextViewText(R.id.offer_value, OfferFormat.money(evaluation.offer.valueCents.toDouble()))
-    setImageViewBitmap(R.id.offer_score, ScoreBadge.bitmap(context, evaluation, context.resources.getDimensionPixelSize(R.dimen.offer_score_badge), isSystemNight()))
-    setContentDescription(R.id.offer_score, OfferFormat.scoreDescription(evaluation))
+    setTextViewText(R.id.offer_value, format.money(evaluation.offer.valueCents.toDouble()))
+    setImageViewBitmap(R.id.offer_score, ScoreBadge.bitmap(context, evaluation, format, context.resources.getDimensionPixelSize(R.dimen.offer_score_badge), isSystemNight()))
+    setContentDescription(R.id.offer_score, format.scoreDescription(evaluation))
     setTextViewText(R.id.offer_text, text)
   }
 
@@ -55,8 +56,8 @@ class OfferNotifier(private val context: Context) : OfferChannel {
     context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
   private fun createChannel() {
-    val channel = NotificationChannel(CHANNEL_ID, context.getString(R.string.offers_channel_name), NotificationManager.IMPORTANCE_HIGH).apply {
-      description = context.getString(R.string.offers_channel_description)
+    val channel = NotificationChannel(CHANNEL_ID, context.copilotText(R.string.offers_channel_name), NotificationManager.IMPORTANCE_HIGH).apply {
+      description = context.copilotText(R.string.offers_channel_description)
       setSound(null, null)
       enableVibration(false)
       setShowBadge(false)

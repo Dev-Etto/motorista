@@ -1,5 +1,5 @@
-import { platformRepository } from '@/data/repositories/platformRepository';
-import { useAsyncData } from '@/shared/hooks/useAsyncData';
+import { platformRepository } from '@data/repositories/platformRepository';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
 
 export function usePlatforms() {
   const state = useAsyncData(() => platformRepository.list());

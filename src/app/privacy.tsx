@@ -1,1 +1,1 @@
-export { default } from '@/features/settings/PrivacyScreen';
+export { default } from '@features/settings/PrivacyScreen';

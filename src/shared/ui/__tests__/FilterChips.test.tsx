@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { FilterChips } from '../FilterChips';
+import { FilterChips } from '@shared/ui/FilterChips';
 
 const MANY_APPS = ['Todos', 'Uber', '99', 'inDrive', 'Maxim', 'Garupa', 'Lady Driver', 'Um aplicativo com nome bem comprido'].map((label) => ({
   value: label,

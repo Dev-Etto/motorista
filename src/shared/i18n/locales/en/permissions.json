@@ -1,0 +1,29 @@
+{
+  "intro": "Everything is processed on your phone. Nothing is sent out.",
+  "granted": "Allowed",
+  "allow": "Allow",
+  "accessibility": {
+    "title": "Read offers",
+    "description": "To evaluate offers from Uber, 99, and inDrive. Android calls this accessibility.",
+    "howTo": {
+      "title": "How to turn on reading",
+      "step1": "1. Find Offer Copilot and turn on the first option. Leave the shortcut off.",
+      "step2": "2. Android warns about full control. It's the standard warning for this permission: the app reads the screen and doesn't tap anything for you.",
+      "step3": "3. If the option is blocked, open the app details, tap the three dots, and allow restricted settings.",
+      "openAppSettings": "Open app details"
+    }
+  },
+  "overlay": {
+    "title": "Display over other apps",
+    "description": "So the timer shows up while you use Uber or 99."
+  },
+  "location": {
+    "title": "Location",
+    "description_km": "To track your shift's kilometers by GPS. Choose to allow while using the app.",
+    "description_mi": "To track your shift's miles by GPS. Choose to allow while using the app."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "For maintenance reminders and to check offers later."
+  }
+}

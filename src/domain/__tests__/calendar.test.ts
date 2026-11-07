@@ -1,13 +1,17 @@
-import { buildCalendar } from '../calendar/calendar';
-import { suggestOfferTargets } from '../goal/goal';
-import { classifyOffer, activeTargets, withGoalTargets, DEFAULT_LOW_DEMAND_TARGETS, DEFAULT_OFFER_TARGETS } from '../offer/offer';
-import { isTimerForgotten } from '../shift/forgotten';
+import { buildCalendar } from '@domain/calendar/calendar';
+import { suggestOfferTargets } from '@domain/goal/goal';
+import { classifyOffer, activeTargets, withGoalTargets, DEFAULT_LOW_DEMAND_TARGETS, DEFAULT_OFFER_TARGETS } from '@domain/offer/offer';
+import { isTimerForgotten } from '@domain/shift/forgotten';
 
 describe('calendário', () => {
-  const weeks = buildCalendar('2026-11-10', [
-    { date: '2026-11-02', profitCents: 100 },
-    { date: '2026-11-02', profitCents: 50 },
-  ]);
+  const weeks = buildCalendar(
+    '2026-11-10',
+    [
+      { date: '2026-11-02', profitCents: 100 },
+      { date: '2026-11-02', profitCents: 50 },
+    ],
+    1,
+  );
 
   it('começa na segunda-feira e fecha semanas completas', () => {
     expect(weeks.every((week) => week.length === 7)).toBe(true);
@@ -22,6 +26,12 @@ describe('calendário', () => {
 
   it('inclui todos os dias do mês', () => {
     expect(weeks.flat().filter(Boolean)).toHaveLength(30);
+  });
+
+  it('começa no domingo quando a região pede', () => {
+    const sundayFirst = buildCalendar('2026-11-10', [], 7);
+    expect(sundayFirst[0]?.[0]?.date).toBe('2026-11-01');
+    expect(sundayFirst[0]?.[6]?.date).toBe('2026-11-07');
   });
 });
 

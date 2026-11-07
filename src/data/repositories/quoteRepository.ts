@@ -1,4 +1,4 @@
-import { getDb, SqlExecutor } from '@/data/database/connection';
+import { getDb, SqlExecutor } from '@data/database/connection';
 
 export interface SavedQuote {
   id: number;

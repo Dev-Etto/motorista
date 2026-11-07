@@ -1,0 +1,85 @@
+{
+  "screen": {
+    "replayIntro": "Ver la introducción de nuevo"
+  },
+  "costPerKm": {
+    "title_km": "Cómo calculamos tu costo por km",
+    "title_mi": "Cómo calculamos tu costo por milla",
+    "howItWorks_km": "Sumamos combustible, aceite, llantas y mantenimiento por km, y dividimos los costos fijos del mes entre los km que prevés recorrer.",
+    "howItWorks_mi": "Sumamos combustible, aceite, llantas y mantenimiento por milla, y dividimos los costos fijos del mes entre las millas que prevés recorrer.",
+    "precision": "Cuantos más valores reales indiques en Vehículo y costos, más preciso es el resultado."
+  },
+  "profit": {
+    "title": "Cómo calculamos tu ganancia",
+    "formula_km": "La ganancia son los ingresos menos el costo del vehículo por los km recorridos y los gastos de la jornada, como peajes y comida.",
+    "formula_mi": "La ganancia son los ingresos menos el costo del vehículo por las millas recorridas y los gastos de la jornada, como peajes y comida.",
+    "notCountedTwice_km": "Las cargas de combustible y el mantenimiento no se descuentan otra vez de la ganancia, porque ya están en el costo por km. Sirven para comparar lo previsto con lo pagado.",
+    "notCountedTwice_mi": "Las cargas de combustible y el mantenimiento no se descuentan otra vez de la ganancia, porque ya están en el costo por milla. Sirven para comparar lo previsto con lo pagado."
+  },
+  "offerScore": {
+    "title": "Cómo entender la puntuación de la oferta",
+    "scale_km": "La puntuación va de 0 a 5 y compara la oferta con tu costo y tus mínimos por km y por hora. Aparece en una insignia, y el color de la insignia indica el rango.",
+    "scale_mi": "La puntuación va de 0 a 5 y compara la oferta con tu costo y tus mínimos por milla y por hora. Aparece en una insignia, y el color de la insignia indica el rango.",
+    "green": "Verde, {{min}} o más: alcanza los dos mínimos. Cuanto más por encima de ellos, mayor la puntuación.",
+    "yellow": "Amarillo, de {{min}} a {{max}}: cubre tu costo, pero queda por debajo de algún mínimo.",
+    "red_km": "Rojo, hasta {{max}}: no cubre tu costo por km.",
+    "red_mi": "Rojo, hasta {{max}}: no cubre tu costo por milla.",
+    "arrows_km": "En la tarjeta, ▲ al lado del valor por km o por hora indica que alcanzó tu mínimo, y ▼ indica que quedó por debajo.",
+    "arrows_mi": "En la tarjeta, ▲ al lado del valor por milla o por hora indica que alcanzó tu mínimo, y ▼ indica que quedó por debajo.",
+    "withoutTime_km": "Cuando la oferta no muestra el tiempo del viaje, la puntuación usa solo el valor por km y llega como máximo a 4, y el valor por hora queda vacío.",
+    "withoutTime_mi": "Cuando la oferta no muestra el tiempo del viaje, la puntuación usa solo el valor por milla y llega como máximo a 4, y el valor por hora queda vacío.",
+    "rating": "★ es la calificación del pasajero, cuando la app de viajes la muestra. No entra en la puntuación.",
+    "noCosts": "Sin costos registrados, la oferta aparece sin puntuación. La decisión siempre es tuya."
+  },
+  "shift": {
+    "title": "Cómo registrar una jornada",
+    "howTo_km": "Toca Nueva jornada con el carro detenido. Indica ganancias, km y horas, y usa el cronómetro o el GPS si prefieres.",
+    "howTo_mi": "Toca Nueva jornada con el carro detenido. Indica ganancias, millas y horas, y usa el cronómetro o el GPS si prefieres.",
+    "partial_km": "Sin km, el resultado queda parcial hasta que lo completes.",
+    "partial_mi": "Sin millas, el resultado queda parcial hasta que lo completes."
+  },
+  "copilotSetup": {
+    "title": "Cómo configurar el Copiloto",
+    "guided": "En Más, abre Copiloto de ofertas y usa la configuración guiada. Después, toca Probar.",
+    "driving": "Mientras manejas, la voz te avisa. Toca el celular solo con el carro detenido."
+  },
+  "copilotMissing": {
+    "title": "Si el Copiloto no aparece",
+    "accessibility": "Revisa si la accesibilidad sigue activada. Algunos dispositivos pausan servicios para ahorrar batería: en ese caso, quita la app de la optimización de batería.",
+    "calibration": "Si alguna oferta no se reconoce, la Calibración muestra lo que está leyendo el Copiloto, con las palabras ocultas."
+  },
+  "shortcutIcon": {
+    "title": "El ícono en el borde de la pantalla",
+    "what": "Es el acceso directo de accesibilidad de Android, y el Copiloto funciona sin él. Solo aparece si la opción de acceso directo está activada.",
+    "remove": "Para quitarlo, arrastra el ícono hasta Quitar. O abre Ajustes de Android, Accesibilidad, Copiloto de ofertas, y desactiva el acceso directo."
+  },
+  "moveCard": {
+    "title": "Mover la tarjeta",
+    "drag": "Con el carro detenido, arrastra la tarjeta adonde prefieras. La posición queda guardada, y puedes volver a la parte superior en la pantalla del Copiloto."
+  },
+  "goal": {
+    "title": "Cómo funciona la meta del mes",
+    "realProfit_km": "La meta mide tu ganancia real, la misma de Este mes en Inicio: lo que facturaste menos el costo por km y los gastos. Si recorres más km por el mismo valor, tu ganancia baja y la barra avanza menos.",
+    "realProfit_mi": "La meta mide tu ganancia real, la misma de Este mes en Inicio: lo que facturaste menos el costo por milla y los gastos. Si recorres más millas por el mismo valor, tu ganancia baja y la barra avanza menos.",
+    "today": "La meta de hoy divide lo que faltaba al principio del día entre los días de trabajo restantes y no cambia durante el día. Los ingresos que se muestran son solo una referencia para alcanzarla.",
+    "plan_km": "El plan del mes es una previsión con los km que indicaste, y de él salen los mínimos por viaje.",
+    "plan_mi": "El plan del mes es una previsión con las millas que indicaste, y de él salen los mínimos por viaje.",
+    "closedMonth": "El Mes cerrado, en Informes, descuenta el costo fijo completo. Si recorres menos de lo previsto, será menor que la ganancia de la meta."
+  },
+  "estimatedRevenue": {
+    "title": "Cómo funcionan los ingresos estimados",
+    "howItWorks": "Cuando tocas aceptar en una app de viajes, el Copiloto suma el valor de la oferta por plataforma. En Más, Ofertas e ingresos muestra el total y todas las ofertas, con filtros de período, app, aceptadas y no aceptadas. Las ofertas se guardan hasta 12 meses.",
+    "suggestion": "Es una sugerencia. La app no sabe si el pasajero canceló ni cuánto pagó la plataforma al final, y algunas apps pueden no avisar del toque.",
+    "useValues": "Al registrar la jornada, toca Usar estos valores para completar las ganancias. Si el valor es distinto de lo que recibiste, corrígelo antes de guardar: nada entra en tu ganancia sin que lo confirmes."
+  },
+  "backup": {
+    "title": "Copia de seguridad y cambio de celular",
+    "onDevice": "Tus datos quedan solo en el celular. Haz copias de seguridad de vez en cuando y guarda el archivo fuera de él, como en Drive.",
+    "newPhone": "En el dispositivo nuevo, instala la app, abre Copia de seguridad y usa Restaurar."
+  },
+  "update": {
+    "title": "Cómo instalar una actualización",
+    "howTo": "En Más, toca Buscar actualización, descarga la nueva versión e instálala sobre la actual. Tus datos siguen en la app.",
+    "backupFirst": "Haz una copia de seguridad antes, por si acaso."
+  }
+}

@@ -1,8 +1,9 @@
-import { loadGoalProgress } from '@/application/goalProgress';
-import { LearnMore } from '@/shared/ui/LearnMore';
-import { AppText, Button, Card, Notice, ProgressBar, Stat, StatGrid } from '@/shared/ui/primitives';
-import { profitTone } from '@/shared/utils/format';
-import { formatBRL } from '@/shared/utils/money';
+import { useTranslation } from 'react-i18next';
+import { loadGoalProgress } from '@application/goalProgress';
+import { useFormat } from '@shared/i18n/format';
+import { LearnMore } from '@shared/ui/LearnMore';
+import { AppText, Button, Card, Notice, ProgressBar, Stat, StatGrid } from '@shared/ui/primitives';
+import { profitTone } from '@shared/utils/format';
 import { describeGoalDay, describePartialShifts } from './goalMessages';
 
 type GoalProgress = NonNullable<Awaited<ReturnType<typeof loadGoalProgress>>>;
@@ -13,10 +14,13 @@ interface GoalProgressCardProps {
 }
 
 export function GoalProgressCard({ progress, onOpenDetails }: GoalProgressCardProps) {
+  const { t } = useTranslation('goals');
+  const format = useFormat();
   return (
-    <Card title="Meta do mês">
+    <Card title={t('progress.title')}>
       <AppText bold tone={profitTone(progress.profitSoFarCents)}>
-        {formatBRL(progress.profitSoFarCents)} <AppText tone="muted">de {formatBRL(progress.goal.desiredProfitCents)} de lucro</AppText>
+        {format.money(progress.profitSoFarCents)}{' '}
+        <AppText tone="muted">{t('progress.ofProfit', { goal: format.money(progress.goal.desiredProfitCents) })}</AppText>
       </AppText>
       <ProgressBar progress={progress.progress} />
       {progress.reached ? null : (
@@ -24,31 +28,24 @@ export function GoalProgressCard({ progress, onOpenDetails }: GoalProgressCardPr
           {progress.dailyTargetCents === null || !progress.todayIsWorkDay ? null : (
             <>
               <Stat
-                label={progress.dayOverride === null ? 'Meta de lucro hoje' : 'Meta de hoje, ajustada por você'}
-                value={formatBRL(progress.dailyTargetCents)}
+                label={progress.dayOverride === null ? t('progress.todayTarget') : t('progress.todayTargetAdjusted')}
+                value={format.money(progress.dailyTargetCents)}
               />
-              <Stat label="Lucro de hoje" value={formatBRL(progress.profitTodayCents)} />
+              <Stat label={t('progress.profitToday')} value={format.money(progress.profitTodayCents)} />
             </>
           )}
-          <Stat label="Falta lucrar no mês" value={formatBRL(progress.remainingCents)} />
+          <Stat label={t('progress.remaining')} value={format.money(progress.remainingCents)} />
         </StatGrid>
       )}
-      <AppText variant="caption">{describeGoalDay(progress)}</AppText>
-      {progress.partialCount > 0 ? <Notice message={describePartialShifts(progress.partialCount)} /> : null}
-      {onOpenDetails ? <Button label="Ver meta e plano" variant="secondary" onPress={onOpenDetails} /> : null}
+      <AppText variant="caption">{describeGoalDay(progress, t, format)}</AppText>
+      {progress.partialCount > 0 ? <Notice message={describePartialShifts(progress.partialCount, t)} /> : null}
+      {onOpenDetails ? <Button label={t('progress.openDetails')} variant="secondary" onPress={onOpenDetails} /> : null}
       {onOpenDetails ? null : (
-        <LearnMore title="Como essa conta funciona?">
-          <AppText variant="caption">
-            O lucro é o mesmo de &quot;Neste mês&quot; no início: o que você faturou menos o custo por km das jornadas e as despesas.
-          </AppText>
-          <AppText variant="caption">O custo fixo, como seguro e parcela, entra diluído em cada km, pelos km que você prevê rodar no mês.</AppText>
-          <AppText variant="caption">
-            Por isso, o Mês fechado, em Relatórios, pode dar um valor diferente: ele desconta o custo fixo inteiro. Se você rodar menos que o previsto, ele será
-            menor que o lucro daqui.
-          </AppText>
-          <AppText variant="caption">
-            A meta de hoje divide o que faltava no começo do dia pelos dias de trabalho restantes. Ela não muda durante o dia.
-          </AppText>
+        <LearnMore title={t('progress.howTitle')}>
+          <AppText variant="caption">{t('progress.howProfit', { unit: format.distanceUnit })}</AppText>
+          <AppText variant="caption">{t('progress.howFixed', { context: format.distanceUnit })}</AppText>
+          <AppText variant="caption">{t('progress.howClosedMonth')}</AppText>
+          <AppText variant="caption">{t('progress.howToday')}</AppText>
         </LearnMore>
       )}
     </Card>

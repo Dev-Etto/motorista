@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { ensureNotifications } from '@/shared/platform/notifications';
+import { useTranslation } from 'react-i18next';
 import { copilot, CopilotPreferences } from '@modules/copilot';
-import { COPILOT_COPY } from './copy';
+import { ensureNotifications } from '@shared/platform/notifications';
 
 const FLOATING_REFRESH_DELAY_MS = 300;
 
 export function useCopilotPreferences(refresh: () => void, notify: (message: string) => void) {
+  const { t } = useTranslation('copilot');
   const [current, setCurrent] = useState<CopilotPreferences>(() => copilot.getPreferences());
 
   const update = (changes: Partial<CopilotPreferences>) => {
@@ -16,7 +17,7 @@ export function useCopilotPreferences(refresh: () => void, notify: (message: str
 
   const setNotification = async (value: boolean) => {
     if (!value) return update({ notification: false });
-    if (!(await ensureNotifications())) return notify(COPILOT_COPY.notificationsForChannel);
+    if (!(await ensureNotifications())) return notify(t('messages.notificationsForChannel'));
 
     update({ notification: true });
   };
@@ -28,7 +29,7 @@ export function useCopilotPreferences(refresh: () => void, notify: (message: str
       return setTimeout(refresh, FLOATING_REFRESH_DELAY_MS);
     }
     if (!copilot.startFloating()) {
-      notify(COPILOT_COPY.overlayForFloating);
+      notify(t('messages.overlayForFloating'));
       return copilot.openOverlaySettings();
     }
     setTimeout(refresh, FLOATING_REFRESH_DELAY_MS);

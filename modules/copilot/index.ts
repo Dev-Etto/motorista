@@ -1,7 +1,7 @@
 import { requireOptionalNativeModule } from 'expo-modules-core';
-import { type CopilotPreferences, parseHistory, parsePreferences } from './schemas';
+import { type CopilotPreferences, type CopilotRegional, copilotRegionalSchema, parseHistory, parsePreferences } from './schemas';
 
-export type { CardLayout, CardSize, CopilotPreferences, OfferHistoryEntry, PrimaryMetric, ThemeMode } from './schemas';
+export type { CardLayout, CardSize, CopilotPreferences, CopilotRegional, OfferHistoryEntry, PrimaryMetric, ThemeMode } from './schemas';
 
 export interface CopilotStatus {
   enabled: boolean;
@@ -26,6 +26,9 @@ interface CopilotNativeModule {
   setEnabled(value: boolean): void;
   getPreferences(): string;
   setPreferences(json: string): void;
+  setRegional(json: string): void;
+  getAppLanguage(): string | null;
+  setAppLanguage(tag: string | null): boolean;
   setTargets(costPerKm: number, targetPerKmCents: number, targetPerHourCents: number): void;
   resetCardPosition(): void;
   getHistory(): Promise<string>;
@@ -64,6 +67,9 @@ export const copilot = {
   setEnabled: (value: boolean) => requireModule().setEnabled(value),
   getPreferences: () => parsePreferences(requireModule().getPreferences()),
   setPreferences: (preferences: CopilotPreferences) => requireModule().setPreferences(JSON.stringify(preferences)),
+  getAppLanguage: () => native?.getAppLanguage() ?? null,
+  setAppLanguage: (tag: string | null) => native?.setAppLanguage(tag) ?? false,
+  setRegional: (regional: CopilotRegional) => requireModule().setRegional(JSON.stringify(copilotRegionalSchema.parse(regional))),
   setTargets: (costPerKm: number, targetPerKmCents: number, targetPerHourCents: number) =>
     requireModule().setTargets(costPerKm, targetPerKmCents, targetPerHourCents),
   resetCardPosition: () => requireModule().resetCardPosition(),

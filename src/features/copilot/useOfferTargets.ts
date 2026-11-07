@@ -1,26 +1,29 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { loadOfferSettings, saveFollowGoal, saveModeTargets, saveOfferMode } from '@/application/offerSettings';
-import { activeTargets, DEFAULT_LOW_DEMAND_TARGETS, DEFAULT_OFFER_TARGETS, type OfferMode, type OfferSettings } from '@/domain/offer/offer';
-import { useSubmit } from '@/shared/hooks/useSubmit';
-import { centsToInput } from '@/shared/utils/money';
-import { centsOrZero } from '@/shared/utils/parse';
+import { loadOfferSettings, saveFollowGoal, saveModeTargets, saveOfferMode } from '@application/offerSettings';
+import { activeTargets, DEFAULT_LOW_DEMAND_TARGETS, DEFAULT_OFFER_TARGETS, type OfferMode, type OfferSettings } from '@domain/offer/offer';
+import { useSubmit } from '@shared/hooks/useSubmit';
+import { useFormat } from '@shared/i18n/format';
 
 const INITIAL: OfferSettings = { mode: 'normal', normal: DEFAULT_OFFER_TARGETS, low: DEFAULT_LOW_DEMAND_TARGETS, followGoal: false };
 
 export function useOfferTargets() {
+  const format = useFormat();
   const [settings, setSettings] = useState<OfferSettings>(INITIAL);
   const [perKm, setPerKm] = useState('');
   const [perHour, setPerHour] = useState('');
   const editing = useRef(false);
 
-  const loadFields = useCallback((next: OfferSettings) => {
-    const targets = activeTargets(next);
-    editing.current = false;
-    setSettings(next);
-    setPerKm(centsToInput(targets.targetPerKmCents));
-    setPerHour(centsToInput(targets.targetPerHourCents));
-  }, []);
+  const loadFields = useCallback(
+    (next: OfferSettings) => {
+      const targets = activeTargets(next);
+      editing.current = false;
+      setSettings(next);
+      setPerKm(format.perDistanceInput(targets.targetPerKmCents));
+      setPerHour(format.moneyInput(targets.targetPerHourCents));
+    },
+    [format],
+  );
 
   const reload = useCallback(async () => loadFields(await loadOfferSettings()), [loadFields]);
 
@@ -35,7 +38,7 @@ export function useOfferTargets() {
     editing.current = true;
     setSettings({
       ...settings,
-      [settings.mode]: { targetPerKmCents: centsOrZero(nextPerKm), targetPerHourCents: centsOrZero(nextPerHour) },
+      [settings.mode]: { targetPerKmCents: format.parsePerDistance(nextPerKm) ?? 0, targetPerHourCents: format.centsOrZero(nextPerHour) },
     });
   };
 

@@ -1,0 +1,63 @@
+{
+  "day": {
+    "reached": "Goal reached.",
+    "reachedWithSurplus": "Goal reached. You've already made {{surplus}} in profit above it.",
+    "noDaysLeft": "There are no more workdays in your goal this month. You were {{remaining}} short of reaching it.",
+    "notWorkDay": "Today isn't a workday in your goal.",
+    "planLastDay": "On the last workday of the month, the target is a profit of {{target}}.",
+    "planNextDays_one": "For the next {{count}} workday, the target is a profit of {{target}} per day.",
+    "planNextDays_other": "For the next {{count}} workdays, the target is a profit of {{target}} per day.",
+    "todayReached": "Today's goal reached. Any extra profit reduces what's left for the coming days.",
+    "leftToday": "{{amount}} of profit left today.",
+    "effort": "That takes about {{gross}} in earnings for the day, driving {{distance}}.",
+    "lastDay": "Today is the last workday of the month.",
+    "daysLeft_one": "{{count}} workday left this month, including today.",
+    "daysLeft_other": "{{count}} workdays left this month, including today."
+  },
+  "partialShifts_one": "{{count}} shift has no kilometers or no cost: the vehicle cost wasn't deducted from it, so your real profit may be lower.",
+  "partialShifts_other": "{{count}} shifts have no kilometers or no cost: the vehicle cost wasn't deducted from them, so your real profit may be lower.",
+  "plan": {
+    "noVehicle": "Add your vehicle to see how much to earn and how much each ride needs to pay.",
+    "title": "Your plan for the month",
+    "caption_km": "This is an estimate made at the start, using the kilometers you entered. The minimums per ride come from it.",
+    "caption_mi": "This is an estimate made at the start, using the miles you entered. The minimums per ride come from it.",
+    "gross": "Estimated earnings for the month",
+    "perWorkDay": "Per workday",
+    "plannedDistance_km": "Kilometers planned per day",
+    "plannedDistance_mi": "Miles planned per day"
+  },
+  "progress": {
+    "title": "Monthly goal",
+    "ofProfit": "of {{goal}} in profit",
+    "todayTarget": "Today's profit goal",
+    "todayTargetAdjusted": "Today's goal, adjusted by you",
+    "profitToday": "Today's profit",
+    "remaining": "Profit left this month",
+    "openDetails": "See goal and plan",
+    "howTitle": "How does this work?",
+    "howProfit": "The profit is the same as \"This month\" on the home screen: what you earned minus the cost per {{unit}} of your shifts and your expenses.",
+    "howFixed_km": "Fixed costs, like insurance and loan payments, are spread across each kilometer, based on the kilometers you plan to drive this month.",
+    "howFixed_mi": "Fixed costs, like insurance and loan payments, are spread across each mile, based on the miles you plan to drive this month.",
+    "howClosedMonth": "That's why Closed month, in Reports, may show a different amount: it deducts the full fixed cost. If you drive less than planned, it will be lower than the profit shown here.",
+    "howToday": "Today's goal divides what was left at the start of the day by the remaining workdays. It doesn't change during the day."
+  },
+  "screen": {
+    "title": "{{month}} goal",
+    "intro": "Tell us how much profit you want to make this month. The app tracks your real profit and shows what's left, today and until the end of the month.",
+    "goalTitle": "Your goal",
+    "desired": "How much profit you want this month",
+    "hoursPerDay": "Work hours per day",
+    "workDays": "Workdays",
+    "update": "Update goal",
+    "calculate": "Calculate my plan",
+    "adjustToday": "Adjust today's goal",
+    "todayProfit": "Profit you want to make today",
+    "todayProfitHint": "Applies to today only. Leave it blank and the app calculates it.",
+    "errors": {
+      "desired": "Enter how much profit you want to make.",
+      "weekdays": "Select at least one workday.",
+      "hours": "Enter the hours per day, from {{min}} to {{max}}.",
+      "dayTarget": "Check today's profit. Use numbers only, like {{example}}."
+    }
+  }
+}

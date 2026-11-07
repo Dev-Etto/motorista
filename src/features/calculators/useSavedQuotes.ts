@@ -1,5 +1,5 @@
-import { quoteRepository } from '@/data/repositories/quoteRepository';
-import { useAsyncData } from '@/shared/hooks/useAsyncData';
+import { quoteRepository } from '@data/repositories/quoteRepository';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
 
 export function useSavedQuotes() {
   const state = useAsyncData(() => quoteRepository.list());

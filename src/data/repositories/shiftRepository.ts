@@ -1,6 +1,6 @@
-import { getDb, runInTransaction, SqlExecutor } from '@/data/database/connection';
-import { countsAgainstProfit, ExpenseCategory } from '@/domain/expense/expense';
-import { ShiftFact } from '@/domain/insights/types';
+import { getDb, runInTransaction, SqlExecutor } from '@data/database/connection';
+import { countsAgainstProfit, ExpenseCategory } from '@domain/expense/expense';
+import { ShiftFact } from '@domain/insights/types';
 import { ExpenseRow } from './expenseRepository';
 import { vehicleRepository } from './vehicleRepository';
 

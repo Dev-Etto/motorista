@@ -1,7 +1,9 @@
 import { Children, ReactNode, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Switch, Text, TextProps, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { fonts, fontSize, MIN_TOUCH_TARGET, radius, spacing, ThemeColors, useTheme } from '@/shared/theme/theme';
+import { useFormat } from '@shared/i18n/format';
+import { fonts, fontSize, MIN_TOUCH_TARGET, radius, spacing, ThemeColors, useTheme } from '@shared/theme/theme';
 import { AppIcon, AppIconName } from './AppIcon';
 import { Illustration, IllustrationName } from './illustrations/Illustration';
 
@@ -188,14 +190,16 @@ interface ListRowProps {
   subtitle?: string;
   value?: string;
   valueTone?: Tone;
+  selected?: boolean;
   onPress?: () => void;
 }
 
-export function ListRow({ icon, leading, title, subtitle, value, valueTone = 'default', onPress }: ListRowProps) {
+export function ListRow({ icon, leading, title, subtitle, value, valueTone = 'default', selected, onPress }: ListRowProps) {
   const colors = useTheme();
   return (
     <Pressable
       accessibilityRole={onPress ? 'button' : undefined}
+      accessibilityState={selected === undefined ? undefined : { selected }}
       disabled={!onPress}
       onPress={onPress}
       style={[styles.listRow, { borderBottomColor: colors.border }]}
@@ -219,6 +223,7 @@ export function ListRow({ icon, leading, title, subtitle, value, valueTone = 'de
           {value}
         </AppText>
       ) : null}
+      {selected ? <AppIcon name="check" color={colors.primary} size={22} /> : null}
     </Pressable>
   );
 }
@@ -261,10 +266,12 @@ export function StatGrid({ children }: { children: ReactNode }) {
 
 export function ProgressBar({ progress }: { progress: number }) {
   const colors = useTheme();
+  const format = useFormat();
+  const { t } = useTranslation();
   const clamped = Math.max(0, Math.min(1, progress));
   const filled = clamped > 0 ? Math.max(1, Math.round(clamped * SEGMENTS)) : 0;
   return (
-    <View accessible accessibilityLabel={`${Math.round(clamped * 100)}% concluído`} style={styles.progress}>
+    <View accessible accessibilityLabel={t('progressBar.label', { percent: format.percent(Math.round(clamped * 100)) })} style={styles.progress}>
       {Array.from({ length: SEGMENTS }, (_, index) => (
         <View key={index} style={[styles.progressSegment, { backgroundColor: index < filled ? colors.primary : colors.surfaceAlt }]} />
       ))}
@@ -287,8 +294,9 @@ export function EmptyState({ title, message, action, illustration }: { title: st
 
 export function StepDots({ total, current }: { total: number; current: number }) {
   const colors = useTheme();
+  const { t } = useTranslation();
   return (
-    <View accessibilityLabel={`Passo ${current + 1} de ${total}`} style={styles.dots}>
+    <View accessibilityLabel={t('stepDots.label', { current: current + 1, total })} style={styles.dots}>
       {Array.from({ length: total }, (_, index) => (
         <View
           key={index}

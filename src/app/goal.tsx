@@ -1,1 +1,1 @@
-export { default } from '@/features/goals/GoalScreen';
+export { default } from '@features/goals/GoalScreen';

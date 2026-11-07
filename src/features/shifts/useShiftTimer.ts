@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
-import { useInterval } from '@/shared/hooks/useInterval';
-import { MS_PER_MINUTE } from '@/shared/utils/time';
 import { copilot, TimerState } from '@modules/copilot';
+import { useInterval } from '@shared/hooks/useInterval';
+import { MS_PER_MINUTE } from '@shared/utils/time';
 
 const TICK_MS = 1000;
 

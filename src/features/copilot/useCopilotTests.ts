@@ -1,10 +1,11 @@
 import { useRef } from 'react';
-import { ensureNotifications } from '@/shared/platform/notifications';
+import { useTranslation } from 'react-i18next';
 import { copilot } from '@modules/copilot';
 import { PLATFORM_PACKAGES } from '@modules/copilot/platforms';
-import { COPILOT_COPY } from './copy';
+import { ensureNotifications } from '@shared/platform/notifications';
 
-const OUTSIDE_TEST_DELAY_MS = 5000;
+const OUTSIDE_TEST_DELAY_SECONDS = 5;
+const MS_PER_SECOND = 1000;
 
 interface Sample {
   source: string;
@@ -18,6 +19,7 @@ const SAMPLES: [Sample, ...Sample[]] = [
 ];
 
 export function useCopilotTests(refresh: () => void, notify: (message: string) => void) {
+  const { t } = useTranslation('copilot');
   const sampleIndex = useRef(0);
 
   const nextSample = (): Sample => {
@@ -28,20 +30,24 @@ export function useCopilotTests(refresh: () => void, notify: (message: string) =
 
   const test = () => {
     const { text, source } = nextSample();
-    notify(copilot.testOffer(text, source) ? COPILOT_COPY.testSent : COPILOT_COPY.accessibilityForTest);
+    notify(copilot.testOffer(text, source) ? t('messages.testSent') : t('messages.accessibilityForTest'));
     refresh();
   };
 
   const testNotification = async () => {
-    if (!(await ensureNotifications())) return notify(COPILOT_COPY.notificationsForExample);
+    if (!(await ensureNotifications())) return notify(t('messages.notificationsForExample'));
 
     const { text, source } = nextSample();
-    notify(copilot.testNotification(text, source) ? COPILOT_COPY.exampleSent : COPILOT_COPY.notificationsForExample);
+    notify(copilot.testNotification(text, source) ? t('messages.exampleSent') : t('messages.notificationsForExample'));
   };
 
   const testOutside = () => {
     const { text, source } = nextSample();
-    notify(copilot.testOffer(text, source, OUTSIDE_TEST_DELAY_MS) ? COPILOT_COPY.outsideTestSent : COPILOT_COPY.accessibilityForTest);
+    notify(
+      copilot.testOffer(text, source, OUTSIDE_TEST_DELAY_SECONDS * MS_PER_SECOND)
+        ? t('messages.outsideTestSent', { seconds: OUTSIDE_TEST_DELAY_SECONDS })
+        : t('messages.accessibilityForTest'),
+    );
   };
 
   return { test, testNotification, testOutside };

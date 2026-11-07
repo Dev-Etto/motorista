@@ -1,0 +1,57 @@
+{
+  "tabs": {
+    "offer": "Avaliar oferta",
+    "quote": "Corrida particular"
+  },
+  "costNotice": {
+    "title": "Primeiro, descubra seu custo por {{unit}}",
+    "message": "Sem ele, a calculadora não sabe quanto do valor vai para o carro.",
+    "action": "Calcular custo"
+  },
+  "offer": {
+    "title": "Essa corrida compensa?",
+    "intro": "Digite o que aparece na oferta e veja quanto sobra para você.",
+    "value": "Quanto a corrida paga",
+    "distance": "Distância total",
+    "distanceHint": "Some o caminho até o passageiro e a viagem.",
+    "time": "Tempo total",
+    "profit": "Sobra para você",
+    "perDistance": "Paga por {{unit}}",
+    "perHour": "Paga por hora",
+    "scoreTitle": "Como a nota é calculada?",
+    "scoreExplain": "A nota compara a corrida com o seu custo e os seus mínimos. De {{target}} para cima, ela atinge os dois mínimos. Abaixo de {{belowCost}}, não cobre o custo do carro.",
+    "scoreDisclaimer": "A nota só ajuda: quem decide é sempre você."
+  },
+  "quote": {
+    "title": "Quanto cobrar nessa corrida?",
+    "intro": "Para corridas combinadas direto com o passageiro, fora dos apps.",
+    "toPassenger": "Até buscar o passageiro",
+    "trip": "Da viagem",
+    "time": "Tempo total",
+    "timeHint": "Inclua o caminho até o passageiro.",
+    "moreOptions": "Mais opções",
+    "return": "Volta sem passageiro",
+    "returnHint": "Se precisar voltar por sua conta.",
+    "profitPerHour": "Quanto quer ganhar por hora",
+    "profitPerHourHint": "É o valor do seu tempo no preço sugerido.",
+    "toll": "Pedágio",
+    "extras": "Espera ou outros extras",
+    "minimum": "Não cobrar menos que",
+    "minimumHint": "Corrida curta pode dar um preço muito baixo. Se isso acontecer, o app sugere este valor.",
+    "price": "Preço sugerido",
+    "vehicle": "Para o carro",
+    "vehicleDetail": "{{distance}} com o seu custo por {{unit}}",
+    "timeValue": "Pelo seu tempo",
+    "tollAndExtras": "Pedágio e extras",
+    "profit": "Sobra para você",
+    "description": "Descrição (opcional)",
+    "descriptionPlaceholder": "Centro ao aeroporto",
+    "share": "Compartilhar",
+    "shareMessage": "Valor: {{price}}",
+    "shareMessageWithTrip": "Viagem: {{trip}}\nValor: {{price}}",
+    "savedTitle": "Orçamentos salvos",
+    "noDescription": "Sem descrição",
+    "tapToRemove": "Toque para remover",
+    "removeTitle": "Remover orçamento?"
+  }
+}

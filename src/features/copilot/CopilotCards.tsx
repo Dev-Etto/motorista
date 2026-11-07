@@ -1,31 +1,18 @@
 import { useRouter } from 'expo-router';
-import { OfferRow } from '@/features/offers';
-import { AppText, Button, ButtonRow, Card, Collapsible, Notice, Segmented, ToggleRow } from '@/shared/ui/primitives';
+import { useTranslation } from 'react-i18next';
+import { OfferRow } from '@features/offers';
 import { CardLayout, CardSize, OfferHistoryEntry, PrimaryMetric } from '@modules/copilot';
 import { PLATFORM_PACKAGES } from '@modules/copilot/platforms';
+import { useFormat } from '@shared/i18n/format';
+import { AppText, Button, ButtonRow, Card, Collapsible, Notice, Segmented, ToggleRow } from '@shared/ui/primitives';
 import { CopilotDiagnosticsState } from './useCopilotDiagnostics';
 import { CopilotPreferencesState } from './useCopilotPreferences';
 import { CopilotStatusState } from './useCopilotStatus';
 import { CopilotTestsState } from './useCopilotTests';
 
-const METRICS: { value: PrimaryMetric; label: string }[] = [
-  { value: 'perKm', label: 'R$/km' },
-  { value: 'profit', label: 'Lucro' },
-];
-const LAYOUTS: { value: CardLayout; label: string }[] = [
-  { value: 'complete', label: 'Completo' },
-  { value: 'summary', label: 'Resumido' },
-];
-const SIZES: { value: CardSize; label: string }[] = [
-  { value: 'compact', label: 'Compacto' },
-  { value: 'large', label: 'Grande' },
-  { value: 'extra', label: 'Extra' },
-];
-const DURATIONS: { value: string; label: string }[] = [
-  { value: '8', label: '8 s' },
-  { value: '12', label: '12 s' },
-  { value: '15', label: '15 s' },
-];
+const LAYOUTS: CardLayout[] = ['complete', 'summary'];
+const SIZES: CardSize[] = ['compact', 'large', 'extra'];
+const DURATIONS = [8, 12, 15];
 const APPS = [
   { packageName: PLATFORM_PACKAGES.uber, label: 'Uber' },
   { packageName: PLATFORM_PACKAGES.ninetyNine, label: '99' },
@@ -33,48 +20,37 @@ const APPS = [
 ];
 
 export function CopilotStatusCard({ copilot, preferences }: { copilot: CopilotStatusState; preferences: CopilotPreferencesState }) {
+  const { t } = useTranslation('copilot');
+  const format = useFormat();
   const status = copilot.current;
 
   return (
-    <Card title="Copiloto">
-      <ToggleRow label="Ler ofertas" hint="Avalia cada oferta reconhecida." value={status.enabled} onChange={copilot.setEnabled} />
+    <Card title={t('status.title')}>
+      <ToggleRow label={t('status.readOffers')} hint={t('status.readOffersHint')} value={status.enabled} onChange={copilot.setEnabled} />
       <ToggleRow
-        label="Ler a imagem da tela"
-        hint="Reforço na Uber e na 99, para quando o texto da oferta não está disponível. A imagem é lida no celular e descartada na hora."
+        label={t('status.imageReading')}
+        hint={t('status.imageReadingHint')}
         value={preferences.current.imageReading}
         onChange={(imageReading) => preferences.update({ imageReading })}
       />
-      <Notice
-        tone="accent"
-        message="As plataformas podem identificar apps que usam acessibilidade ou sobreposição, e as regras delas podem prever punições na conta. Usar o Copiloto é decisão sua, e a leitura pode não funcionar em todos os aparelhos."
-      />
+      <Notice tone="accent" message={t('status.platformRules')} />
       <AppText bold tone={status.accessibilityGranted ? 'positive' : 'warning'}>
-        {status.accessibilityGranted ? 'Acessibilidade ativa' : 'Acessibilidade desativada'}
+        {status.accessibilityGranted ? t('status.accessibilityOn') : t('status.accessibilityOff')}
       </AppText>
-      {status.accessibilityGranted ? null : <Button label="Ativar acessibilidade" onPress={copilot.openAccessibility} />}
+      {status.accessibilityGranted ? null : <Button label={t('status.enableAccessibility')} onPress={copilot.openAccessibility} />}
       {status.shortcutEnabled ? (
         <>
-          <Notice
-            tone="accent"
-            message="O ícone na lateral é um atalho do Android, e o Copiloto funciona sem ele. Para tirá-lo, abra Copiloto de ofertas na próxima tela e desligue a opção de atalho."
-          />
-          <Button label="Remover o ícone da lateral" variant="secondary" onPress={copilot.openShortcutSettings} />
+          <Notice tone="accent" message={t('status.shortcutNotice')} />
+          <Button label={t('status.removeShortcut')} variant="secondary" onPress={copilot.openShortcutSettings} />
         </>
       ) : null}
       {status.enabled && status.batteryRestricted ? (
         <>
-          <Notice
-            tone="accent"
-            message="O Android pode pausar o Copiloto e a medição de km para economizar bateria. Se as ofertas pararem de aparecer, escolha Motorista na próxima tela e marque Não otimizar."
-          />
-          <Button label="Abrir ajustes de bateria" variant="secondary" onPress={copilot.openBatterySettings} />
+          <Notice tone="accent" message={t('status.batteryNotice', { context: format.distanceUnit })} />
+          <Button label={t('status.openBattery')} variant="secondary" onPress={copilot.openBatterySettings} />
         </>
       ) : null}
-      {status.failedReads > 0 ? (
-        <Notice
-          message={`${status.failedReads === 1 ? '1 leitura ficou incompleta e não foi mostrada' : `${status.failedReads} leituras ficaram incompletas e não foram mostradas`}, para você só ver números confiáveis.`}
-        />
-      ) : null}
+      {status.failedReads > 0 ? <Notice message={t('status.failedReads', { count: status.failedReads })} /> : null}
     </Card>
   );
 }
@@ -87,45 +63,31 @@ interface ChannelsCardProps {
 }
 
 export function CopilotChannelsCard({ copilot, preferences: settings, tests, message }: ChannelsCardProps) {
+  const { t } = useTranslation('copilot');
   const status = copilot.current;
   const preferences = settings.current;
 
   return (
-    <Card title="Como receber a oferta">
-      <ToggleRow
-        label="Voz"
-        hint="Recomendado ao dirigir: não exige olhar para a tela."
-        value={preferences.voice}
-        onChange={(voice) => settings.update({ voice })}
-      />
+    <Card title={t('channels.title')}>
+      <ToggleRow label={t('channels.voice')} hint={t('channels.voiceHint')} value={preferences.voice} onChange={(voice) => settings.update({ voice })} />
       {preferences.voice && status.accessibilityGranted && !status.voiceAvailable ? (
         <>
-          <Notice tone="accent" message="Instale uma voz em português no Android para ouvir as ofertas." />
-          <Button label="Abrir configurações de voz" variant="secondary" onPress={copilot.openVoiceSettings} />
+          <Notice tone="accent" message={t('channels.installVoice')} />
+          <Button label={t('channels.openVoiceSettings')} variant="secondary" onPress={copilot.openVoiceSettings} />
         </>
       ) : null}
+      <ToggleRow label={t('channels.card')} hint={t('channels.cardHint')} value={preferences.card} onChange={(card) => settings.update({ card })} />
+      <ToggleRow label={t('channels.floating')} hint={t('channels.floatingHint')} value={status.floatingRunning} onChange={settings.setFloating} />
       <ToggleRow
-        label="Cartão na tela"
-        hint="Com o carro parado, arraste para onde preferir. O app guarda a posição."
-        value={preferences.card}
-        onChange={(card) => settings.update({ card })}
-      />
-      <ToggleRow
-        label="Botão flutuante"
-        hint="Fica sobre os outros apps, com o cronômetro. A oferta abre dentro dele. Só esta opção desliga o botão de vez. A plataforma pode escondê-lo durante a oferta, então deixe a voz ligada."
-        value={status.floatingRunning}
-        onChange={settings.setFloating}
-      />
-      <ToggleRow
-        label="Notificação"
-        hint="Fica no painel do Android para consultar depois."
+        label={t('channels.notification')}
+        hint={t('channels.notificationHint')}
         value={preferences.notification}
         onChange={settings.setNotification}
       />
-      <Button label="Ver exemplo da notificação" variant="secondary" onPress={tests.testNotification} />
+      <Button label={t('channels.notificationExample')} variant="secondary" onPress={tests.testNotification} />
       <ButtonRow>
-        <Button label="Testar cartão" onPress={tests.test} />
-        <Button label="Testar fora do app" variant="secondary" onPress={tests.testOutside} />
+        <Button label={t('channels.testCard')} onPress={tests.test} />
+        <Button label={t('channels.testOutside')} variant="secondary" onPress={tests.testOutside} />
       </ButtonRow>
       {message ? <Notice tone="accent" message={message} /> : null}
     </Card>
@@ -133,41 +95,51 @@ export function CopilotChannelsCard({ copilot, preferences: settings, tests, mes
 }
 
 export function CopilotDisplayCard({ preferences: settings }: { preferences: CopilotPreferencesState }) {
+  const { t } = useTranslation('copilot');
   const preferences = settings.current;
+  const format = useFormat();
+  const metrics: { value: PrimaryMetric; label: string }[] = [
+    { value: 'perKm', label: format.perDistanceLabel },
+    { value: 'profit', label: t('display.profit') },
+  ];
+  const layouts = LAYOUTS.map((value) => ({ value, label: t(`display.layout.${value}`) }));
+  const sizes = SIZES.map((value) => ({ value, label: t(`display.size.${value}`) }));
+  const durations = DURATIONS.map((seconds) => ({ value: String(seconds), label: t('display.durationOption', { seconds }) }));
 
   return (
-    <Collapsible title="Aparência do cartão">
+    <Collapsible title={t('display.title')}>
       <AppText variant="caption" tone="muted">
-        Vale para o cartão na tela e para a oferta dentro do botão flutuante.
+        {t('display.intro')}
       </AppText>
       <AppText variant="caption" tone="muted">
-        Formato
+        {t('display.layoutLabel')}
       </AppText>
-      <Segmented value={preferences.cardLayout} options={LAYOUTS} onChange={(cardLayout) => settings.update({ cardLayout })} />
+      <Segmented value={preferences.cardLayout} options={layouts} onChange={(cardLayout) => settings.update({ cardLayout })} />
       <AppText variant="caption" tone="muted">
-        Número principal (voz e formato resumido)
+        {t('display.primaryMetricLabel')}
       </AppText>
-      <Segmented value={preferences.primaryMetric} options={METRICS} onChange={(primaryMetric) => settings.update({ primaryMetric })} />
+      <Segmented value={preferences.primaryMetric} options={metrics} onChange={(primaryMetric) => settings.update({ primaryMetric })} />
       <AppText variant="caption" tone="muted">
-        Tamanho
+        {t('display.sizeLabel')}
       </AppText>
-      <Segmented value={preferences.cardSize} options={SIZES} onChange={(cardSize) => settings.update({ cardSize })} />
+      <Segmented value={preferences.cardSize} options={sizes} onChange={(cardSize) => settings.update({ cardSize })} />
       <AppText variant="caption" tone="muted">
-        Tempo máximo na tela
+        {t('display.durationLabel')}
       </AppText>
       <Segmented
         value={String(preferences.durationSeconds)}
-        options={DURATIONS}
+        options={durations}
         onChange={(duration) => settings.update({ durationSeconds: Number(duration) })}
       />
-      <Button label="Voltar o cartão para o topo" variant="secondary" onPress={settings.resetCardPosition} />
+      <Button label={t('display.resetPosition')} variant="secondary" onPress={settings.resetCardPosition} />
     </Collapsible>
   );
 }
 
 export function CopilotAppsCard({ preferences }: { preferences: CopilotPreferencesState }) {
+  const { t } = useTranslation('copilot');
   return (
-    <Collapsible title="Apps monitorados">
+    <Collapsible title={t('apps.title')}>
       {APPS.map((app) => (
         <ToggleRow
           key={app.packageName}
@@ -181,36 +153,33 @@ export function CopilotAppsCard({ preferences }: { preferences: CopilotPreferenc
 }
 
 export function CopilotHistoryCard({ history }: { history: OfferHistoryEntry[] }) {
+  const { t } = useTranslation('copilot');
   const router = useRouter();
   if (history.length === 0) return null;
 
   return (
-    <Collapsible title="Últimas ofertas">
+    <Collapsible title={t('history.title')}>
       {history.map((entry) => (
         <OfferRow key={entry.timestamp} entry={entry} />
       ))}
-      <Button label="Ver todas as ofertas" variant="secondary" onPress={() => router.push('/offers')} />
+      <Button label={t('history.seeAll')} variant="secondary" onPress={() => router.push('/offers')} />
     </Collapsible>
   );
 }
 
 export function CopilotCalibrationCard({ diagnostics }: { diagnostics: CopilotDiagnosticsState }) {
+  const { t } = useTranslation('copilot');
   const router = useRouter();
 
   return (
-    <Collapsible title="Calibração">
-      <ToggleRow
-        label="Ver o que o Copiloto lê"
-        hint="Mostra o texto da tela com as palavras mascaradas. Fica só na memória."
-        value={diagnostics.enabled}
-        onChange={diagnostics.toggle}
-      />
+    <Collapsible title={t('calibration.title')}>
+      <ToggleRow label={t('calibration.showReading')} hint={t('calibration.showReadingHint')} value={diagnostics.enabled} onChange={diagnostics.toggle} />
       {diagnostics.lines.map((line, index) => (
         <AppText key={index} variant="caption" tone="muted" selectable>
           {line}
         </AppText>
       ))}
-      {diagnostics.lines.length > 0 ? <Button label="Enviar estas leituras" variant="secondary" onPress={() => router.push('/report')} /> : null}
+      {diagnostics.lines.length > 0 ? <Button label={t('calibration.sendReadings')} variant="secondary" onPress={() => router.push('/report')} /> : null}
     </Collapsible>
   );
 }

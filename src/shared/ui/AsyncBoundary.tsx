@@ -1,7 +1,8 @@
 import { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { AsyncData } from '@/shared/hooks/useAsyncData';
-import { spacing, useTheme } from '@/shared/theme/theme';
+import { AsyncData } from '@shared/hooks/useAsyncData';
+import { spacing, useTheme } from '@shared/theme/theme';
 import { Button, Card, Notice } from './primitives';
 
 interface AsyncBoundaryProps<T> {
@@ -11,16 +12,18 @@ interface AsyncBoundaryProps<T> {
 }
 
 function LoadError({ message, onRetry }: { message: string; onRetry: () => Promise<void> }) {
+  const { t } = useTranslation();
   return (
     <Card>
       <Notice tone="negative" message={message} />
-      <Button label="Tentar de novo" variant="secondary" onPress={onRetry} />
+      <Button label={t('actions.retry')} variant="secondary" onPress={onRetry} />
     </Card>
   );
 }
 
 export function AsyncBoundary<T>({ state, children, empty = null }: AsyncBoundaryProps<T>) {
   const colors = useTheme();
+  const { t } = useTranslation();
   const { data } = state;
   const pending = data === null || data === undefined;
 
@@ -28,7 +31,7 @@ export function AsyncBoundary<T>({ state, children, empty = null }: AsyncBoundar
   if (pending && state.loading) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator accessibilityLabel="Carregando" color={colors.textMuted} />
+        <ActivityIndicator accessibilityLabel={t('loading')} color={colors.textMuted} />
       </View>
     );
   }

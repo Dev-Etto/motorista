@@ -1,6 +1,6 @@
 import { ReactNode, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { spacing, useTheme } from '@/shared/theme/theme';
+import { spacing, useTheme } from '@shared/theme/theme';
 import { AppIcon } from './AppIcon';
 import { AppText } from './primitives';
 

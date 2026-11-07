@@ -1,0 +1,78 @@
+{
+  "realProfit": {
+    "title": "Real profit",
+    "messageKept": "Out of every {{hundred}} in earnings, you kept {{share}}.",
+    "messageMissing": "For every {{hundred}} in earnings, you were {{share}} short of covering your costs.",
+    "basis_one": "Earnings of {{gross}} and profit of {{profit}} over {{count}} shift.",
+    "basis_other": "Earnings of {{gross}} and profit of {{profit}} over {{count}} shifts."
+  },
+  "bestWeekday": {
+    "title": "Best day",
+    "message": "{{weekday}} brought the highest profit per hour over the last 4 weeks.",
+    "basis_one": "{{perHour}} over {{count}} shift.",
+    "basis_other": "{{perHour}} over {{count}} shifts."
+  },
+  "bestPeriod": {
+    "title": "Best time of day",
+    "message": "Shifts started {{best}} earn {{gap}} more than those started {{worst}}.",
+    "basis": "{{bestName}}: {{bestRate}}. {{worstName}}: {{worstRate}}."
+  },
+  "period": {
+    "dawn": "late night",
+    "morning": "morning",
+    "afternoon": "afternoon",
+    "night": "evening"
+  },
+  "periodStart": {
+    "dawn": "late at night",
+    "morning": "in the morning",
+    "afternoon": "in the afternoon",
+    "night": "in the evening"
+  },
+  "platform": {
+    "title": "Platform",
+    "message": "{{platform}} brought in {{share}} of your earnings.",
+    "basis": "{{cents}} out of {{gross}}."
+  },
+  "biggestCost": {
+    "title": "Biggest cost",
+    "basis": "{{value}} out of {{full}}.",
+    "message_km": "{{part}} is {{share}} of your cost per km.",
+    "message_mi": "{{part}} is {{share}} of your cost per mile."
+  },
+  "costPart": {
+    "fuel": "Fuel",
+    "oil": "Oil",
+    "tires": "Tires",
+    "maintenance": "Maintenance",
+    "fixed": "Fixed costs"
+  },
+  "efficiency": {
+    "title": "Efficiency",
+    "message": "Your profit went up, but your profit per hour went down: you worked more to get there.",
+    "basis": "Per hour: {{previous}} to {{last}} over the last 7 days."
+  },
+  "breakEven": {
+    "title": "Break-even point",
+    "message": "You need to earn {{daily}} per day just to cover your costs.",
+    "basis_one": "{{count}} day per month and {{distance}} per day, on average.",
+    "basis_other": "{{count}} days per month and {{distance}} per day, on average."
+  },
+  "projection": {
+    "title": "Monthly projection",
+    "message": "At this pace, you'll end the month with {{projected}} in profit.",
+    "basis_one": "{{profit}} over {{count}} day this month.",
+    "basis_other": "{{profit}} over {{count}} days this month."
+  },
+  "fuelGap": {
+    "title": "Fuel",
+    "messageAbove": "You spent {{gap}} more than estimated. It's worth checking your fuel economy.",
+    "messageBelow": "You spent {{gap}} less than estimated. It's worth checking your fuel economy.",
+    "basis": "Estimated {{expected}}, paid {{paid}}."
+  },
+  "fixedWeight": {
+    "title": "Weight of fixed costs",
+    "message": "Driving {{extra}} more per month, your cost would drop by {{saving}}.",
+    "basis": "Fixed costs of {{fixed}}/month over {{planned}} planned."
+  }
+}

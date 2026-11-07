@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { AppText, Card, Screen } from '@/shared/ui/primitives';
+import { AppText, Card, Screen } from '@shared/ui/primitives';
 
 export interface InfoSection {
   title: string;

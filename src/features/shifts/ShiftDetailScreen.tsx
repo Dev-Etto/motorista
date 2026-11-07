@@ -1,15 +1,14 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { countsAgainstProfit, EXPENSE_LABELS } from '@/domain/expense/expense';
-import { summarizeOutcomes } from '@/domain/offer/offerLog';
-import { computeShift } from '@/domain/shift/shift';
-import { OutcomeSummaryCard } from '@/features/offers';
-import { useAsyncData } from '@/shared/hooks/useAsyncData';
-import { confirmAction, IRREVERSIBLE_MESSAGE } from '@/shared/platform/confirm';
-import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
-import { AppText, Button, Card, EmptyState, ListRow, Screen } from '@/shared/ui/primitives';
-import { formatDate, formatDuration } from '@/shared/utils/dates';
-import { formatKm } from '@/shared/utils/format';
-import { formatBRL } from '@/shared/utils/money';
+import { useTranslation } from 'react-i18next';
+import { countsAgainstProfit } from '@domain/expense/expense';
+import { summarizeOutcomes } from '@domain/offer/offerLog';
+import { computeShift } from '@domain/shift/shift';
+import { OutcomeSummaryCard } from '@features/offers';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
+import { useFormat } from '@shared/i18n/format';
+import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
+import { confirmAction } from '@shared/ui/dialog';
+import { AppText, Button, Card, EmptyState, ListRow, Screen } from '@shared/ui/primitives';
 import { loadShiftDetail, removeShift, ShiftDetail } from './shiftQueries';
 import { ShiftResultCard } from './ShiftResultCard';
 
@@ -17,10 +16,11 @@ export default function ShiftDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const shiftId = Number(id);
   const detail = useAsyncData(() => loadShiftDetail(shiftId), [shiftId]);
+  const { t } = useTranslation('shifts');
 
   return (
     <Screen>
-      <AsyncBoundary state={detail} empty={<EmptyState title="Jornada não encontrada" message="Ela pode ter sido excluída." />}>
+      <AsyncBoundary state={detail} empty={<EmptyState title={t('detail.notFoundTitle')} message={t('detail.notFoundMessage')} />}>
         {(data) => <ShiftDetailContent shiftId={shiftId} detail={data} />}
       </AsyncBoundary>
     </Screen>
@@ -28,6 +28,8 @@ export default function ShiftDetailScreen() {
 }
 
 function ShiftDetailContent({ shiftId, detail }: { shiftId: number; detail: ShiftDetail }) {
+  const { t } = useTranslation(['shifts', 'expenses', 'common']);
+  const format = useFormat();
   const router = useRouter();
   const { shift, earnings, expenses, dayOffers } = detail;
   const result = computeShift({
@@ -40,9 +42,9 @@ function ShiftDetailContent({ shiftId, detail }: { shiftId: number; detail: Shif
 
   const confirmDelete = () => {
     confirmAction({
-      title: 'Excluir jornada?',
-      message: IRREVERSIBLE_MESSAGE,
-      actionLabel: 'Excluir',
+      title: t('detail.deleteTitle'),
+      message: t('common:irreversible'),
+      actionLabel: t('common:actions.delete'),
       onConfirm: async () => {
         await removeShift(shiftId);
         router.back();
@@ -53,23 +55,23 @@ function ShiftDetailContent({ shiftId, detail }: { shiftId: number; detail: Shif
   return (
     <>
       <AppText variant="title" bold>
-        {formatDate(shift.date)}
+        {format.date(shift.date)}
       </AppText>
       <ShiftResultCard result={result} />
-      <Card title="Detalhes">
-        <ListRow title="Tempo" value={formatDuration(shift.minutes)} />
-        <ListRow title="Distância" value={formatKm(shift.km)} />
-        <ListRow title="Custo por km do dia" value={formatBRL(shift.costPerKm)} />
+      <Card title={t('detail.title')}>
+        <ListRow title={t('detail.time')} value={format.duration(shift.minutes)} />
+        <ListRow title={t('detail.distance')} value={format.distance(shift.km)} />
+        <ListRow title={t('detail.costPerKm', { context: format.distanceUnit })} value={format.perDistanceAmount(shift.costPerKm)} />
         {earnings.map((earning) => (
-          <ListRow key={earning.platformId} title={earning.name} value={formatBRL(earning.cents)} />
+          <ListRow key={earning.platformId} title={earning.name} value={format.money(earning.cents)} />
         ))}
         {expenses.map((expense) => (
-          <ListRow key={expense.id} title={EXPENSE_LABELS[expense.category]} value={formatBRL(expense.cents)} />
+          <ListRow key={expense.id} title={t(`expenses:category.${expense.category}`)} value={format.money(expense.cents)} />
         ))}
       </Card>
-      {dayOffers.length > 0 ? <OutcomeSummaryCard title="Ofertas do dia" summary={summarizeOutcomes(dayOffers)} /> : null}
-      <Button label="Editar" variant="secondary" onPress={() => router.push({ pathname: '/shift/new', params: { id: shiftId } })} />
-      <Button label="Excluir" variant="danger" onPress={confirmDelete} />
+      {dayOffers.length > 0 ? <OutcomeSummaryCard title={t('detail.dayOffers')} summary={summarizeOutcomes(dayOffers)} /> : null}
+      <Button label={t('detail.edit')} variant="secondary" onPress={() => router.push({ pathname: '/shift/new', params: { id: shiftId } })} />
+      <Button label={t('common:actions.delete')} variant="danger" onPress={confirmDelete} />
     </>
   );
 }

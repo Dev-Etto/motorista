@@ -1,1 +1,1 @@
-export { default } from '@/features/shifts/ShiftFormScreen';
+export { default } from '@features/shifts/ShiftFormScreen';

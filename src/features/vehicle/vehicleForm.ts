@@ -1,6 +1,6 @@
-import { CostProfile, defaultDepreciationEnabled, FuelType, Ownership, suggestedProfile, VehicleKind } from '@/domain/vehicle/costs';
-import { centsToInput } from '@/shared/utils/money';
-import { centsOrZero, decimalOrZero, decimalToInput } from '@/shared/utils/parse';
+import { CostProfile, defaultDepreciationEnabled, FuelType, Ownership, suggestedProfile, VehicleKind } from '@domain/vehicle/costs';
+import type { Formatter } from '@shared/i18n/format';
+import type { ConsumptionUnit } from '@shared/utils/units';
 
 export type CostFields = {
   fuelPrice: string;
@@ -20,82 +20,98 @@ export type CostFields = {
   plannedKm: string;
 };
 
-export function profileToFields(profile: CostProfile): CostFields {
+const LIQUID_FUELS: FuelType[] = ['gasoline', 'ethanol', 'diesel'];
+
+const isLiquid = (fuel: FuelType) => LIQUID_FUELS.includes(fuel);
+
+const LIQUID_CONSUMPTION_LABELS: Record<ConsumptionUnit, string> = { 'km/L': 'km/l', 'L/100km': 'L/100 km', mpg: 'mpg' };
+
+const ENERGY_UNITS: Partial<Record<FuelType, string>> = { cng: 'm³', electric: 'kWh' };
+
+export function consumptionLabel(fuel: FuelType, format: Formatter): string {
+  if (isLiquid(fuel)) return LIQUID_CONSUMPTION_LABELS[format.consumptionUnit];
+  return `${format.distanceUnit}/${ENERGY_UNITS[fuel] ?? ''}`;
+}
+
+const consumptionInput = (kmPerUnit: number, fuel: FuelType, format: Formatter) =>
+  isLiquid(fuel) ? format.consumptionInput(kmPerUnit) : format.distanceInput(kmPerUnit);
+
+const consumptionOf = (text: string, fuel: FuelType, format: Formatter) => (isLiquid(fuel) ? format.consumptionOrZero(text) : format.distanceOrZero(text));
+
+const fuelPriceInput = (cents: number, fuel: FuelType, format: Formatter) => (isLiquid(fuel) ? format.perVolumeInput(cents) : format.moneyInput(cents));
+
+const fuelPriceOf = (text: string, fuel: FuelType, format: Formatter) => (isLiquid(fuel) ? format.perVolumeOrZero(text) : format.centsOrZero(text));
+
+export function profileToFields(profile: CostProfile, fuel: FuelType, format: Formatter): CostFields {
   return {
-    fuelPrice: centsToInput(profile.fuelPriceCents),
-    consumption: decimalToInput(profile.consumptionKmPerUnit),
-    oilChange: centsToInput(profile.oilChangeCents),
-    oilInterval: String(profile.oilIntervalKm),
-    tires: centsToInput(profile.tiresCents),
-    tiresLife: String(profile.tiresLifeKm),
-    maintenance: centsToInput(profile.maintenanceMonthlyCents),
-    insurance: centsToInput(profile.insuranceMonthlyCents),
-    ipva: centsToInput(profile.ipvaYearlyCents),
-    licensing: centsToInput(profile.licensingYearlyCents),
-    payment: centsToInput(profile.paymentMonthlyCents),
-    vehicleValue: centsToInput(profile.vehicleValueCents),
-    depreciationPct: decimalToInput(profile.depreciationAnnualPct),
-    otherFixed: centsToInput(profile.otherFixedMonthlyCents),
-    plannedKm: String(profile.plannedKmMonth),
+    fuelPrice: fuelPriceInput(profile.fuelPriceCents, fuel, format),
+    consumption: consumptionInput(profile.consumptionKmPerUnit, fuel, format),
+    oilChange: format.moneyInput(profile.oilChangeCents),
+    oilInterval: format.distanceInput(profile.oilIntervalKm, 0),
+    tires: format.moneyInput(profile.tiresCents),
+    tiresLife: format.distanceInput(profile.tiresLifeKm, 0),
+    maintenance: format.moneyInput(profile.maintenanceMonthlyCents),
+    insurance: format.moneyInput(profile.insuranceMonthlyCents),
+    ipva: format.moneyInput(profile.ipvaYearlyCents),
+    licensing: format.moneyInput(profile.licensingYearlyCents),
+    payment: format.moneyInput(profile.paymentMonthlyCents),
+    vehicleValue: format.moneyInput(profile.vehicleValueCents),
+    depreciationPct: format.decimalInput(profile.depreciationAnnualPct),
+    otherFixed: format.moneyInput(profile.otherFixedMonthlyCents),
+    plannedKm: format.distanceInput(profile.plannedKmMonth, 0),
   };
 }
 
-export function fieldsToProfile(fields: CostFields, ownership: Ownership, depreciationEnabled: boolean): CostProfile {
+export interface ProfileChoices {
+  ownership: Ownership;
+  depreciationEnabled: boolean;
+  fuel: FuelType;
+}
+
+export function fieldsToProfile(fields: CostFields, choices: ProfileChoices, format: Formatter): CostProfile {
   return {
-    ownership,
-    fuelPriceCents: centsOrZero(fields.fuelPrice),
-    consumptionKmPerUnit: decimalOrZero(fields.consumption),
-    oilChangeCents: centsOrZero(fields.oilChange),
-    oilIntervalKm: decimalOrZero(fields.oilInterval),
-    tiresCents: centsOrZero(fields.tires),
-    tiresLifeKm: decimalOrZero(fields.tiresLife),
-    maintenanceMonthlyCents: centsOrZero(fields.maintenance),
-    insuranceMonthlyCents: centsOrZero(fields.insurance),
-    ipvaYearlyCents: centsOrZero(fields.ipva),
-    licensingYearlyCents: centsOrZero(fields.licensing),
-    paymentMonthlyCents: centsOrZero(fields.payment),
-    vehicleValueCents: centsOrZero(fields.vehicleValue),
-    depreciationAnnualPct: decimalOrZero(fields.depreciationPct),
-    depreciationEnabled,
-    otherFixedMonthlyCents: centsOrZero(fields.otherFixed),
-    plannedKmMonth: decimalOrZero(fields.plannedKm),
+    ownership: choices.ownership,
+    fuelPriceCents: fuelPriceOf(fields.fuelPrice, choices.fuel, format),
+    consumptionKmPerUnit: consumptionOf(fields.consumption, choices.fuel, format),
+    oilChangeCents: format.centsOrZero(fields.oilChange),
+    oilIntervalKm: format.distanceOrZero(fields.oilInterval),
+    tiresCents: format.centsOrZero(fields.tires),
+    tiresLifeKm: format.distanceOrZero(fields.tiresLife),
+    maintenanceMonthlyCents: format.centsOrZero(fields.maintenance),
+    insuranceMonthlyCents: format.centsOrZero(fields.insurance),
+    ipvaYearlyCents: format.centsOrZero(fields.ipva),
+    licensingYearlyCents: format.centsOrZero(fields.licensing),
+    paymentMonthlyCents: format.centsOrZero(fields.payment),
+    vehicleValueCents: format.centsOrZero(fields.vehicleValue),
+    depreciationAnnualPct: format.decimalOrZero(fields.depreciationPct),
+    depreciationEnabled: choices.depreciationEnabled,
+    otherFixedMonthlyCents: format.centsOrZero(fields.otherFixed),
+    plannedKmMonth: format.distanceOrZero(fields.plannedKm),
   };
 }
 
 const MAX_FUEL_PRICE_CENTS = 5000;
 
-export function validateProfile(profile: CostProfile): string | null {
-  if (profile.consumptionKmPerUnit <= 0) return 'Informe o consumo do veículo.';
-  if (profile.plannedKmMonth <= 0) return 'Informe quantos km você roda por mês.';
-  if (profile.fuelPriceCents <= 0) return 'Informe o preço do combustível.';
-  if (profile.fuelPriceCents > MAX_FUEL_PRICE_CENTS) return 'Confira o preço do combustível. Use vírgula nos centavos, como 5,89.';
+export type ProfileProblem = 'consumption' | 'plannedDistance' | 'fuelPrice' | 'fuelPriceTooHigh';
+
+export function validateProfile(profile: CostProfile): ProfileProblem | null {
+  if (profile.consumptionKmPerUnit <= 0) return 'consumption';
+  if (profile.plannedKmMonth <= 0) return 'plannedDistance';
+  if (profile.fuelPriceCents <= 0) return 'fuelPrice';
+  if (profile.fuelPriceCents > MAX_FUEL_PRICE_CENTS) return 'fuelPriceTooHigh';
   return null;
 }
 
-export const CONSUMPTION_UNITS: Record<FuelType, string> = {
-  gasoline: 'km/l',
-  ethanol: 'km/l',
-  diesel: 'km/l',
-  cng: 'km/m³',
-  electric: 'km/kWh',
-};
+export const FUEL_CHOICES = ['gasoline', 'ethanol', 'cng', 'electric'] as const satisfies readonly FuelType[];
 
-export const FUEL_OPTIONS: { value: FuelType; label: string }[] = [
-  { value: 'gasoline', label: 'Gasolina' },
-  { value: 'ethanol', label: 'Etanol' },
-  { value: 'cng', label: 'GNV' },
-  { value: 'electric', label: 'Elétrico' },
-];
+export const KIND_CHOICES = ['car', 'motorcycle'] as const satisfies readonly VehicleKind[];
 
-export const KIND_OPTIONS: { value: VehicleKind; label: string }[] = [
-  { value: 'car', label: 'Carro' },
-  { value: 'motorcycle', label: 'Moto' },
-];
+export const OWNERSHIP_CHOICES = ['owned', 'financed', 'rented'] as const satisfies readonly Ownership[];
 
-export const OWNERSHIP_OPTIONS: { value: Ownership; label: string }[] = [
-  { value: 'owned', label: 'Quitado' },
-  { value: 'financed', label: 'Financiado' },
-  { value: 'rented', label: 'Alugado' },
-];
+export const CONSUMPTION_HINT_KEYS = {
+  'km/L': 'form.consumptionHint.kmPerLiter',
+  'L/100km': 'form.consumptionHint.litersPer100km',
+  mpg: 'form.consumptionHint.mpg',
+} as const satisfies Record<ConsumptionUnit, string>;
 
 export { defaultDepreciationEnabled, suggestedProfile };

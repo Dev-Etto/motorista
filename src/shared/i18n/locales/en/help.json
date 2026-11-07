@@ -1,0 +1,85 @@
+{
+  "screen": {
+    "replayIntro": "Replay the introduction"
+  },
+  "costPerKm": {
+    "title_km": "How we calculate your cost per km",
+    "title_mi": "How we calculate your cost per mile",
+    "howItWorks_km": "We add up fuel, oil, tires, and maintenance per kilometer, and divide the month's fixed costs by the kilometers you plan to drive.",
+    "howItWorks_mi": "We add up fuel, oil, tires, and maintenance per mile, and divide the month's fixed costs by the miles you plan to drive.",
+    "precision": "The more real amounts you enter in Vehicle and costs, the more accurate the result."
+  },
+  "profit": {
+    "title": "How we calculate your profit",
+    "formula_km": "Profit is your earnings minus the vehicle cost for the kilometers driven and the shift expenses, like tolls and food.",
+    "formula_mi": "Profit is your earnings minus the vehicle cost for the miles driven and the shift expenses, like tolls and food.",
+    "notCountedTwice_km": "Refuels and maintenance aren't deducted from profit again, because they're already in the cost per km. They're used to compare the estimate with what you paid.",
+    "notCountedTwice_mi": "Refuels and maintenance aren't deducted from profit again, because they're already in the cost per mile. They're used to compare the estimate with what you paid."
+  },
+  "offerScore": {
+    "title": "Understanding the offer score",
+    "scale_km": "The score goes from 0 to 5 and compares the offer with your cost and your minimums per km and per hour. It appears on a badge, and the badge color shows the range.",
+    "scale_mi": "The score goes from 0 to 5 and compares the offer with your cost and your minimums per mile and per hour. It appears on a badge, and the badge color shows the range.",
+    "green": "Green, {{min}} or higher: meets both minimums. The further above them, the higher the score.",
+    "yellow": "Yellow, from {{min}} to {{max}}: covers your cost, but falls short of a minimum.",
+    "red_km": "Red, up to {{max}}: doesn't cover your cost per km.",
+    "red_mi": "Red, up to {{max}}: doesn't cover your cost per mile.",
+    "arrows_km": "On the card, ▲ next to the amount per km or per hour means it met your minimum, and ▼ means it fell below.",
+    "arrows_mi": "On the card, ▲ next to the amount per mile or per hour means it met your minimum, and ▼ means it fell below.",
+    "withoutTime_km": "When the offer doesn't show the ride time, the score uses only the amount per km and goes up to 4 at most, and the amount per hour stays empty.",
+    "withoutTime_mi": "When the offer doesn't show the ride time, the score uses only the amount per mile and goes up to 4 at most, and the amount per hour stays empty.",
+    "rating": "★ is the passenger's rating, when the ride-hailing app shows it. It doesn't count toward the score.",
+    "noCosts": "Without costs set up, the offer appears with no score. The decision is always yours."
+  },
+  "shift": {
+    "title": "How to log a shift",
+    "howTo_km": "Tap New shift with the car stopped. Enter earnings, kilometers, and hours, and use the timer or GPS if you prefer.",
+    "howTo_mi": "Tap New shift with the car stopped. Enter earnings, miles, and hours, and use the timer or GPS if you prefer.",
+    "partial_km": "Without kilometers, the result stays partial until you fill them in.",
+    "partial_mi": "Without miles, the result stays partial until you fill them in."
+  },
+  "copilotSetup": {
+    "title": "How to set up Copilot",
+    "guided": "In More, open Offer Copilot and use the guided setup. Then tap Test.",
+    "driving": "While driving, the voice tells you. Only touch your phone when the car is stopped."
+  },
+  "copilotMissing": {
+    "title": "If Copilot doesn't show up",
+    "accessibility": "Check that accessibility is still on. Some devices pause services to save battery: in that case, remove the app from battery optimization.",
+    "calibration": "If an offer isn't recognized, Calibration shows what Copilot is reading, with words masked."
+  },
+  "shortcutIcon": {
+    "title": "The icon on the side of the screen",
+    "what": "It's the Android accessibility shortcut, and Copilot works without it. It only appears if the shortcut option is on.",
+    "remove": "To remove it, drag the icon to Remove. Or open Android Settings, Accessibility, Offer Copilot, and turn off the shortcut."
+  },
+  "moveCard": {
+    "title": "Move the card",
+    "drag": "With the car stopped, drag the card wherever you like. The position is saved, and you can move it back to the top on the Copilot screen."
+  },
+  "goal": {
+    "title": "How the monthly goal works",
+    "realProfit_km": "The goal measures your real profit, the same as This month on the home screen: what you earned minus the cost per km and expenses. If you drive more kilometers for the same amount, your profit drops and the bar moves less.",
+    "realProfit_mi": "The goal measures your real profit, the same as This month on the home screen: what you earned minus the cost per mile and expenses. If you drive more miles for the same amount, your profit drops and the bar moves less.",
+    "today": "Today's goal divides what was left at the start of the day by the remaining workdays and doesn't change during the day. The earnings shown are just a reference for reaching it.",
+    "plan_km": "The monthly plan is an estimate based on the kilometers you entered, and the minimums per ride come from it.",
+    "plan_mi": "The monthly plan is an estimate based on the miles you entered, and the minimums per ride come from it.",
+    "closedMonth": "Closed month, in Reports, deducts the full fixed cost. If you drive less than planned, it will be lower than the goal profit."
+  },
+  "estimatedRevenue": {
+    "title": "How estimated earnings work",
+    "howItWorks": "When you tap accept in a ride-hailing app, Copilot adds up the offer amount by platform. In More, Offers and earnings shows the total and every offer, with filters for period, app, accepted, and not accepted. Offers are kept for up to 12 months.",
+    "suggestion": "It's a suggestion. The app doesn't know whether the passenger canceled or how much the platform paid in the end, and some apps may not report the tap.",
+    "useValues": "When you log the shift, tap Use these amounts to fill in your earnings. If the amount differs from what you got paid, correct it before saving: nothing counts toward your profit until you confirm it."
+  },
+  "backup": {
+    "title": "Backup and switching phones",
+    "onDevice": "Your data is stored only on your phone. Make backups from time to time and keep the file somewhere else, like Drive.",
+    "newPhone": "On the new device, install the app, open Backup, and use Restore."
+  },
+  "update": {
+    "title": "How to install an update",
+    "howTo": "In More, tap Check for updates, download the new version, and install it over the current one. Your data stays in the app.",
+    "backupFirst": "Make a backup first, just to be safe."
+  }
+}

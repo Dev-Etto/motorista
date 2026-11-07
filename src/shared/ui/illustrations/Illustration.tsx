@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import Svg, { Circle, G, Path } from 'react-native-svg';
-import { useTheme } from '@/shared/theme/theme';
+import { useTheme } from '@shared/theme/theme';
 
 const VIEW_WIDTH = 240;
 const VIEW_HEIGHT = 140;

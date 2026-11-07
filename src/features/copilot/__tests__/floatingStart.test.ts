@@ -1,4 +1,4 @@
-import { shouldStartFloating } from '../floatingStart';
+import { shouldStartFloating } from '@features/copilot/floatingStart';
 
 const ready = { floatingButton: true, overlayGranted: true, floatingRunning: false };
 

@@ -1,5 +1,5 @@
-import { ShiftFact } from '@/domain/insights/types';
-import { MINUTES_PER_HOUR } from '@/shared/utils/time';
+import { ShiftFact } from '@domain/insights/types';
+import { MINUTES_PER_HOUR } from '@shared/utils/time';
 import { computeShift } from './shift';
 
 export interface ShiftSummary {

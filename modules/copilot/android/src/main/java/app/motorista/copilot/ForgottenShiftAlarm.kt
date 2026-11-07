@@ -33,11 +33,11 @@ object ForgottenShiftAlarm {
     val manager = context.getSystemService(NotificationManager::class.java)
     if (!manager.areNotificationsEnabled()) return
 
-    manager.createNotificationChannel(NotificationChannel(CHANNEL_ID, context.getString(R.string.forgotten_channel_name), NotificationManager.IMPORTANCE_DEFAULT))
+    manager.createNotificationChannel(NotificationChannel(CHANNEL_ID, context.copilotText(R.string.forgotten_channel_name), NotificationManager.IMPORTANCE_DEFAULT))
     val notification = Notification.Builder(context, CHANNEL_ID)
       .setSmallIcon(R.drawable.ic_stat_motorista)
-      .setContentTitle(context.getString(R.string.forgotten_title))
-      .setContentText(context.getString(R.string.forgotten_text))
+      .setContentTitle(context.copilotText(R.string.forgotten_title))
+      .setContentText(context.copilotText(R.string.forgotten_text))
       .setContentIntent(openAppIntent(context))
       .setAutoCancel(true)
       .setLocalOnly(true)

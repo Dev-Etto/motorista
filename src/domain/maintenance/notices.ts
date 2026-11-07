@@ -1,4 +1,4 @@
-import { MS_PER_DAY } from '@/shared/utils/time';
+import { MS_PER_DAY } from '@shared/utils/time';
 
 export function isBackupDue(lastBackupAt: string | null, hasShifts: boolean, now: number, reminderDays: number): boolean {
   if (!hasShifts) return false;

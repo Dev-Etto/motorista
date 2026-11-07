@@ -1,5 +1,5 @@
 import { Appearance } from 'react-native';
-import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
+import { SETTING_KEYS, settingsRepository } from '@data/repositories/settingsRepository';
 import { copilot, type ThemeMode } from '@modules/copilot';
 import { THEME_MODES } from '@modules/copilot/schemas';
 

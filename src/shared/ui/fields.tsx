@@ -1,5 +1,6 @@
 import { KeyboardTypeOptions, StyleSheet, TextInput, View } from 'react-native';
-import { fonts, fontSize, MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@/shared/theme/theme';
+import { useFormat } from '@shared/i18n/format';
+import { fonts, fontSize, MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@shared/theme/theme';
 import { AppText } from './primitives';
 
 interface TextFieldProps {
@@ -79,7 +80,8 @@ export function NumberField(props: NumericFieldProps) {
 }
 
 export function MoneyField(props: Omit<NumericFieldProps, 'prefix'>) {
-  return <TextField keyboardType="decimal-pad" prefix="R$" placeholder="0,00" {...props} />;
+  const format = useFormat();
+  return <TextField keyboardType="decimal-pad" prefix={format.currencySymbol} placeholder={format.moneyInput(0)} {...props} />;
 }
 
 const styles = StyleSheet.create({

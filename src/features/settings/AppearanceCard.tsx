@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Card, Segmented } from '@/shared/ui/primitives';
+import { useTranslation } from 'react-i18next';
 import { ThemeMode } from '@modules/copilot';
+import { Card, Segmented } from '@shared/ui/primitives';
 import { loadThemeMode, saveThemeMode } from './themePreference';
 
-const OPTIONS: { value: ThemeMode; label: string }[] = [
-  { value: 'system', label: 'Automático' },
-  { value: 'light', label: 'Claro' },
-  { value: 'dark', label: 'Escuro' },
-];
+const MODES: ThemeMode[] = ['system', 'light', 'dark'];
 
 export function AppearanceCard() {
+  const { t } = useTranslation('settings');
   const [mode, setMode] = useState<ThemeMode>('system');
+  const options = MODES.map((value) => ({ value, label: t(`appearance.${value}`) }));
 
   useEffect(() => {
     void loadThemeMode().then(setMode);
@@ -22,8 +21,8 @@ export function AppearanceCard() {
   };
 
   return (
-    <Card title="Tema">
-      <Segmented value={mode} options={OPTIONS} onChange={change} />
+    <Card title={t('appearance.title')}>
+      <Segmented value={mode} options={options} onChange={change} />
     </Card>
   );
 }

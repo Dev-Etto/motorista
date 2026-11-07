@@ -1,10 +1,9 @@
 import { act, renderHook } from '@testing-library/react-native';
-import { ensureNotifications } from '@/shared/platform/notifications';
+import { useCopilotDiagnostics } from '@features/copilot/useCopilotDiagnostics';
+import { useCopilotPreferences } from '@features/copilot/useCopilotPreferences';
+import { useCopilotTests } from '@features/copilot/useCopilotTests';
 import { copilot } from '@modules/copilot';
-import { COPILOT_COPY } from '../copy';
-import { useCopilotDiagnostics } from '../useCopilotDiagnostics';
-import { useCopilotPreferences } from '../useCopilotPreferences';
-import { useCopilotTests } from '../useCopilotTests';
+import { ensureNotifications } from '@shared/platform/notifications';
 
 const PREFERENCES = {
   voice: true,
@@ -21,7 +20,7 @@ const PREFERENCES = {
   floatingButton: true,
 };
 
-jest.mock('@/shared/platform/notifications', () => ({ ensureNotifications: jest.fn() }));
+jest.mock('@shared/platform/notifications', () => ({ ensureNotifications: jest.fn() }));
 jest.mock('@modules/copilot', () => ({
   copilot: {
     getPreferences: jest.fn(() => PREFERENCES),
@@ -42,7 +41,7 @@ describe('preferências do Copiloto', () => {
 
     await act(async () => result.current.setNotification(true));
 
-    expect(notify).toHaveBeenCalledWith(COPILOT_COPY.notificationsForChannel);
+    expect(notify).toHaveBeenCalledWith('Permita as notificações do app para usar este canal.');
     expect(result.current.current.notification).toBe(false);
   });
 
@@ -64,7 +63,7 @@ describe('testes do Copiloto', () => {
 
     await act(async () => result.current.test());
 
-    expect(notify).toHaveBeenCalledWith(COPILOT_COPY.accessibilityForTest);
+    expect(notify).toHaveBeenCalledWith('Ative o serviço de acessibilidade para testar.');
     expect(refresh).toHaveBeenCalled();
   });
 });

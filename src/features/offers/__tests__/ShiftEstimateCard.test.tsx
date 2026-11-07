@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { ShiftEstimateCard } from '@features/offers/ShiftEstimateCard';
 import { copilot } from '@modules/copilot';
-import { ShiftEstimateCard } from '../ShiftEstimateCard';
 
 jest.mock('expo-router', () => ({
   useFocusEffect: (callback: () => void) => {

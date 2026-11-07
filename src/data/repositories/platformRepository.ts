@@ -1,4 +1,8 @@
-import { getDb, SqlExecutor } from '@/data/database/connection';
+import { getDb, SqlExecutor } from '@data/database/connection';
+
+export const PLATFORM_SYSTEM_KEYS = ['private', 'other'] as const;
+
+export type PlatformSystemKey = (typeof PLATFORM_SYSTEM_KEYS)[number];
 
 export interface Platform {
   id: number;
@@ -19,6 +23,13 @@ export function createPlatformRepository(connection: () => SqlExecutor = getDb) 
         name.trim(),
         (max?.value ?? 0) + 1,
       );
+    },
+
+    async localizeSystemNames(names: Record<PlatformSystemKey, string>): Promise<void> {
+      const db = connection();
+      for (const key of PLATFORM_SYSTEM_KEYS) {
+        await db.runAsync('UPDATE OR IGNORE platforms SET name = ? WHERE system_key = ?', names[key], key);
+      }
     },
 
     async deactivate(id: number): Promise<void> {

@@ -1,33 +1,34 @@
+import type { TFunction } from 'i18next';
 import { useMemo, useState } from 'react';
-import { platformRepository } from '@/data/repositories/platformRepository';
-import { shiftRepository } from '@/data/repositories/shiftRepository';
-import { vehicleRepository } from '@/data/repositories/vehicleRepository';
-import { countsAgainstProfit, type ExpenseCategory } from '@/domain/expense/expense';
-import { computeShift } from '@/domain/shift/shift';
-import { KmEntryMode, kmFromEntry, ShiftFormError, validateShiftForm } from '@/domain/shift/shiftForm';
-import { useAsyncData } from '@/shared/hooks/useAsyncData';
-import { useFormFields } from '@/shared/hooks/useFormFields';
-import { useFormHydration } from '@/shared/hooks/useFormHydration';
-import { hourOfMillis, isoFromMillis, today } from '@/shared/utils/dates';
-import { centsToInput } from '@/shared/utils/money';
-import { centsOrZero, decimalOrNull, decimalToInput, hasInvalidHour, hasInvalidNumber, hoursToInput, intOrNull, parseHours } from '@/shared/utils/parse';
-import { MINUTES_PER_HOUR } from '@/shared/utils/time';
+import { useTranslation } from 'react-i18next';
+import { platformRepository } from '@data/repositories/platformRepository';
+import { shiftRepository } from '@data/repositories/shiftRepository';
+import { vehicleRepository } from '@data/repositories/vehicleRepository';
+import { countsAgainstProfit, type ExpenseCategory } from '@domain/expense/expense';
+import { computeShift } from '@domain/shift/shift';
+import { KmEntryMode, kmFromEntry, ShiftFormError, validateShiftForm } from '@domain/shift/shiftForm';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
+import { useFormFields } from '@shared/hooks/useFormFields';
+import { useFormHydration } from '@shared/hooks/useFormHydration';
+import { Formatter, useFormat } from '@shared/i18n/format';
+import { hourOfMillis, isoFromMillis, today } from '@shared/utils/dates';
+import { hoursToInput } from '@shared/utils/parse';
+import { MINUTES_PER_HOUR } from '@shared/utils/time';
 
-export const JOURNEY_EXPENSES: { category: ExpenseCategory; label: string }[] = [
-  { category: 'toll', label: 'Pedágio' },
-  { category: 'parking', label: 'Estacionamento' },
-  { category: 'wash', label: 'Lavagem' },
-  { category: 'food', label: 'Alimentação' },
-  { category: 'other', label: 'Outras despesas' },
-];
+export const JOURNEY_EXPENSES: ExpenseCategory[] = ['toll', 'parking', 'wash', 'food', 'other'];
 
-const FORM_ERRORS: Record<ShiftFormError, string> = {
-  'invalid-number': 'Confira os números digitados. Use só números, como 150,50.',
-  'invalid-start-hour': 'A hora de início vai de 0 a 23.',
-  'too-long': 'Uma jornada tem no máximo 24 horas. Confira as horas trabalhadas.',
-  'no-earnings': 'Informe o ganho de pelo menos uma plataforma.',
-  'odometer-order': 'O odômetro final precisa ser maior que o inicial.',
-};
+const EXAMPLE_CENTS = 15050;
+
+export function describeFormError(error: ShiftFormError, t: TFunction<['shifts', 'common']>, format: Formatter): string {
+  const messages: Record<ShiftFormError, string> = {
+    'invalid-number': t('common:invalidNumber', { example: format.moneyInput(EXAMPLE_CENTS) }),
+    'invalid-start-hour': t('form.errors.invalidStartHour'),
+    'too-long': t('form.errors.tooLong'),
+    'no-earnings': t('form.errors.noEarnings'),
+    'odometer-order': t('form.errors.odometerOrder'),
+  };
+  return messages[error];
+}
 
 async function loadFormData(shiftId: number | undefined, date: string) {
   const [platforms, costs, existing] = await Promise.all([
@@ -43,19 +44,21 @@ const EMPTY_FIELDS = { hours: '', startHour: '', km: '', odometerStart: '', odom
 
 type ShiftFormData = Awaited<ReturnType<typeof loadFormData>>;
 
-function fieldsFrom(shift: NonNullable<ShiftFormData['existing']>['shift']) {
+function fieldsFrom(shift: NonNullable<ShiftFormData['existing']>['shift'], format: Formatter) {
   const hasOdometer = shift.odometerEnd !== null && shift.km !== null;
   return {
     hours: hoursToInput(shift.minutes),
     startHour: shift.startHour === null ? '' : String(shift.startHour),
-    km: shift.km === null ? '' : decimalToInput(shift.km),
-    odometerEnd: shift.odometerEnd === null ? '' : decimalToInput(shift.odometerEnd),
-    odometerStart: hasOdometer ? decimalToInput((shift.odometerEnd ?? 0) - (shift.km ?? 0)) : '',
+    km: shift.km === null ? '' : format.distanceInput(shift.km),
+    odometerEnd: shift.odometerEnd === null ? '' : format.distanceInput(shift.odometerEnd),
+    odometerStart: hasOdometer ? format.distanceInput((shift.odometerEnd ?? 0) - (shift.km ?? 0)) : '',
     trips: shift.trips === null ? '' : String(shift.trips),
   };
 }
 
 export function useShiftForm(shiftId?: number) {
+  const { t } = useTranslation(['shifts', 'common']);
+  const format = useFormat();
   const [date, setDate] = useState(today());
   const [kmMode, setKmMode] = useState<KmEntryMode>('manual');
   const [kmMeasured, setKmMeasured] = useState(false);
@@ -70,25 +73,25 @@ export function useShiftForm(shiftId?: number) {
     data?.existing,
     ({ shift, earnings: savedEarnings, expenses: savedExpenses }) => {
       setDate(shift.date);
-      setFields(fieldsFrom(shift));
+      setFields(fieldsFrom(shift, format));
       setKmMode(shift.kmSource === 'odometer' ? 'odometer' : 'manual');
       setKmMeasured(shift.kmSource === 'gps');
-      setEarnings(Object.fromEntries(savedEarnings.map((earning) => [earning.platformId, centsToInput(earning.cents)])));
-      setExpenses(Object.fromEntries(savedExpenses.map((expense) => [expense.category, centsToInput(expense.cents)])));
+      setEarnings(Object.fromEntries(savedEarnings.map((earning) => [earning.platformId, format.moneyInput(earning.cents)])));
+      setExpenses(Object.fromEntries(savedExpenses.map((expense) => [expense.category, format.moneyInput(expense.cents)])));
     },
     shiftId ?? 'new',
   );
 
   const km = kmFromEntry({
     mode: kmMode,
-    km: decimalOrNull(fields.km),
-    odometerStart: decimalOrNull(fields.odometerStart),
-    odometerEnd: decimalOrNull(fields.odometerEnd),
+    km: format.parseDistance(fields.km),
+    odometerStart: format.parseDistance(fields.odometerStart),
+    odometerEnd: format.parseDistance(fields.odometerEnd),
   });
-  const minutes = Math.round((parseHours(fields.hours) ?? 0) * MINUTES_PER_HOUR);
-  const grossCents = Object.values(earnings).reduce((total, text) => total + centsOrZero(text), 0);
-  const expensesCents = JOURNEY_EXPENSES.filter(({ category }) => countsAgainstProfit(category)).reduce(
-    (total, { category }) => total + centsOrZero(expenses[category] ?? ''),
+  const minutes = Math.round((format.parseHours(fields.hours) ?? 0) * MINUTES_PER_HOUR);
+  const grossCents = Object.values(earnings).reduce((total, text) => total + format.centsOrZero(text), 0);
+  const expensesCents = JOURNEY_EXPENSES.filter((category) => countsAgainstProfit(category)).reduce(
+    (total, category) => total + format.centsOrZero(expenses[category] ?? ''),
     0,
   );
 
@@ -107,7 +110,7 @@ export function useShiftForm(shiftId?: number) {
     if (measuredKm <= 0) return;
 
     setKmMode('manual');
-    setField('km', decimalToInput(measuredKm, 1));
+    setField('km', format.distanceInput(measuredKm, 1));
     setKmMeasured(true);
   };
 
@@ -131,8 +134,8 @@ export function useShiftForm(shiftId?: number) {
 
   const save = async (): Promise<boolean> => {
     const problem = validateShiftForm({
-      hasInvalidNumber: typedNumbers.some(hasInvalidNumber) || (fields.hours.trim() !== '' && parseHours(fields.hours) === null),
-      hasInvalidHour: hasInvalidHour(fields.startHour),
+      hasInvalidNumber: typedNumbers.some(format.hasInvalidNumber) || (fields.hours.trim() !== '' && format.parseHours(fields.hours) === null),
+      hasInvalidHour: format.hasInvalidHour(fields.startHour),
       minutes,
       grossCents,
       kmMode,
@@ -140,24 +143,24 @@ export function useShiftForm(shiftId?: number) {
       odometerTyped: Boolean(fields.odometerStart || fields.odometerEnd),
     });
     if (problem) {
-      setError(FORM_ERRORS[problem]);
+      setError(describeFormError(problem, t, format));
       return false;
     }
 
     await shiftRepository.save({
       id: shiftId,
       date,
-      startHour: intOrNull(fields.startHour),
+      startHour: format.parseInt(fields.startHour),
       minutes,
       km,
       kmSource: kmMeasured ? 'gps' : kmMode,
-      odometerEnd: kmMode === 'odometer' ? decimalOrNull(fields.odometerEnd) : null,
-      trips: intOrNull(fields.trips),
+      odometerEnd: kmMode === 'odometer' ? format.parseDistance(fields.odometerEnd) : null,
+      trips: format.parseInt(fields.trips),
       note: null,
       earnings: Object.entries(earnings)
-        .map(([platformId, text]) => ({ platformId: Number(platformId), cents: centsOrZero(text) }))
+        .map(([platformId, text]) => ({ platformId: Number(platformId), cents: format.centsOrZero(text) }))
         .filter((earning) => earning.cents > 0),
-      expenses: JOURNEY_EXPENSES.map(({ category }) => ({ category, cents: centsOrZero(expenses[category] ?? '') })).filter((expense) => expense.cents > 0),
+      expenses: JOURNEY_EXPENSES.map((category) => ({ category, cents: format.centsOrZero(expenses[category] ?? '') })).filter((expense) => expense.cents > 0),
     });
     return true;
   };

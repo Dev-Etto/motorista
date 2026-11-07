@@ -1,1 +1,1 @@
-export { default } from '@/features/permissions/PermissionsScreen';
+export { default } from '@features/permissions/PermissionsScreen';

@@ -1,0 +1,27 @@
+{
+  "category": {
+    "fuel": "Refuel",
+    "maintenance": "Maintenance",
+    "toll": "Tolls",
+    "parking": "Parking",
+    "wash": "Car wash",
+    "food": "Food",
+    "other": "Other expense"
+  },
+  "form": {
+    "option": {
+      "fuel": "Refuel",
+      "maintenance": "Maintenance",
+      "other": "Other"
+    },
+    "valueRequired": "Enter an amount greater than zero.",
+    "dateLabel": "Date",
+    "valueLabel": "Amount",
+    "litersLabel_L": "Liters (optional)",
+    "litersLabel_gal": "Gallons (optional)",
+    "odometerLabel": "Odometer (optional)",
+    "noteLabel": "Note (optional)"
+  },
+  "alreadyInCost_km": "{{category}} is already included in the cost per km. The amount is used to compare the estimate with what you paid.",
+  "alreadyInCost_mi": "{{category}} is already included in the cost per mile. The amount is used to compare the estimate with what you paid."
+}

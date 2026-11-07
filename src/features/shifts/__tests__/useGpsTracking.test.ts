@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import * as Location from 'expo-location';
-import { gpsSessionRepository } from '@/data/repositories/gpsSessionRepository';
-import { useGpsTracking } from '../useGpsTracking';
+import { gpsSessionRepository } from '@data/repositories/gpsSessionRepository';
+import { useGpsTracking } from '@features/shifts/useGpsTracking';
 
 jest.mock('expo-location', () => ({
   Accuracy: { High: 4 },
@@ -14,7 +14,7 @@ jest.mock('expo-location', () => ({
 }));
 jest.mock('expo-task-manager', () => ({ defineTask: jest.fn() }));
 jest.mock('@modules/copilot', () => ({ copilot: { getTimer: () => ({ running: true }) } }));
-jest.mock('@/data/repositories/gpsSessionRepository', () => ({
+jest.mock('@data/repositories/gpsSessionRepository', () => ({
   gpsSessionRepository: { get: jest.fn(), start: jest.fn(), stop: jest.fn(), reset: jest.fn() },
 }));
 

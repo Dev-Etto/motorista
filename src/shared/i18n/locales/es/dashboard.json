@@ -1,0 +1,45 @@
+{
+  "copilotStopped": {
+    "title": "Copiloto en pausa",
+    "message": "El permiso de accesibilidad se desactivó. Actívalo de nuevo para volver a evaluar las ofertas.",
+    "action": "Reactivar el Copiloto"
+  },
+  "gpsRunning_km": "Midiendo tus km por GPS. En trayectos personales, solo tienes que pausar.",
+  "gpsRunning_mi": "Midiendo tus millas por GPS. En trayectos personales, solo tienes que pausar.",
+  "gpsProblem_km": "Los km no se están midiendo. {{problem}}",
+  "gpsProblem_mi": "Las millas no se están midiendo. {{problem}}",
+  "todayTitle": "Ganancia de hoy",
+  "weekTitle": "Esta semana",
+  "monthTitle": "Este mes",
+  "estimated": {
+    "title": "Ingresos estimados hoy",
+    "subtitle": "Según las ofertas aceptadas. Confírmalo al registrar la jornada."
+  },
+  "missingFixedCosts": "Esta ganancia todavía no considera seguro, impuesto vehicular, cuota o alquiler. Inclúyelos en Vehículo y costos para ver el valor real.",
+  "whyLess": {
+    "title": "¿Por qué la ganancia es menor que lo que recibí?",
+    "body": "Parte de lo que recibes paga el carro: combustible, desgaste, seguro y otros costos. La ganancia es lo que queda después de eso.",
+    "costToday_km": "Hoy, cada km cuesta cerca de {{cost}}.",
+    "costToday_mi": "Hoy, cada milla cuesta cerca de {{cost}}."
+  },
+  "reminder": "Recordatorio: {{title}}",
+  "backup": {
+    "message": "¿Qué tal hacer una copia de seguridad? Así tus datos quedan guardados también fuera del celular.",
+    "action": "Hacer copia de seguridad"
+  },
+  "update": {
+    "message": "Esta versión de la app ya tiene más de un mes. Una versión nueva puede corregir la lectura de las ofertas.",
+    "action": "Buscar actualización"
+  },
+  "profitCard": {
+    "gross": "Ingresos",
+    "time": "Tiempo",
+    "perKm_km": "Por km",
+    "perKm_mi": "Por milla",
+    "profitPerHour": "Ganancia por hora",
+    "partial_km_one": "{{count}} jornada sin km o sin costo: no se le descontó el costo del vehículo.",
+    "partial_km_other": "{{count}} jornadas sin km o sin costo: no se les descontó el costo del vehículo.",
+    "partial_mi_one": "{{count}} jornada sin millas o sin costo: no se le descontó el costo del vehículo.",
+    "partial_mi_other": "{{count}} jornadas sin millas o sin costo: no se les descontó el costo del vehículo."
+  }
+}

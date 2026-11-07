@@ -1,5 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
-import { useAsyncData } from '../useAsyncData';
+import { useAsyncData } from '@shared/hooks/useAsyncData';
 
 jest.mock('expo-router', () => ({
   useFocusEffect: (callback: () => void) => {
@@ -7,7 +7,7 @@ jest.mock('expo-router', () => ({
     useMountEffect(callback, [callback]);
   },
 }));
-jest.mock('@/shared/utils/reportError', () => ({ reportError: jest.fn() }));
+jest.mock('@shared/utils/reportError', () => ({ reportError: jest.fn() }));
 
 describe('useAsyncData', () => {
   it('carrega uma vez ao montar', async () => {

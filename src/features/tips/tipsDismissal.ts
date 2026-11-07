@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
+import { SETTING_KEYS, settingsRepository } from '@data/repositories/settingsRepository';
 
 const dismissedSchema = z.array(z.string());
 

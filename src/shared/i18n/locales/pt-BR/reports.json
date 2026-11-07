@@ -1,0 +1,61 @@
+{
+  "period": {
+    "week": "Semana",
+    "month": "Mês",
+    "year": "Ano"
+  },
+  "weekRange": "{{start}} a {{end}}",
+  "tip": "Mês fechado desconta o custo fixo inteiro. É onde você vê se rodou o suficiente para pagar os custos.",
+  "exportFailed": "Não foi possível gerar o arquivo.",
+  "emptyTitle": "Sem jornadas neste período",
+  "emptyMessage": "Registre jornadas para ver gráficos e relatórios.",
+  "periodProfit": "Lucro no período",
+  "chart": {
+    "byMonth": "Lucro por mês",
+    "byDay": "Lucro por dia",
+    "accessibilityLabel": "Lucro no período: {{amount}}"
+  },
+  "monthClose": {
+    "title": "Mês fechado",
+    "variable": "Custo variável",
+    "fixed": "Custo fixo do mês inteiro",
+    "expenses": "Despesas",
+    "realCostPerKm_km": "Custo real por km",
+    "realCostPerKm_mi": "Custo real por milha",
+    "profit": "Lucro com o fixo inteiro"
+  },
+  "byPlatform": "Por plataforma",
+  "pdfButton": "Gerar PDF",
+  "csvButton": "Exportar CSV",
+  "insightsFrom": "Os insights aparecem a partir de {{minimum}} jornadas.",
+  "pdf": {
+    "title": "{{app}}: relatório",
+    "range": "{{start}} a {{end}}",
+    "summary": "Resumo",
+    "shifts": "Jornadas",
+    "gross": "Faturamento",
+    "vehicleCost": "Custo do veículo",
+    "expenses": "Despesas",
+    "estimatedProfit": "Lucro estimado",
+    "distance": "Distância",
+    "time": "Tempo",
+    "grossPerKm_km": "Faturamento por km",
+    "grossPerKm_mi": "Faturamento por milha",
+    "profitPerHour": "Lucro por hora",
+    "date": "Data",
+    "profit": "Lucro",
+    "footer": "Gerado com os dados informados pelo usuário. Valores estimados, sem valor fiscal."
+  },
+  "csv": {
+    "fileName": "jornadas-{{start}}-a-{{end}}.csv",
+    "date": "Data",
+    "gross": "Faturamento ({{currency}})",
+    "minutes": "Minutos",
+    "expenses": "Despesas ({{currency}})",
+    "profit": "Lucro ({{currency}})",
+    "distance_km": "Km",
+    "distance_mi": "Milhas",
+    "costPerDistance_km": "Custo por km ({{currency}})",
+    "costPerDistance_mi": "Custo por milha ({{currency}})"
+  }
+}

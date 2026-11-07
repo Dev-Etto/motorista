@@ -1,9 +1,9 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'react-native';
-import { syncCopilotTargets } from '@/application/offerSettings';
-import { reportError } from '@/shared/utils/reportError';
+import { syncCopilotTargets } from '@application/offerSettings';
 import { copilot, CopilotStatus, OfferHistoryEntry } from '@modules/copilot';
+import { reportError } from '@shared/utils/reportError';
 
 const RECENT_OFFERS = 5;
 

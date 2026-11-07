@@ -447,6 +447,22 @@
       "km": 4.3,
       "minutes": 0,
       "rating": null
+    },
+    {
+      "text": "$18.40 | ★ 4.92 | 5 min (2.1 mi) | 14 min trip (6.4 mi) | Accept",
+      "none": true
+    },
+    {
+      "text": "US$ 18,40 | 5 min (2,1 km) | Viagem de 14 min (6,4 km) | Aceitar",
+      "none": true
+    },
+    {
+      "text": "R$ 18,40 | ★ 4,92 | 5 min (2,1 mi) | Viagem de 14 min (6,4 mi) | Aceitar",
+      "none": true
+    },
+    {
+      "text": "18,40 € | 5 min (2,1 km) | Viagem de 14 min (6,4 km) | Aceitar",
+      "none": true
     }
   ]
 }

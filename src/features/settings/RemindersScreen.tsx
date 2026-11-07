@@ -1,44 +1,39 @@
 import { useState } from 'react';
-import { Alert } from 'react-native';
-import { kmRemaining } from '@/domain/reminder/reminder';
-import { useFormFields } from '@/shared/hooks/useFormFields';
-import { useSubmit } from '@/shared/hooks/useSubmit';
-import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
-import { DateField } from '@/shared/ui/DateField';
-import { NumberField, TextField } from '@/shared/ui/fields';
-import { Button, ButtonRow, Card, EmptyState, ListRow, Notice, Screen } from '@/shared/ui/primitives';
-import { formatDate } from '@/shared/utils/dates';
-import { formatKm } from '@/shared/utils/format';
-import { decimalOrNull, hasInvalidNumber } from '@/shared/utils/parse';
+import { useTranslation } from 'react-i18next';
+import { useFormFields } from '@shared/hooks/useFormFields';
+import { useSubmit } from '@shared/hooks/useSubmit';
+import { useFormat } from '@shared/i18n/format';
+import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
+import { DateField } from '@shared/ui/DateField';
+import { showDialog } from '@shared/ui/dialog';
+import { NumberField, TextField } from '@shared/ui/fields';
+import { Button, ButtonRow, Card, EmptyState, ListRow, Notice, Screen } from '@shared/ui/primitives';
 import { DailyReminderCard } from './DailyReminderCard';
+import { describeReminderDue } from './describeReminderDue';
 import { Reminder, useReminders } from './useReminders';
 
 const INITIAL = { title: '', km: '' };
 
-function describeKm(dueKm: number, totalKm: number) {
-  const remaining = kmRemaining(dueKm, totalKm);
-  return remaining > 0 ? `faltam ${formatKm(remaining)}` : 'já chegou a hora';
-}
-
-const describeDue = (reminder: Reminder, totalKm: number) =>
-  [reminder.dueDate ? formatDate(reminder.dueDate) : null, reminder.dueKm ? describeKm(reminder.dueKm, totalKm) : null].filter(Boolean).join(' ou ');
-
 export default function RemindersScreen() {
   const { state, reminders, totalKm, profile, add, complete, remove } = useReminders();
   const { values, bind, setValues } = useFormFields(INITIAL);
+  const { t } = useTranslation(['settings', 'common']);
+  const format = useFormat();
+  const unitContext = { context: format.distanceUnit };
+  const describeDue = (reminder: Reminder) => describeReminderDue(reminder, totalKm, t, format);
   const [dueDate, setDueDate] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
 
   const saving = useSubmit(async () => {
-    const dueKm = decimalOrNull(values.km);
-    if (!values.title.trim()) return setError('Informe o que precisa ser feito.');
-    if (hasInvalidNumber(values.km)) return setError('Confira os km. Use só números, como 10000.');
-    if (!dueDate && !dueKm) return setError('Informe uma data ou os km.');
+    const dueKm = format.parseDistance(values.km);
+    if (!values.title.trim()) return setError(t('reminders.missingTitle'));
+    if (format.hasInvalidNumber(values.km)) return setError(t('reminders.invalidDistance', { ...unitContext, example: format.decimalInput(10000, 0) }));
+    if (!dueDate && !dueKm) return setError(t('reminders.missingDue', unitContext));
 
     setError(null);
     const { notifies } = await add(values.title.trim(), dueDate, dueKm);
-    setWarning(notifies ? null : 'Lembrete salvo, mas sem aviso no celular. Permita as notificações do app ou escolha uma data futura.');
+    setWarning(notifies ? null : t('reminders.noNotification'));
     setValues(INITIAL);
     setDueDate(null);
   });
@@ -46,11 +41,15 @@ export default function RemindersScreen() {
   const failure = error ?? saving.error;
 
   const chooseAction = (reminder: Reminder) => {
-    Alert.alert(reminder.title, describeDue(reminder, totalKm), [
-      { text: 'Cancelar', style: 'cancel' },
-      { text: 'Excluir', style: 'destructive', onPress: () => remove(reminder) },
-      { text: 'Concluir', onPress: () => complete(reminder) },
-    ]);
+    showDialog({
+      title: reminder.title,
+      message: describeDue(reminder),
+      actions: [
+        { label: t('common:actions.done'), onPress: () => complete(reminder) },
+        { label: t('common:actions.delete'), tone: 'danger', onPress: () => remove(reminder) },
+        { label: t('common:actions.cancel'), tone: 'secondary' },
+      ],
+    });
   };
 
   const pending = reminders.filter((reminder) => !reminder.done);
@@ -58,28 +57,41 @@ export default function RemindersScreen() {
   return (
     <Screen>
       {warning ? <Notice tone="accent" message={warning} /> : null}
-      <Card title="Novo lembrete">
+      <Card title={t('reminders.newTitle')}>
         {profile ? (
           <ButtonRow>
-            <Button label="Troca de óleo" variant="secondary" onPress={() => setValues({ title: 'Trocar o óleo', km: String(profile.oilIntervalKm) })} />
-            <Button label="Pneus" variant="secondary" onPress={() => setValues({ title: 'Trocar os pneus', km: String(profile.tiresLifeKm) })} />
+            <Button
+              label={t('reminders.oilButton')}
+              variant="secondary"
+              onPress={() => setValues({ title: t('reminders.oilTask'), km: format.distanceInput(profile.oilIntervalKm, 0) })}
+            />
+            <Button
+              label={t('reminders.tiresButton')}
+              variant="secondary"
+              onPress={() => setValues({ title: t('reminders.tiresTask'), km: format.distanceInput(profile.tiresLifeKm, 0) })}
+            />
           </ButtonRow>
         ) : null}
-        <TextField label="O que fazer" placeholder="Trocar o óleo" {...bind('title')} />
-        <DateField label="Data (opcional)" value={dueDate} onChange={setDueDate} minimumDate={new Date()} clearable />
-        <NumberField label="Daqui a quantos km (opcional)" suffix="km" hint="O app soma os km das suas jornadas e avisa no início." {...bind('km')} />
+        <TextField label={t('reminders.titleLabel')} placeholder={t('reminders.titlePlaceholder')} {...bind('title')} />
+        <DateField label={t('reminders.dateLabel')} value={dueDate} onChange={setDueDate} minimumDate={new Date()} clearable />
+        <NumberField
+          label={t('reminders.distanceLabel', unitContext)}
+          suffix={format.distanceUnit}
+          hint={t('reminders.distanceHint', unitContext)}
+          {...bind('km')}
+        />
         {failure ? <Notice tone="negative" message={failure} /> : null}
-        <Button label="Adicionar" busy={saving.busy} onPress={saving.submit} />
+        <Button label={t('common:actions.add')} busy={saving.busy} onPress={saving.submit} />
       </Card>
       <DailyReminderCard />
       <AsyncBoundary state={state}>
         {() =>
           pending.length === 0 ? (
-            <EmptyState title="Nenhum lembrete" message="Crie lembretes para troca de óleo, pneus e revisões." />
+            <EmptyState title={t('reminders.emptyTitle')} message={t('reminders.emptyMessage')} />
           ) : (
-            <Card title="Pendentes">
+            <Card title={t('reminders.pendingTitle')}>
               {pending.map((reminder) => (
-                <ListRow key={reminder.id} title={reminder.title} subtitle={describeDue(reminder, totalKm)} onPress={() => chooseAction(reminder)} />
+                <ListRow key={reminder.id} title={reminder.title} subtitle={describeDue(reminder)} onPress={() => chooseAction(reminder)} />
               ))}
             </Card>
           )

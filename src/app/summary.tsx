@@ -1,1 +1,1 @@
-export { default } from '@/features/settings/MySummaryScreen';
+export { default } from '@features/settings/MySummaryScreen';
