@@ -29,11 +29,27 @@ interface AppTextProps extends TextProps {
 
 export function AppText({ variant = 'body', tone = 'default', bold, center, style, ...props }: AppTextProps) {
   const colors = useTheme();
-  const textStyle = { color: colors[TONE_COLORS[tone]], fontSize: fontSize[variant], fontFamily: bold ? fonts.bold : fonts.regular, fontVariant: TABULAR, textAlign: center ? 'center' : 'auto' } as const;
+  const textStyle = {
+    color: colors[TONE_COLORS[tone]],
+    fontSize: fontSize[variant],
+    fontFamily: bold ? fonts.bold : fonts.regular,
+    fontVariant: TABULAR,
+    textAlign: center ? 'center' : 'auto',
+  } as const;
   return <Text style={[textStyle, style]} {...props} />;
 }
 
-export function Screen({ children, scroll = true, safeTop = false, centered = false }: { children: ReactNode; scroll?: boolean; safeTop?: boolean; centered?: boolean }) {
+export function Screen({
+  children,
+  scroll = true,
+  safeTop = false,
+  centered = false,
+}: {
+  children: ReactNode;
+  scroll?: boolean;
+  safeTop?: boolean;
+  centered?: boolean;
+}) {
   const colors = useTheme();
   const insets = useSafeAreaInsets();
   const padding = { paddingBottom: insets.bottom + spacing.xxl, paddingTop: safeTop ? insets.top + spacing.lg : spacing.lg };
@@ -57,7 +73,11 @@ export function Card({ children, title }: { children: ReactNode; title?: string 
   const colors = useTheme();
   return (
     <View style={[styles.card, { backgroundColor: colors.surface, boxShadow: colors.cardShadow }]}>
-      {title ? <AppText variant="subtitle" bold>{title}</AppText> : null}
+      {title ? (
+        <AppText variant="subtitle" bold>
+          {title}
+        </AppText>
+      ) : null}
       {children}
     </View>
   );
@@ -102,7 +122,9 @@ export function ButtonRow({ children }: { children: ReactNode }) {
   return (
     <View style={styles.buttonRow}>
       {Children.toArray(children).map((child, index) => (
-        <View key={index} style={styles.flex}>{child}</View>
+        <View key={index} style={styles.flex}>
+          {child}
+        </View>
       ))}
     </View>
   );
@@ -128,9 +150,7 @@ export function Segmented<T extends string>({ value, options, onChange }: Segmen
             onPress={() => onChange(option.value)}
             style={[styles.segment, selected && { backgroundColor: colors.primary }]}
           >
-            <Text style={{ color: selected ? colors.onPrimary : colors.text, fontFamily: fonts.semibold, textAlign: 'center' }}>
-              {option.label}
-            </Text>
+            <Text style={{ color: selected ? colors.onPrimary : colors.text, fontFamily: fonts.semibold, textAlign: 'center' }}>{option.label}</Text>
           </Pressable>
         );
       })}
@@ -144,9 +164,19 @@ export function ToggleRow({ label, hint, value, onChange }: { label: string; hin
     <View style={styles.rowBetween}>
       <View style={styles.flex}>
         <AppText>{label}</AppText>
-        {hint ? <AppText variant="caption" tone="muted">{hint}</AppText> : null}
+        {hint ? (
+          <AppText variant="caption" tone="muted">
+            {hint}
+          </AppText>
+        ) : null}
       </View>
-      <Switch accessibilityLabel={label} value={value} onValueChange={onChange} trackColor={{ false: colors.border, true: colors.primary }} thumbColor={value ? colors.onPrimary : colors.textMuted} />
+      <Switch
+        accessibilityLabel={label}
+        value={value}
+        onValueChange={onChange}
+        trackColor={{ false: colors.border, true: colors.primary }}
+        thumbColor={value ? colors.onPrimary : colors.textMuted}
+      />
     </View>
   );
 }
@@ -178,9 +208,17 @@ export function ListRow({ icon, leading, title, subtitle, value, valueTone = 'de
       {leading ? <View>{leading}</View> : null}
       <View style={styles.flex}>
         {title ? <AppText>{title}</AppText> : null}
-        {subtitle ? <AppText variant="caption" tone="muted">{subtitle}</AppText> : null}
+        {subtitle ? (
+          <AppText variant="caption" tone="muted">
+            {subtitle}
+          </AppText>
+        ) : null}
       </View>
-      {value ? <AppText bold tone={valueTone}>{value}</AppText> : null}
+      {value ? (
+        <AppText bold tone={valueTone}>
+          {value}
+        </AppText>
+      ) : null}
     </Pressable>
   );
 }
@@ -191,14 +229,13 @@ export function Collapsible({ title, children, initiallyOpen = false }: { title:
 
   return (
     <View style={[styles.card, { backgroundColor: colors.surface, boxShadow: colors.cardShadow }]}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityState={{ expanded: open }}
-        onPress={() => setOpen((current) => !current)}
-        style={styles.rowBetween}
-      >
-        <AppText variant="subtitle" bold style={styles.flex}>{title}</AppText>
-        <AppText variant="subtitle" tone="muted">{open ? '−' : '+'}</AppText>
+      <Pressable accessibilityRole="button" accessibilityState={{ expanded: open }} onPress={() => setOpen((current) => !current)} style={styles.rowBetween}>
+        <AppText variant="subtitle" bold style={styles.flex}>
+          {title}
+        </AppText>
+        <AppText variant="subtitle" tone="muted">
+          {open ? '−' : '+'}
+        </AppText>
       </Pressable>
       {open ? children : null}
     </View>
@@ -208,8 +245,12 @@ export function Collapsible({ title, children, initiallyOpen = false }: { title:
 export function Stat({ label, value, tone = 'default' }: { label: string; value: string; tone?: Tone }) {
   return (
     <View style={styles.stat}>
-      <AppText variant="caption" tone="muted">{label}</AppText>
-      <AppText variant="subtitle" bold tone={tone}>{value}</AppText>
+      <AppText variant="caption" tone="muted">
+        {label}
+      </AppText>
+      <AppText variant="subtitle" bold tone={tone}>
+        {value}
+      </AppText>
     </View>
   );
 }
@@ -235,7 +276,9 @@ export function EmptyState({ title, message, action, illustration }: { title: st
   return (
     <Card>
       {illustration ? <Illustration name={illustration} height={100} /> : null}
-      <AppText variant="subtitle" bold>{title}</AppText>
+      <AppText variant="subtitle" bold>
+        {title}
+      </AppText>
       <AppText tone="muted">{message}</AppText>
       {action}
     </Card>
@@ -270,7 +313,9 @@ export function Notice({ message, tone = 'warning' }: { message: string; tone?: 
   return (
     <View style={[styles.notice, { backgroundColor: colors.surfaceAlt }]}>
       <AppIcon name={NOTICE_ICONS[tone]} color={colors[TONE_COLORS[tone]]} size={20} />
-      <AppText variant="caption" style={styles.flex}>{message}</AppText>
+      <AppText variant="caption" style={styles.flex}>
+        {message}
+      </AppText>
     </View>
   );
 }
@@ -283,9 +328,23 @@ const styles = StyleSheet.create({
   button: { minHeight: MIN_TOUCH_TARGET, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center', paddingHorizontal: spacing.lg },
   buttonRow: { flexDirection: 'row', gap: spacing.sm },
   segmented: { flexDirection: 'row', borderRadius: radius.md, padding: spacing.xs, gap: spacing.xs },
-  segment: { flex: 1, minHeight: MIN_TOUCH_TARGET - spacing.sm, borderRadius: radius.sm, alignItems: 'center', justifyContent: 'center', paddingHorizontal: spacing.xs },
+  segment: {
+    flex: 1,
+    minHeight: MIN_TOUCH_TARGET - spacing.sm,
+    borderRadius: radius.sm,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: spacing.xs,
+  },
   rowBetween: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: MIN_TOUCH_TARGET },
-  listRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: MIN_TOUCH_TARGET + spacing.sm, paddingVertical: spacing.sm, borderBottomWidth: StyleSheet.hairlineWidth },
+  listRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    minHeight: MIN_TOUCH_TARGET + spacing.sm,
+    paddingVertical: spacing.sm,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
   stat: { flexBasis: '45%', flexGrow: 1, gap: 2 },
   statGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
   progress: { flexDirection: 'row', gap: spacing.xs },

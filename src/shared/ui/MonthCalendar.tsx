@@ -31,7 +31,9 @@ export function MonthCalendar({ weeks, selectedDate, onSelect }: MonthCalendarPr
       <View style={styles.week}>
         {WEEKDAY_LABELS.map((label, index) => (
           <View key={index} style={styles.cell}>
-            <AppText variant="caption" tone="muted">{label}</AppText>
+            <AppText variant="caption" tone="muted">
+              {label}
+            </AppText>
           </View>
         ))}
       </View>
@@ -52,9 +54,7 @@ export function MonthCalendar({ weeks, selectedDate, onSelect }: MonthCalendarPr
                 style={[styles.cell, styles.day, selected && { backgroundColor: colors.surfaceAlt }]}
               >
                 <AppText bold={hasShift}>{cell.day}</AppText>
-                {hasShift ? (
-                  <View style={[styles.marker, { backgroundColor: cell.profitCents! < 0 ? colors.negative : colors.positive }]} />
-                ) : null}
+                {hasShift ? <View style={[styles.marker, { backgroundColor: cell.profitCents! < 0 ? colors.negative : colors.positive }]} /> : null}
               </Pressable>
             );
           })}

@@ -1,7 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import { gpsSessionRepository } from '@/data/repositories/gpsSessionRepository';
 import { useInterval } from '@/shared/hooks/useInterval';
-import { ensureLocation, isTrackingInBackground, LOCATION_PERMISSION_MESSAGE, readGpsProblem, startBackgroundTracking, stopBackgroundTracking } from '@/shared/platform/location';
+import {
+  ensureLocation,
+  isTrackingInBackground,
+  LOCATION_PERMISSION_MESSAGE,
+  readGpsProblem,
+  startBackgroundTracking,
+  stopBackgroundTracking,
+} from '@/shared/platform/location';
 import { GPS_TASK } from './gpsTask';
 
 const METERS_PER_KM = 1000;

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { MINUTES_PER_HOUR } from '@/shared/utils/time';
 
 export type OfferColor = 'green' | 'yellow' | 'red' | 'neutral';
 export const OFFER_MODES = ['normal', 'low'] as const;
@@ -55,7 +56,7 @@ const TARGET_SCORE = 3.5;
 const MAX_SCORE = 5;
 const SCORE_PER_RATIO_ABOVE_TARGET = 3;
 const SCORE_BANDS: Record<Exclude<OfferColor, 'neutral'>, [number, number]> = {
-  green: [3.5, 5],
+  green: [TARGET_SCORE, MAX_SCORE],
   yellow: [2, 3.4],
   red: [0, 1.9],
 };
@@ -95,7 +96,7 @@ function resolveReason(offer: OfferInput, color: OfferColor, perKm: number, perH
 
 export function classifyOffer(offer: OfferInput) {
   const perKm = offer.km > 0 ? offer.valueCents / offer.km : 0;
-  const perHour = offer.minutes > 0 ? (offer.valueCents / offer.minutes) * 60 : 0;
+  const perHour = offer.minutes > 0 ? (offer.valueCents / offer.minutes) * MINUTES_PER_HOUR : 0;
   const profit = offer.valueCents - offer.km * offer.costPerKm;
   const color = resolveColor(offer, profit, perKm, perHour);
   const profitCents = color === 'neutral' ? null : profit;

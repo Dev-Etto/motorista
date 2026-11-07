@@ -153,14 +153,14 @@ Tipos de teste:
 | R12.2 | Sem `else` depois de `return` e sem `if` dentro do `else`, por `no-else-return` e `no-restricted-syntax` | Lint |
 | R12.3 | `max-depth` igual a 2 | Lint |
 | R12.4 | Camadas verificadas por `import/no-restricted-paths`, cobrindo R9.1, R9.3, R9.5, R9.6 e R9.8 | Lint |
-| R12.5 | `prettier --check` faz parte do `npm run lint` | Lint |
+| R12.5 | `prettier --check` faz parte do `npm run lint`, e a ordem dos imports é conferida por `import/order` | Lint |
 | R12.6 | No Kotlin, cadeias de `if/else if` viram `when`, e `if` opostos viram early return, como em `FloatingPanel`, `OfferCardView` e `CopilotStore` | Revisão |
 
 ## R13. Textos e constantes
 
 | ID | Critério de aceite | Teste |
 | --- | --- | --- |
-| R13.1 | Cada funcionalidade tem um `copy.ts` com os textos repetidos, como os avisos de permissão | Revisão |
+| R13.1 | Textos repetidos ficam em um lugar só: `copy.ts` da funcionalidade, como no Copiloto, ou a constante do módulo que os usa, como `LOCATION_PERMISSION_MESSAGE` e `IRREVERSIBLE_MESSAGE` | Revisão |
 | R13.2 | `MS_PER_DAY`, `MS_PER_HOUR`, `MS_PER_MINUTE` e `MONTHS_PER_YEAR` existem uma vez, em `shared/utils/time.ts` | Revisão |
 | R13.3 | A faixa verde da nota usa `TARGET_SCORE`, sem repetir `3.5` | Revisão |
 | R13.4 | Intervalos e arredondamentos com significado viram constantes nomeadas, como o atraso de 300 ms do Copiloto | Revisão |

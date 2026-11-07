@@ -1,16 +1,16 @@
 import { useCallback, useState } from 'react';
 
-export function useFormFields<T extends Record<string, string>>(initial: T) {
-  const [values, setValues] = useState<T>(initial);
+export function useFormFields<Key extends string>(initial: Record<Key, string>) {
+  const [values, setValues] = useState(initial);
 
-  const setField = useCallback(<K extends keyof T>(key: K, value: T[K]) => {
+  const setField = useCallback((key: Key, value: string) => {
     setValues((current) => ({ ...current, [key]: value }));
   }, []);
 
   const bind = useCallback(
-    <K extends keyof T>(key: K) => ({
+    (key: Key) => ({
       value: values[key],
-      onChangeText: (text: string) => setField(key, text as T[K]),
+      onChangeText: (text: string) => setField(key, text),
     }),
     [values, setField],
   );

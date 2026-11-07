@@ -34,7 +34,12 @@ export function DailyReminderCard() {
 
   return (
     <Card title="Fim do dia">
-      <ToggleRow label="Lembrar de registrar a jornada" hint="Um aviso por dia, no horário que você escolher." value={Boolean(hour)} onChange={toggling.submit} />
+      <ToggleRow
+        label="Lembrar de registrar a jornada"
+        hint="Um aviso por dia, no horário que você escolher."
+        value={Boolean(hour)}
+        onChange={toggling.submit}
+      />
       {hour ? <Segmented value={hour} options={HOUR_OPTIONS} onChange={scheduling.submit} /> : null}
       {failure ? <Notice tone="negative" message={failure} /> : null}
       {denied ? <Notice message="Permita as notificações do app para receber o lembrete." /> : null}

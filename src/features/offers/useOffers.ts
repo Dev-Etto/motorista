@@ -1,7 +1,7 @@
-import { copilot } from '@modules/copilot';
 import { useMemo, useState } from 'react';
 import { estimateEarnings, filterOffers, listSources, OutcomeFilter, summarizeOutcomes } from '@/domain/offer/offerLog';
 import { today } from '@/shared/utils/dates';
+import { copilot } from '@modules/copilot';
 import { CustomDates, defaultCustomDates, OfferPeriod, periodRange } from './offerPeriod';
 import { useOfferHistory } from './useOfferHistory';
 
@@ -25,10 +25,12 @@ export function useOffers() {
   const inSource = useMemo(() => filterOffers(history.entries, { ...range, outcome: 'all', source: sourceFilter }), [history.entries, range, sourceFilter]);
   const listed = useMemo(() => filterOffers(inSource, { ...range, outcome, source: sourceFilter }), [inSource, range, outcome, sourceFilter]);
 
-  const resettingList = <T,>(apply: (value: T) => void) => (value: T) => {
-    apply(value);
-    setVisible(PAGE_SIZE);
-  };
+  const resettingList =
+    <T>(apply: (value: T) => void) =>
+    (value: T) => {
+      apply(value);
+      setVisible(PAGE_SIZE);
+    };
 
   const toggleEstimating = (value: boolean) => {
     copilot.setPreferences({ ...copilot.getPreferences(), estimateEarnings: value });

@@ -1,6 +1,6 @@
-import { copilot } from '@modules/copilot';
 import { useEffect } from 'react';
 import { AppState } from 'react-native';
+import { copilot } from '@modules/copilot';
 import { shouldStartFloating } from './floatingStart';
 
 function startFloatingIfNeeded(): void {

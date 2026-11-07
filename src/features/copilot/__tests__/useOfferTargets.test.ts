@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-native';
-import { DEFAULT_LOW_DEMAND_TARGETS } from '@/domain/offer/offer';
 import { loadOfferSettings, saveModeTargets } from '@/application/offerSettings';
+import { DEFAULT_LOW_DEMAND_TARGETS } from '@/domain/offer/offer';
 import { useOfferTargets } from '../useOfferTargets';
 
 const mockFocus: { callback: (() => void) | null } = { callback: null };

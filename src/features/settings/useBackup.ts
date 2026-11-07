@@ -1,4 +1,3 @@
-import { copilot } from '@modules/copilot';
 import * as DocumentPicker from 'expo-document-picker';
 import { File, Paths } from 'expo-file-system';
 import { useState } from 'react';
@@ -6,8 +5,9 @@ import { type BackupFile, createBackup, parseBackup, restoreBackup } from '@/dat
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useSubmit } from '@/shared/hooks/useSubmit';
-import { today } from '@/shared/utils/dates';
 import { shareTextFile } from '@/shared/platform/share';
+import { today } from '@/shared/utils/dates';
+import { copilot } from '@modules/copilot';
 import { applyRestoredState } from './afterRestore';
 
 const SAFETY_COPY_NAME = 'antes-de-restaurar.json';
@@ -35,7 +35,10 @@ export function useBackup() {
     writeSafetyCopy(JSON.stringify(await fullBackup()));
     await restoreBackup(backup);
     setCanUndo(true);
-    const complete = await applyRestoredState(backup).then(() => true, () => false);
+    const complete = await applyRestoredState(backup).then(
+      () => true,
+      () => false,
+    );
     setMessage({ tone: 'positive', text: complete ? doneText : `${doneText} Confira os lembretes e o Copiloto.` });
   };
 
@@ -53,9 +56,10 @@ export function useBackup() {
   const importing = useSubmit(async () => {
     try {
       const picked = await DocumentPicker.getDocumentAsync({ type: 'application/json', copyToCacheDirectory: true });
-      if (picked.canceled) return;
+      const [asset] = picked.assets ?? [];
+      if (picked.canceled || !asset) return;
 
-      const parsed = parseBackup(new File(picked.assets[0].uri).textSync());
+      const parsed = parseBackup(new File(asset.uri).textSync());
       if (!parsed.ok) return setMessage({ tone: 'negative', text: parsed.error });
 
       await replaceData(parsed.backup, 'Dados restaurados com sucesso.');

@@ -13,7 +13,9 @@ export function PlatformBadge({ name }: { name: string }) {
 
   return (
     <View style={[styles.badge, { backgroundColor: style.background }]}>
-      <Text numberOfLines={1} style={[styles.label, { color: style.text }]}>{name}</Text>
+      <Text numberOfLines={1} style={[styles.label, { color: style.text }]}>
+        {name}
+      </Text>
     </View>
   );
 }

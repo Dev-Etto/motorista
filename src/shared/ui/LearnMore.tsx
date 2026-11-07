@@ -12,7 +12,9 @@ export function LearnMore({ title, children }: { title: string; children: ReactN
     <View style={styles.container}>
       <Pressable accessibilityRole="button" accessibilityState={{ expanded: open }} onPress={() => setOpen((current) => !current)} style={styles.row}>
         <AppIcon name="help" color={colors.accent} size={20} />
-        <AppText variant="caption" tone="accent" bold style={styles.title}>{title}</AppText>
+        <AppText variant="caption" tone="accent" bold style={styles.title}>
+          {title}
+        </AppText>
       </Pressable>
       {open ? <View style={styles.body}>{children}</View> : null}
     </View>

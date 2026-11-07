@@ -32,7 +32,7 @@ export function parseDecimal(input: string): number | null {
 
 export function formatNumber(value: number, decimals = 1): string {
   const fixed = value.toFixed(decimals);
-  const [int, frac] = fixed.split('.');
+  const [int = '', frac] = fixed.split('.');
   const grouped = int.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   return frac ? `${grouped},${frac}` : grouped;
 }

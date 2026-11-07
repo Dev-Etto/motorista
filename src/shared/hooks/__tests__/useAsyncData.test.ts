@@ -42,4 +42,3 @@ describe('useAsyncData', () => {
     expect(result.current.loading).toBe(false);
   });
 });
-

@@ -1,5 +1,7 @@
 import { Alert } from 'react-native';
 
+export const IRREVERSIBLE_MESSAGE = 'Essa ação não pode ser desfeita.';
+
 interface ConfirmOptions {
   title: string;
   message: string;

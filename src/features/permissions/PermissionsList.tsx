@@ -21,8 +21,16 @@ function PermissionRow({ icon, title, description, granted, onAllow }: Permissio
       <AppIcon name={granted ? 'check' : icon} color={granted ? colors.positive : colors.primary} size={28} />
       <View style={styles.content}>
         <AppText bold>{title}</AppText>
-        <AppText variant="caption" tone="muted">{description}</AppText>
-        {granted ? <AppText variant="caption" tone="positive" bold>Permitido</AppText> : <Button label="Permitir" variant="secondary" onPress={onAllow} />}
+        <AppText variant="caption" tone="muted">
+          {description}
+        </AppText>
+        {granted ? (
+          <AppText variant="caption" tone="positive" bold>
+            Permitido
+          </AppText>
+        ) : (
+          <Button label="Permitir" variant="secondary" onPress={onAllow} />
+        )}
       </View>
     </View>
   );
@@ -44,8 +52,12 @@ export function PermissionsList() {
       {state.accessibility ? null : (
         <LearnMore title="Como ativar a leitura">
           <AppText variant="caption">1. Procure Copiloto de ofertas e ligue a primeira opção. Deixe o atalho desligado.</AppText>
-          <AppText variant="caption">2. O Android avisa sobre controle total. É o aviso padrão dessa permissão: o app lê a tela e não toca em nada por você.</AppText>
-          <AppText variant="caption">3. Se a opção estiver bloqueada, abra os detalhes do app, toque nos três pontos e permita as configurações restritas.</AppText>
+          <AppText variant="caption">
+            2. O Android avisa sobre controle total. É o aviso padrão dessa permissão: o app lê a tela e não toca em nada por você.
+          </AppText>
+          <AppText variant="caption">
+            3. Se a opção estiver bloqueada, abra os detalhes do app, toque nos três pontos e permita as configurações restritas.
+          </AppText>
           <Button label="Abrir detalhes do app" variant="secondary" onPress={permissions.openAppSettings} />
         </LearnMore>
       )}

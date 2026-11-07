@@ -18,7 +18,9 @@ export function TipBanner({ id, message }: { id: string; message: string }) {
 
   return (
     <Card>
-      <AppText variant="caption" tone="accent" bold>Dica</AppText>
+      <AppText variant="caption" tone="accent" bold>
+        Dica
+      </AppText>
       <AppText>{message}</AppText>
       <Button label="Entendi" variant="secondary" onPress={close} />
     </Card>

@@ -1,7 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { FilterChips } from '../FilterChips';
 
-const MANY_APPS = ['Todos', 'Uber', '99', 'inDrive', 'Maxim', 'Garupa', 'Lady Driver', 'Um aplicativo com nome bem comprido'].map((label) => ({ value: label, label }));
+const MANY_APPS = ['Todos', 'Uber', '99', 'inDrive', 'Maxim', 'Garupa', 'Lady Driver', 'Um aplicativo com nome bem comprido'].map((label) => ({
+  value: label,
+  label,
+}));
 
 describe('filtro em chips', () => {
   it('mostra todas as opções, sem limite de quantidade', async () => {

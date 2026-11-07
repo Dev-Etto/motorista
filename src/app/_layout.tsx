@@ -6,8 +6,8 @@ import { useFloatingVisibility } from '@/features/copilot/useFloatingVisibility'
 import { restoreThemeMode } from '@/features/settings/themePreference';
 import '@/features/shifts/gpsTask';
 import { fonts, useTheme } from '@/shared/theme/theme';
-import { ThemedStatusBar } from '@/shared/ui/ThemedStatusBar';
 import { AppText, Notice, Screen } from '@/shared/ui/primitives';
+import { ThemedStatusBar } from '@/shared/ui/ThemedStatusBar';
 
 const SCREEN_TITLES: Record<string, string> = {
   vehicle: 'Veículo e custos',

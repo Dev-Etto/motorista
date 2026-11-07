@@ -1,5 +1,7 @@
-import { copilot } from '@modules/copilot';
 import Constants from 'expo-constants';
+import { loadGoalProgress } from '@/application/goalProgress';
+import { loadInsights } from '@/application/insights';
+import { loadNextStep } from '@/application/nextStep';
 import { BACKUP_REMINDER_DAYS, UPDATE_REMINDER_DAYS } from '@/config/app';
 import { expenseRepository } from '@/data/repositories/expenseRepository';
 import { gpsSessionRepository } from '@/data/repositories/gpsSessionRepository';
@@ -11,12 +13,10 @@ import { isBackupDue, isUpdateDue } from '@/domain/maintenance/notices';
 import { estimateEarnings } from '@/domain/offer/offerLog';
 import { isDueByKm } from '@/domain/reminder/reminder';
 import { summarizeShifts, withLooseExpenses } from '@/domain/shift/summary';
-import { loadGoalProgress } from '@/application/goalProgress';
-import { loadInsights } from '@/application/insights';
-import { loadNextStep } from '@/application/nextStep';
-import { readGpsProblem } from '@/shared/platform/location';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
+import { readGpsProblem } from '@/shared/platform/location';
 import { dayRange, monthBounds, today, weekBounds } from '@/shared/utils/dates';
+import { copilot } from '@modules/copilot';
 
 async function loadDashboard() {
   const date = today();
@@ -39,7 +39,7 @@ async function loadDashboard() {
   const copilotStatus = copilot.getStatus();
   const measuring = gpsSession.running && copilot.getTimer().running;
   const gpsProblem = measuring ? await readGpsProblem() : null;
-  const dueKmReminders = reminders.filter((reminder) => isDueByKm({ dueKm: reminder.due_km, done: reminder.done === 1 }, totalKm));
+  const dueKmReminders = reminders.filter((reminder) => isDueByKm({ dueKm: reminder.dueKm, done: reminder.done }, totalKm));
 
   return {
     costs,

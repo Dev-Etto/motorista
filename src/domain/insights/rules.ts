@@ -2,6 +2,7 @@ import { computeShift } from '@/domain/shift/shift';
 import { totalsByPlatform } from '@/domain/shift/summary';
 import { addDays, dayPeriod, fromISODate, monthBounds, weekdayName } from '@/shared/utils/dates';
 import { formatBRL, formatNumber } from '@/shared/utils/money';
+import { MINUTES_PER_HOUR, MS_PER_DAY } from '@/shared/utils/time';
 import { InsightRule, ShiftFact } from './types';
 
 const MIN_BUCKET_SHIFTS = 2;
@@ -10,11 +11,10 @@ const MIN_FUEL_GAP_PCT = 10;
 const MIN_MONTH_SHIFTS = 3;
 const EXTRA_KM_SCENARIO = 1000;
 const RECENT_DAYS = 28;
-const MS_PER_DAY = 86400000;
 
 const profitOf = (shift: ShiftFact) => computeShift(shift).profitCents;
 
-const sumBy = <T,>(items: T[], selector: (item: T) => number) => items.reduce((total, item) => total + selector(item), 0);
+const sumBy = <T>(items: T[], selector: (item: T) => number) => items.reduce((total, item) => total + selector(item), 0);
 
 function rankByProfitPerHour(shifts: ShiftFact[], keyOf: (shift: ShiftFact) => string | null) {
   const buckets = new Map<string, { profit: number; minutes: number; count: number }>();
@@ -33,7 +33,7 @@ function rankByProfitPerHour(shifts: ShiftFact[], keyOf: (shift: ShiftFact) => s
 
   return [...buckets.entries()]
     .filter(([, bucket]) => bucket.count >= MIN_BUCKET_SHIFTS)
-    .map(([key, bucket]) => ({ key, perHour: (bucket.profit / bucket.minutes) * 60, count: bucket.count }))
+    .map(([key, bucket]) => ({ key, perHour: (bucket.profit / bucket.minutes) * MINUTES_PER_HOUR, count: bucket.count }))
     .sort((a, b) => b.perHour - a.perHour);
 }
 
@@ -46,7 +46,10 @@ export const realProfitRule: InsightRule = ({ shifts, looseExpenses = [] }) => {
   return {
     id: 'real-profit',
     title: 'Lucro real',
-    message: profit >= 0 ? `De cada R$ 100 faturados, R$ ${shareOfHundred} ficaram com você.` : `Para cada R$ 100 faturados, faltaram R$ ${-shareOfHundred} para cobrir os custos.`,
+    message:
+      profit >= 0
+        ? `De cada R$ 100 faturados, R$ ${shareOfHundred} ficaram com você.`
+        : `Para cada R$ 100 faturados, faltaram R$ ${-shareOfHundred} para cobrir os custos.`,
     basis: `Faturamento ${formatBRL(gross)} e lucro ${formatBRL(profit)} em ${shifts.length} jornadas.`,
   };
 };
@@ -58,6 +61,8 @@ export const bestWeekdayRule: InsightRule = ({ shifts, today }) => {
   if (ranked.length < 2) return null;
 
   const [best] = ranked;
+  if (!best) return null;
+
   return {
     id: 'best-weekday',
     title: 'Melhor dia',
@@ -71,7 +76,9 @@ export const bestPeriodRule: InsightRule = ({ shifts }) => {
   if (ranked.length < 2) return null;
 
   const best = ranked[0];
-  const worst = ranked[ranked.length - 1];
+  const worst = ranked.at(-1);
+  if (!best || !worst) return null;
+
   const gap = best.perHour - worst.perHour;
   if (gap < MIN_PERIOD_GAP_CENTS) return null;
 
@@ -90,7 +97,10 @@ export const platformRule: InsightRule = ({ shifts }) => {
   const gross = sumBy(totals, (total) => total.cents);
   if (gross <= 0) return null;
 
-  const [{ platform: name, cents }] = totals;
+  const [top] = totals;
+  if (!top) return null;
+
+  const { platform: name, cents } = top;
   return {
     id: 'platform',
     title: 'Plataforma',
@@ -109,7 +119,10 @@ export const biggestCostRule: InsightRule = ({ costs }) => {
     ['Manutenção', costs.maintenancePerKm],
     ['Custos fixos', costs.fixedPerKm],
   ];
-  const [name, value] = parts.sort((a, b) => b[1] - a[1])[0];
+  const [biggest] = parts.sort((a, b) => b[1] - a[1]);
+  if (!biggest) return null;
+
+  const [name, value] = biggest;
 
   return {
     id: 'biggest-cost',
@@ -130,8 +143,8 @@ export const efficiencyRule: InsightRule = ({ shifts, today }) => {
 
   const lastProfit = sumBy(last, profitOf);
   const previousProfit = sumBy(previous, profitOf);
-  const lastRate = (lastProfit / lastMinutes) * 60;
-  const previousRate = (previousProfit / previousMinutes) * 60;
+  const lastRate = (lastProfit / lastMinutes) * MINUTES_PER_HOUR;
+  const previousRate = (previousProfit / previousMinutes) * MINUTES_PER_HOUR;
   if (lastProfit <= previousProfit || lastRate >= previousRate) return null;
 
   return {
@@ -146,7 +159,9 @@ export const breakEvenRule: InsightRule = ({ shifts, costs, today }) => {
   if (!costs) return null;
 
   const workedDays = new Set(shifts.map((shift) => shift.date)).size;
-  const firstDate = shifts.map((shift) => shift.date).sort()[0];
+  const [firstDate] = shifts.map((shift) => shift.date).sort();
+  if (!firstDate) return null;
+
   const elapsedMs = fromISODate(today).getTime() - fromISODate(firstDate).getTime();
   const spanDays = Math.max(1, Math.round(elapsedMs / MS_PER_DAY) + 1);
   const daysPerMonth = Math.max(1, Math.round((workedDays / spanDays) * monthBounds(today).days));

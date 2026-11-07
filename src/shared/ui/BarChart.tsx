@@ -55,7 +55,9 @@ export function BarChart({ data, accessibilityLabel }: BarChartProps) {
       </Svg>
       <View style={styles.labels}>
         {visibleLabels.map((datum) => (
-          <AppText key={datum.label} variant="caption" tone="muted">{datum.label}</AppText>
+          <AppText key={datum.label} variant="caption" tone="muted">
+            {datum.label}
+          </AppText>
         ))}
       </View>
     </View>

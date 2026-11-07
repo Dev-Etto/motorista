@@ -32,7 +32,9 @@ export function DateField({ label, value, onChange, placeholder = 'Escolher data
   if (Platform.OS === 'ios') {
     return (
       <View style={styles.field}>
-        <AppText variant="caption" tone="muted">{label}</AppText>
+        <AppText variant="caption" tone="muted">
+          {label}
+        </AppText>
         <DateTimePicker
           value={current}
           mode="date"
@@ -47,7 +49,9 @@ export function DateField({ label, value, onChange, placeholder = 'Escolher data
 
   return (
     <View style={styles.field}>
-      <AppText variant="caption" tone="muted">{label}</AppText>
+      <AppText variant="caption" tone="muted">
+        {label}
+      </AppText>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={`${label}: ${value ? formatDate(value) : placeholder}`}
@@ -55,7 +59,9 @@ export function DateField({ label, value, onChange, placeholder = 'Escolher data
         style={[styles.input, { backgroundColor: colors.surface, borderColor: colors.border }]}
       >
         <AppIcon name="calendar" color={colors.textMuted} size={22} />
-        <AppText tone={value ? 'default' : 'muted'} style={styles.value}>{value ? formatDate(value) : placeholder}</AppText>
+        <AppText tone={value ? 'default' : 'muted'} style={styles.value}>
+          {value ? formatDate(value) : placeholder}
+        </AppText>
         {clearable && value ? (
           <Pressable accessibilityRole="button" accessibilityLabel={`Limpar ${label}`} hitSlop={12} onPress={() => onChange(null)}>
             <AppText tone="muted">Limpar</AppText>

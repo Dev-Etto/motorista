@@ -16,7 +16,10 @@ describe('estimativa de faturamento', () => {
     const estimate = estimateEarnings(OFFERS);
     expect(estimate.totalCents).toBe(3000);
     expect(estimate.trips).toBe(2);
-    expect(estimate.byPlatform).toEqual([{ source: '99', cents: 2000, trips: 1 }, { source: 'Uber', cents: 1000, trips: 1 }]);
+    expect(estimate.byPlatform).toEqual([
+      { source: '99', cents: 2000, trips: 1 },
+      { source: 'Uber', cents: 1000, trips: 1 },
+    ]);
   });
 
   it('contraoferta fica fora da soma', () => {
@@ -62,12 +65,18 @@ describe('comparação', () => {
 });
 
 describe('ligação com as plataformas da jornada', () => {
-  const platforms = [{ id: 1, name: 'Uber' }, { id: 2, name: '99' }];
+  const platforms = [
+    { id: 1, name: 'Uber' },
+    { id: 2, name: '99' },
+  ];
 
   it('liga pelo nome e avisa o que não encontrou', () => {
     const estimate = estimateEarnings([...OFFERS, offer({ source: 'inDrive', status: 'accepted' })]);
     const { matched, unmatched } = matchPlatforms(estimate, platforms);
-    expect(matched).toEqual([{ platformId: 2, cents: 2000 }, { platformId: 1, cents: 1000 }]);
+    expect(matched).toEqual([
+      { platformId: 2, cents: 2000 },
+      { platformId: 1, cents: 1000 },
+    ]);
     expect(unmatched).toEqual(['inDrive']);
   });
 });

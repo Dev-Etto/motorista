@@ -1,3 +1,4 @@
+import { MINUTES_PER_HOUR } from '@/shared/utils/time';
 import { parseDecimal } from './money';
 
 const CENTS_PER_REAL = 100;
@@ -28,7 +29,6 @@ export const hasInvalidHour = (text: string) => {
 };
 
 const HOURS_AND_MINUTES = /^(\d+):(\d{1,2})$/;
-const MINUTES_PER_HOUR = 60;
 
 export function parseHours(text: string): number | null {
   const match = text.trim().match(HOURS_AND_MINUTES);

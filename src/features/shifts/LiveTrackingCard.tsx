@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
+import { confirmAction } from '@/shared/platform/confirm';
 import { spacing } from '@/shared/theme/theme';
 import { AppText, Button, ButtonRow, Card, Notice, ToggleRow } from '@/shared/ui/primitives';
-import { confirmAction } from '@/shared/platform/confirm';
 import { formatClock } from '@/shared/utils/dates';
 import { formatNumber } from '@/shared/utils/money';
 import { LiveTrackingState } from './useLiveTracking';
@@ -25,16 +25,29 @@ export function LiveTrackingCard({ live }: { live: LiveTrackingState }) {
     <Card title={cardTitle(live)}>
       <View style={styles.measures}>
         <View style={styles.measure}>
-          <AppText variant="caption" tone="muted" center>Tempo</AppText>
-          <AppText variant="title" bold center>{formatClock(live.elapsedMs)}</AppText>
+          <AppText variant="caption" tone="muted" center>
+            Tempo
+          </AppText>
+          <AppText variant="title" bold center>
+            {formatClock(live.elapsedMs)}
+          </AppText>
         </View>
         <View style={styles.measure}>
-          <AppText variant="caption" tone="muted" center>Distância</AppText>
-          <AppText variant="title" bold center>{formatNumber(live.km)} km</AppText>
+          <AppText variant="caption" tone="muted" center>
+            Distância
+          </AppText>
+          <AppText variant="title" bold center>
+            {formatNumber(live.km)} km
+          </AppText>
         </View>
       </View>
       {live.started && !live.running ? null : (
-        <ToggleRow label="Medir km por GPS" hint="A posição fica só no celular. Em deslocamentos pessoais, é só pausar." value={live.measureKm} onChange={live.toggleMeasureKm} />
+        <ToggleRow
+          label="Medir km por GPS"
+          hint="A posição fica só no celular. Em deslocamentos pessoais, é só pausar."
+          value={live.measureKm}
+          onChange={live.toggleMeasureKm}
+        />
       )}
       {live.gpsError ? <Notice message={live.gpsError} /> : null}
       {live.applied ? <Notice tone="positive" message="Medição levada para o registro abaixo. Ela só é apagada depois de salvar a jornada." /> : null}

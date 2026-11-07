@@ -1,10 +1,10 @@
-import { copilot } from '@modules/copilot';
+import { z } from 'zod';
 import { goalRepository } from '@/data/repositories/goalRepository';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
 import { shiftRepository } from '@/data/repositories/shiftRepository';
 import { vehicleRepository } from '@/data/repositories/vehicleRepository';
 import { monthKey, today } from '@/shared/utils/dates';
-import { z } from 'zod';
+import { copilot } from '@modules/copilot';
 
 const STEP_IDS = ['vehicle', 'first-shift', 'goal', 'first-backup'] as const;
 const dismissedSchema = z.array(z.enum(STEP_IDS));

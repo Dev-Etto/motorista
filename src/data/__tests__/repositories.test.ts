@@ -1,3 +1,5 @@
+import { z } from 'zod';
+import { loadGoalProgress } from '@/application/goalProgress';
 import { getDb, MIGRATIONS } from '@/data/database/connection';
 import { expenseRepository } from '@/data/repositories/expenseRepository';
 import { goalRepository } from '@/data/repositories/goalRepository';
@@ -9,8 +11,6 @@ import { createShiftRepository, shiftRepository } from '@/data/repositories/shif
 import { vehicleRepository } from '@/data/repositories/vehicleRepository';
 import { summarizeShifts, withLooseExpenses } from '@/domain/shift/summary';
 import { computeCosts, CostProfile } from '@/domain/vehicle/costs';
-import { loadGoalProgress } from '@/application/goalProgress';
-import { z } from 'zod';
 import { openTestDatabase } from './sqliteHarness';
 
 jest.mock('expo-sqlite', () => jest.requireActual('./sqliteHarness').expoSqliteMock);
@@ -44,7 +44,10 @@ const shiftInput = (over = {}) => ({
   odometerEnd: null,
   trips: 10,
   note: null,
-  earnings: [{ platformId: 1, cents: 30000 }, { platformId: 2, cents: 10000 }],
+  earnings: [
+    { platformId: 1, cents: 30000 },
+    { platformId: 2, cents: 10000 },
+  ],
   expenses: [{ category: 'toll' as const, cents: 1500 }],
   ...over,
 });
@@ -68,7 +71,7 @@ describe('repositórios criados por fábrica', () => {
     const id = await shifts.save(shiftInput());
 
     expect(vehicles.getCostsAt).toHaveBeenCalledWith('2026-11-05');
-    expect((await shifts.findById(id))?.shift.cost_per_km).toBeCloseTo(costs.fullPerKm);
+    expect((await shifts.findById(id))?.shift.costPerKm).toBeCloseTo(costs.fullPerKm);
   });
 
   it('a jornada lê pela conexão recebida', async () => {
@@ -95,13 +98,13 @@ describe('jornadas', () => {
   it('guarda uma cópia do custo: mudar o preço não altera o passado', async () => {
     const vehicleId = await createVehicle();
     const id = await shiftRepository.save(shiftInput());
-    const original = (await shiftRepository.findById(id))?.shift.cost_per_km;
+    const original = (await shiftRepository.findById(id))?.shift.costPerKm;
 
     await vehicleRepository.saveCostProfile(vehicleId, '2026-11-05', { ...PROFILE, fuelPriceCents: 900 });
     const newer = await shiftRepository.save(shiftInput());
 
-    expect((await shiftRepository.findById(id))?.shift.cost_per_km).toBe(original);
-    expect((await shiftRepository.findById(newer))?.shift.cost_per_km).toBeGreaterThan(original ?? 0);
+    expect((await shiftRepository.findById(id))?.shift.costPerKm).toBe(original);
+    expect((await shiftRepository.findById(newer))?.shift.costPerKm).toBeGreaterThan(original ?? 0);
   });
 
   it('editar troca os ganhos sem duplicar nem criar outra jornada', async () => {
@@ -135,13 +138,13 @@ describe('jornadas', () => {
     expect(facts).toHaveLength(2);
     expect(facts.map((fact) => fact.partial)).toEqual([true, false]);
     expect(facts[1]).toMatchObject({ grossCents: 40000, expensesCents: 1500 });
-    expect(facts[1].variablePerKm).toBeGreaterThan(0);
-    expect(facts[1].earnings).toEqual(expect.arrayContaining([{ platform: 'Uber', cents: 30000 }]));
+    expect(facts[1]?.variablePerKm).toBeGreaterThan(0);
+    expect(facts[1]?.earnings).toEqual(expect.arrayContaining([{ platform: 'Uber', cents: 30000 }]));
   });
 
   it('jornada sem veículo fica sem custo, e não com erro', async () => {
     const id = await shiftRepository.save(shiftInput());
-    expect((await shiftRepository.findById(id))?.shift.cost_per_km).toBe(0);
+    expect((await shiftRepository.findById(id))?.shift.costPerKm).toBe(0);
   });
 });
 
@@ -153,6 +156,7 @@ describe('lançamentos avulsos', () => {
     expect(await expenseRepository.totalLooseCountable('2026-11-01', '2026-11-30')).toBe(5000);
 
     const [saved] = await expenseRepository.listLoose('2026-11-01', '2026-11-30');
+    if (!saved) throw new Error('despesa não encontrada');
     await expenseRepository.remove(saved.id);
 
     expect(await expenseRepository.totalLooseCountable('2026-11-01', '2026-11-30')).toBe(0);
@@ -248,12 +252,13 @@ describe('metas, lembretes e ajustes', () => {
   });
 
   it('guarda o aviso do lembrete e marca como feito', async () => {
-    await reminderRepository.add({ title: 'Óleo', due_date: '2026-12-01', due_km: null, notification_id: null });
+    await reminderRepository.add({ title: 'Óleo', dueDate: '2026-12-01', dueKm: null, notificationId: null });
     const [reminder] = await reminderRepository.list();
+    if (!reminder) throw new Error('lembrete não encontrado');
     await reminderRepository.setNotificationId(reminder.id, 'abc');
     await reminderRepository.setDone(reminder.id, true);
 
-    expect((await reminderRepository.list())[0]).toMatchObject({ notification_id: 'abc', done: 1 });
+    expect((await reminderRepository.list())[0]).toMatchObject({ notificationId: 'abc', done: true });
   });
 
   it('salva, atualiza e remove ajustes', async () => {

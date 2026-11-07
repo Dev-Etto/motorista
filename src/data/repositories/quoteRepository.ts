@@ -1,11 +1,17 @@
 import { getDb, SqlExecutor } from '@/data/database/connection';
 
-export interface QuoteRow {
+export interface SavedQuote {
+  id: number;
+  createdAt: number;
+  label: string | null;
+  priceCents: number;
+}
+
+interface QuoteRow {
   id: number;
   created_at: number;
   label: string | null;
   price_cents: number;
-  data: string;
 }
 
 const MAX_LISTED_QUOTES = 50;
@@ -22,8 +28,12 @@ export function createQuoteRepository(connection: () => SqlExecutor = getDb) {
       );
     },
 
-    list(): Promise<QuoteRow[]> {
-      return connection().getAllAsync<QuoteRow>('SELECT * FROM quotes ORDER BY created_at DESC LIMIT ?', MAX_LISTED_QUOTES);
+    async list(): Promise<SavedQuote[]> {
+      const rows = await connection().getAllAsync<QuoteRow>(
+        'SELECT id, created_at, label, price_cents FROM quotes ORDER BY created_at DESC LIMIT ?',
+        MAX_LISTED_QUOTES,
+      );
+      return rows.map((row) => ({ id: row.id, createdAt: row.created_at, label: row.label, priceCents: row.price_cents }));
     },
 
     async remove(id: number): Promise<void> {

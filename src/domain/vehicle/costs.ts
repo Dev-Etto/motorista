@@ -1,9 +1,11 @@
 import { z } from 'zod';
+import { MONTHS_PER_YEAR } from '@/shared/utils/time';
 
 export type VehicleKind = 'car' | 'motorcycle';
 export type FuelType = 'gasoline' | 'ethanol' | 'diesel' | 'cng' | 'electric';
 
 const amount = z.number().nonnegative();
+const PERCENT = 100;
 
 export const costProfileSchema = z.object({
   ownership: z.enum(['owned', 'financed', 'rented']),
@@ -59,12 +61,11 @@ export function computeCosts(p: CostProfile): CostBreakdown {
   const maintenancePerKm = safeDivide(p.maintenanceMonthlyCents, p.plannedKmMonth);
   const variablePerKm = fuelPerKm + oilPerKm + tiresPerKm + maintenancePerKm;
 
-  const taxesMonthly = (p.ipvaYearlyCents + p.licensingYearlyCents) / 12;
+  const taxesMonthly = (p.ipvaYearlyCents + p.licensingYearlyCents) / MONTHS_PER_YEAR;
   const depreciates = p.depreciationEnabled && p.ownership !== 'rented';
-  const depreciationMonthly = depreciates ? (p.vehicleValueCents * (p.depreciationAnnualPct / 100)) / 12 : 0;
+  const depreciationMonthly = depreciates ? (p.vehicleValueCents * (p.depreciationAnnualPct / PERCENT)) / MONTHS_PER_YEAR : 0;
   const paymentMonthly = p.ownership === 'owned' ? 0 : p.paymentMonthlyCents;
-  const fixedMonthly =
-    p.insuranceMonthlyCents + taxesMonthly + paymentMonthly + depreciationMonthly + p.otherFixedMonthlyCents;
+  const fixedMonthly = p.insuranceMonthlyCents + taxesMonthly + paymentMonthly + depreciationMonthly + p.otherFixedMonthlyCents;
   const fixedPerKm = safeDivide(fixedMonthly, p.plannedKmMonth);
 
   return {

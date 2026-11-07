@@ -11,7 +11,19 @@ describe('despesas', () => {
 });
 
 describe('resumo', () => {
-  const shift = { date: '2026-11-04', startHour: 8, minutes: 480, km: 150, grossCents: 30000, expensesCents: 2000, costPerKm: 64, earnings: [{ platform: 'A', cents: 20000 }, { platform: 'B', cents: 10000 }] };
+  const shift = {
+    date: '2026-11-04',
+    startHour: 8,
+    minutes: 480,
+    km: 150,
+    grossCents: 30000,
+    expensesCents: 2000,
+    costPerKm: 64,
+    earnings: [
+      { platform: 'A', cents: 20000 },
+      { platform: 'B', cents: 10000 },
+    ],
+  };
 
   it('soma as jornadas', () => {
     const summary = summarizeShifts([shift, shift]);
@@ -47,12 +59,19 @@ describe('jornadas sem km no resumo', () => {
   const base = { startHour: 8, minutes: 480, grossCents: 30000, expensesCents: 0, costPerKm: 100, earnings: [], date: '2026-11-05' };
 
   it('calcula o R$/km só com as jornadas que têm km', () => {
-    const summary = summarizeShifts([{ ...base, km: 100 }, { ...base, km: null }]);
+    const summary = summarizeShifts([
+      { ...base, km: 100 },
+      { ...base, km: null },
+    ]);
     expect(summary.grossPerKm).toBe(300);
   });
 
   it('conta as jornadas parciais', () => {
-    const summary = summarizeShifts([{ ...base, km: 100 }, { ...base, km: null }, { ...base, km: 50, costPerKm: 0 }]);
+    const summary = summarizeShifts([
+      { ...base, km: 100 },
+      { ...base, km: null },
+      { ...base, km: 50, costPerKm: 0 },
+    ]);
     expect(summary.partialCount).toBe(2);
   });
 });

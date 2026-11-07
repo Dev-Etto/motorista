@@ -26,12 +26,16 @@ export function describeGoalDay(facts: GoalDayFacts): string {
   }
   if (!facts.todayIsWorkDay) {
     const target = formatBRL(facts.dailyTargetCents);
-    const plan = facts.workDaysLeft === 1 ? `No último dia de trabalho do mês, o objetivo é lucrar ${target}.` : `Nos próximos ${facts.workDaysLeft} dias de trabalho, o objetivo é lucrar ${target} por dia.`;
+    const plan =
+      facts.workDaysLeft === 1
+        ? `No último dia de trabalho do mês, o objetivo é lucrar ${target}.`
+        : `Nos próximos ${facts.workDaysLeft} dias de trabalho, o objetivo é lucrar ${target} por dia.`;
     return `Hoje não é dia de trabalho na sua meta. ${plan}${describeDayEffort(facts)}`;
   }
   if (facts.leftTodayCents === 0) return 'Meta de hoje batida. O que você lucrar a mais diminui o que falta nos próximos dias.';
 
-  const daysLeft = facts.workDaysLeft === 1 ? 'Hoje é o último dia de trabalho do mês.' : `Restam ${facts.workDaysLeft} dias de trabalho no mês, contando hoje.`;
+  const daysLeft =
+    facts.workDaysLeft === 1 ? 'Hoje é o último dia de trabalho do mês.' : `Restam ${facts.workDaysLeft} dias de trabalho no mês, contando hoje.`;
 
   return `Faltam ${formatBRL(facts.leftTodayCents ?? 0)} de lucro hoje.${describeDayEffort(facts)} ${daysLeft}`;
 }

@@ -1,20 +1,20 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { buildCalendar } from '@/domain/calendar/calendar';
-import { computeShift } from '@/domain/shift/shift';
 import { EXPENSE_LABELS } from '@/domain/expense/expense';
+import { computeShift } from '@/domain/shift/shift';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
-import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { useMonthCursor } from '@/shared/hooks/useMonthCursor';
+import { confirmAction } from '@/shared/platform/confirm';
+import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { MonthCalendar } from '@/shared/ui/MonthCalendar';
 import { MonthSwitcher } from '@/shared/ui/MonthSwitcher';
-import { ActiveShiftCard, NewShiftButton } from './ActiveShift';
-import { loadMonth, removeLooseExpense } from './shiftQueries';
 import { AppText, Button, Card, EmptyState, ListRow, Screen } from '@/shared/ui/primitives';
 import { formatDate, formatDuration, monthKey } from '@/shared/utils/dates';
-import { confirmAction } from '@/shared/platform/confirm';
 import { profitTone } from '@/shared/utils/format';
 import { formatBRL } from '@/shared/utils/money';
+import { ActiveShiftCard, NewShiftButton } from './ActiveShift';
+import { loadMonth, removeLooseExpense } from './shiftQueries';
 
 export default function ShiftsScreen() {
   const router = useRouter();
@@ -26,7 +26,11 @@ export default function ShiftsScreen() {
   const allShifts = useMemo(() => data?.shifts ?? [], [data?.shifts]);
   const shifts = selectedDate ? allShifts.filter((shift) => shift.date === selectedDate) : allShifts;
   const calendar = useMemo(
-    () => buildCalendar(cursor.date, allShifts.map((shift) => ({ date: shift.date, profitCents: computeShift(shift).profitCents }))),
+    () =>
+      buildCalendar(
+        cursor.date,
+        allShifts.map((shift) => ({ date: shift.date, profitCents: computeShift(shift).profitCents })),
+      ),
     [cursor.date, allShifts],
   );
   const expenses = data?.expenses ?? [];
@@ -51,11 +55,7 @@ export default function ShiftsScreen() {
       <Button label="Lançar despesa ou abastecimento" variant="secondary" onPress={() => router.push('/expense/new')} />
 
       <Card>
-        <MonthCalendar
-          weeks={calendar}
-          selectedDate={selectedDate}
-          onSelect={(date) => setSelectedDate((current) => (current === date ? null : date))}
-        />
+        <MonthCalendar weeks={calendar} selectedDate={selectedDate} onSelect={(date) => setSelectedDate((current) => (current === date ? null : date))} />
       </Card>
 
       <AsyncBoundary state={month}>
@@ -87,7 +87,9 @@ export default function ShiftsScreen() {
 
             {expenses.length === 0 ? null : (
               <Card title="Lançamentos avulsos">
-                <AppText variant="caption" tone="muted">Toque em um lançamento para excluir.</AppText>
+                <AppText variant="caption" tone="muted">
+                  Toque em um lançamento para excluir.
+                </AppText>
                 {expenses.map((expense) => (
                   <ListRow
                     key={expense.id}

@@ -1,6 +1,6 @@
-import { ThemeMode } from '@modules/copilot';
 import { useEffect, useState } from 'react';
 import { Card, Segmented } from '@/shared/ui/primitives';
+import { ThemeMode } from '@modules/copilot';
 import { loadThemeMode, saveThemeMode } from './themePreference';
 
 const OPTIONS: { value: ThemeMode; label: string }[] = [

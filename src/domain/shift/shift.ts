@@ -1,3 +1,5 @@
+import { MINUTES_PER_HOUR } from '@/shared/utils/time';
+
 export interface ShiftInput {
   grossCents: number;
   km: number | null;
@@ -25,7 +27,7 @@ export interface MonthCloseInput {
   fixedMonthlyCents: number;
 }
 
-const perHour = (cents: number, minutes: number): number | null => (minutes > 0 ? (cents / minutes) * 60 : null);
+const perHour = (cents: number, minutes: number): number | null => (minutes > 0 ? (cents / minutes) * MINUTES_PER_HOUR : null);
 
 export function computeShift(shift: ShiftInput): ShiftResult {
   const km = shift.km !== null && shift.km > 0 ? shift.km : null;

@@ -1,10 +1,11 @@
+import type { Href } from 'expo-router';
 import { AppIconName } from '@/shared/ui/AppIcon';
 
 export interface MoreMenuItem {
   icon: AppIconName;
   title: string;
   subtitle: string;
-  href: string;
+  href: Href;
 }
 
 export const MORE_SECTIONS: { title: string; items: MoreMenuItem[] }[] = [

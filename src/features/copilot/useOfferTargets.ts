@@ -1,10 +1,10 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { loadOfferSettings, saveFollowGoal, saveModeTargets, saveOfferMode } from '@/application/offerSettings';
 import { activeTargets, DEFAULT_LOW_DEMAND_TARGETS, DEFAULT_OFFER_TARGETS, type OfferMode, type OfferSettings } from '@/domain/offer/offer';
 import { useSubmit } from '@/shared/hooks/useSubmit';
 import { centsToInput } from '@/shared/utils/money';
 import { centsOrZero } from '@/shared/utils/parse';
-import { loadOfferSettings, saveFollowGoal, saveModeTargets, saveOfferMode } from '@/application/offerSettings';
 
 const INITIAL: OfferSettings = { mode: 'normal', normal: DEFAULT_OFFER_TARGETS, low: DEFAULT_LOW_DEMAND_TARGETS, followGoal: false };
 

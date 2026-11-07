@@ -1,3 +1,5 @@
+import { MINUTES_PER_HOUR } from '@/shared/utils/time';
+
 export interface QuoteInput {
   kmToPassenger: number;
   kmTrip: number;
@@ -16,7 +18,7 @@ const DEFAULT_ROUNDING_CENTS = 100;
 export function computeQuote(quote: QuoteInput) {
   const totalKm = quote.kmToPassenger + quote.kmTrip + quote.kmReturn;
   const vehicleCostCents = totalKm * quote.costPerKm;
-  const timeCents = quote.minutes * (quote.desiredProfitPerHourCents / 60);
+  const timeCents = quote.minutes * (quote.desiredProfitPerHourCents / MINUTES_PER_HOUR);
   const rawPriceCents = vehicleCostCents + timeCents + quote.tollCents + quote.extrasCents;
   const step = quote.roundToCents ?? DEFAULT_ROUNDING_CENTS;
   const priceCents = Math.max(Math.ceil(rawPriceCents / step) * step, quote.minimumCents);

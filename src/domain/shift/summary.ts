@@ -1,4 +1,5 @@
 import { ShiftFact } from '@/domain/insights/types';
+import { MINUTES_PER_HOUR } from '@/shared/utils/time';
 import { computeShift } from './shift';
 
 export interface ShiftSummary {
@@ -39,8 +40,8 @@ export function summarizeShifts(shifts: ShiftFact[]): ShiftSummary {
   return {
     ...summary,
     grossPerKm: totals.km > 0 ? grossWithKm / totals.km : null,
-    grossPerHour: totals.minutes > 0 ? (totals.grossCents / totals.minutes) * 60 : null,
-    profitPerHour: totals.minutes > 0 ? (totals.profitCents / totals.minutes) * 60 : null,
+    grossPerHour: totals.minutes > 0 ? (totals.grossCents / totals.minutes) * MINUTES_PER_HOUR : null,
+    profitPerHour: totals.minutes > 0 ? (totals.profitCents / totals.minutes) * MINUTES_PER_HOUR : null,
   };
 }
 
@@ -51,7 +52,7 @@ export function withLooseExpenses(summary: ShiftSummary, looseExpensesCents: num
     ...summary,
     profitCents,
     expensesCents: summary.expensesCents + looseExpensesCents,
-    profitPerHour: summary.minutes > 0 ? (profitCents / summary.minutes) * 60 : null,
+    profitPerHour: summary.minutes > 0 ? (profitCents / summary.minutes) * MINUTES_PER_HOUR : null,
   };
 }
 

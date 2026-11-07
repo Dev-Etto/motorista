@@ -1,5 +1,5 @@
-import { AppText, Card, Collapsible, Notice, Segmented, ToggleRow } from '@/shared/ui/primitives';
 import { MoneyField, NumberField, TextField } from '@/shared/ui/fields';
+import { AppText, Card, Collapsible, Notice, Segmented, ToggleRow } from '@/shared/ui/primitives';
 import { CostSummaryCard } from './CostSummaryCard';
 import { useVehicleForm } from './useVehicleForm';
 import { CONSUMPTION_UNITS, FUEL_OPTIONS, KIND_OPTIONS, OWNERSHIP_OPTIONS } from './vehicleForm';
@@ -16,11 +16,17 @@ export function VehicleCostForm({ form }: { form: VehicleFormState }) {
 
       <Card title="Veículo">
         <TextField label="Nome" value={form.name} onChangeText={form.setName} />
-        <AppText variant="caption" tone="muted">Tipo</AppText>
+        <AppText variant="caption" tone="muted">
+          Tipo
+        </AppText>
         <Segmented value={form.kind} options={KIND_OPTIONS} onChange={form.setKind} />
-        <AppText variant="caption" tone="muted">Combustível</AppText>
+        <AppText variant="caption" tone="muted">
+          Combustível
+        </AppText>
         <Segmented value={form.fuel} options={FUEL_OPTIONS} onChange={form.setFuel} />
-        <AppText variant="caption" tone="muted">Situação do veículo</AppText>
+        <AppText variant="caption" tone="muted">
+          Situação do veículo
+        </AppText>
         <Segmented value={ownership} options={OWNERSHIP_OPTIONS} onChange={form.setOwnership} />
       </Card>
 
@@ -42,9 +48,7 @@ export function VehicleCostForm({ form }: { form: VehicleFormState }) {
         <MoneyField label="Seguro por mês" {...bind('insurance')} />
         <MoneyField label="IPVA por ano" {...bind('ipva')} />
         <MoneyField label="Licenciamento por ano" {...bind('licensing')} />
-        {ownership === 'owned' ? null : (
-          <MoneyField label={ownership === 'rented' ? 'Aluguel por mês' : 'Parcela por mês'} {...bind('payment')} />
-        )}
+        {ownership === 'owned' ? null : <MoneyField label={ownership === 'rented' ? 'Aluguel por mês' : 'Parcela por mês'} {...bind('payment')} />}
         <MoneyField label="Outros custos fixos por mês" {...bind('otherFixed')} />
       </Collapsible>
 

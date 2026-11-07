@@ -1,5 +1,4 @@
-const MINUTES_PER_HOUR = 60;
-const HOURS_PER_DAY = 24;
+import { HOURS_PER_DAY, MINUTES_PER_HOUR } from '@/shared/utils/time';
 
 export const MAX_SHIFT_MINUTES = HOURS_PER_DAY * MINUTES_PER_HOUR;
 

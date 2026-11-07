@@ -1,12 +1,12 @@
 import { getDb, runInTransaction, SqlExecutor } from '@/data/database/connection';
 import { countsAgainstProfit, ExpenseCategory } from '@/domain/expense/expense';
 import { ShiftFact } from '@/domain/insights/types';
-import { vehicleRepository } from './vehicleRepository';
 import { ExpenseRow } from './expenseRepository';
+import { vehicleRepository } from './vehicleRepository';
 
 export type KmSource = 'manual' | 'odometer' | 'gps';
 
-export interface ShiftRow {
+interface ShiftRow {
   id: number;
   vehicle_id: number | null;
   date: string;
@@ -20,6 +20,36 @@ export interface ShiftRow {
   variable_per_km: number;
   note: string | null;
 }
+
+export interface ShiftRecord {
+  id: number;
+  vehicleId: number | null;
+  date: string;
+  startHour: number | null;
+  minutes: number;
+  km: number | null;
+  kmSource: KmSource;
+  odometerEnd: number | null;
+  trips: number | null;
+  costPerKm: number;
+  variablePerKm: number;
+  note: string | null;
+}
+
+const toShiftRecord = (row: ShiftRow): ShiftRecord => ({
+  id: row.id,
+  vehicleId: row.vehicle_id,
+  date: row.date,
+  startHour: row.start_hour,
+  minutes: row.minutes,
+  km: row.km,
+  kmSource: row.km_source,
+  odometerEnd: row.odometer_end,
+  trips: row.trips,
+  costPerKm: row.cost_per_km,
+  variablePerKm: row.variable_per_km,
+  note: row.note,
+});
 
 export interface ShiftInput {
   id?: number;
@@ -93,21 +123,10 @@ async function updateShift(tx: SqlExecutor, id: number, input: ShiftInput, snaps
 
 async function insertChildren(tx: SqlExecutor, shiftId: number, input: ShiftInput) {
   for (const earning of input.earnings) {
-    await tx.runAsync(
-      'INSERT INTO shift_earnings (shift_id, platform_id, cents) VALUES (?, ?, ?)',
-      shiftId,
-      earning.platformId,
-      earning.cents,
-    );
+    await tx.runAsync('INSERT INTO shift_earnings (shift_id, platform_id, cents) VALUES (?, ?, ?)', shiftId, earning.platformId, earning.cents);
   }
   for (const expense of input.expenses) {
-    await tx.runAsync(
-      'INSERT INTO expenses (shift_id, date, category, cents) VALUES (?, ?, ?, ?)',
-      shiftId,
-      input.date,
-      expense.category,
-      expense.cents,
-    );
+    await tx.runAsync('INSERT INTO expenses (shift_id, date, category, cents) VALUES (?, ?, ?, ?)', shiftId, input.date, expense.category, expense.cents);
   }
 }
 
@@ -134,18 +153,18 @@ export function createShiftRepository(connection: () => SqlExecutor = getDb, veh
 
     async findById(id: number) {
       const db = connection();
-      const shift = await db.getFirstAsync<ShiftRow>('SELECT * FROM shifts WHERE id = ?', id);
-      if (!shift) return null;
+      const row = await db.getFirstAsync<ShiftRow>('SELECT * FROM shifts WHERE id = ?', id);
+      if (!row) return null;
 
       const [earnings, expenses] = await Promise.all([
-        db.getAllAsync<{ platform_id: number; name: string; cents: number }>(
-          'SELECT e.platform_id, p.name, e.cents FROM shift_earnings e JOIN platforms p ON p.id = e.platform_id WHERE e.shift_id = ?',
+        db.getAllAsync<{ platformId: number; name: string; cents: number }>(
+          'SELECT e.platform_id AS platformId, p.name, e.cents FROM shift_earnings e JOIN platforms p ON p.id = e.platform_id WHERE e.shift_id = ?',
           id,
         ),
         db.getAllAsync<ExpenseRow>('SELECT * FROM expenses WHERE shift_id = ?', id),
       ]);
 
-      return { shift, earnings, expenses };
+      return { shift: toShiftRecord(row), earnings, expenses };
     },
 
     async listFacts(start: string, end: string): Promise<ShiftListItem[]> {
@@ -159,11 +178,7 @@ export function createShiftRepository(connection: () => SqlExecutor = getDb, veh
           start,
           end,
         ),
-        db.getAllAsync<ExpenseRow>(
-          'SELECT e.* FROM expenses e JOIN shifts s ON s.id = e.shift_id WHERE s.date >= ? AND s.date <= ?',
-          start,
-          end,
-        ),
+        db.getAllAsync<ExpenseRow>('SELECT e.* FROM expenses e JOIN shifts s ON s.id = e.shift_id WHERE s.date >= ? AND s.date <= ?', start, end),
       ]);
 
       return shifts.map((shift) => {
@@ -198,13 +213,8 @@ export function createShiftRepository(connection: () => SqlExecutor = getDb, veh
       return row?.value ?? 0;
     },
 
-
     async totalKm(start: string, end: string): Promise<number> {
-      const row = await connection().getFirstAsync<{ value: number | null }>(
-        'SELECT SUM(km) AS value FROM shifts WHERE date >= ? AND date <= ?',
-        start,
-        end,
-      );
+      const row = await connection().getFirstAsync<{ value: number | null }>('SELECT SUM(km) AS value FROM shifts WHERE date >= ? AND date <= ?', start, end);
       return row?.value ?? 0;
     },
   };

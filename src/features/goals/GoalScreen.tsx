@@ -1,11 +1,12 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import { loadGoalProgress } from '@/application/goalProgress';
 import { DEFAULT_HOURS_PER_DAY, DEFAULT_WORK_WEEKDAYS } from '@/domain/goal/goal';
 import { OfferTargetsEditor, useOfferTargets } from '@/features/copilot';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
 import { useFormHydration } from '@/shared/hooks/useFormHydration';
-import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { useSubmit } from '@/shared/hooks/useSubmit';
+import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { MoneyField, NumberField } from '@/shared/ui/fields';
 import { AppText, Button, Card, Collapsible, Notice, Screen } from '@/shared/ui/primitives';
 import { WeekdayPicker } from '@/shared/ui/WeekdayPicker';
@@ -15,7 +16,6 @@ import { centsOrNull, decimalOrNull, decimalToInput, hasInvalidNumber } from '@/
 import { GoalPlanCard } from './GoalPlanCard';
 import { GoalProgressCard } from './GoalProgressCard';
 import { saveGoal } from './saveGoal';
-import { loadGoalProgress } from '@/application/goalProgress';
 
 export default function GoalScreen() {
   const router = useRouter();
@@ -59,12 +59,16 @@ export default function GoalScreen() {
 
   return (
     <Screen>
-      <AppText variant="title" bold>Meta de {formatMonth(date)}</AppText>
+      <AppText variant="title" bold>
+        Meta de {formatMonth(date)}
+      </AppText>
       <AppText tone="muted">Diga quanto quer lucrar no mês. O app acompanha seu lucro real e mostra o que falta, hoje e até o fim do mês.</AppText>
       <Card title="Sua meta">
         <MoneyField label="Quanto quer lucrar no mês" value={desired} onChangeText={setDesired} error={error} />
         <NumberField label="Horas de trabalho por dia" value={hoursPerDay} onChangeText={setHoursPerDay} suffix="h" />
-        <AppText variant="caption" tone="muted">Dias de trabalho</AppText>
+        <AppText variant="caption" tone="muted">
+          Dias de trabalho
+        </AppText>
         <WeekdayPicker selected={weekdays} onToggle={toggleWeekday} />
         {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
         <Button label={progress ? 'Atualizar meta' : 'Calcular meu plano'} busy={saving.busy} onPress={saving.submit} />

@@ -12,10 +12,18 @@ const connect = () => new DatabaseSync(path, { enableForeignKeyConstraints: fals
 
 const adapter = (resolve: () => DatabaseSync) => ({
   execAsync: async (sql: string) => resolve().exec(sql),
-  getFirstAsync: async (sql: string, ...params: never[]) => resolve().prepare(sql).get(...params.flat()) ?? null,
-  getAllAsync: async (sql: string, ...params: never[]) => resolve().prepare(sql).all(...params.flat()),
+  getFirstAsync: async (sql: string, ...params: never[]) =>
+    resolve()
+      .prepare(sql)
+      .get(...params.flat()) ?? null,
+  getAllAsync: async (sql: string, ...params: never[]) =>
+    resolve()
+      .prepare(sql)
+      .all(...params.flat()),
   runAsync: async (sql: string, ...params: never[]) => {
-    const result = resolve().prepare(sql).run(...params.flat());
+    const result = resolve()
+      .prepare(sql)
+      .run(...params.flat());
     return { lastInsertRowId: Number(result.lastInsertRowid), changes: Number(result.changes) };
   },
   withTransactionAsync: async (work: () => Promise<void>) => {

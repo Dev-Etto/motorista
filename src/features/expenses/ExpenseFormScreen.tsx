@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { countsAgainstProfit, EXPENSE_LABELS, type ExpenseCategory } from '@/domain/expense/expense';
+import { countsAgainstProfit, EXPENSE_LABELS } from '@/domain/expense/expense';
 import { useSubmit } from '@/shared/hooks/useSubmit';
 import { DateField } from '@/shared/ui/DateField';
 import { MoneyField, NumberField, TextField } from '@/shared/ui/fields';
@@ -19,7 +19,7 @@ const OPTIONS: { value: LooseCategory; label: string }[] = [
 
 export default function ExpenseFormScreen() {
   const router = useRouter();
-  const [category, setCategory] = useState<ExpenseCategory>('fuel');
+  const [category, setCategory] = useState<LooseCategory>('fuel');
   const [date, setDate] = useState(today());
   const [value, setValue] = useState('');
   const [liters, setLiters] = useState('');
@@ -45,7 +45,7 @@ export default function ExpenseFormScreen() {
 
   return (
     <Screen>
-      <Segmented value={category as LooseCategory} options={OPTIONS} onChange={setCategory} />
+      <Segmented value={category} options={OPTIONS} onChange={setCategory} />
       {countsAgainstProfit(category) ? null : (
         <Notice tone="accent" message={`${EXPENSE_LABELS[category]} já está no custo por km. O valor serve para comparar o previsto com o pago.`} />
       )}

@@ -1,8 +1,8 @@
 import { ReportPeriod } from '@/domain/report/report';
 import { addDays, addMonths, formatDate, formatMonth, monthBounds, weekBounds } from '@/shared/utils/dates';
+import { MONTHS_PER_YEAR } from '@/shared/utils/time';
 
 const DAYS_IN_WEEK = 7;
-const MONTHS_IN_YEAR = 12;
 
 export function periodBounds(period: ReportPeriod, date: string) {
   if (period === 'week') return weekBounds(date);
@@ -13,7 +13,7 @@ export function periodBounds(period: ReportPeriod, date: string) {
 
 export function stepPeriod(period: ReportPeriod, date: string, direction: 1 | -1): string {
   if (period === 'week') return addDays(date, DAYS_IN_WEEK * direction);
-  return addMonths(date, (period === 'month' ? 1 : MONTHS_IN_YEAR) * direction);
+  return addMonths(date, (period === 'month' ? 1 : MONTHS_PER_YEAR) * direction);
 }
 
 export function periodLabel(period: ReportPeriod, date: string): string {

@@ -20,7 +20,10 @@ describe('período das ofertas', () => {
   });
 
   it('aceita as datas invertidas', () => {
-    expect(periodRange('custom', TODAY, { start: '2026-03-20', end: '2026-01-10' })).toEqual({ from: dayRange('2026-01-10').from, to: dayRange('2026-03-20').to });
+    expect(periodRange('custom', TODAY, { start: '2026-03-20', end: '2026-01-10' })).toEqual({
+      from: dayRange('2026-01-10').from,
+      to: dayRange('2026-03-20').to,
+    });
   });
 
   it('sugere os últimos 30 dias ao escolher datas', () => {

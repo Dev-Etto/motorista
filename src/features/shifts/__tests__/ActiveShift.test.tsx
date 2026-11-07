@@ -1,5 +1,5 @@
-import { copilot } from '@modules/copilot';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { copilot } from '@modules/copilot';
 import { ActiveShiftCard, NewShiftButton } from '../ActiveShift';
 
 const mockPush = jest.fn();
@@ -28,7 +28,12 @@ describe('jornada em andamento', () => {
 
   it('sem jornada, mostra só o botão de nova jornada', async () => {
     timer.mockReturnValue(state(false, false));
-    await render(<><ActiveShiftCard /><NewShiftButton /></>);
+    await render(
+      <>
+        <ActiveShiftCard />
+        <NewShiftButton />
+      </>,
+    );
 
     expect(screen.getByText('Nova jornada')).toBeTruthy();
     expect(screen.queryByText('Continuar jornada')).toBeNull();
@@ -36,7 +41,12 @@ describe('jornada em andamento', () => {
 
   it('com jornada, troca o botão pelo card e leva ao formulário', async () => {
     timer.mockReturnValue(state(true, true));
-    await render(<><ActiveShiftCard /><NewShiftButton /></>);
+    await render(
+      <>
+        <ActiveShiftCard />
+        <NewShiftButton />
+      </>,
+    );
 
     expect(screen.getByText('Jornada em andamento')).toBeTruthy();
     expect(screen.getByText('00:00:08')).toBeTruthy();
@@ -48,7 +58,12 @@ describe('jornada em andamento', () => {
 
   it('percebe uma jornada iniciada pelo botão flutuante com a tela aberta', async () => {
     timer.mockReturnValue(state(false, false));
-    await render(<><ActiveShiftCard /><NewShiftButton /></>);
+    await render(
+      <>
+        <ActiveShiftCard />
+        <NewShiftButton />
+      </>,
+    );
 
     timer.mockReturnValue(state(true, true));
     await act(async () => {

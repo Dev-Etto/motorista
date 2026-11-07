@@ -2,18 +2,18 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { KmEntryMode } from '@/domain/shift/shiftForm';
+import { ShiftEstimateCard } from '@/features/offers';
+import { TipBanner } from '@/features/tips';
+import { useSubmit } from '@/shared/hooks/useSubmit';
 import { spacing } from '@/shared/theme/theme';
 import { DateField } from '@/shared/ui/DateField';
 import { MoneyField, NumberField } from '@/shared/ui/fields';
 import { PlatformBadge } from '@/shared/ui/PlatformBadge';
-import { ShiftEstimateCard } from '@/features/offers';
-import { TipBanner } from '@/features/tips';
-import { useSubmit } from '@/shared/hooks/useSubmit';
-import { dayRange } from '@/shared/utils/dates';
 import { Button, Card, Collapsible, Notice, Screen, Segmented } from '@/shared/ui/primitives';
+import { dayRange } from '@/shared/utils/dates';
 import { LiveTrackingCard } from './LiveTrackingCard';
-import { useLiveTracking } from './useLiveTracking';
 import { ShiftResultCard } from './ShiftResultCard';
+import { useLiveTracking } from './useLiveTracking';
 import { JOURNEY_EXPENSES, useShiftForm } from './useShiftForm';
 
 const KM_OPTIONS: { value: KmEntryMode; label: string }[] = [
@@ -42,7 +42,8 @@ export default function ShiftFormScreen() {
   }, [finish, live]);
 
   const saving = useSubmit(async () => {
-    if (!id && live.pending) return setMeasureError('Você tem uma medição em andamento. Toque em Usar no registro para levar o tempo e os km, ou descarte a medição.');
+    if (!id && live.pending)
+      return setMeasureError('Você tem uma medição em andamento. Toque em Usar no registro para levar o tempo e os km, ou descarte a medição.');
 
     setMeasureError(null);
     const saved = await form.save();
@@ -58,14 +59,14 @@ export default function ShiftFormScreen() {
       {id ? null : <LiveTrackingCard live={live} />}
 
       <Card title="Tempo e distância">
-        <NumberField label="Horas trabalhadas" value={form.hours} onChangeText={form.setHours} suffix="h" placeholder="8,5" />
+        <NumberField label="Horas trabalhadas" {...form.bind('hours')} suffix="h" placeholder="8,5" />
         <Segmented value={form.kmMode} options={KM_OPTIONS} onChange={form.setKmMode} />
         {form.kmMode === 'manual' ? (
-          <NumberField label="Km rodados" value={form.kmText} onChangeText={form.setKmText} suffix="km" hint={form.kmMeasured ? 'Medido por GPS. Você pode ajustar.' : undefined} />
+          <NumberField label="Km rodados" {...form.kmField} suffix="km" hint={form.kmMeasured ? 'Medido por GPS. Você pode ajustar.' : undefined} />
         ) : (
           <>
-            <NumberField label="Odômetro inicial" value={form.odometerStart} onChangeText={form.setOdometerStart} suffix="km" />
-            <NumberField label="Odômetro final" value={form.odometerEnd} onChangeText={form.setOdometerEnd} suffix="km" />
+            <NumberField label="Odômetro inicial" {...form.bind('odometerStart')} suffix="km" />
+            <NumberField label="Odômetro final" {...form.bind('odometerEnd')} suffix="km" />
           </>
         )}
       </Card>
@@ -76,12 +77,7 @@ export default function ShiftFormScreen() {
         {form.platforms.map((platform) => (
           <View key={platform.id} style={styles.platform}>
             <PlatformBadge name={platform.name} />
-            <MoneyField
-              label={platform.name}
-              hideLabel
-              value={form.earnings[platform.id] ?? ''}
-              onChangeText={(text) => form.setEarning(platform.id, text)}
-            />
+            <MoneyField label={platform.name} hideLabel value={form.earnings[platform.id] ?? ''} onChangeText={(text) => form.setEarning(platform.id, text)} />
           </View>
         ))}
       </Card>
@@ -97,8 +93,8 @@ export default function ShiftFormScreen() {
       </Collapsible>
 
       <Collapsible title="Mais detalhes">
-        <NumberField label="Hora de início" value={form.startHour} onChangeText={form.setStartHour} placeholder="8" hint="Ajuda a descobrir seu melhor período." />
-        <NumberField label="Corridas" value={form.trips} onChangeText={form.setTrips} />
+        <NumberField label="Hora de início" {...form.bind('startHour')} placeholder="8" hint="Ajuda a descobrir seu melhor período." />
+        <NumberField label="Corridas" {...form.bind('trips')} />
       </Collapsible>
 
       <ShiftResultCard result={form.preview} />

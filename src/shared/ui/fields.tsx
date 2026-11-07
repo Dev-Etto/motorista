@@ -17,13 +17,30 @@ interface TextFieldProps {
   multiline?: boolean;
 }
 
-export function TextField({ label, value, onChangeText, onBlur, hint, error, placeholder, keyboardType, prefix, suffix, hideLabel, multiline }: TextFieldProps) {
+export function TextField({
+  label,
+  value,
+  onChangeText,
+  onBlur,
+  hint,
+  error,
+  placeholder,
+  keyboardType,
+  prefix,
+  suffix,
+  hideLabel,
+  multiline,
+}: TextFieldProps) {
   const colors = useTheme();
   const borderColor = error ? colors.negative : colors.border;
 
   return (
     <View style={styles.field}>
-      {hideLabel ? null : <AppText variant="caption" tone="muted">{label}</AppText>}
+      {hideLabel ? null : (
+        <AppText variant="caption" tone="muted">
+          {label}
+        </AppText>
+      )}
       <View style={[styles.input, { backgroundColor: colors.surface, borderColor }]}>
         {prefix ? <AppText tone="muted">{prefix}</AppText> : null}
         <TextInput
@@ -41,8 +58,16 @@ export function TextField({ label, value, onChangeText, onBlur, hint, error, pla
         />
         {suffix ? <AppText tone="muted">{suffix}</AppText> : null}
       </View>
-      {error ? <AppText variant="caption" tone="negative">{error}</AppText> : null}
-      {hint && !error ? <AppText variant="caption" tone="muted">{hint}</AppText> : null}
+      {error ? (
+        <AppText variant="caption" tone="negative">
+          {error}
+        </AppText>
+      ) : null}
+      {hint && !error ? (
+        <AppText variant="caption" tone="muted">
+          {hint}
+        </AppText>
+      ) : null}
     </View>
   );
 }

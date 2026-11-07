@@ -1,6 +1,14 @@
 import { buildProblemReport } from '../problemReport';
 
-const base = { description: ' A Uber não avisa. ', version: '0.8.2', android: '15', device: 'Samsung SM-A155', accessibilityGranted: true, failedReads: 2, readings: [] };
+const base = {
+  description: ' A Uber não avisa. ',
+  version: '0.8.2',
+  android: '15',
+  device: 'Samsung SM-A155',
+  accessibilityGranted: true,
+  failedReads: 2,
+  readings: [],
+};
 
 describe('relato de problema', () => {
   it('reúne a descrição e os dados do aparelho', () => {

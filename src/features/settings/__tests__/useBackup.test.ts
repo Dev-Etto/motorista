@@ -10,7 +10,10 @@ jest.mock('expo-file-system', () => ({ File: jest.fn(), Paths: { document: 'doc'
 jest.mock('expo-router', () => ({ useFocusEffect: jest.fn() }));
 jest.mock('expo-sharing', () => ({}));
 jest.mock('expo-print', () => ({}));
-jest.mock('@/data/repositories/settingsRepository', () => ({ SETTING_KEYS: {}, settingsRepository: { get: jest.fn().mockResolvedValue(null), set: jest.fn() } }));
+jest.mock('@/data/repositories/settingsRepository', () => ({
+  SETTING_KEYS: {},
+  settingsRepository: { get: jest.fn().mockResolvedValue(null), set: jest.fn() },
+}));
 jest.mock('@/data/backup/backup', () => ({ createBackup: jest.fn().mockResolvedValue({}), parseBackup: jest.fn(), restoreBackup: jest.fn() }));
 jest.mock('@modules/copilot', () => ({ copilot: { exportState: jest.fn() } }));
 jest.mock('../afterRestore', () => ({ applyRestoredState: jest.fn().mockResolvedValue(undefined) }));
@@ -42,7 +45,14 @@ describe('restaurar backup', () => {
 
   it('mostra uma mensagem quando o arquivo escolhido não pode ser lido', async () => {
     jest.mocked(DocumentPicker.getDocumentAsync).mockResolvedValue({ canceled: false, assets: [{ uri: 'file:///ruim.json' }] } as never);
-    jest.mocked(File).mockImplementation(() => ({ textSync: () => { throw new Error('ilegível'); } }) as never);
+    jest.mocked(File).mockImplementation(
+      () =>
+        ({
+          textSync: () => {
+            throw new Error('ilegível');
+          },
+        }) as never,
+    );
     const { result } = await renderHook(() => useBackup());
 
     await act(async () => result.current.importBackup());

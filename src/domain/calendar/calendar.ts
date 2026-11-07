@@ -26,7 +26,5 @@ export function buildCalendar(monthDate: string, facts: CalendarFact[]): (Calend
   }
   while (cells.length % DAYS_PER_WEEK !== 0) cells.push(null);
 
-  return Array.from({ length: cells.length / DAYS_PER_WEEK }, (_, week) =>
-    cells.slice(week * DAYS_PER_WEEK, (week + 1) * DAYS_PER_WEEK),
-  );
+  return Array.from({ length: cells.length / DAYS_PER_WEEK }, (_, week) => cells.slice(week * DAYS_PER_WEEK, (week + 1) * DAYS_PER_WEEK));
 }

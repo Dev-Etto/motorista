@@ -139,11 +139,11 @@ export async function migrate(): Promise<void> {
   await db.execAsync('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
   const row = await db.getFirstAsync<{ user_version: number }>('PRAGMA user_version');
   const current = row?.user_version ?? 0;
-  for (let version = current; version < MIGRATIONS.length; version++) {
+  for (const [index, migration] of MIGRATIONS.slice(current).entries()) {
     await runInTransaction(
       async (tx) => {
-        await tx.execAsync(MIGRATIONS[version]);
-        await tx.execAsync(`PRAGMA user_version = ${version + 1}`);
+        await tx.execAsync(migration);
+        await tx.execAsync(`PRAGMA user_version = ${current + index + 1}`);
         await assertForeignKeys(tx);
       },
       { enforceForeignKeys: false },

@@ -40,7 +40,11 @@ export async function seedSampleData(now = Date.now()): Promise<void> {
         date,
         now,
       );
-      await tx.runAsync('INSERT INTO shift_earnings (shift_id, platform_id, cents) VALUES (?, 1, ?)', day + 1, SAMPLE_EARNINGS_CENTS + day * SAMPLE_EARNINGS_STEP);
+      await tx.runAsync(
+        'INSERT INTO shift_earnings (shift_id, platform_id, cents) VALUES (?, 1, ?)',
+        day + 1,
+        SAMPLE_EARNINGS_CENTS + day * SAMPLE_EARNINGS_STEP,
+      );
     }
   });
 }

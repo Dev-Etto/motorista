@@ -43,6 +43,7 @@
     "eslint-config-expo": "~58.0.4",
     "jest": "~30.5.2",
     "jest-expo": "~58.0.14",
+    "prettier": "3.6.2",
     "test-renderer": "^1.3.1",
     "typescript": "~6.0.3"
   },
@@ -53,9 +54,10 @@
     "web": "expo start --web",
     "test": "jest",
     "typecheck": "tsc --noEmit",
-    "lint": "expo lint",
+    "lint": "expo lint && prettier --check \"src/**/*.{ts,tsx}\" \"modules/copilot/*.ts\" \"*.{js,ts}\"",
     "build:apk": "bash scripts/release-apk.sh",
-    "mock": "bash scripts/mock-oferta.sh"
+    "mock": "bash scripts/mock-oferta.sh",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"modules/copilot/*.ts\" \"*.{js,ts}\""
   },
   "private": true
 }

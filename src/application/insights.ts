@@ -17,5 +17,13 @@ export async function loadInsights(date: string) {
     expenseRepository.listLoose(start, date),
   ]);
 
-  return buildInsights({ today: date, shifts, costs, plannedKmMonth: profile?.plannedKmMonth ?? 0, fuelPaidCents, fuelKm, looseExpenses: loose.filter((expense) => countsAgainstProfit(expense.category)) });
+  return buildInsights({
+    today: date,
+    shifts,
+    costs,
+    plannedKmMonth: profile?.plannedKmMonth ?? 0,
+    fuelPaidCents,
+    fuelKm,
+    looseExpenses: loose.filter((expense) => countsAgainstProfit(expense.category)),
+  });
 }

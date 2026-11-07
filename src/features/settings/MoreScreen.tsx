@@ -1,5 +1,5 @@
 import Constants from 'expo-constants';
-import { Href, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { Linking } from 'react-native';
 import { DONATION_URL, RELEASES_URL, REPOSITORY_URL } from '@/config/app';
 import { Card, ListRow, Screen } from '@/shared/ui/primitives';
@@ -15,7 +15,7 @@ export default function MoreScreen() {
       {MORE_SECTIONS.map((section) => (
         <Card key={section.title} title={section.title}>
           {section.items.map((item) => (
-            <ListRow key={item.title} icon={item.icon} title={item.title} subtitle={item.subtitle} onPress={() => router.push(item.href as Href)} />
+            <ListRow key={item.title} icon={item.icon} title={item.title} subtitle={item.subtitle} onPress={() => router.push(item.href)} />
           ))}
         </Card>
       ))}

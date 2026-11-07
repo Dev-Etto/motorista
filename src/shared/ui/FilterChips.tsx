@@ -14,7 +14,9 @@ export function FilterChips<T extends string>({ label, value, options, onChange 
 
   return (
     <View style={styles.group}>
-      <AppText variant="caption" tone="muted">{label}</AppText>
+      <AppText variant="caption" tone="muted">
+        {label}
+      </AppText>
       <View style={styles.chips}>
         {options.map((option) => {
           const selected = option.value === value;

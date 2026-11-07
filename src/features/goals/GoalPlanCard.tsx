@@ -1,6 +1,6 @@
+import { loadGoalProgress } from '@/application/goalProgress';
 import { AppText, Card, ListRow, Notice } from '@/shared/ui/primitives';
 import { formatNumber, formatBRL } from '@/shared/utils/money';
-import { loadGoalProgress } from '@/application/goalProgress';
 
 type GoalProgress = NonNullable<Awaited<ReturnType<typeof loadGoalProgress>>>;
 
@@ -10,7 +10,9 @@ export function GoalPlanCard({ progress }: { progress: GoalProgress }) {
 
   return (
     <Card title="Seu plano para o mês">
-      <AppText variant="caption" tone="muted">É uma previsão feita no começo, com os km que você informou. Os mínimos por corrida saem dela.</AppText>
+      <AppText variant="caption" tone="muted">
+        É uma previsão feita no começo, com os km que você informou. Os mínimos por corrida saem dela.
+      </AppText>
       <ListRow title="Faturamento previsto no mês" value={formatBRL(progress.requiredGrossCents)} />
       <ListRow title="Por dia de trabalho" value={formatBRL(suggestion.grossPerWorkDayCents)} />
       <ListRow title="Km previstos por dia" value={`${formatNumber(progress.plannedKmPerDay, 0)} km`} />

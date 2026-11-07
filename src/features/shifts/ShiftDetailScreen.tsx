@@ -4,14 +4,14 @@ import { summarizeOutcomes } from '@/domain/offer/offerLog';
 import { computeShift } from '@/domain/shift/shift';
 import { OutcomeSummaryCard } from '@/features/offers';
 import { useAsyncData } from '@/shared/hooks/useAsyncData';
+import { confirmAction, IRREVERSIBLE_MESSAGE } from '@/shared/platform/confirm';
 import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { AppText, Button, Card, EmptyState, ListRow, Screen } from '@/shared/ui/primitives';
 import { formatDate, formatDuration } from '@/shared/utils/dates';
-import { confirmAction } from '@/shared/platform/confirm';
 import { formatKm } from '@/shared/utils/format';
 import { formatBRL } from '@/shared/utils/money';
-import { ShiftResultCard } from './ShiftResultCard';
 import { loadShiftDetail, removeShift, ShiftDetail } from './shiftQueries';
+import { ShiftResultCard } from './ShiftResultCard';
 
 export default function ShiftDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -35,13 +35,13 @@ function ShiftDetailContent({ shiftId, detail }: { shiftId: number; detail: Shif
     km: shift.km,
     minutes: shift.minutes,
     expensesCents: expenses.filter((expense) => countsAgainstProfit(expense.category)).reduce((total, expense) => total + expense.cents, 0),
-    costPerKm: shift.cost_per_km,
+    costPerKm: shift.costPerKm,
   });
 
   const confirmDelete = () => {
     confirmAction({
       title: 'Excluir jornada?',
-      message: 'Essa ação não pode ser desfeita.',
+      message: IRREVERSIBLE_MESSAGE,
       actionLabel: 'Excluir',
       onConfirm: async () => {
         await removeShift(shiftId);
@@ -52,14 +52,16 @@ function ShiftDetailContent({ shiftId, detail }: { shiftId: number; detail: Shif
 
   return (
     <>
-      <AppText variant="title" bold>{formatDate(shift.date)}</AppText>
+      <AppText variant="title" bold>
+        {formatDate(shift.date)}
+      </AppText>
       <ShiftResultCard result={result} />
       <Card title="Detalhes">
         <ListRow title="Tempo" value={formatDuration(shift.minutes)} />
         <ListRow title="Distância" value={formatKm(shift.km)} />
-        <ListRow title="Custo por km do dia" value={formatBRL(shift.cost_per_km)} />
+        <ListRow title="Custo por km do dia" value={formatBRL(shift.costPerKm)} />
         {earnings.map((earning) => (
-          <ListRow key={earning.platform_id} title={earning.name} value={formatBRL(earning.cents)} />
+          <ListRow key={earning.platformId} title={earning.name} value={formatBRL(earning.cents)} />
         ))}
         {expenses.map((expense) => (
           <ListRow key={expense.id} title={EXPENSE_LABELS[expense.category]} value={formatBRL(expense.cents)} />

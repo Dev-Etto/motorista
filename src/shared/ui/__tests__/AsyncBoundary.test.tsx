@@ -37,7 +37,11 @@ describe('estado do carregamento', () => {
   });
 
   it('mostra o vazio quando o carregamento termina sem dado', async () => {
-    await render(<AsyncBoundary state={state<string>({ data: null })} empty={<Text>Não encontrada</Text>}>{(data) => <Text>{data}</Text>}</AsyncBoundary>);
+    await render(
+      <AsyncBoundary state={state<string>({ data: null })} empty={<Text>Não encontrada</Text>}>
+        {(data) => <Text>{data}</Text>}
+      </AsyncBoundary>,
+    );
 
     expect(screen.getByText('Não encontrada')).toBeTruthy();
   });

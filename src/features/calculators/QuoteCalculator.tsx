@@ -1,12 +1,12 @@
-import { Share } from 'react-native';
 import { useMemo } from 'react';
+import { Share } from 'react-native';
 import { computeQuote } from '@/domain/quote/quote';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { useSubmit } from '@/shared/hooks/useSubmit';
+import { confirmAction, IRREVERSIBLE_MESSAGE } from '@/shared/platform/confirm';
 import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { MoneyField, NumberField, TextField } from '@/shared/ui/fields';
 import { AppText, Button, ButtonRow, Card, Collapsible, ListRow, Notice } from '@/shared/ui/primitives';
-import { confirmAction } from '@/shared/platform/confirm';
 import { profitTone } from '@/shared/utils/format';
 import { formatBRL, formatNumber } from '@/shared/utils/money';
 import { centsOrZero, decimalOrZero } from '@/shared/utils/parse';
@@ -49,7 +49,7 @@ export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
   const remove = (id: number) => {
     confirmAction({
       title: 'Remover orçamento?',
-      message: 'Essa ação não pode ser desfeita.',
+      message: IRREVERSIBLE_MESSAGE,
       actionLabel: 'Remover',
       onConfirm: async () => {
         await removeQuote(id);
@@ -70,12 +70,20 @@ export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
         <MoneyField label="Quanto quer ganhar por hora" hint="É o valor do seu tempo no preço sugerido." {...bind('profitPerHour')} />
         <MoneyField label="Pedágio" {...bind('toll')} />
         <MoneyField label="Espera ou outros extras" {...bind('extras')} />
-        <MoneyField label="Não cobrar menos que" hint="Corrida curta pode dar um preço muito baixo. Se isso acontecer, o app sugere este valor." {...bind('minimum')} />
+        <MoneyField
+          label="Não cobrar menos que"
+          hint="Corrida curta pode dar um preço muito baixo. Se isso acontecer, o app sugere este valor."
+          {...bind('minimum')}
+        />
       </Collapsible>
       {ready ? (
         <Card>
-          <AppText variant="caption" tone="muted" center>Preço sugerido</AppText>
-          <AppText variant="display" bold center>{formatBRL(quote.priceCents)}</AppText>
+          <AppText variant="caption" tone="muted" center>
+            Preço sugerido
+          </AppText>
+          <AppText variant="display" bold center>
+            {formatBRL(quote.priceCents)}
+          </AppText>
           <ListRow title="Para o carro" subtitle={`${formatNumber(quote.totalKm)} km com o seu custo por km`} value={formatBRL(quote.vehicleCostCents)} />
           <ListRow title="Pelo seu tempo" value={formatBRL(quote.timeCents)} />
           {quote.tollCents + quote.extrasCents > 0 ? <ListRow title="Pedágio e extras" value={formatBRL(quote.tollCents + quote.extrasCents)} /> : null}
@@ -97,7 +105,7 @@ export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
                   key={item.id}
                   title={item.label ?? 'Sem descrição'}
                   subtitle="Toque para remover"
-                  value={formatBRL(item.price_cents)}
+                  value={formatBRL(item.priceCents)}
                   onPress={() => remove(item.id)}
                 />
               ))}

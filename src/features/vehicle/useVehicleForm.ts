@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
+import { syncCopilotTargets } from '@/application/offerSettings';
 import { vehicleRepository } from '@/data/repositories/vehicleRepository';
 import { computeCosts, FuelType, Ownership, VehicleKind } from '@/domain/vehicle/costs';
-import { syncCopilotTargets } from '@/application/offerSettings';
 import { useFormFields } from '@/shared/hooks/useFormFields';
 import { today } from '@/shared/utils/dates';
 import { CostFields, defaultDepreciationEnabled, fieldsToProfile, validateProfile, profileToFields, suggestedProfile } from './vehicleForm';
@@ -16,7 +16,7 @@ export function useVehicleForm() {
   const [fuel, setFuel] = useState<FuelType>('gasoline');
   const [ownership, setOwnershipState] = useState<Ownership>('owned');
   const [depreciationEnabled, setDepreciationEnabled] = useState(true);
-  const form = useFormFields<CostFields>(profileToFields(suggestedProfile('car', 'owned')));
+  const form = useFormFields<keyof CostFields>(profileToFields(suggestedProfile('car', 'owned')));
   const { setValues } = form;
 
   useEffect(() => {
@@ -49,10 +49,7 @@ export function useVehicleForm() {
     setDepreciationEnabled(defaultDepreciationEnabled(next));
   };
 
-  const profile = useMemo(
-    () => fieldsToProfile(form.values, ownership, depreciationEnabled),
-    [form.values, ownership, depreciationEnabled],
-  );
+  const profile = useMemo(() => fieldsToProfile(form.values, ownership, depreciationEnabled), [form.values, ownership, depreciationEnabled]);
   const costs = useMemo(() => computeCosts(profile), [profile]);
 
   const save = async (): Promise<boolean> => {

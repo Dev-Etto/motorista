@@ -1,9 +1,9 @@
 import { useState } from 'react';
+import { MIN_SHIFTS_FOR_INSIGHTS } from '@/domain/insights/buildInsights';
+import { ReportPeriod } from '@/domain/report/report';
 import { ProfitCard } from '@/features/dashboard';
 import { InsightCard } from '@/features/insights';
 import { TipBanner } from '@/features/tips';
-import { MIN_SHIFTS_FOR_INSIGHTS } from '@/domain/insights/buildInsights';
-import { ReportPeriod } from '@/domain/report/report';
 import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { BarChart } from '@/shared/ui/BarChart';
 import { PeriodSwitcher } from '@/shared/ui/MonthSwitcher';
@@ -41,7 +41,12 @@ export default function ReportsScreen() {
     <Screen>
       <TipBanner id="reports" message="Mês fechado desconta o custo fixo inteiro. É onde você vê se rodou o suficiente para pagar os custos." />
       <Segmented value={period} options={PERIODS} onChange={setPeriod} />
-      <PeriodSwitcher label={periodLabel(period, date)} noun={PERIOD_NOUNS[period]} onPrevious={() => setDate(stepPeriod(period, date, -1))} onNext={() => setDate(stepPeriod(period, date, 1))} />
+      <PeriodSwitcher
+        label={periodLabel(period, date)}
+        noun={PERIOD_NOUNS[period]}
+        onPrevious={() => setDate(stepPeriod(period, date, -1))}
+        onNext={() => setDate(stepPeriod(period, date, 1))}
+      />
       <AsyncBoundary state={report}>
         {(data) => (
           <>
@@ -59,7 +64,11 @@ export default function ReportsScreen() {
                     <ListRow title="Custo fixo do mês inteiro" value={formatBRL(data.monthClose.fixedCents)} />
                     <ListRow title="Despesas" value={formatBRL(data.monthClose.expensesCents)} />
                     <ListRow title="Custo real por km" value={formatPerKm(data.monthClose.realCostPerKm)} />
-                    <ListRow title="Lucro com o fixo inteiro" value={formatBRL(data.monthClose.profitCents)} valueTone={profitTone(data.monthClose.profitCents)} />
+                    <ListRow
+                      title="Lucro com o fixo inteiro"
+                      value={formatBRL(data.monthClose.profitCents)}
+                      valueTone={profitTone(data.monthClose.profitCents)}
+                    />
                   </Card>
                 ) : null}
                 <Card title="Por plataforma">
@@ -74,7 +83,9 @@ export default function ReportsScreen() {
                 {exportError ? <Notice tone="negative" message={exportError} /> : null}
               </>
             )}
-            {data.insights.length ? data.insights.map((insight) => <InsightCard key={insight.id} insight={insight} />) : (
+            {data.insights.length ? (
+              data.insights.map((insight) => <InsightCard key={insight.id} insight={insight} />)
+            ) : (
               <Notice tone="accent" message={`Os insights aparecem a partir de ${MIN_SHIFTS_FOR_INSIGHTS} jornadas.`} />
             )}
           </>

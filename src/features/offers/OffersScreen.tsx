@@ -1,8 +1,8 @@
 import { OutcomeFilter } from '@/domain/offer/offerLog';
+import { confirmAction } from '@/shared/platform/confirm';
 import { DateField } from '@/shared/ui/DateField';
 import { FilterChips } from '@/shared/ui/FilterChips';
 import { Button, Card, EmptyState, Notice, Screen, ToggleRow } from '@/shared/ui/primitives';
-import { confirmAction } from '@/shared/platform/confirm';
 import { EstimateCard } from './EstimateCard';
 import { PERIOD_OPTIONS } from './offerPeriod';
 import { OfferRow } from './OfferRow';
@@ -49,10 +49,20 @@ export default function OffersScreen() {
         ))}
         {offers.hasMore ? <Button label="Ver mais" variant="secondary" onPress={offers.showMore} /> : null}
       </Card>
-      {offers.offers.length === 0 ? <EmptyState title="Nenhuma oferta aqui" message="Troque os filtros ou aguarde as próximas ofertas lidas pelo Copiloto." /> : null}
-      <Notice tone="accent" message="O app registra sozinho o que você aceita. Se o valor sugerido estiver diferente do que recebeu, é só corrigir ao registrar a jornada." />
+      {offers.offers.length === 0 ? (
+        <EmptyState title="Nenhuma oferta aqui" message="Troque os filtros ou aguarde as próximas ofertas lidas pelo Copiloto." />
+      ) : null}
+      <Notice
+        tone="accent"
+        message="O app registra sozinho o que você aceita. Se o valor sugerido estiver diferente do que recebeu, é só corrigir ao registrar a jornada."
+      />
       <Card title="Ajustes">
-        <ToggleRow label="Estimar faturamento pelos aceites" hint="Nota quando você toca em aceitar ou recusar nos apps de corrida. Nada sai do celular." value={offers.estimating} onChange={offers.toggleEstimating} />
+        <ToggleRow
+          label="Estimar faturamento pelos aceites"
+          hint="Nota quando você toca em aceitar ou recusar nos apps de corrida. Nada sai do celular."
+          value={offers.estimating}
+          onChange={offers.toggleEstimating}
+        />
         <Button label="Limpar as ofertas" variant="danger" onPress={confirmClear} />
       </Card>
     </Screen>

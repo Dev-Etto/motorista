@@ -1,17 +1,26 @@
+import { MINUTES_PER_HOUR, SECONDS_PER_HOUR, SECONDS_PER_MINUTE } from '@/shared/utils/time';
+
 const pad = (n: number) => String(n).padStart(2, '0');
 
 export function toISODate(d: Date): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
+const NOON = 12;
+
+function dateParts(iso: string): { year: number; month: number; day: number } {
+  const [year = 0, month = 1, day = 1] = iso.split('-').map(Number);
+  return { year, month, day };
+}
+
 export function fromISODate(iso: string): Date {
-  const [y, m, d] = iso.split('-').map(Number);
-  return new Date(y, m - 1, d, 12);
+  const { year, month, day } = dateParts(iso);
+  return new Date(year, month - 1, day, NOON);
 }
 
 export function dayRange(iso: string): { from: number; to: number } {
-  const [y, m, d] = iso.split('-').map(Number);
-  return { from: new Date(y, m - 1, d).getTime(), to: new Date(y, m - 1, d + 1).getTime() };
+  const { year, month, day } = dateParts(iso);
+  return { from: new Date(year, month - 1, day).getTime(), to: new Date(year, month - 1, day + 1).getTime() };
 }
 
 export function monthKey(iso: string): string {
@@ -47,7 +56,7 @@ const WEEKDAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', '
 const MONTHS = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 
 export function weekdayName(index: number): string {
-  return WEEKDAYS[index];
+  return WEEKDAYS[index] ?? '';
 }
 
 export function formatDate(iso: string): string {
@@ -62,7 +71,7 @@ export function formatMonth(iso: string): string {
 
 export function formatDuration(minutes: number): string {
   const total = Math.max(0, Math.round(minutes));
-  const h = Math.floor(total / 60);
+  const h = Math.floor(total / MINUTES_PER_HOUR);
   const m = total % 60;
   return h > 0 ? `${h}h${m > 0 ? ` ${pad(m)}min` : ''}` : `${m}min`;
 }
@@ -70,7 +79,7 @@ export function formatDuration(minutes: number): string {
 export function formatClock(elapsedMs: number): string {
   const totalSeconds = Math.max(0, Math.floor(elapsedMs / 1000));
   const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const minutes = Math.floor((totalSeconds % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE);
   return `${pad(hours)}:${pad(minutes)}:${pad(totalSeconds % 60)}`;
 }
 

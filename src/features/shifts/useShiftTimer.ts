@@ -1,6 +1,7 @@
-import { copilot, TimerState } from '@modules/copilot';
 import { useCallback, useState } from 'react';
 import { useInterval } from '@/shared/hooks/useInterval';
+import { MS_PER_MINUTE } from '@/shared/utils/time';
+import { copilot, TimerState } from '@modules/copilot';
 
 const TICK_MS = 1000;
 
@@ -18,5 +19,5 @@ export function useShiftTimer() {
   const pause = useCallback(() => setState(copilot.pauseTimer()), []);
   const reset = useCallback(() => setState(copilot.resetTimer()), []);
 
-  return { ...state, minutes: Math.round(state.elapsedMs / 60000), start, pause, reset };
+  return { ...state, minutes: Math.round(state.elapsedMs / MS_PER_MINUTE), start, pause, reset };
 }

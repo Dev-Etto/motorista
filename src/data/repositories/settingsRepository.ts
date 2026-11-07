@@ -34,11 +34,7 @@ export function createSettingsRepository(connection: () => SqlExecutor = getDb) 
     },
 
     async set(key: SettingKey, value: string, executor: SqlExecutor = connection()): Promise<void> {
-      await executor.runAsync(
-        'INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value',
-        key,
-        value,
-      );
+      await executor.runAsync('INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value', key, value);
     },
 
     async remove(key: SettingKey): Promise<void> {

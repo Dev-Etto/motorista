@@ -63,7 +63,8 @@ app -> features -> application -> data -> domain -> shared/utils
 - Telas usam componentes de `shared/ui`, nunca estilos de texto ou botão próprios.
 - Componente de tela não acessa o banco diretamente, salvo pelo hook da funcionalidade.
 - Dinheiro é guardado em centavos. Taxas por km podem ter fração de centavo.
-- Antes de concluir uma tarefa: `npm run typecheck`, `npm test` e `npm run lint`.
+- Antes de concluir uma tarefa: `npm run typecheck`, `npm test` e `npm run lint`. `npm run format` aplica o Prettier.
+- O lint confere sem `any`, sem `else`, sem `if` dentro de `if`, profundidade máxima de 2 blocos, ordem dos imports e formatação.
 
 ## Decisões
 
@@ -230,4 +231,10 @@ app -> features -> application -> data -> domain -> shared/utils
 - **Cores dos overlays:** `OverlayColors`, em `CardTheme.kt`, guarda as cores repetidas no botão, na área de soltar e no cartão.
 - **Nós de acessibilidade reciclados:** abaixo do Android 13, os nós e janelas obtidos na leitura são reciclados. A raiz recebida de fora continua com quem a passou.
 - **Foco de áudio sem ramo antigo:** com `minSdk` 26, `AudioFocusRequest` sempre existe.
+- **TypeScript estrito:** `noUncheckedIndexedAccess`, `noImplicitReturns` e `noFallthroughCasesInSwitch` ligados. Acesso por índice é tratado com valor padrão ou early return, sem `!`.
+- **Sem cast:** o único `as` fora de `as const` são os genéricos de `getAllAsync<Row>`, que tipam o SQL na fronteira do repositório.
+- **Linhas do banco em camelCase:** os repositórios devolvem objetos como `Reminder`, `SavedQuote` e `ShiftRecord`, com booleanos de verdade. O formato da tabela não sai de `data`.
+- **Constantes de tempo:** `shared/utils/time.ts` concentra `MS_PER_DAY`, `MINUTES_PER_HOUR`, `MONTHS_PER_YEAR` e as demais.
+- **Hooks do Copiloto separados:** `useCopilotStatus`, `useCopilotPreferences`, `useCopilotTests` e `useCopilotDiagnostics`. `useCopilot` só os compõe, e cada cartão recebe a parte que usa.
+- **Formulário da jornada:** os campos de texto ficam em `useFormFields`, e a jornada salva é preenchida por `useFormHydration`, sem efeito colateral dentro do loader.
 

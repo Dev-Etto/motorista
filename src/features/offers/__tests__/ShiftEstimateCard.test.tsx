@@ -1,5 +1,5 @@
-import { copilot } from '@modules/copilot';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { copilot } from '@modules/copilot';
 import { ShiftEstimateCard } from '../ShiftEstimateCard';
 
 jest.mock('expo-router', () => ({
@@ -10,9 +10,22 @@ jest.mock('expo-router', () => ({
 }));
 jest.mock('@modules/copilot', () => ({ copilot: { getOffers: jest.fn() } }));
 
-const offer = (source: string, valueCents: number, status: string, timestamp = 100) => ({ timestamp, source, valueCents, km: 5, minutes: 10, perKmCents: 1, perHourCents: 1, color: 'green', status });
+const offer = (source: string, valueCents: number, status: string, timestamp = 100) => ({
+  timestamp,
+  source,
+  valueCents,
+  km: 5,
+  minutes: 10,
+  perKmCents: 1,
+  perHourCents: 1,
+  color: 'green',
+  status,
+});
 const RANGE = { from: 0, to: 1000 };
-const PLATFORMS = [{ id: 1, name: 'Uber' }, { id: 2, name: '99' }];
+const PLATFORMS = [
+  { id: 1, name: 'Uber' },
+  { id: 2, name: '99' },
+];
 
 describe('sugestão na jornada', () => {
   it('não aparece sem corridas aceitas', async () => {
@@ -26,7 +39,9 @@ describe('sugestão na jornada', () => {
 
   it('só preenche os ganhos quando o motorista pede', async () => {
     const onApply = jest.fn();
-    jest.mocked(copilot.getOffers).mockResolvedValue([offer('Uber', 1000, 'accepted'), offer('Uber', 500, 'accepted', 200), offer('99', 2000, 'declined')] as never);
+    jest
+      .mocked(copilot.getOffers)
+      .mockResolvedValue([offer('Uber', 1000, 'accepted'), offer('Uber', 500, 'accepted', 200), offer('99', 2000, 'declined')] as never);
     await render(<ShiftEstimateCard range={RANGE} platforms={PLATFORMS} onApply={onApply} />);
     expect(onApply).not.toHaveBeenCalled();
 

@@ -1,10 +1,10 @@
-import { isHistoryText, isPreferencesText, sanitizeHistoryText } from '@modules/copilot/schemas';
 import { z } from 'zod';
-import { assertForeignKeys, getDb, runInTransaction, SCHEMA_VERSION } from '@/data/database/connection';
+import { assertForeignKeys, getDb, runInTransaction, SCHEMA_VERSION, type SqlExecutor } from '@/data/database/connection';
 import { isJsonOf } from '@/data/database/jsonColumn';
 import { SETTING_KEYS, settingsRepository } from '@/data/repositories/settingsRepository';
 import { workWeekdaysSchema } from '@/domain/goal/goal';
 import { costProfileSchema } from '@/domain/vehicle/costs';
+import { isHistoryText, isPreferencesText, sanitizeHistoryText } from '@modules/copilot/schemas';
 
 const scalar = z.union([z.string(), z.number(), z.null()]);
 const row = z.record(z.string().regex(/^[a-z_]+$/), scalar);
@@ -72,21 +72,26 @@ export function parseBackup(text: string): ParseResult {
   return { ok: true, backup: parsed.data };
 }
 
+async function insertRows(tx: SqlExecutor, table: string, records: Record<string, string | number | null>[]) {
+  for (const record of records) {
+    const columns = Object.keys(record);
+    if (columns.length === 0) continue;
+
+    const placeholders = columns.map(() => '?').join(', ');
+    await tx.runAsync(
+      `INSERT INTO ${table} (${columns.join(', ')}) VALUES (${placeholders})`,
+      columns.map((column) => record[column] ?? null),
+    );
+  }
+}
+
 export async function restoreBackup(backup: BackupFile): Promise<void> {
   await runInTransaction(async (tx) => {
     for (const table of [...TABLES].reverse()) {
       await tx.runAsync(`DELETE FROM ${table}`);
     }
     for (const table of TABLES) {
-      for (const record of backup.tables[table]) {
-        const columns = Object.keys(record);
-        if (columns.length === 0) continue;
-        const placeholders = columns.map(() => '?').join(', ');
-        await tx.runAsync(
-          `INSERT INTO ${table} (${columns.join(', ')}) VALUES (${placeholders})`,
-          columns.map((c) => record[c]),
-        );
-      }
+      await insertRows(tx, table, backup.tables[table]);
     }
     await assertForeignKeys(tx);
     await settingsRepository.set(SETTING_KEYS.onboarded, '1', tx);

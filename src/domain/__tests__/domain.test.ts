@@ -1,13 +1,13 @@
-import { computeCosts, suggestedProfile, CostProfile } from '../vehicle/costs';
-import { computeMonthClose, computeShift } from '../shift/shift';
-import { computeQuote } from '../quote/quote';
-import { classifyOffer } from '../offer/offer';
+import { addDays, formatClock, monthBounds, weekBounds, workDaysLeft } from '@/shared/utils/dates';
+import { formatBRL, parseBRL, parseDecimal } from '@/shared/utils/money';
 import { computeGoalProgress, requiredGrossForGoal } from '../goal/goal';
 import { accumulateGps } from '../gps/gps';
 import { buildInsights } from '../insights/buildInsights';
 import { ShiftFact } from '../insights/types';
-import { formatBRL, parseBRL, parseDecimal } from '@/shared/utils/money';
-import { addDays, formatClock, monthBounds, weekBounds, workDaysLeft } from '@/shared/utils/dates';
+import { classifyOffer } from '../offer/offer';
+import { computeQuote } from '../quote/quote';
+import { computeMonthClose, computeShift } from '../shift/shift';
+import { computeCosts, suggestedProfile, CostProfile } from '../vehicle/costs';
 
 const profile = (over: Partial<CostProfile> = {}): CostProfile => ({
   ...suggestedProfile('car', 'owned'),
@@ -167,7 +167,17 @@ describe('oferta', () => {
 });
 
 describe('meta do mês', () => {
-  const goal = { desiredProfitCents: 300000, profitSoFarCents: 100000, profitTodayCents: 0, expensesTodayCents: 0, todayIsWorkDay: true, workDaysLeft: 10, dayOverrideCents: null, costPerKm: 75, plannedKmPerDay: 160 };
+  const goal = {
+    desiredProfitCents: 300000,
+    profitSoFarCents: 100000,
+    profitTodayCents: 0,
+    expensesTodayCents: 0,
+    todayIsWorkDay: true,
+    workDaysLeft: 10,
+    dayOverrideCents: null,
+    costPerKm: 75,
+    plannedKmPerDay: 160,
+  };
 
   it('o plano soma lucro desejado, fixos e custo dos km previstos', () => {
     expect(requiredGrossForGoal({ desiredProfitCents: 300000, fixedMonthlyCents: 100000, plannedKm: 4000, variablePerKm: 50 })).toBe(600000);

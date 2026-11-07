@@ -18,11 +18,7 @@ export interface VehicleCosts {
 const PROFILE_COLUMNS = 'SELECT data FROM cost_profiles WHERE vehicle_id = ?';
 
 async function findProfileRow(db: SqlExecutor, vehicleId: number, date: string) {
-  const current = await db.getFirstAsync<{ data: string }>(
-    `${PROFILE_COLUMNS} AND valid_from <= ? ORDER BY valid_from DESC LIMIT 1`,
-    vehicleId,
-    date,
-  );
+  const current = await db.getFirstAsync<{ data: string }>(`${PROFILE_COLUMNS} AND valid_from <= ? ORDER BY valid_from DESC LIMIT 1`, vehicleId, date);
   if (current) return current;
 
   return db.getFirstAsync<{ data: string }>(`${PROFILE_COLUMNS} ORDER BY valid_from ASC LIMIT 1`, vehicleId);

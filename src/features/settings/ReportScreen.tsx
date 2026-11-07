@@ -1,15 +1,17 @@
-import { copilot } from '@modules/copilot';
 import Constants from 'expo-constants';
 import { useState } from 'react';
 import { Linking, Platform, Share } from 'react-native';
 import { ISSUES_URL } from '@/config/app';
 import { TextField } from '@/shared/ui/fields';
 import { AppText, Button, Card, Notice, Screen } from '@/shared/ui/primitives';
+import { copilot } from '@modules/copilot';
 import { buildProblemReport } from './problemReport';
 
+const UNKNOWN_DEVICE = 'não identificado';
+
 function deviceName() {
-  const constants = Platform.constants as { Brand?: string; Model?: string };
-  return [constants.Brand, constants.Model].filter(Boolean).join(' ') || 'não identificado';
+  if (Platform.OS !== 'android') return UNKNOWN_DEVICE;
+  return [Platform.constants.Brand, Platform.constants.Model].filter(Boolean).join(' ') || UNKNOWN_DEVICE;
 }
 
 export default function ReportScreen() {
@@ -30,10 +32,14 @@ export default function ReportScreen() {
       <Card title="O que aconteceu?">
         <TextField label="Conte com suas palavras" placeholder="A oferta da Uber não apareceu" multiline value={description} onChangeText={setDescription} />
         <Button label="Enviar relato" onPress={() => Share.share({ message: report })} />
-        <AppText variant="caption" tone="muted">Você escolhe para onde enviar, como o WhatsApp ou o e-mail. Nada sai do celular sem você enviar.</AppText>
+        <AppText variant="caption" tone="muted">
+          Você escolhe para onde enviar, como o WhatsApp ou o e-mail. Nada sai do celular sem você enviar.
+        </AppText>
       </Card>
       <Card title="O que será enviado">
-        <AppText variant="caption" tone="muted" selectable>{report}</AppText>
+        <AppText variant="caption" tone="muted" selectable>
+          {report}
+        </AppText>
       </Card>
       <Notice tone="accent" message="As palavras lidas pelo Copiloto vão mascaradas, mas os números ficam. Confira o texto acima antes de enviar." />
       <Button label="Abrir no GitHub" variant="secondary" onPress={() => Linking.openURL(ISSUES_URL)} />

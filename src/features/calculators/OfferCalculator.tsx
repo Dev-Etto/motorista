@@ -22,10 +22,7 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
   const minutes = decimalOrZero(values.minutes);
   const ready = valueCents > 0 && km > 0 && minutes > 0;
 
-  const result = useMemo(
-    () => classifyOffer({ valueCents, km, minutes, costPerKm, ...targets.values }),
-    [valueCents, km, minutes, costPerKm, targets.values],
-  );
+  const result = useMemo(() => classifyOffer({ valueCents, km, minutes, costPerKm, ...targets.values }), [valueCents, km, minutes, costPerKm, targets.values]);
 
   return (
     <>
@@ -39,8 +36,12 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
         <Card>
           {result.profitCents === null ? null : (
             <>
-              <AppText variant="caption" tone="muted" center>Sobra para você</AppText>
-              <AppText variant="display" bold center tone={profitTone(result.profitCents)}>{formatBRL(result.profitCents)}</AppText>
+              <AppText variant="caption" tone="muted" center>
+                Sobra para você
+              </AppText>
+              <AppText variant="display" bold center tone={profitTone(result.profitCents)}>
+                {formatBRL(result.profitCents)}
+              </AppText>
             </>
           )}
           {result.score === null ? null : (
@@ -54,7 +55,9 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
             <Stat label="Paga por hora" value={formatPerHour(result.perHour)} />
           </StatGrid>
           <LearnMore title="Como a nota é calculada?">
-            <AppText variant="caption">A nota compara a corrida com o seu custo e os seus mínimos. De 3,5 para cima, ela atinge os dois mínimos. Abaixo de 2, não cobre o custo do carro.</AppText>
+            <AppText variant="caption">
+              A nota compara a corrida com o seu custo e os seus mínimos. De 3,5 para cima, ela atinge os dois mínimos. Abaixo de 2, não cobre o custo do carro.
+            </AppText>
             <AppText variant="caption">A nota só ajuda: quem decide é sempre você.</AppText>
           </LearnMore>
         </Card>

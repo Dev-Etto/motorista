@@ -1,9 +1,9 @@
 import { useRouter } from 'expo-router';
 import { Linking } from 'react-native';
 import { RELEASES_URL } from '@/config/app';
-import { NextStepCard } from '@/features/onboarding';
 import { GoalProgressCard } from '@/features/goals';
 import { InsightCard } from '@/features/insights';
+import { NextStepCard } from '@/features/onboarding';
 import { ActiveShiftCard, NewShiftButton } from '@/features/shifts';
 import { AsyncBoundary } from '@/shared/ui/AsyncBoundary';
 import { LearnMore } from '@/shared/ui/LearnMore';
@@ -42,7 +42,13 @@ function DashboardContent({ data, onReload }: { data: DashboardData; onReload: (
       <ProfitCard title="Lucro de hoje" summary={data.today} hero />
       {data.estimatedToday && data.estimatedToday.trips > 0 ? (
         <Card>
-          <ListRow icon="layers" title="Faturamento estimado hoje" subtitle="Pelos aceites. Confira ao registrar a jornada." value={formatBRL(data.estimatedToday.totalCents)} onPress={() => router.push('/offers')} />
+          <ListRow
+            icon="layers"
+            title="Faturamento estimado hoje"
+            subtitle="Pelos aceites. Confira ao registrar a jornada."
+            value={formatBRL(data.estimatedToday.totalCents)}
+            onPress={() => router.push('/offers')}
+          />
         </Card>
       ) : null}
       {data.missingFixedCosts ? (
@@ -50,7 +56,9 @@ function DashboardContent({ data, onReload }: { data: DashboardData; onReload: (
       ) : null}
       <Card>
         <LearnMore title="Por que o lucro é menor que o que recebi?">
-          <AppText variant="caption">Parte do que você recebe paga o carro: combustível, desgaste, seguro e outros custos. Lucro é o que sobra depois disso.</AppText>
+          <AppText variant="caption">
+            Parte do que você recebe paga o carro: combustível, desgaste, seguro e outros custos. Lucro é o que sobra depois disso.
+          </AppText>
           {data.costs ? <AppText variant="caption">Hoje, cada km custa cerca de {formatPerKm(data.costs.fullPerKm)}.</AppText> : null}
         </LearnMore>
       </Card>

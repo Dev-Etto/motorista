@@ -43,8 +43,7 @@ export const statusOf = (entry: OfferLogEntry): OfferStatus => entry.status ?? '
 
 const isAccepted = (entry: OfferLogEntry) => statusOf(entry) === 'accepted';
 
-export const inRange = (entries: OfferLogEntry[], { from, to }: OfferRange) =>
-  entries.filter((entry) => entry.timestamp >= from && entry.timestamp < to);
+export const inRange = (entries: OfferLogEntry[], { from, to }: OfferRange) => entries.filter((entry) => entry.timestamp >= from && entry.timestamp < to);
 
 export function filterOffers<T extends OfferLogEntry>(entries: T[], filters: OfferFilters): T[] {
   return entries.filter((entry) => {
@@ -96,8 +95,11 @@ export function matchPlatforms<T extends { id: number; name: string }>(estimate:
   const unmatched: string[] = [];
   for (const { source, cents } of estimate.byPlatform) {
     const platformId = byName.get(source.toLowerCase());
-    if (platformId === undefined) unmatched.push(source);
-    else matched.push({ platformId, cents });
+    if (platformId === undefined) {
+      unmatched.push(source);
+      continue;
+    }
+    matched.push({ platformId, cents });
   }
   return { matched, unmatched };
 }

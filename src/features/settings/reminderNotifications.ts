@@ -40,7 +40,7 @@ export async function rescheduleAllNotifications() {
   await cancelAllScheduled();
   const reminders = await reminderRepository.list();
   for (const reminder of reminders) {
-    const id = !reminder.done && reminder.due_date ? await scheduleDateReminder(reminder.title, reminder.due_date) : null;
+    const id = !reminder.done && reminder.dueDate ? await scheduleDateReminder(reminder.title, reminder.dueDate) : null;
     await reminderRepository.setNotificationId(reminder.id, id);
   }
   const hour = await settingsRepository.get(SETTING_KEYS.dailyReminderHour);

@@ -1,10 +1,10 @@
-import { copilot, CopilotStatus } from '@modules/copilot';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 import { syncCopilotTargets } from '@/application/offerSettings';
 import { ensureLocation, hasLocationPermission } from '@/shared/platform/location';
 import { ensureNotifications, hasNotificationPermission } from '@/shared/platform/notifications';
+import { copilot, CopilotStatus } from '@modules/copilot';
 
 export interface PermissionsState {
   notifications: boolean;

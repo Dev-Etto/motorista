@@ -11,13 +11,13 @@ describe('calendário', () => {
 
   it('começa na segunda-feira e fecha semanas completas', () => {
     expect(weeks.every((week) => week.length === 7)).toBe(true);
-    expect(weeks[0][6]?.date).toBe('2026-11-01');
-    expect(weeks[1][0]?.date).toBe('2026-11-02');
+    expect(weeks[0]?.[6]?.date).toBe('2026-11-01');
+    expect(weeks[1]?.[0]?.date).toBe('2026-11-02');
   });
 
   it('soma jornadas do mesmo dia e mantém dias vazios', () => {
-    expect(weeks[1][0]?.profitCents).toBe(150);
-    expect(weeks[1][1]?.profitCents).toBeNull();
+    expect(weeks[1]?.[0]?.profitCents).toBe(150);
+    expect(weeks[1]?.[1]?.profitCents).toBeNull();
   });
 
   it('inclui todos os dias do mês', () => {

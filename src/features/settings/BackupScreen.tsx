@@ -1,6 +1,6 @@
-import { Button, Card, ListRow, Notice, Screen } from '@/shared/ui/primitives';
 import { TipBanner } from '@/features/tips';
 import { confirmAction } from '@/shared/platform/confirm';
+import { Button, Card, ListRow, Notice, Screen } from '@/shared/ui/primitives';
 import { formatDate, toISODate } from '@/shared/utils/dates';
 import { useBackup } from './useBackup';
 
@@ -29,7 +29,10 @@ export default function BackupScreen() {
   return (
     <Screen>
       <TipBanner id="backup" message="Guarde o arquivo fora do celular, como no Drive ou em seu e-mail. Na troca de aparelho, use Restaurar." />
-      <Notice tone="accent" message="Seus dados ficam só neste celular. Com um backup, você os leva para onde quiser, inclusive se trocar de aparelho ou reinstalar o app. O arquivo não tem senha: guarde em um lugar só seu." />
+      <Notice
+        tone="accent"
+        message="Seus dados ficam só neste celular. Com um backup, você os leva para onde quiser, inclusive se trocar de aparelho ou reinstalar o app. O arquivo não tem senha: guarde em um lugar só seu."
+      />
       <Card title="Backup">
         <ListRow title="Último backup" value={lastLabel} />
         <Button label="Fazer backup" busy={backup.busy} onPress={backup.exportBackup} />

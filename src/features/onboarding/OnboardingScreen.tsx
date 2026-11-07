@@ -1,11 +1,11 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-import { MIN_TOUCH_TARGET } from '@/shared/theme/theme';
 import { APP_NAME } from '@/config/app';
 import { enableCopilotIfGranted, PermissionsList } from '@/features/permissions';
 import { CostExample, useVehicleForm, VehicleQuickForm } from '@/features/vehicle';
 import { useSubmit } from '@/shared/hooks/useSubmit';
+import { MIN_TOUCH_TARGET } from '@/shared/theme/theme';
 import { Illustration } from '@/shared/ui/illustrations/Illustration';
 import { AppText, Button, Card, Notice, Screen, StepDots } from '@/shared/ui/primitives';
 import { formatPerKm } from '@/shared/utils/format';
@@ -51,16 +51,28 @@ export default function OnboardingScreen() {
     return (
       <Screen safeTop centered>
         <Illustration name="welcome" />
-        <AppText variant="display" bold center>{APP_NAME}</AppText>
-        <AppText variant="subtitle" center>Descubra quanto sobra de verdade no seu trabalho como motorista de aplicativo.</AppText>
+        <AppText variant="display" bold center>
+          {APP_NAME}
+        </AppText>
+        <AppText variant="subtitle" center>
+          Descubra quanto sobra de verdade no seu trabalho como motorista de aplicativo.
+        </AppText>
         <Card>
           <AppText center>Sem conta. Sem cobrança. Sem anúncios.</AppText>
-          <AppText tone="muted" center>Seus dados ficam só no seu celular.</AppText>
+          <AppText tone="muted" center>
+            Seus dados ficam só no seu celular.
+          </AppText>
         </Card>
         <Button label="Começar" onPress={() => setStep('register')} />
         <Button label="Pular introdução" variant="secondary" onPress={() => setStep('setup')} />
         <Pressable accessibilityRole="link" onPress={() => router.push('/terms')} style={styles.terms}>
-          <AppText variant="caption" tone="muted" center>Ao continuar, você concorda com os <AppText variant="caption" bold>Termos de uso</AppText>.</AppText>
+          <AppText variant="caption" tone="muted" center>
+            Ao continuar, você concorda com os{' '}
+            <AppText variant="caption" bold>
+              Termos de uso
+            </AppText>
+            .
+          </AppText>
         </Pressable>
       </Screen>
     );
@@ -72,8 +84,12 @@ export default function OnboardingScreen() {
       <Screen safeTop centered>
         <Illustration name={content.illustration} />
         <StepDots total={2} current={step === 'register' ? 0 : 1} />
-        <AppText variant="title" bold center>{content.title}</AppText>
-        <AppText variant="subtitle" center>{content.body}</AppText>
+        <AppText variant="title" bold center>
+          {content.title}
+        </AppText>
+        <AppText variant="subtitle" center>
+          {content.body}
+        </AppText>
         <Button label="Continuar" onPress={() => setStep(step === 'register' ? 'offers' : 'setup')} />
         <Button label="Pular" variant="secondary" onPress={() => setStep('setup')} />
       </Screen>
@@ -83,8 +99,12 @@ export default function OnboardingScreen() {
   if (step === 'setup') {
     return (
       <Screen safeTop>
-        <AppText variant="title" bold center>Seu custo em poucos dados</AppText>
-        <AppText tone="muted" center>Óleo, pneus e manutenção começam com estimativas. Seguro, IPVA e parcela você inclui depois.</AppText>
+        <AppText variant="title" bold center>
+          Seu custo em poucos dados
+        </AppText>
+        <AppText tone="muted" center>
+          Óleo, pneus e manutenção começam com estimativas. Seguro, IPVA e parcela você inclui depois.
+        </AppText>
         <VehicleQuickForm form={form} />
         {form.error ? <Notice tone="negative" message={form.error} /> : null}
         {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
@@ -98,8 +118,12 @@ export default function OnboardingScreen() {
     return (
       <Screen safeTop centered>
         <Illustration name="result" height={110} />
-        <AppText variant="caption" tone="muted" center>Cada km custa para você</AppText>
-        <AppText variant="display" bold tone="accent" center>{formatPerKm(form.costs.fullPerKm)}</AppText>
+        <AppText variant="caption" tone="muted" center>
+          Cada km custa para você
+        </AppText>
+        <AppText variant="display" bold tone="accent" center>
+          {formatPerKm(form.costs.fullPerKm)}
+        </AppText>
         <CostExample costPerKm={form.costs.fullPerKm} />
         {form.costs.fixedMonthly > 0 ? null : (
           <Notice tone="accent" message="É uma primeira conta. Inclua seguro, IPVA, parcela ou aluguel para ver o valor completo." />
@@ -113,10 +137,17 @@ export default function OnboardingScreen() {
   if (step === 'permissions') {
     return (
       <Screen safeTop>
-        <AppText variant="title" bold center>Deixe tudo pronto para usar</AppText>
-        <AppText tone="muted" center>Assim você não precisa parar no meio da jornada. Tudo fica no seu celular, e você pode mudar depois.</AppText>
+        <AppText variant="title" bold center>
+          Deixe tudo pronto para usar
+        </AppText>
+        <AppText tone="muted" center>
+          Assim você não precisa parar no meio da jornada. Tudo fica no seu celular, e você pode mudar depois.
+        </AppText>
         <PermissionsList />
-        <Notice tone="accent" message="Quem decide as corridas é sempre você: o app não toca na tela. Cada plataforma tem suas regras sobre apps de apoio, e vale conhecê-las. Dirigindo, a voz avisa: toque no celular só com o carro parado." />
+        <Notice
+          tone="accent"
+          message="Quem decide as corridas é sempre você: o app não toca na tela. Cada plataforma tem suas regras sobre apps de apoio, e vale conhecê-las. Dirigindo, a voz avisa: toque no celular só com o carro parado."
+        />
         <Button label="Continuar" onPress={finishPermissions} />
       </Screen>
     );
@@ -125,8 +156,12 @@ export default function OnboardingScreen() {
   return (
     <Screen safeTop centered>
       <Illustration name="welcome" />
-      <AppText variant="title" bold center>Tudo pronto</AppText>
-      <AppText variant="subtitle" center>Registre sua primeira jornada e veja quanto sobrou de verdade.</AppText>
+      <AppText variant="title" bold center>
+        Tudo pronto
+      </AppText>
+      <AppText variant="subtitle" center>
+        Registre sua primeira jornada e veja quanto sobrou de verdade.
+      </AppText>
       <Button label="Registrar uma jornada" onPress={() => finish('/shift/new')} />
       <Button label={replay ? 'Voltar ao início' : 'Ver o início'} variant="secondary" onPress={() => finish('/')} />
     </Screen>

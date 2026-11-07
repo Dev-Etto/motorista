@@ -6,7 +6,9 @@ import { formatBRL } from '@/shared/utils/money';
 export function ShiftResultCard({ result }: { result: ShiftResult }) {
   return (
     <Card title="Resultado">
-      <AppText variant="title" bold tone={profitTone(result.profitCents)}>{formatBRL(result.profitCents)}</AppText>
+      <AppText variant="title" bold tone={profitTone(result.profitCents)}>
+        {formatBRL(result.profitCents)}
+      </AppText>
       {result.partial ? <Notice message="Resultado parcial: falta informar os km ou os custos do veículo." /> : null}
       <ListRow title="Faturamento" value={formatBRL(result.grossCents)} />
       <ListRow title="Custo do veículo" value={formatBRL(result.vehicleCostCents)} />

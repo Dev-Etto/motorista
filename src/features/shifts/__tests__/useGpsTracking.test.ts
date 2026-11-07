@@ -14,7 +14,9 @@ jest.mock('expo-location', () => ({
 }));
 jest.mock('expo-task-manager', () => ({ defineTask: jest.fn() }));
 jest.mock('@modules/copilot', () => ({ copilot: { getTimer: () => ({ running: true }) } }));
-jest.mock('@/data/repositories/gpsSessionRepository', () => ({ gpsSessionRepository: { get: jest.fn(), start: jest.fn(), stop: jest.fn(), reset: jest.fn() } }));
+jest.mock('@/data/repositories/gpsSessionRepository', () => ({
+  gpsSessionRepository: { get: jest.fn(), start: jest.fn(), stop: jest.fn(), reset: jest.fn() },
+}));
 
 const location = jest.mocked(Location);
 const sessions = jest.mocked(gpsSessionRepository);

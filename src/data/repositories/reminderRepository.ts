@@ -1,6 +1,15 @@
 import { getDb, SqlExecutor } from '@/data/database/connection';
 
-export interface ReminderRow {
+export interface Reminder {
+  id: number;
+  title: string;
+  dueDate: string | null;
+  dueKm: number | null;
+  notificationId: string | null;
+  done: boolean;
+}
+
+interface ReminderRow {
   id: number;
   title: string;
   due_date: string | null;
@@ -9,19 +18,29 @@ export interface ReminderRow {
   done: number;
 }
 
+const toReminder = (row: ReminderRow): Reminder => ({
+  id: row.id,
+  title: row.title,
+  dueDate: row.due_date,
+  dueKm: row.due_km,
+  notificationId: row.notification_id,
+  done: row.done === 1,
+});
+
 export function createReminderRepository(connection: () => SqlExecutor = getDb) {
   return {
-    list(): Promise<ReminderRow[]> {
-      return connection().getAllAsync<ReminderRow>("SELECT * FROM reminders ORDER BY done, COALESCE(due_date, '9999'), id");
+    async list(): Promise<Reminder[]> {
+      const rows = await connection().getAllAsync<ReminderRow>("SELECT * FROM reminders ORDER BY done, COALESCE(due_date, '9999'), id");
+      return rows.map(toReminder);
     },
 
-    async add(input: Pick<ReminderRow, 'title' | 'due_date' | 'due_km' | 'notification_id'>): Promise<void> {
+    async add(input: Pick<Reminder, 'title' | 'dueDate' | 'dueKm' | 'notificationId'>): Promise<void> {
       await connection().runAsync(
         'INSERT INTO reminders (title, due_date, due_km, notification_id) VALUES (?, ?, ?, ?)',
         input.title,
-        input.due_date,
-        input.due_km,
-        input.notification_id,
+        input.dueDate,
+        input.dueKm,
+        input.notificationId,
       );
     },
 

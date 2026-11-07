@@ -10,7 +10,9 @@ export function CostExample({ costPerKm }: { costPerKm: number }) {
 
   return (
     <Card title="Na prática">
-      <AppText tone="muted">Uma corrida de {formatBRL(EXAMPLE_VALUE_CENTS)} com {EXAMPLE_KM} km:</AppText>
+      <AppText tone="muted">
+        Uma corrida de {formatBRL(EXAMPLE_VALUE_CENTS)} com {EXAMPLE_KM} km:
+      </AppText>
       <ListRow title="Você recebe" value={formatBRL(EXAMPLE_VALUE_CENTS)} />
       <ListRow title="Vai para o carro" subtitle="Combustível, desgaste e outros custos" value={`- ${formatBRL(costCents)}`} />
       <ListRow title="Sobra para você" value={formatBRL(EXAMPLE_VALUE_CENTS - costCents)} valueTone={profitTone(EXAMPLE_VALUE_CENTS - costCents)} />

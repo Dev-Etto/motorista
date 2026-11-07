@@ -21,7 +21,7 @@ function describeKm(dueKm: number, totalKm: number) {
 }
 
 const describeDue = (reminder: Reminder, totalKm: number) =>
-  [reminder.due_date ? formatDate(reminder.due_date) : null, reminder.due_km ? describeKm(reminder.due_km, totalKm) : null].filter(Boolean).join(' ou ');
+  [reminder.dueDate ? formatDate(reminder.dueDate) : null, reminder.dueKm ? describeKm(reminder.dueKm, totalKm) : null].filter(Boolean).join(' ou ');
 
 export default function RemindersScreen() {
   const { state, reminders, totalKm, profile, add, complete, remove } = useReminders();

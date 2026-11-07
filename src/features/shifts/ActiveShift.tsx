@@ -15,8 +15,12 @@ export function ActiveShiftCard() {
 
   return (
     <Card title={timer.running ? 'Jornada em andamento' : 'Jornada pausada'}>
-      <AppText variant="display" bold>{formatClock(timer.elapsedMs)}</AppText>
-      <AppText variant="caption" tone="muted">{message}</AppText>
+      <AppText variant="display" bold>
+        {formatClock(timer.elapsedMs)}
+      </AppText>
+      <AppText variant="caption" tone="muted">
+        {message}
+      </AppText>
       <Button label="Encerrar e registrar" onPress={() => router.push({ pathname: '/shift/new', params: { finish: '1' } })} />
       <Button label="Continuar jornada" variant="secondary" onPress={() => router.push('/shift/new')} />
     </Card>
