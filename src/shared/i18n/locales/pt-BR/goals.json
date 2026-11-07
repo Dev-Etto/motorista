@@ -58,6 +58,7 @@
       "weekdays": "Selecione pelo menos um dia de trabalho.",
       "hours": "Informe as horas por dia, de {{min}} a {{max}}.",
       "dayTarget": "Confira o lucro de hoje. Use só números, como {{example}}."
-    }
+    },
+    "carried": "Repetindo a meta de {{month}}. Salve para usar neste mês ou mude os valores."
   }
 }

@@ -16,18 +16,25 @@ interface GoalRow {
   hours_per_day: number;
 }
 
+function goalOf(row: GoalRow): MonthlyGoal {
+  return {
+    month: row.month,
+    desiredProfitCents: row.desired_profit_cents,
+    workWeekdays: parseJsonColumn(row.work_weekdays, workWeekdaysSchema),
+    hoursPerDay: row.hours_per_day,
+  };
+}
+
 export function createGoalRepository(connection: () => SqlExecutor = getDb) {
   return {
     async find(month: string): Promise<MonthlyGoal | null> {
       const row = await connection().getFirstAsync<GoalRow>('SELECT * FROM goals WHERE month = ?', month);
-      if (!row) return null;
+      return row ? goalOf(row) : null;
+    },
 
-      return {
-        month: row.month,
-        desiredProfitCents: row.desired_profit_cents,
-        workWeekdays: parseJsonColumn(row.work_weekdays, workWeekdaysSchema),
-        hoursPerDay: row.hours_per_day,
-      };
+    async findInEffect(month: string): Promise<MonthlyGoal | null> {
+      const row = await connection().getFirstAsync<GoalRow>('SELECT * FROM goals WHERE month <= ? ORDER BY month DESC LIMIT 1', month);
+      return row ? goalOf(row) : null;
     },
 
     async findDayOverride(date: string): Promise<number | null> {

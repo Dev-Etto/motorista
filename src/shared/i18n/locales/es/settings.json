@@ -100,7 +100,7 @@
       "message": "Los datos vuelven a ser los de antes de la última restauración.",
       "action": "Deshacer"
     },
-    "exported": "Copia de seguridad generada. Revisa que el archivo se haya guardado donde elegiste.",
+    "exported": "Copia de seguridad guardada.",
     "exportFailed": "No se pudo generar la copia de seguridad.",
     "restoreFailed": "La restauración falló y se mantuvieron tus datos actuales.",
     "restored": "Datos restaurados correctamente.",
@@ -116,6 +116,13 @@
       "title": "¿Restaurar de otro país?",
       "message": "Esta copia es de {{country}}. La moneda y la lectura de ofertas pasan a seguir a {{country}}, y los valores vuelven con los mismos números, sin conversión de divisas.",
       "action": "Restaurar"
+    },
+    "notSaved": "La copia no se marcó como hecha. Toca \"Hacer copia de seguridad\" y guarda el archivo en un lugar seguro, como Google Drive.",
+    "savedQuestion": {
+      "title": "¿Guardaste el archivo?",
+      "message": "La copia solo cuenta como hecha si el archivo se guardó, por ejemplo en Google Drive o en los archivos del teléfono.",
+      "yes": "Lo guardé",
+      "no": "No lo guardé"
     }
   },
   "dailyReminder": {

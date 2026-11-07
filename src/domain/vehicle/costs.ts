@@ -85,12 +85,24 @@ export function computeCosts(p: CostProfile): CostBreakdown {
   };
 }
 
-export function suggestedProfile(kind: VehicleKind, ownership: Ownership): CostProfile {
+const FUEL_SUGGESTIONS: Record<FuelType, { priceCents: number; car: number; motorcycle: number }> = {
+  gasoline: { priceCents: 600, car: 11, motorcycle: 30 },
+  ethanol: { priceCents: 420, car: 8, motorcycle: 21 },
+  diesel: { priceCents: 620, car: 13, motorcycle: 30 },
+  cng: { priceCents: 480, car: 13, motorcycle: 30 },
+  electric: { priceCents: 95, car: 6.5, motorcycle: 25 },
+};
+
+export function suggestedFuel(kind: VehicleKind, fuel: FuelType): Pick<CostProfile, 'fuelPriceCents' | 'consumptionKmPerUnit'> {
+  const suggestion = FUEL_SUGGESTIONS[fuel];
+  return { fuelPriceCents: suggestion.priceCents, consumptionKmPerUnit: suggestion[kind] };
+}
+
+export function suggestedProfile(kind: VehicleKind, ownership: Ownership, fuel: FuelType = 'gasoline'): CostProfile {
   const isCar = kind === 'car';
   return {
     ownership,
-    fuelPriceCents: 600,
-    consumptionKmPerUnit: isCar ? 11 : 30,
+    ...suggestedFuel(kind, fuel),
     oilChangeCents: isCar ? 25000 : 6000,
     oilIntervalKm: isCar ? 10000 : 3000,
     tiresCents: isCar ? 200000 : 60000,

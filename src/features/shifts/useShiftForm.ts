@@ -1,6 +1,7 @@
 import type { TFunction } from 'i18next';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { vehicleInUse } from '@application/vehicleInUse';
 import { platformRepository } from '@data/repositories/platformRepository';
 import { shiftRepository } from '@data/repositories/shiftRepository';
 import { vehicleRepository } from '@data/repositories/vehicleRepository';
@@ -35,7 +36,7 @@ async function loadFormData(shiftId: number | undefined) {
   const [platforms, vehicles, current, existing] = await Promise.all([
     platformRepository.list(),
     vehicleRepository.list(),
-    vehicleRepository.getCurrent(),
+    vehicleInUse(),
     shiftId ? shiftRepository.findById(shiftId) : Promise.resolve(null),
   ]);
   const inactive = (existing?.earnings ?? []).filter((earning) => !platforms.some((platform) => platform.id === earning.platformId));

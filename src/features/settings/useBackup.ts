@@ -10,7 +10,7 @@ import { copilot } from '@modules/copilot';
 import { useAsyncData } from '@shared/hooks/useAsyncData';
 import { useSubmit } from '@shared/hooks/useSubmit';
 import { shareTextFile } from '@shared/platform/share';
-import { confirmAction } from '@shared/ui/dialog';
+import { confirmAction, showDialog } from '@shared/ui/dialog';
 import { today } from '@shared/utils/dates';
 import { applyRestoredState } from './afterRestore';
 
@@ -48,12 +48,27 @@ export function useBackup() {
     setMessage({ tone: 'positive', text: complete ? t(`backup.${outcome}`) : t(`backup.${outcome}Partial`) });
   };
 
+  const markSaved = async () => {
+    await settingsRepository.set(SETTING_KEYS.lastBackupAt, String(Date.now()));
+    await lastBackup.reload();
+    setMessage({ tone: 'positive', text: t('backup.exported') });
+  };
+
+  const askIfSaved = () => {
+    showDialog({
+      title: t('backup.savedQuestion.title'),
+      message: t('backup.savedQuestion.message'),
+      actions: [
+        { label: t('backup.savedQuestion.no'), tone: 'secondary', onPress: () => setMessage({ tone: 'negative', text: t('backup.notSaved') }) },
+        { label: t('backup.savedQuestion.yes'), tone: 'primary', onPress: markSaved },
+      ],
+    });
+  };
+
   const exporting = useSubmit(async () => {
     try {
       await shareTextFile(`backup-${today()}.json`, JSON.stringify(await fullBackup()), 'application/json');
-      await settingsRepository.set(SETTING_KEYS.lastBackupAt, String(Date.now()));
-      await lastBackup.reload();
-      setMessage({ tone: 'positive', text: t('backup.exported') });
+      askIfSaved();
     } catch {
       setMessage({ tone: 'negative', text: t('backup.exportFailed') });
     }

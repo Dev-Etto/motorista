@@ -2,9 +2,11 @@ import { act, renderHook } from '@testing-library/react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import { File } from 'expo-file-system';
 import { backupMarket, parseBackup, restoreBackup } from '@data/backup/backup';
+import { settingsRepository } from '@data/repositories/settingsRepository';
 import { applyRestoredState } from '@features/settings/afterRestore';
 import { useBackup } from '@features/settings/useBackup';
-import { confirmAction } from '@shared/ui/dialog';
+import { shareTextFile } from '@shared/platform/share';
+import { confirmAction, showDialog } from '@shared/ui/dialog';
 
 jest.mock('expo-document-picker', () => ({ getDocumentAsync: jest.fn() }));
 jest.mock('expo-file-system', () => ({ File: jest.fn(), Paths: { document: 'doc', cache: 'cache' } }));
@@ -12,7 +14,7 @@ jest.mock('expo-router', () => ({ useFocusEffect: jest.fn() }));
 jest.mock('expo-sharing', () => ({}));
 jest.mock('expo-print', () => ({}));
 jest.mock('@data/repositories/settingsRepository', () => ({
-  SETTING_KEYS: {},
+  SETTING_KEYS: { lastBackupAt: 'last_backup_at' },
   settingsRepository: { get: jest.fn().mockResolvedValue(null), set: jest.fn() },
 }));
 jest.mock('@data/backup/backup', () => ({
@@ -21,9 +23,39 @@ jest.mock('@data/backup/backup', () => ({
   parseBackup: jest.fn(),
   restoreBackup: jest.fn(),
 }));
-jest.mock('@shared/ui/dialog', () => ({ confirmAction: jest.fn() }));
+jest.mock('@shared/ui/dialog', () => ({ confirmAction: jest.fn(), showDialog: jest.fn() }));
+jest.mock('@shared/platform/share', () => ({ shareTextFile: jest.fn() }));
 jest.mock('@modules/copilot', () => ({ copilot: { exportState: jest.fn() } }));
 jest.mock('@features/settings/afterRestore', () => ({ applyRestoredState: jest.fn().mockResolvedValue(undefined) }));
+
+describe('fazer backup', () => {
+  const answer = async (index: number) => {
+    const options = jest.mocked(showDialog).mock.calls.at(-1)?.[0];
+    await act(async () => options?.actions[index]?.onPress?.());
+  };
+
+  beforeEach(() => jest.clearAllMocks());
+
+  it('só marca o backup como feito quando o arquivo foi salvo', async () => {
+    const { result } = await renderHook(() => useBackup());
+    await act(async () => result.current.exportBackup());
+
+    expect(shareTextFile).toHaveBeenCalled();
+    expect(settingsRepository.set).not.toHaveBeenCalled();
+    await answer(1);
+    expect(settingsRepository.set).toHaveBeenCalledWith('last_backup_at', expect.any(String));
+    expect(result.current.message?.tone).toBe('positive');
+  });
+
+  it('sem salvar, não marca o backup e explica como tentar de novo', async () => {
+    const { result } = await renderHook(() => useBackup());
+    await act(async () => result.current.exportBackup());
+
+    await answer(0);
+    expect(settingsRepository.set).not.toHaveBeenCalled();
+    expect(result.current.message?.tone).toBe('negative');
+  });
+});
 
 describe('restaurar backup', () => {
   it('mostra uma mensagem quando o seletor de arquivo falha', async () => {

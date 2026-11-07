@@ -100,7 +100,7 @@
       "message": "Your data goes back to what it was before the last restore.",
       "action": "Undo"
     },
-    "exported": "Backup created. Check that the file was saved where you chose.",
+    "exported": "Backup saved.",
     "exportFailed": "Couldn't create the backup.",
     "restoreFailed": "The restore failed and your current data was kept.",
     "restored": "Data restored successfully.",
@@ -116,6 +116,13 @@
       "title": "Restore from another country?",
       "message": "This backup is from {{country}}. The currency and offer reading will follow {{country}}, and amounts come back with the same numbers, with no currency conversion.",
       "action": "Restore"
+    },
+    "notSaved": "The backup wasn't marked as done. Tap \"Back up now\" and save the file somewhere safe, like Google Drive.",
+    "savedQuestion": {
+      "title": "Did you save the file?",
+      "message": "The backup only counts as done if the file was saved, for example to Google Drive or the phone's files.",
+      "yes": "I saved it",
+      "no": "I didn't"
     }
   },
   "dailyReminder": {

@@ -7,7 +7,7 @@ import { summarizeShifts, withLooseExpenses } from '@domain/shift/summary';
 import { monthBounds, monthKey, weekdayOf, workDaysInMonth, workDaysLeft } from '@shared/utils/dates';
 
 export async function loadGoalProgress(date: string) {
-  const goal = await goalRepository.find(monthKey(date));
+  const goal = await goalRepository.findInEffect(monthKey(date));
   if (!goal) return null;
 
   const { start, end } = monthBounds(date);

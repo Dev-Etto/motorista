@@ -22,6 +22,7 @@ export const SETTING_KEYS = {
   consumptionUnit: 'consumption_unit',
   firstWeekday: 'first_weekday',
   currentVehicle: 'current_vehicle',
+  shiftVehicle: 'shift_vehicle',
 } as const;
 
 export type SettingKey = (typeof SETTING_KEYS)[keyof typeof SETTING_KEYS];

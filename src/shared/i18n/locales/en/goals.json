@@ -58,6 +58,7 @@
       "weekdays": "Select at least one workday.",
       "hours": "Enter the hours per day, from {{min}} to {{max}}.",
       "dayTarget": "Check today's profit. Use numbers only, like {{example}}."
-    }
+    },
+    "carried": "Repeating the goal from {{month}}. Save to use it this month or change the values."
   }
 }

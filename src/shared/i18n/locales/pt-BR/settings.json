@@ -100,7 +100,7 @@
       "message": "Os dados voltam a ser os de antes da última restauração.",
       "action": "Desfazer"
     },
-    "exported": "Backup gerado. Confira se o arquivo foi salvo onde você escolheu.",
+    "exported": "Backup salvo.",
     "exportFailed": "Não foi possível gerar o backup.",
     "restoreFailed": "A restauração falhou e seus dados atuais foram mantidos.",
     "restored": "Dados restaurados com sucesso.",
@@ -116,6 +116,13 @@
       "title": "Restaurar de outro país?",
       "message": "Este backup é de {{country}}. A moeda e a leitura das ofertas passam a seguir {{country}}, e os valores voltam com os mesmos números, sem conversão de câmbio.",
       "action": "Restaurar"
+    },
+    "notSaved": "O backup não foi marcado como feito. Toque em \"Fazer backup\" e salve o arquivo num lugar seguro, como o Google Drive.",
+    "savedQuestion": {
+      "title": "Você salvou o arquivo?",
+      "message": "O backup só conta como feito se o arquivo foi salvo, por exemplo no Google Drive ou nos arquivos do celular.",
+      "yes": "Salvei",
+      "no": "Não salvei"
     }
   },
   "dailyReminder": {

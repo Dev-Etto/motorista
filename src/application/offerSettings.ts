@@ -15,6 +15,7 @@ import {
 } from '@domain/offer/offer';
 import { copilot } from '@modules/copilot';
 import { today } from '@shared/utils/dates';
+import { vehicleInUse } from './vehicleInUse';
 
 export async function loadOfferSettings(): Promise<OfferSettings> {
   const [mode, normal, low, followGoal, progress] = await Promise.all([
@@ -43,7 +44,8 @@ export async function saveModeTargets(mode: OfferMode, targets: OfferTargets): P
 }
 
 export async function syncCopilotTargets(): Promise<void> {
-  const [{ costs }, settings] = await Promise.all([vehicleRepository.getCostsAt(today()), loadOfferSettings()]);
+  const vehicle = await vehicleInUse();
+  const [{ costs }, settings] = await Promise.all([vehicleRepository.getCostsAt(today(), vehicle?.id), loadOfferSettings()]);
   const targets = activeTargets(settings);
   copilot.setTargets(costs?.fullPerKm ?? 0, targets.targetPerKmCents, targets.targetPerHourCents);
 }
