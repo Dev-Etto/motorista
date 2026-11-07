@@ -60,14 +60,18 @@
     "expenseNew": "Novo lançamento",
     "region": "Idioma e região",
     "regionLanguage": "Idioma",
-    "regionFormat": "Formato regional"
+    "regionFormat": "Formato regional",
+    "calculator": "Calculadora"
   },
   "tabs": {
     "home": "Início",
     "shifts": "Jornadas",
     "calculator": "Calculadora",
     "reports": "Relatórios",
-    "more": "Mais"
+    "more": "Mais",
+    "offers": "Ofertas",
+    "unseenOffers_one": "{{count}} oferta nova",
+    "unseenOffers_other": "{{count}} ofertas novas"
   },
   "location": {
     "permissionNeeded_km": "Permita a localização para medir os km por GPS.",

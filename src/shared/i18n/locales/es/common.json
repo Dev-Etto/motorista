@@ -60,14 +60,18 @@
     "expenseNew": "Nuevo gasto suelto",
     "region": "Idioma y región",
     "regionLanguage": "Idioma",
-    "regionFormat": "Formato regional"
+    "regionFormat": "Formato regional",
+    "calculator": "Calculadora"
   },
   "tabs": {
     "home": "Inicio",
     "shifts": "Jornadas",
     "calculator": "Calculadora",
     "reports": "Informes",
-    "more": "Más"
+    "more": "Más",
+    "offers": "Ofertas",
+    "unseenOffers_one": "{{count}} oferta nueva",
+    "unseenOffers_other": "{{count}} ofertas nuevas"
   },
   "location": {
     "permissionNeeded_km": "Permite la ubicación para medir los km por GPS.",

@@ -19,6 +19,7 @@ const SCREENS = [
   { name: 'goal', titleKey: 'screens.goal' },
   { name: 'copilot', titleKey: 'screens.copilot' },
   { name: 'offers', titleKey: 'screens.offers' },
+  { name: 'calculator', titleKey: 'screens.calculator' },
   { name: 'copilot-setup', titleKey: 'screens.copilotSetup' },
   { name: 'help', titleKey: 'screens.help' },
   { name: 'permissions', titleKey: 'screens.permissions' },

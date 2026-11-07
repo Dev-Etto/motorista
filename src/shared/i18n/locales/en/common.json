@@ -60,14 +60,18 @@
     "expenseNew": "New expense",
     "region": "Language and region",
     "regionLanguage": "Language",
-    "regionFormat": "Regional format"
+    "regionFormat": "Regional format",
+    "calculator": "Calculator"
   },
   "tabs": {
     "home": "Home",
     "shifts": "Shifts",
     "calculator": "Calculator",
     "reports": "Reports",
-    "more": "More"
+    "more": "More",
+    "offers": "Offers",
+    "unseenOffers_one": "{{count}} new offer",
+    "unseenOffers_other": "{{count}} new offers"
   },
   "location": {
     "permissionNeeded_km": "Allow location access to track kilometers by GPS.",

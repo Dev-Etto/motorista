@@ -73,5 +73,22 @@
       "title": "Limpar as ofertas?",
       "message": "O histórico e a estimativa de faturamento serão apagados. As jornadas salvas não mudam."
     }
+  },
+  "hub": {
+    "copilotTitle": "Copiloto",
+    "readOffers": "Ler ofertas",
+    "readOffersHint": "Mostra a nota de cada corrida enquanto você dirige",
+    "setupMessage": "O Copiloto lê as ofertas da Uber, 99 e inDrive e mostra se a corrida compensa. Configure em 2 passos.",
+    "setupButton": "Configurar o Copiloto",
+    "settings": "Ajustes do Copiloto",
+    "settingsSubtitle": "Cartão, voz, botão flutuante e apps",
+    "recentTitle": "Últimas ofertas",
+    "empty": "As ofertas lidas pelo Copiloto aparecem aqui.",
+    "seeAll": "Ver todas as ofertas",
+    "toolsTitle": "Ferramentas",
+    "evaluate": "Avaliar uma oferta",
+    "evaluateSubtitle": "Digite valor, distância e tempo",
+    "quote": "Orçamento de corrida particular",
+    "quoteSubtitle": "Calcule o preço e compartilhe"
   }
 }

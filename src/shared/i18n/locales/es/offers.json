@@ -73,5 +73,22 @@
       "title": "¿Borrar las ofertas?",
       "message": "Se borrarán el historial y la estimación de ingresos. Las jornadas guardadas no cambian."
     }
+  },
+  "hub": {
+    "copilotTitle": "Copiloto",
+    "readOffers": "Leer ofertas",
+    "readOffersHint": "Muestra la nota de cada viaje mientras conduces",
+    "setupMessage": "El Copiloto lee las ofertas de Uber, 99 e inDrive y muestra si el viaje vale la pena. Configúralo en 2 pasos.",
+    "setupButton": "Configurar el Copiloto",
+    "settings": "Ajustes del Copiloto",
+    "settingsSubtitle": "Tarjeta, voz, botón flotante y apps",
+    "recentTitle": "Últimas ofertas",
+    "empty": "Las ofertas leídas por el Copiloto aparecen aquí.",
+    "seeAll": "Ver todas las ofertas",
+    "toolsTitle": "Herramientas",
+    "evaluate": "Evaluar una oferta",
+    "evaluateSubtitle": "Escribe valor, distancia y tiempo",
+    "quote": "Presupuesto de viaje particular",
+    "quoteSubtitle": "Calcula el precio y compártelo"
   }
 }
