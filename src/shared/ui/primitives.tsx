@@ -191,10 +191,11 @@ interface ListRowProps {
   value?: string;
   valueTone?: Tone;
   selected?: boolean;
+  chevron?: boolean;
   onPress?: () => void;
 }
 
-export function ListRow({ icon, leading, title, subtitle, value, valueTone = 'default', selected, onPress }: ListRowProps) {
+export function ListRow({ icon, leading, title, subtitle, value, valueTone = 'default', selected, chevron, onPress }: ListRowProps) {
   const colors = useTheme();
   return (
     <Pressable
@@ -224,6 +225,7 @@ export function ListRow({ icon, leading, title, subtitle, value, valueTone = 'de
         </AppText>
       ) : null}
       {selected ? <AppIcon name="check" color={colors.primary} size={22} /> : null}
+      {chevron ? <AppIcon name="chevron" color={colors.textMuted} size={20} /> : null}
     </Pressable>
   );
 }

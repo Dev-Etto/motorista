@@ -69,7 +69,7 @@ Hoje a tela abre com cerca de 24 linhas de uma vez. O formato aparece como códi
 | ID | Critério de aceite | Teste |
 | --- | --- | --- |
 | B1 | O topo mostra uma prévia com dinheiro, distância, preço por km, data e consumo no perfil atual. A prévia muda na hora quando uma escolha muda | Jest |
-| B2 | O card "Idioma e formato" tem as linhas Idioma, Formato regional e Semana começa em. Cada linha mostra o valor atual e abre a lista só quando é tocada | Manual |
+| B2 | O card "Idioma e formato" tem as linhas Idioma e Formato regional, que mostram o valor atual e abrem a lista só quando são tocadas. "A semana começa em" fica no mesmo card como `Segmented`, porque tem só três opções | Manual |
 | B3 | A lista de idiomas e a de formatos abrem em telas próprias do stack, com "Automático" no topo, dizendo o que foi detectado no aparelho | Manual |
 | B4 | Cada formato tem nome legível, como "Português (Brasil)" ou "Español (México)", vindo de `common:formatLocaleName`, com o exemplo de data e número como subtítulo | Jest |
 | B5 | Com um só país disponível, o país aparece como informação, sem ação, com a moeda ao lado. A explicação longa vai para um `LearnMore` | Manual |

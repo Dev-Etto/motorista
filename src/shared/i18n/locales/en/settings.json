@@ -264,38 +264,40 @@
     }
   },
   "region": {
+    "previewTitle": "How values look",
+    "languageAndFormat": "Language and format",
     "language": {
       "title": "Language",
       "automatic": "Automatic ({{language}})",
       "automaticHint": "Follows your phone's language."
     },
     "format": {
-      "title": "Number and date format",
-      "automatic": "Automatic",
-      "hint": "Decimal separator, date order, and first day of the week."
+      "title": "Regional format",
+      "automatic": "Automatic ({{format}})",
+      "automaticHint": "Follows the phone's format.",
+      "firstWeekday": "Week starts on"
+    },
+    "market": {
+      "title": "Country where you drive",
+      "hint": "The currency and offer reading follow the country, because amounts come from the platforms' screens there. New countries are added when reading their platforms is ready.",
+      "confirmTitle": "Change country?",
+      "confirmMessage": "Saved amounts keep the same numbers, now in {{currency}}. The app does not convert currency.",
+      "confirmAction": "Change",
+      "learnMore": "Why does the currency follow the country?",
+      "soon": "More countries coming soon."
     },
     "units": {
       "title": "Units",
       "distance": "Distance",
       "volume": "Fuel",
       "consumption": "Fuel economy",
-      "firstWeekday": "Week starts on",
       "km": "Kilometers",
       "mi": "Miles",
       "L": "Liters",
       "gal": "Gallons",
       "kmPerLiter": "km/L",
       "litersPer100km": "L/100 km",
-      "mpg": "mpg",
-      "example": "Example: {{distance}}, {{money}}"
-    },
-    "market": {
-      "title": "Country where you drive",
-      "hint": "The currency and offer reading follow the country, because amounts come from the platforms' screens there. New countries are added when reading their platforms is ready.",
-      "currency": "Currency: {{currency}}",
-      "confirmTitle": "Change country?",
-      "confirmMessage": "Saved amounts keep the same numbers, now in {{currency}}. The app does not convert currency.",
-      "confirmAction": "Change"
+      "mpg": "mpg"
     }
   }
 }

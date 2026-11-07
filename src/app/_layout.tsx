@@ -26,6 +26,8 @@ const SCREENS = [
   { name: 'platforms', titleKey: 'screens.platforms' },
   { name: 'reminders', titleKey: 'screens.reminders' },
   { name: 'region', titleKey: 'screens.region' },
+  { name: 'region-language', titleKey: 'screens.regionLanguage' },
+  { name: 'region-format', titleKey: 'screens.regionFormat' },
   { name: 'backup', titleKey: 'screens.backup' },
   { name: 'report', titleKey: 'screens.report' },
   { name: 'privacy', titleKey: 'screens.privacy' },

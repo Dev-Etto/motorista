@@ -162,6 +162,10 @@ export const isIsoWeekday = (value: number) => weekdaySchema.safeParse(value).su
 export const FORMAT_LOCALE_CHOICES = ['pt-BR', 'pt-PT', 'en-US', 'en-GB', 'es-ES', 'es-MX', 'es-AR', 'es-CO', 'es-CL', 'es-PE'] as const;
 export const FIRST_WEEKDAY_CHOICES = [1, 7, 6] as const;
 
+export type FormatLocaleChoice = (typeof FORMAT_LOCALE_CHOICES)[number];
+
+export const isFormatLocaleChoice = (locale: string): locale is FormatLocaleChoice => FORMAT_LOCALE_CHOICES.some((choice) => choice === locale);
+
 export function formatLocaleChoices(current: string): string[] {
   return [...new Set([current, ...FORMAT_LOCALE_CHOICES])];
 }

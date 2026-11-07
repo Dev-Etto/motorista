@@ -264,38 +264,40 @@
     }
   },
   "region": {
+    "previewTitle": "Como os valores aparecem",
+    "languageAndFormat": "Idioma e formato",
     "language": {
       "title": "Idioma",
       "automatic": "Automático ({{language}})",
       "automaticHint": "Segue o idioma do celular."
     },
     "format": {
-      "title": "Formato de números e datas",
-      "automatic": "Automático",
-      "hint": "Separador de decimais, ordem da data e primeiro dia da semana."
+      "title": "Formato regional",
+      "automatic": "Automático ({{format}})",
+      "automaticHint": "Segue o formato do celular.",
+      "firstWeekday": "A semana começa em"
+    },
+    "market": {
+      "title": "País onde você dirige",
+      "hint": "A moeda e a leitura das ofertas seguem o país, porque os valores vêm das telas das plataformas de lá. Novos países entram quando a leitura das plataformas deles estiver pronta.",
+      "confirmTitle": "Trocar o país?",
+      "confirmMessage": "Os valores já salvos continuam com os mesmos números, agora em {{currency}}. O app não converte câmbio.",
+      "confirmAction": "Trocar",
+      "learnMore": "Por que a moeda segue o país?",
+      "soon": "Mais países em breve."
     },
     "units": {
       "title": "Unidades",
       "distance": "Distância",
       "volume": "Combustível",
       "consumption": "Consumo",
-      "firstWeekday": "A semana começa em",
       "km": "Quilômetros",
       "mi": "Milhas",
       "L": "Litros",
       "gal": "Galões",
-      "kmPerLiter": "km/l",
+      "kmPerLiter": "km/L",
       "litersPer100km": "L/100 km",
-      "mpg": "mpg",
-      "example": "Exemplo: {{distance}}, {{money}}"
-    },
-    "market": {
-      "title": "País onde você dirige",
-      "hint": "A moeda e a leitura das ofertas seguem o país, porque os valores vêm das telas das plataformas de lá. Novos países entram quando a leitura das plataformas deles estiver pronta.",
-      "currency": "Moeda: {{currency}}",
-      "confirmTitle": "Trocar o país?",
-      "confirmMessage": "Os valores já salvos continuam com os mesmos números, agora em {{currency}}. O app não converte câmbio.",
-      "confirmAction": "Trocar"
+      "mpg": "mpg"
     }
   }
 }
