@@ -53,5 +53,6 @@
     "noDescription": "Sin descripción",
     "tapToRemove": "Toca para quitar",
     "removeTitle": "¿Quitar la cotización?"
-  }
+  },
+  "costOf": "Costo de {{name}}: {{cost}}"
 }

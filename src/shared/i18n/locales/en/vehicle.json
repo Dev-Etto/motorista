@@ -98,7 +98,8 @@
     "emptyMessage": "Add your car or motorcycle so the app can work out your cost per distance.",
     "archiveConfirm": {
       "title": "Archive {{name}}?",
-      "message": "It leaves the choices, but past shifts keep its cost."
+      "message": "It leaves the choices, but past shifts keep its cost.",
+      "nextCurrent": "{{name}} becomes the current vehicle."
     },
     "currentRow": "Current vehicle",
     "switchInShift": {
@@ -106,6 +107,14 @@
       "message": "This shift stays with {{shift}}. {{next}} applies from the next shift.",
       "action": "Switch"
     },
-    "inShift": "This vehicle is in a shift in progress. To archive it, finish the shift."
+    "inShift": "This vehicle is in a shift in progress. To archive it, finish the shift.",
+    "validFromToday": "The saved cost applies from today. Earlier shifts keep their own cost.",
+    "archivedTitle": "Archived",
+    "reactivateHint": "Tap to reactivate",
+    "reactivate": "Reactivate",
+    "reactivateConfirm": {
+      "title": "Reactivate {{name}}?",
+      "message": "It returns to the shift and expense choices."
+    }
   }
 }

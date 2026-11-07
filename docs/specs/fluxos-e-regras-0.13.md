@@ -188,3 +188,38 @@ O texto do app passa no contraste AA, mas erros não são anunciados pelo leitor
 | F4.6.1 | O botão flutuante abre e fecha por clique acessível, com descrição e estado aberto ou fechado | Manual |
 | F4.6.2 | O fechar e o logo do painel têm descrição ou ficam fora do leitor de tela | Manual |
 | F4.6.3 | O cartão da oferta tem uma descrição resumida e é região viva `polite`. "▲▼" não são lidos | Kotlin, Manual |
+
+## Fase 5. Mais de um veículo, completo
+
+A fase 1 prendeu o veículo à jornada. Ainda faltam o Mês fechado com o custo fixo de todos os veículos usados, despesas ligadas ao veículo, o preço do combustível atualizado pelo abastecimento, um jeito de reativar um veículo arquivado e mostrar de qual veículo é o custo.
+
+### F5.1 Mês fechado
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F5.1.1 | O custo fixo do Mês fechado soma o custo fixo de cada veículo usado no mês, proporcional aos dias com jornada de cada um. Jornada sem veículo conta para o veículo atual. Sem jornada, vale o veículo atual | Jest |
+| F5.1.2 | Com mais de um veículo, a tela da Meta avisa que o plano usa o custo do veículo atual | Jest |
+
+### F5.2 Despesas por veículo
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F5.2.1 | Despesas guardam o veículo, numa migração nova (`expenses.vehicle_id`). Com mais de um veículo, o formulário mostra a escolha, com o veículo em uso marcado | Jest |
+| F5.2.2 | Abastecimento com valor e litros oferece atualizar o preço do combustível do veículo para o valor pago por litro, a partir de hoje | Jest |
+| F5.2.3 | Backups antigos restauram, com as despesas sem veículo | Jest |
+
+### F5.3 Arquivar e reativar
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F5.3.1 | Arquivar o veículo atual diz qual veículo passa a ser o atual | Jest |
+| F5.3.2 | A lista de veículos tem a seção "Arquivados", e tocar num deles oferece "Reativar" | Jest |
+
+### F5.4 Clareza do custo
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F5.4.1 | A tela do veículo diz que o custo salvo vale a partir de hoje e que as jornadas anteriores mantêm o custo delas | Manual |
+| F5.4.2 | Com mais de um veículo, a calculadora mostra de qual veículo é o custo usado | Jest |
+
+Fora do escopo: mínimos por corrida diferentes para cada veículo.

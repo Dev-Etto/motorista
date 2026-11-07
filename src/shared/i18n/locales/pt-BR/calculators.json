@@ -53,5 +53,6 @@
     "noDescription": "Sem descrição",
     "tapToRemove": "Toque para remover",
     "removeTitle": "Remover orçamento?"
-  }
+  },
+  "costOf": "Custo do {{name}}: {{cost}}"
 }

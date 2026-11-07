@@ -16,6 +16,19 @@ export function closedMonthVariableCents(shifts: ShiftFact[], currentVariablePer
   return shifts.reduce((total, shift) => total + (shift.km ?? 0) * (shift.variablePerKm || currentVariablePerKm), 0);
 }
 
+export function proratedFixedMonthly(shifts: { date: string; vehicleId: number | null }[], fixedOf: (vehicleId: number | null) => number): number {
+  const daysByVehicle = new Map<number | null, Set<string>>();
+  for (const shift of shifts) {
+    const days = daysByVehicle.get(shift.vehicleId) ?? new Set<string>();
+    days.add(shift.date);
+    daysByVehicle.set(shift.vehicleId, days);
+  }
+  const totalDays = [...daysByVehicle.values()].reduce((total, days) => total + days.size, 0);
+  if (totalDays === 0) return fixedOf(null);
+
+  return [...daysByVehicle.entries()].reduce((total, [vehicleId, days]) => total + fixedOf(vehicleId) * (days.size / totalDays), 0);
+}
+
 export function buildChart(period: ReportPeriod, start: string, end: string, shifts: ShiftFact[]): ChartPoint[] {
   const keyOf = (date: string) => (period === 'year' ? date.slice(MONTH_KEY.start, MONTH_KEY.end) : date);
   const totals = new Map<string, number>();

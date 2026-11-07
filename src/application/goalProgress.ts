@@ -6,6 +6,11 @@ import { computeGoalProgress, requiredGrossForGoal, suggestOfferTargets } from '
 import { summarizeShifts, withLooseExpenses } from '@domain/shift/summary';
 import { monthBounds, monthKey, weekdayOf, workDaysInMonth, workDaysLeft } from '@shared/utils/dates';
 
+export async function planVehicleName(): Promise<string | null> {
+  const [vehicles, current] = await Promise.all([vehicleRepository.list(), vehicleRepository.getCurrent()]);
+  return vehicles.length > 1 ? (current?.name ?? null) : null;
+}
+
 export async function plannedHoursPerDay(date: string): Promise<number | null> {
   return (await goalRepository.findInEffect(monthKey(date)))?.hoursPerDay ?? null;
 }

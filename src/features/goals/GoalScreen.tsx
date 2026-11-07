@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { loadGoalProgress } from '@application/goalProgress';
+import { loadGoalProgress, planVehicleName } from '@application/goalProgress';
 import { DEFAULT_HOURS_PER_DAY, DEFAULT_WORK_WEEKDAYS } from '@domain/goal/goal';
 import { OfferTargetsEditor, useOfferTargets } from '@features/copilot';
 import { useAsyncData } from '@shared/hooks/useAsyncData';
@@ -28,6 +28,7 @@ export default function GoalScreen() {
   const goal = useAsyncData(() => loadGoalProgress(date), [date]);
   const { data: progress, reload } = goal;
   const targets = useOfferTargets();
+  const { data: vehicleName } = useAsyncData(planVehicleName, []);
   const [desired, setDesired] = useState('');
   const [hoursPerDay, setHoursPerDay] = useState(String(DEFAULT_HOURS_PER_DAY));
   const [weekdays, setWeekdays] = useState<number[]>(DEFAULT_WORK_WEEKDAYS);
@@ -78,6 +79,7 @@ export default function GoalScreen() {
         {t('screen.title', { month: format.month(date) })}
       </AppText>
       <AppText tone="muted">{t('screen.intro')}</AppText>
+      {vehicleName ? <Notice tone="accent" message={t('screen.planVehicle', { name: vehicleName })} /> : null}
       {carriedFrom ? <Notice tone="accent" message={t('screen.carried', { month: format.month(`${carriedFrom}-01`) })} /> : null}
       <Card title={t('screen.goalTitle')}>
         <MoneyField label={t('screen.desired')} value={desired} onChangeText={setDesired} error={errors.desired ? t('screen.errors.desired') : null} />

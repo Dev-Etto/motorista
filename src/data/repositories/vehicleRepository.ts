@@ -39,6 +39,14 @@ export function createVehicleRepository(connection: () => SqlExecutor = getDb) {
       return connection().getAllAsync<Vehicle>(`${VEHICLE_COLUMNS} WHERE active = 1 ORDER BY id`);
     },
 
+    listArchived(): Promise<Vehicle[]> {
+      return connection().getAllAsync<Vehicle>(`${VEHICLE_COLUMNS} WHERE active = 0 ORDER BY id`);
+    },
+
+    async reactivate(id: number): Promise<void> {
+      await connection().runAsync('UPDATE vehicles SET active = 1 WHERE id = ?', id);
+    },
+
     find(id: number): Promise<Vehicle | null> {
       return connection().getFirstAsync<Vehicle>(`${VEHICLE_COLUMNS} WHERE id = ?`, id);
     },

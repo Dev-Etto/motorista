@@ -98,7 +98,8 @@
     "emptyMessage": "Registra tu auto o moto para que la app calcule el costo por distancia.",
     "archiveConfirm": {
       "title": "¿Archivar {{name}}?",
-      "message": "Sale de las opciones, pero las jornadas anteriores mantienen su costo."
+      "message": "Sale de las opciones, pero las jornadas anteriores mantienen su costo.",
+      "nextCurrent": "{{name}} pasa a ser el vehículo actual."
     },
     "currentRow": "Vehículo actual",
     "switchInShift": {
@@ -106,6 +107,14 @@
       "message": "Esta jornada sigue con {{shift}}. {{next}} vale a partir de la próxima jornada.",
       "action": "Cambiar"
     },
-    "inShift": "Este vehículo está en una jornada en curso. Para archivarlo, termina la jornada."
+    "inShift": "Este vehículo está en una jornada en curso. Para archivarlo, termina la jornada.",
+    "validFromToday": "El costo guardado vale desde hoy. Las jornadas anteriores mantienen su costo.",
+    "archivedTitle": "Archivados",
+    "reactivateHint": "Toca para reactivar",
+    "reactivate": "Reactivar",
+    "reactivateConfirm": {
+      "title": "¿Reactivar {{name}}?",
+      "message": "Vuelve a las opciones de jornada y gasto."
+    }
   }
 }
