@@ -40,12 +40,27 @@ export default function RemindersScreen() {
 
   const failure = error ?? saving.error;
 
+  const completeAndOfferNext = async (reminder: Reminder) => {
+    await complete(reminder);
+    const repeatKm = reminder.repeatKm;
+    if (!repeatKm) return;
+
+    showDialog({
+      title: t('reminders.next.title'),
+      message: t('reminders.next.message', { title: reminder.title, distance: format.distance(repeatKm) }),
+      actions: [
+        { label: t('common:actions.notNow'), tone: 'secondary' },
+        { label: t('reminders.next.action'), onPress: () => add(reminder.title, null, repeatKm).then(() => undefined) },
+      ],
+    });
+  };
+
   const chooseAction = (reminder: Reminder) => {
     showDialog({
       title: reminder.title,
       message: describeDue(reminder),
       actions: [
-        { label: t('common:actions.done'), onPress: () => complete(reminder) },
+        { label: t('common:actions.done'), onPress: () => completeAndOfferNext(reminder) },
         { label: t('common:actions.delete'), tone: 'danger', onPress: () => remove(reminder) },
         { label: t('common:actions.cancel'), tone: 'secondary' },
       ],

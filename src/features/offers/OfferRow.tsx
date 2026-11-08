@@ -1,13 +1,15 @@
 import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { OfferStatus, statusOf } from '@domain/offer/offerLog';
-import { OfferHistoryEntry } from '@modules/copilot';
+import { copilot, OfferHistoryEntry } from '@modules/copilot';
 import { Formatter, useFormat } from '@shared/i18n/format';
 import { spacing, useTheme } from '@shared/theme/theme';
+import { showDialog } from '@shared/ui/dialog';
 import { PlatformBadge } from '@shared/ui/PlatformBadge';
 import { AppText } from '@shared/ui/primitives';
 import { ScoreBadge } from '@shared/ui/ScoreBadge';
+import { reportError } from '@shared/utils/reportError';
 
 const REASON_SEPARATOR = ' · ';
 const ESTIMATE_MARK = '~';
@@ -36,7 +38,7 @@ function describeRates(entry: OfferHistoryEntry, format: Formatter): string {
   return `${perDistance} • ${mark}${format.perHour(entry.perHourCents)}`;
 }
 
-export function OfferRow({ entry }: { entry: OfferHistoryEntry }) {
+export function OfferRow({ entry, onCorrected }: { entry: OfferHistoryEntry; onCorrected?: () => void }) {
   const { t } = useTranslation('offers');
   const colors = useTheme();
   const format = useFormat();
@@ -52,8 +54,34 @@ export function OfferRow({ entry }: { entry: OfferHistoryEntry }) {
     .filter(Boolean)
     .join(', ');
 
+  const correct = (status: 'accepted' | 'declined') => {
+    copilot
+      .setOfferStatus(entry.timestamp, status)
+      .then(() => onCorrected?.())
+      .catch(reportError);
+  };
+
+  const chooseOutcome = () => {
+    showDialog({
+      title: t('correct.title'),
+      message: t('correct.message'),
+      actions: [
+        { label: t('correct.accepted'), onPress: () => correct('accepted') },
+        { label: t('correct.declined'), tone: 'secondary', onPress: () => correct('declined') },
+        { label: t('correct.cancel'), tone: 'secondary' },
+      ],
+    });
+  };
+
   return (
-    <View accessible accessibilityLabel={spoken} style={[styles.row, { borderBottomColor: colors.border }]}>
+    <Pressable
+      accessible
+      accessibilityRole={onCorrected ? 'button' : undefined}
+      accessibilityLabel={spoken}
+      accessibilityHint={onCorrected ? t('correct.hint') : undefined}
+      onPress={onCorrected ? chooseOutcome : undefined}
+      style={[styles.row, { borderBottomColor: colors.border }]}
+    >
       <View style={styles.header}>
         <View>
           <PlatformBadge name={entry.source} />
@@ -75,7 +103,7 @@ export function OfferRow({ entry }: { entry: OfferHistoryEntry }) {
       <AppText bold tone={statusOf(entry) === 'accepted' ? 'positive' : 'muted'}>
         {describeStatus(entry, t, format)}
       </AppText>
-    </View>
+    </Pressable>
   );
 }
 

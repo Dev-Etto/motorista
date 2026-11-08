@@ -36,6 +36,7 @@ interface CopilotNativeModule {
   clearHistory(): void;
   getOffers(from: number, to: number): Promise<string>;
   getRecentOffers(limit: number): Promise<string>;
+  setOfferStatus(timestamp: number, status: string): Promise<void>;
   openAccessibilitySettings(): void;
   openAppSettings(): void;
   openOverlaySettings(): void;
@@ -76,6 +77,7 @@ export const copilot = {
   getOffers: async (from: number, to: number) => parseHistory(await requireModule().getOffers(from, Math.min(to, Number.MAX_SAFE_INTEGER))),
   getRecentOffers: async (limit: number) => parseHistory(await requireModule().getRecentOffers(limit)),
   clearHistory: () => requireModule().clearHistory(),
+  setOfferStatus: (timestamp: number, status: 'accepted' | 'declined') => requireModule().setOfferStatus(timestamp, status),
   exportState: async () => ({ preferences: requireModule().getPreferences(), history: await requireModule().getHistory() }),
   importState: async (state: { preferences: string; history: string }) => {
     requireModule().setPreferences(state.preferences);

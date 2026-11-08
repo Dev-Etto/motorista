@@ -9,9 +9,10 @@ import { isSameMarket } from '@domain/regional/regional';
 import { copilot } from '@modules/copilot';
 import { useAsyncData } from '@shared/hooks/useAsyncData';
 import { useSubmit } from '@shared/hooks/useSubmit';
+import { useFormat } from '@shared/i18n/format';
 import { shareTextFile } from '@shared/platform/share';
 import { confirmAction, showDialog } from '@shared/ui/dialog';
-import { today } from '@shared/utils/dates';
+import { isoFromMillis, today } from '@shared/utils/dates';
 import { applyRestoredState } from './afterRestore';
 
 const SAFETY_COPY_NAME = 'antes-de-restaurar.json';
@@ -33,6 +34,7 @@ async function fullBackup(): Promise<BackupFile> {
 
 export function useBackup() {
   const { t } = useTranslation(['settings', 'common']);
+  const format = useFormat();
   const [message, setMessage] = useState<{ tone: 'positive' | 'negative'; text: string } | null>(null);
   const [canUndo, setCanUndo] = useState(() => safetyCopy().exists === true);
   const lastBackup = useAsyncData(() => settingsRepository.get(SETTING_KEYS.lastBackupAt));
@@ -84,12 +86,19 @@ export function useBackup() {
       if (!parsed.ok) return setMessage({ tone: 'negative', text: t(`backup.invalid.${parsed.error}`) });
 
       const market = backupMarket(parsed.backup);
-      if (market === null || isSameMarket(market, regionalStore.current().market)) return await replaceData(parsed.backup, 'restored');
+      const otherMarket = market !== null && !isSameMarket(market, regionalStore.current().market);
+      const { tables, exportedAt } = parsed.backup;
+      const preview = t('backup.preview', {
+        date: format.date(isoFromMillis(Date.parse(exportedAt))),
+        shifts: tables.shifts.length,
+        vehicles: tables.vehicles.length,
+      });
+      const warning = otherMarket ? t('backup.marketConfirm.message', { country: t(`common:marketName.${market}`) }) : t('backup.restoreConfirm.message');
 
       confirmAction({
-        title: t('backup.marketConfirm.title'),
-        message: t('backup.marketConfirm.message', { country: t(`common:marketName.${market}`) }),
-        actionLabel: t('backup.marketConfirm.action'),
+        title: otherMarket ? t('backup.marketConfirm.title') : t('backup.restoreConfirm.title'),
+        message: `${preview}\n\n${warning}`,
+        actionLabel: otherMarket ? t('backup.marketConfirm.action') : t('backup.restoreConfirm.action'),
         onConfirm: () => replaceData(parsed.backup, 'restored').catch(() => setMessage({ tone: 'negative', text: t('backup.restoreFailed') })),
       });
     } catch {

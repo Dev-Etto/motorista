@@ -1,7 +1,9 @@
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { StyleSheet, View } from 'react-native';
 import { useFormat } from '@shared/i18n/format';
+import { spacing } from '@shared/theme/theme';
 import { AppText, Screen, Segmented } from '@shared/ui/primitives';
 import { CostDependencyNotice } from './CostDependencyNotice';
 import { OfferCalculator } from './OfferCalculator';
@@ -29,7 +31,17 @@ export default function CalculatorScreen() {
           {t('costOf', { name: vehicleName, cost: format.perDistance(costPerKm) })}
         </AppText>
       ) : null}
-      {tab === 'offer' ? <OfferCalculator costPerKm={costPerKm} /> : <QuoteCalculator costPerKm={costPerKm} />}
+      <View style={tab === 'offer' ? styles.visible : styles.hidden}>
+        <OfferCalculator costPerKm={costPerKm} />
+      </View>
+      <View style={tab === 'quote' ? styles.visible : styles.hidden}>
+        <QuoteCalculator costPerKm={costPerKm} />
+      </View>
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  visible: { gap: spacing.lg },
+  hidden: { display: 'none' },
+});

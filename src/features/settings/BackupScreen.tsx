@@ -12,15 +12,6 @@ export default function BackupScreen() {
   const backup = useBackup();
   const lastLabel = backup.lastBackupAt ? format.date(isoFromMillis(Number(backup.lastBackupAt))) : t('backup.never');
 
-  const confirmRestore = () => {
-    confirmAction({
-      title: t('backup.restoreConfirm.title'),
-      message: t('backup.restoreConfirm.message'),
-      actionLabel: t('backup.restoreConfirm.action'),
-      onConfirm: backup.importBackup,
-    });
-  };
-
   const confirmUndo = () => {
     confirmAction({
       title: t('backup.undoConfirm.title'),
@@ -37,7 +28,7 @@ export default function BackupScreen() {
       <Card title={t('backup.cardTitle')}>
         <ListRow title={t('backup.lastBackup')} value={lastLabel} />
         <Button label={t('backup.exportButton')} busy={backup.busy} onPress={backup.exportBackup} />
-        <Button label={t('backup.restoreButton')} variant="secondary" onPress={confirmRestore} />
+        <Button label={t('backup.restoreButton')} variant="secondary" onPress={backup.importBackup} />
         {backup.canUndo ? <Button label={t('backup.undoButton')} variant="secondary" onPress={confirmUndo} /> : null}
       </Card>
       {backup.message ? <Notice tone={backup.message.tone} message={backup.message.text} /> : null}

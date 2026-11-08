@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Share } from 'react-native';
 import { computeQuote } from '@domain/quote/quote';
@@ -6,10 +6,11 @@ import { useFormFields } from '@shared/hooks/useFormFields';
 import { useSubmit } from '@shared/hooks/useSubmit';
 import { Formatter, useFormat } from '@shared/i18n/format';
 import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
-import { confirmAction } from '@shared/ui/dialog';
+import { confirmAction, showDialog } from '@shared/ui/dialog';
 import { IntegerField, MoneyField, NumberField, TextField } from '@shared/ui/fields';
 import { AppText, Button, ButtonRow, Card, Collapsible, ListRow, Notice } from '@shared/ui/primitives';
 import { profitTone } from '@shared/utils/format';
+import { useMinimumPerHour } from './useMinimumPerHour';
 import { useSavedQuotes } from './useSavedQuotes';
 
 const DEFAULT_PROFIT_PER_HOUR_CENTS = 3000;
@@ -29,7 +30,14 @@ const initialFields = (format: Formatter) => ({
 export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
   const { t } = useTranslation(['calculators', 'common']);
   const format = useFormat();
-  const { bind, values } = useFormFields(initialFields(format));
+  const { bind, values, setValues } = useFormFields(initialFields(format));
+  const minimumPerHour = useMinimumPerHour();
+  const profitPerHourTouched = useRef(false);
+
+  useEffect(() => {
+    if (!minimumPerHour || profitPerHourTouched.current) return;
+    setValues((current) => ({ ...current, profitPerHour: format.moneyInput(minimumPerHour) }));
+  }, [minimumPerHour, format, setValues]);
   const { state: saved, save, remove: removeQuote } = useSavedQuotes();
 
   const quote = useMemo(
@@ -62,6 +70,31 @@ export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
 
   const share = () => Share.share({ message: shareMessage() });
 
+  const profitPerHourBinding = bind('profitPerHour');
+  const profitPerHourField = {
+    value: profitPerHourBinding.value,
+    onChangeText: (text: string) => {
+      profitPerHourTouched.current = true;
+      profitPerHourBinding.onChangeText(text);
+    },
+  };
+
+  const open = (fields: Record<string, string>) => {
+    profitPerHourTouched.current = true;
+    setValues((current) => ({ ...current, ...fields }));
+  };
+
+  const chooseSaved = (item: { id: number; label: string | null; fields: Record<string, string> }) => {
+    showDialog({
+      title: item.label ?? t('quote.noDescription'),
+      actions: [
+        { label: t('quote.open'), onPress: () => open(item.fields) },
+        { label: t('common:actions.remove'), tone: 'danger', onPress: () => remove(item.id) },
+        { label: t('common:actions.cancel'), tone: 'secondary' },
+      ],
+    });
+  };
+
   const remove = (id: number) => {
     confirmAction({
       title: t('quote.removeTitle'),
@@ -83,7 +116,7 @@ export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
       </Card>
       <Collapsible title={t('quote.moreOptions')}>
         <NumberField label={t('quote.return')} suffix={format.distanceUnit} hint={t('quote.returnHint')} {...bind('kmReturn')} />
-        <MoneyField label={t('quote.profitPerHour')} hint={t('quote.profitPerHourHint')} {...bind('profitPerHour')} />
+        <MoneyField label={t('quote.profitPerHour')} hint={t('quote.profitPerHourHint')} {...profitPerHourField} />
         <MoneyField label={t('quote.toll')} {...bind('toll')} />
         <MoneyField label={t('quote.extras')} {...bind('extras')} />
         <MoneyField label={t('quote.minimum')} hint={t('quote.minimumHint')} {...bind('minimum')} />
@@ -122,9 +155,9 @@ export function QuoteCalculator({ costPerKm }: { costPerKm: number }) {
                 <ListRow
                   key={item.id}
                   title={item.label ?? t('quote.noDescription')}
-                  subtitle={t('quote.tapToRemove')}
+                  subtitle={t('quote.tapToOpen')}
                   value={format.money(item.priceCents)}
-                  onPress={() => remove(item.id)}
+                  onPress={() => chooseSaved(item)}
                 />
               ))}
             </Card>

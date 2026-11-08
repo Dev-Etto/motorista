@@ -223,3 +223,21 @@ A fase 1 prendeu o veículo à jornada. Ainda faltam o Mês fechado com o custo 
 | F5.4.2 | Com mais de um veículo, a calculadora mostra de qual veículo é o custo usado | Jest |
 
 Fora do escopo: mínimos por corrida diferentes para cada veículo.
+
+## Fase 6. Refinos
+
+Ajustes de fluxo que evitam perda de dados, retrabalho e ações sem retorno.
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F6.1 | Relatórios e Jornadas não avançam para depois do período atual. O botão de próximo fica desativado | Jest |
+| F6.2 | Restaurar escolhe o arquivo primeiro e mostra uma prévia (data do backup, jornadas e veículos) antes de pedir a confirmação | Jest |
+| F6.3 | Concluir um lembrete por km oferece criar o próximo com o mesmo intervalo | Jest, Manual |
+| F6.4 | Tocar num orçamento salvo oferece Abrir, que carrega os valores na calculadora, e Remover | Jest |
+| F6.5 | O lucro por hora do orçamento começa pelo mínimo por hora das ofertas | Jest |
+| F6.6 | Trocar entre "Avaliar oferta" e "Corrida particular" mantém o que foi digitado | Manual |
+| F6.7 | Tocar numa oferta do histórico permite corrigir o resultado: aceita ou não aceita | Jest |
+| F6.8 | Formulários de jornada e de lançamento avisam alterações não salvas ao voltar | Jest |
+| F6.9 | O estado vazio usa o ícone da própria área no lugar da ilustração genérica | Manual |
+| F6.10 | O odômetro inicial de uma jornada nova vem do último odômetro final registrado | Jest |
+| F6.11 | Desligar uma plataforma lida pelo Copiloto avisa que a leitura das ofertas dela para | Jest |

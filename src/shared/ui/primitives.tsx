@@ -298,10 +298,24 @@ export function ProgressBar({ progress }: { progress: number }) {
   );
 }
 
-export function EmptyState({ title, message, action, illustration }: { title: string; message: string; action?: ReactNode; illustration?: IllustrationName }) {
+interface EmptyStateProps {
+  title: string;
+  message: string;
+  action?: ReactNode;
+  illustration?: IllustrationName;
+  icon?: AppIconName;
+}
+
+export function EmptyState({ title, message, action, illustration, icon }: EmptyStateProps) {
+  const colors = useTheme();
   return (
     <Card>
       {illustration ? <Illustration name={illustration} height={100} /> : null}
+      {icon ? (
+        <View style={[styles.emptyIcon, { backgroundColor: colors.surfaceAlt }]}>
+          <AppIcon name={icon} color={colors.textMuted} size={28} />
+        </View>
+      ) : null}
       <AppText variant="subtitle" bold accessibilityRole="header">
         {title}
       </AppText>
@@ -395,5 +409,6 @@ const styles = StyleSheet.create({
   dots: { flexDirection: 'row', justifyContent: 'center', gap: spacing.sm },
   dot: { width: 8, height: 8, borderRadius: radius.pill },
   dotActive: { width: 24 },
+  emptyIcon: { width: 56, height: 56, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
   notice: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm, borderRadius: radius.md, padding: spacing.md },
 });

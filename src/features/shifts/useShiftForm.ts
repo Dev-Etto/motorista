@@ -1,5 +1,5 @@
 import type { TFunction } from 'i18next';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { vehicleInUse } from '@application/vehicleInUse';
 import { platformRepository } from '@data/repositories/platformRepository';
@@ -39,6 +39,7 @@ async function loadFormData(shiftId: number | undefined) {
     vehicleInUse(),
     shiftId ? shiftRepository.findById(shiftId) : Promise.resolve(null),
   ]);
+  const lastOdometer = shiftId ? null : await shiftRepository.lastOdometerEnd(current?.id ?? null);
   const inactive = (existing?.earnings ?? []).filter((earning) => !platforms.some((platform) => platform.id === earning.platformId));
   const shiftVehicle = existing?.shift.vehicleId ? await vehicleRepository.find(existing.shift.vehicleId) : null;
   const archived = shiftVehicle && !vehicles.some((vehicle) => vehicle.id === shiftVehicle.id) ? [shiftVehicle] : [];
@@ -46,6 +47,7 @@ async function loadFormData(shiftId: number | undefined) {
     platforms: [...platforms, ...inactive.map((earning) => ({ id: earning.platformId, name: earning.name }))],
     vehicles: [...vehicles, ...archived],
     currentVehicleId: current?.id ?? null,
+    lastOdometer,
     existing,
   };
 }
@@ -76,6 +78,7 @@ export function useShiftForm(shiftId?: number) {
   const [earnings, setEarnings] = useState<Record<number, string>>({});
   const [expenses, setExpenses] = useState<Partial<Record<ExpenseCategory, string>>>({});
   const [problem, setProblem] = useState<ShiftFormError | null>(null);
+  const [touched, setTouched] = useState(false);
 
   const [chosenVehicleId, setVehicleId] = useState<number | null>(null);
   const { data } = useAsyncData(() => loadFormData(shiftId), [shiftId]);
@@ -94,6 +97,22 @@ export function useShiftForm(shiftId?: number) {
     },
     shiftId ?? 'new',
   );
+
+  useEffect(() => {
+    if (!data?.lastOdometer) return;
+    setFields((current) => (current.odometerStart ? current : { ...current, odometerStart: format.distanceInput(data.lastOdometer ?? 0, 0) }));
+  }, [data?.lastOdometer, format, setFields]);
+
+  const touching =
+    <Args extends unknown[]>(action: (...args: Args) => void) =>
+    (...args: Args) => {
+      setTouched(true);
+      action(...args);
+    };
+  const touchedBind = (key: keyof typeof EMPTY_FIELDS) => {
+    const binding = bind(key);
+    return { ...binding, onChangeText: touching(binding.onChangeText) };
+  };
 
   const km = kmFromEntry({
     mode: kmMode,
@@ -182,18 +201,19 @@ export function useShiftForm(shiftId?: number) {
     platforms: data?.platforms ?? [],
     vehicles: data?.vehicles ?? [],
     vehicleId,
-    setVehicleId,
+    setVehicleId: touching(setVehicleId),
     date,
-    setDate,
-    bind,
-    kmField,
+    setDate: touching(setDate),
+    bind: touchedBind,
+    kmField: { ...kmField, onChangeText: touching(kmField.onChangeText) },
     kmMode,
-    setKmMode,
+    setKmMode: touching(setKmMode),
     kmMeasured,
     earnings,
-    setEarning: (platformId: number, text: string) => setEarnings((current) => ({ ...current, [platformId]: text })),
+    setEarning: touching((platformId: number, text: string) => setEarnings((current) => ({ ...current, [platformId]: text }))),
     expenses,
-    setExpense: (category: ExpenseCategory, text: string) => setExpenses((current) => ({ ...current, [category]: text })),
+    setExpense: touching((category: ExpenseCategory, text: string) => setExpenses((current) => ({ ...current, [category]: text }))),
+    dirty: touched,
     preview,
     error: problem && !fieldOfError(problem) ? describeFormError(problem, t, format) : null,
     fieldError: (field: ShiftFormField) => (problem && fieldOfError(problem) === field ? describeFormError(problem, t, format) : null),

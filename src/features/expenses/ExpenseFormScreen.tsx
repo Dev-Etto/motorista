@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { fuelPriceSuggestion, updateFuelPrice } from '@application/vehicles';
 import { countsAgainstProfit } from '@domain/expense/expense';
 import { useSubmit } from '@shared/hooks/useSubmit';
+import { useUnsavedChangesGuard } from '@shared/hooks/useUnsavedChangesGuard';
 import { useFormat } from '@shared/i18n/format';
 import { DateField } from '@shared/ui/DateField';
 import { confirmAction, showDialog } from '@shared/ui/dialog';
@@ -40,6 +41,9 @@ export default function ExpenseFormScreen() {
   const [chosenVehicleId, setVehicleId] = useState<number | null>(null);
   const { vehicles, inUseId } = useExpenseVehicles();
   const vehicleId = chosenVehicleId ?? inUseId;
+  const snapshot = JSON.stringify([category, date, value, liters, odometer, note]);
+  const [baseline, setBaseline] = useState<string | null>(expenseId ? null : snapshot);
+  const allowLeave = useUnsavedChangesGuard(baseline !== null && snapshot !== baseline);
 
   useEffect(() => {
     if (!expenseId) return;
@@ -52,6 +56,16 @@ export default function ExpenseFormScreen() {
       setLiters(expense.liters === null ? '' : format.volumeInput(expense.liters));
       setOdometer(expense.odometer === null ? '' : format.distanceInput(expense.odometer, 0));
       setNote(expense.note ?? '');
+      setBaseline(
+        JSON.stringify([
+          categoryOf(expense.category),
+          expense.date,
+          format.moneyInput(expense.cents),
+          expense.liters === null ? '' : format.volumeInput(expense.liters),
+          expense.odometer === null ? '' : format.distanceInput(expense.odometer, 0),
+          expense.note ?? '',
+        ]),
+      );
       if (expense.vehicle_id) setVehicleId(expense.vehicle_id);
     }, reportError);
   }, [expenseId, format]);
@@ -65,6 +79,7 @@ export default function ExpenseFormScreen() {
       actionLabel: t('common:actions.delete'),
       onConfirm: async () => {
         await removeExpense(expenseId);
+        allowLeave();
         router.back();
       },
     });
@@ -94,6 +109,7 @@ export default function ExpenseFormScreen() {
       expenseId,
     );
     const suggestion = category === 'fuel' ? await fuelPriceSuggestion(vehicleId, cents, savedLiters) : null;
+    allowLeave();
     router.back();
     if (!suggestion) return;
 

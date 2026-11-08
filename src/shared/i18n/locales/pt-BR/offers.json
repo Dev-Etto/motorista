@@ -91,5 +91,13 @@
     "evaluateSubtitle": "Digite valor, distância e tempo",
     "quote": "Orçamento de corrida particular",
     "quoteSubtitle": "Calcule o preço e compartilhe"
+  },
+  "correct": {
+    "title": "Corrigir o resultado",
+    "message": "Marque o que aconteceu com esta oferta. Isso ajusta o faturamento estimado.",
+    "accepted": "Aceitei",
+    "declined": "Não aceitei",
+    "cancel": "Cancelar",
+    "hint": "Corrige se a oferta foi aceita"
   }
 }

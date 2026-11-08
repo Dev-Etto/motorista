@@ -63,7 +63,7 @@ export default function ShiftsScreen() {
         {() => (
           <>
             {shifts.length === 0 ? (
-              <EmptyState illustration="empty" title={selectedDate ? t('list.emptyDay') : t('list.emptyMonth')} message={t('list.emptyMessage')} />
+              <EmptyState icon="shifts" title={selectedDate ? t('list.emptyDay') : t('list.emptyMonth')} message={t('list.emptyMessage')} />
             ) : (
               <Card title={selectedDate ? t('list.dayTitle', { date: format.date(selectedDate) }) : t('list.title')}>
                 {shifts.map((shift) => {

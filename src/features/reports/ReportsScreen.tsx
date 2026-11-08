@@ -15,7 +15,7 @@ import { today } from '@shared/utils/dates';
 import { profitTone } from '@shared/utils/format';
 import { ChartDataList } from './ChartDataList';
 import { shareReportCsv, shareReportPdf } from './reportExport';
-import { periodLabel, periodNoun, stepPeriod } from './reportPeriod';
+import { periodLabel, periodNoun, startsAfter, stepPeriod } from './reportPeriod';
 import { useReport } from './useReport';
 
 const PERIODS: ReportPeriod[] = ['week', 'month', 'year'];
@@ -47,12 +47,13 @@ export default function ReportsScreen() {
         period={period}
         onPrevious={() => setDate(stepPeriod(period, date, -1))}
         onNext={() => setDate(stepPeriod(period, date, 1))}
+        nextDisabled={startsAfter(period, date, format.profile.firstWeekday, today())}
       />
       <AsyncBoundary state={report}>
         {(data) => (
           <>
             {data.shifts.length === 0 ? (
-              <EmptyState illustration="empty" title={t('emptyTitle')} message={t('emptyMessage')} />
+              <EmptyState icon="reports" title={t('emptyTitle')} message={t('emptyMessage')} />
             ) : (
               <>
                 <ProfitCard title={t('periodProfit')} summary={data.summary} />

@@ -178,6 +178,9 @@ export const MIGRATIONS: string[] = [
   `
   ALTER TABLE expenses ADD COLUMN vehicle_id INTEGER REFERENCES vehicles(id) ON DELETE SET NULL;
   `,
+  `
+  ALTER TABLE reminders ADD COLUMN repeat_km REAL;
+  `,
 ];
 
 export const SCHEMA_VERSION = MIGRATIONS.length;

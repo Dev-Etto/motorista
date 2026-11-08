@@ -123,7 +123,8 @@
       "message": "The backup only counts as done if the file was saved, for example to Google Drive or the phone's files.",
       "yes": "I saved it",
       "no": "I didn't"
-    }
+    },
+    "preview": "Backup from {{date}}. Shifts: {{shifts}}. Vehicles: {{vehicles}}."
   },
   "dailyReminder": {
     "title": "End of day",
@@ -158,6 +159,11 @@
       "private": "Rides arranged directly with the passenger",
       "other": "Another ride or delivery app. No Copilot",
       "legacy": "Once off, it leaves the list. Past shifts keep the name"
+    },
+    "turnOff": {
+      "title": "Turn off {{name}}?",
+      "message": "The earnings field disappears from shifts, and the Copilot stops reading {{name}} offers.",
+      "action": "Turn off"
     }
   },
   "privacy": {
@@ -247,6 +253,11 @@
       "remaining": "{{distance}} to go",
       "reached": "it's time",
       "dateOrDistance": "{{date}} or {{distance}}"
+    },
+    "next": {
+      "title": "Create the next one?",
+      "message": "Remind about \"{{title}}\" again in {{distance}}.",
+      "action": "Create"
     }
   },
   "report": {

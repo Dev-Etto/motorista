@@ -133,5 +133,11 @@
     "es-CO": "Español (Colombia)",
     "es-CL": "Español (Chile)",
     "es-PE": "Español (Perú)"
+  },
+  "unsavedChanges": {
+    "title": "¿Descartar los cambios?",
+    "message": "Lo que escribiste todavía no se guardó.",
+    "keep": "Seguir editando",
+    "discard": "Descartar"
   }
 }

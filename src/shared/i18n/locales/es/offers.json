@@ -91,5 +91,13 @@
     "evaluateSubtitle": "Escribe valor, distancia y tiempo",
     "quote": "Presupuesto de viaje particular",
     "quoteSubtitle": "Calcula el precio y compártelo"
+  },
+  "correct": {
+    "title": "Corregir el resultado",
+    "message": "Marca lo que pasó con esta oferta. Esto ajusta la facturación estimada.",
+    "accepted": "La acepté",
+    "declined": "No la acepté",
+    "cancel": "Cancelar",
+    "hint": "Corrige si la oferta fue aceptada"
   }
 }

@@ -18,6 +18,10 @@ export function stepPeriod(period: ReportPeriod, date: string, direction: 1 | -1
   return addMonths(date, (period === 'month' ? 1 : MONTHS_PER_YEAR) * direction);
 }
 
+export function startsAfter(period: ReportPeriod, date: string, firstWeekday: number, todayIso: string): boolean {
+  return periodBounds(period, stepPeriod(period, date, 1), firstWeekday).start > todayIso;
+}
+
 export function periodLabel(period: ReportPeriod, date: string, format: Formatter, t: TFunction<'reports'>): string {
   if (period === 'month') return format.month(date);
   if (period === 'year') return date.slice(0, 4);

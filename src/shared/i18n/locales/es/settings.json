@@ -123,7 +123,8 @@
       "message": "La copia solo cuenta como hecha si el archivo se guardó, por ejemplo en Google Drive o en los archivos del teléfono.",
       "yes": "Lo guardé",
       "no": "No lo guardé"
-    }
+    },
+    "preview": "Copia del {{date}}. Jornadas: {{shifts}}. Vehículos: {{vehicles}}."
   },
   "dailyReminder": {
     "title": "Fin del día",
@@ -158,6 +159,11 @@
       "private": "Viajes acordados directamente con el pasajero",
       "other": "Otra app de viajes o entregas. Sin Copiloto",
       "legacy": "Al desactivarla, sale de la lista. Las jornadas anteriores mantienen el nombre"
+    },
+    "turnOff": {
+      "title": "¿Apagar {{name}}?",
+      "message": "El campo de ganancia sale de las jornadas y el Copiloto deja de leer las ofertas de {{name}}.",
+      "action": "Apagar"
     }
   },
   "privacy": {
@@ -247,6 +253,11 @@
       "remaining": "faltan {{distance}}",
       "reached": "ya llegó el momento",
       "dateOrDistance": "{{date}} o {{distance}}"
+    },
+    "next": {
+      "title": "¿Crear el próximo?",
+      "message": "Recordar \"{{title}}\" de nuevo dentro de {{distance}}.",
+      "action": "Crear"
     }
   },
   "report": {

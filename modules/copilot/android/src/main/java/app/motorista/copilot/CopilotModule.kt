@@ -54,6 +54,10 @@ class CopilotModule : Module() {
     AsyncFunction("getRecentOffers") { limit: Int -> CopilotStore.get(context).recentOffers(limit) }
     AsyncFunction("setHistory") { json: String -> CopilotStore.get(context).replaceHistory(json) }
     Function("clearHistory") { CopilotStore.get(context).clearHistory() }
+    AsyncFunction("setOfferStatus") { timestamp: Long, status: String ->
+      val outcome = OfferStatus.entries.firstOrNull { it.id == status } ?: return@AsyncFunction
+      CopilotStore.get(context).markOutcome(timestamp, OfferOutcome(outcome))
+    }
 
     Function("openAccessibilitySettings") { openIntent(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)) }
     Function("openAppSettings") {

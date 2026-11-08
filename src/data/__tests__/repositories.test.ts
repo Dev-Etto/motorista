@@ -377,6 +377,21 @@ describe('metas, lembretes e ajustes', () => {
     expect(await goalRepository.findInEffect('2026-08')).toBeNull();
   });
 
+  it('lembrete por km guarda o intervalo para repetir', async () => {
+    await reminderRepository.add({ title: 'Óleo', dueDate: null, dueKm: 15000, notificationId: null, vehicleId: null, repeatKm: 5000 });
+    const [reminder] = await reminderRepository.list();
+    expect(reminder?.repeatKm).toBe(5000);
+  });
+
+  it('o último odômetro final serve de início da próxima jornada', async () => {
+    const car = await createVehicle();
+    await shiftRepository.save(shiftInput({ vehicleId: car, date: '2026-11-03', odometerEnd: 45200 }));
+    await shiftRepository.save(shiftInput({ vehicleId: car, date: '2026-11-04', odometerEnd: 45380 }));
+
+    expect(await shiftRepository.lastOdometerEnd(car)).toBe(45380);
+    expect(await shiftRepository.lastOdometerEnd(null)).toBe(45380);
+  });
+
   it('guarda o aviso do lembrete e marca como feito', async () => {
     await reminderRepository.add({ title: 'Óleo', dueDate: '2026-12-01', dueKm: null, notificationId: null, vehicleId: null });
     const [reminder] = await reminderRepository.list();

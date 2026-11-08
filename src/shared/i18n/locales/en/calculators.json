@@ -52,7 +52,9 @@
     "savedTitle": "Saved quotes",
     "noDescription": "No description",
     "tapToRemove": "Tap to remove",
-    "removeTitle": "Remove quote?"
+    "removeTitle": "Remove quote?",
+    "tapToOpen": "Tap to open or remove",
+    "open": "Open"
   },
   "costOf": "{{name}} cost: {{cost}}"
 }
