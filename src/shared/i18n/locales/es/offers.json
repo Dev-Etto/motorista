@@ -73,7 +73,10 @@
     "clearConfirm": {
       "title": "¿Borrar las ofertas?",
       "message": "Se borrarán el historial y la estimación de ingresos. Las jornadas guardadas no cambian."
-    }
+    },
+    "read": "Leídas",
+    "accepted": "Aceptadas",
+    "averageScore": "Nota media"
   },
   "hub": {
     "copilotTitle": "Copiloto",

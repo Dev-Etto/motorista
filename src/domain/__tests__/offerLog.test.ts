@@ -1,4 +1,5 @@
 import {
+  averageScore,
   estimateEarnings,
   filterOffers,
   listSources,
@@ -100,5 +101,15 @@ describe('ofertas do dia', () => {
     ];
 
     expect(summarizeOfferDay(entries)).toEqual({ read: 4, accepted: 2, estimatedCents: 3140 });
+  });
+});
+
+describe('nota média', () => {
+  it('é a média das notas, com uma casa', () => {
+    expect(averageScore([{ score: 4.1 }, { score: 3 }, { score: 3.1 }, {}])).toBe(3.4);
+  });
+
+  it('sem notas, não tem média', () => {
+    expect(averageScore([{}])).toBeNull();
   });
 });

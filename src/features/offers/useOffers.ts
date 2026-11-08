@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { estimateEarnings, filterOffers, listSources, OutcomeFilter, summarizeOutcomes } from '@domain/offer/offerLog';
+import { averageScore, estimateEarnings, filterOffers, listSources, OutcomeFilter, summarizeOutcomes } from '@domain/offer/offerLog';
 import { copilot } from '@modules/copilot';
 import { today } from '@shared/utils/dates';
 import { CustomDates, defaultCustomDates, OfferPeriod, periodRange } from './offerPeriod';
@@ -45,6 +45,7 @@ export function useOffers() {
     sources,
     estimate: estimateEarnings(inSource),
     summary: summarizeOutcomes(inSource),
+    averageScore: averageScore(inSource),
     offers: listed.slice(0, visible),
     hasMore: listed.length > visible,
     estimating,

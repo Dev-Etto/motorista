@@ -52,7 +52,7 @@ A barra tem cinco abas presas à borda, e Relatórios repete o que Jornadas já 
 | F2.2.2 | Sem jornada, tocar no botão inicia a jornada, como "Iniciar jornada" no Início | Jest |
 | F2.2.3 | Com a jornada iniciada, o botão é verde e mostra o tempo. Pausada, é amarelo, com o tempo parado e o ícone de pausa | Jest |
 | F2.2.4 | Com jornada, tocar no botão abre o Início, onde ficam pausar, retomar e encerrar | Jest |
-| F2.2.5 | O tempo é abreviado: `<1min`, `45min`, `2h`, `2h14` e `12h30`, e passa para `24h+` depois de 24 h. Com 5 caracteres ou mais, a fonte diminui | Jest |
+| F2.2.5 | O tempo é abreviado: `0min`, `45min`, `2h`, `2h14` e `12h30`, e passa para `24h+` depois de 24 h. Com 5 caracteres ou mais, a fonte diminui | Jest |
 | F2.2.6 | O leitor de tela lê o estado e o tempo por extenso, como "Jornada em andamento, 2 horas e 14 minutos" | Jest |
 
 ### F2.3 Relatórios dentro de Jornadas
