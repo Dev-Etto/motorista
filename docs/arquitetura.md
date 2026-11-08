@@ -311,3 +311,10 @@ Spec: `docs/specs/fluxos-e-regras-0.13.md`.
 - **Alterações não salvas:** `useUnsavedChangesGuard` usa `usePreventRemove` do expo-router. O formulário da jornada só fica "alterado" pelo que a pessoa digita, e não pela hidratação, pela medição aplicada ou pelo odômetro sugerido. Salvar chama a liberação antes de navegar.
 - **Correção da oferta:** `copilot.setOfferStatus` grava o resultado pelo `timestamp`, a chave do registro, com o mesmo `markOutcome` usado no toque.
 - **Lembrete que se repete:** `reminders.repeat_km` guarda o intervalo de um lembrete por km, para oferecer o próximo ao concluir.
+
+## Decisões da versão 0.14.0
+
+Spec: `docs/specs/redesign-0.14.md`.
+
+- **Marca "m de rota":** o símbolo é um m minúsculo de traço único com o ponto de destino. Os SVGs de `assets/brand` são a fonte, e os PNGs de `assets` são gerados a partir deles. O ícone da notificação usa a versão pequena, sem o recorte do meio e com traço mais grosso, para continuar legível em 24 dp.
+- **Bandeira de tamanho fixo:** `PlatformBadge` mede sempre 78x32, então as bandeiras alinham em colunas em qualquer lista. Um nome que não cabe diminui a fonte, em vez de alargar a bandeira.

@@ -310,16 +310,24 @@ export function EmptyState({ title, message, action, illustration, icon }: Empty
   const colors = useTheme();
   return (
     <Card>
-      {illustration ? <Illustration name={illustration} height={100} /> : null}
-      {icon ? (
-        <View style={[styles.emptyIcon, { backgroundColor: colors.surfaceAlt }]}>
-          <AppIcon name={icon} color={colors.textMuted} size={28} />
-        </View>
-      ) : null}
-      <AppText variant="subtitle" bold accessibilityRole="header">
-        {title}
-      </AppText>
-      <AppText tone="muted">{message}</AppText>
+      <View style={styles.empty}>
+        {illustration ? (
+          <View style={styles.stretch}>
+            <Illustration name={illustration} height={100} />
+          </View>
+        ) : null}
+        {icon ? (
+          <View testID="empty-state-icon" style={[styles.emptyIcon, { backgroundColor: colors.surfaceAlt }]}>
+            <AppIcon name={icon} color={colors.textMuted} size={28} />
+          </View>
+        ) : null}
+        <AppText variant="subtitle" bold center accessibilityRole="header">
+          {title}
+        </AppText>
+        <AppText tone="muted" center>
+          {message}
+        </AppText>
+      </View>
       {action}
     </Card>
   );
@@ -409,6 +417,8 @@ const styles = StyleSheet.create({
   dots: { flexDirection: 'row', justifyContent: 'center', gap: spacing.sm },
   dot: { width: 8, height: 8, borderRadius: radius.pill },
   dotActive: { width: 24 },
+  empty: { alignItems: 'center', gap: spacing.md },
+  stretch: { alignSelf: 'stretch' },
   emptyIcon: { width: 56, height: 56, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
   notice: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm, borderRadius: radius.md, padding: spacing.md },
 });
