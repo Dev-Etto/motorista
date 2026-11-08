@@ -1,17 +1,21 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useRegional } from '@application/useRegional';
 import { APP_NAME } from '@config/app';
 import { enableCopilotIfGranted, PermissionsList } from '@features/permissions';
 import { CostExample, useVehicleForm, VehicleQuickForm } from '@features/vehicle';
 import { useSubmit } from '@shared/hooks/useSubmit';
 import { useFormat } from '@shared/i18n/format';
-import { MIN_TOUCH_TARGET } from '@shared/theme/theme';
+import { MIN_TOUCH_TARGET, spacing } from '@shared/theme/theme';
+import { BrandMark } from '@shared/ui/BrandMark';
 import { Illustration } from '@shared/ui/illustrations/Illustration';
-import { AppText, Button, Card, Notice, Screen, StepDots } from '@shared/ui/primitives';
+import { AppText, Button, Notice, Screen } from '@shared/ui/primitives';
 import { markOnboarded } from './finishOnboarding';
+import { StepHeader } from './StepHeader';
+
+const BRAND_SIZE = 132;
 
 type Step = 'welcome' | 'register' | 'offers' | 'setup' | 'result' | 'permissions' | 'done';
 
@@ -41,22 +45,23 @@ export default function OnboardingScreen() {
 
   if (step === 'welcome') {
     return (
-      <Screen safeTop centered>
-        <Illustration name="welcome" />
-        <AppText variant="display" bold center>
-          {APP_NAME}
-        </AppText>
-        <AppText variant="subtitle" center>
-          {t('welcome.tagline')}
-        </AppText>
-        <Card>
-          <AppText center>{t('welcome.promise')}</AppText>
-          <AppText tone="muted" center>
-            {t('welcome.privacy')}
+      <Screen safeTop>
+        <View style={styles.hero}>
+          <BrandMark size={BRAND_SIZE} accessibilityLabel={APP_NAME} />
+        </View>
+        <View style={styles.headline}>
+          <AppText variant="display" bold center>
+            {t('welcome.title')}
           </AppText>
-        </Card>
+          <AppText variant="subtitle" tone="muted" center>
+            {t('welcome.tagline')}
+          </AppText>
+        </View>
         <Button label={t('welcome.start')} onPress={() => setStep('register')} />
         <Button label={t('welcome.skipIntro')} variant="secondary" onPress={() => setStep('setup')} />
+        <AppText variant="caption" tone="muted" center>
+          {`${t('welcome.promise')} ${t('welcome.privacy')}`}
+        </AppText>
         <Pressable accessibilityRole="button" onPress={() => router.push('/region')} style={styles.terms}>
           <AppText variant="caption" tone="muted" center>
             {t('welcome.region', {
@@ -81,9 +86,9 @@ export default function OnboardingScreen() {
         ? { title: t('intro.registerTitle'), body: t('intro.registerBody', { context: format.distanceUnit }) }
         : { title: t('intro.offersTitle'), body: t('intro.offersBody') };
     return (
-      <Screen safeTop centered>
+      <Screen safeTop>
+        <StepHeader step={step} onSkip={() => setStep('setup')} />
         <Illustration name={step} />
-        <StepDots total={2} current={step === 'register' ? 0 : 1} />
         <AppText variant="title" bold center>
           {content.title}
         </AppText>
@@ -91,7 +96,6 @@ export default function OnboardingScreen() {
           {content.body}
         </AppText>
         <Button label={t('common:actions.continue')} onPress={() => setStep(step === 'register' ? 'offers' : 'setup')} />
-        <Button label={t('intro.skip')} variant="secondary" onPress={() => setStep('setup')} />
       </Screen>
     );
   }
@@ -99,6 +103,7 @@ export default function OnboardingScreen() {
   if (step === 'setup') {
     return (
       <Screen safeTop>
+        <StepHeader step="setup" onSkip={() => finish('/')} />
         <AppText variant="title" bold center>
           {t('setup.title')}
         </AppText>
@@ -109,14 +114,14 @@ export default function OnboardingScreen() {
         {form.error ? <Notice tone="negative" message={form.error} /> : null}
         {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
         <Button label={t('setup.seeCost')} busy={saving.busy} onPress={saving.submit} />
-        <Button label={t('common:actions.later')} variant="secondary" onPress={() => finish('/')} />
       </Screen>
     );
   }
 
   if (step === 'result') {
     return (
-      <Screen safeTop centered>
+      <Screen safeTop>
+        <StepHeader step="result" onSkip={() => setStep('permissions')} />
         <Illustration name="result" height={110} />
         <AppText variant="caption" tone="muted" center>
           {t('result.caption', { context: format.distanceUnit })}
@@ -135,6 +140,7 @@ export default function OnboardingScreen() {
   if (step === 'permissions') {
     return (
       <Screen safeTop>
+        <StepHeader step="permissions" onSkip={() => setStep('done')} />
         <AppText variant="title" bold center>
           {t('permissions.title')}
         </AppText>
@@ -165,4 +171,6 @@ export default function OnboardingScreen() {
 
 const styles = StyleSheet.create({
   terms: { minHeight: MIN_TOUCH_TARGET, justifyContent: 'center' },
+  hero: { flex: 1, minHeight: BRAND_SIZE + spacing.xxl * 2, alignItems: 'center', justifyContent: 'center' },
+  headline: { gap: spacing.sm, marginBottom: spacing.lg },
 });

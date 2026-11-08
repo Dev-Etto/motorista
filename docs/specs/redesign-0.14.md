@@ -103,5 +103,5 @@ O cartão nativo já segue o design aprovado: o topo tem só a bandeira do app, 
 
 | ID | Critério de aceite | Teste |
 | --- | --- | --- |
-| F4.2.1 | Cada passo mostra o progresso no topo e "Pular" no canto | Jest |
-| F4.2.2 | O cadastro do veículo oferece gasolina, etanol, diesel, GNV e elétrico. No elétrico, preço e consumo usam kWh | Jest |
+| F4.2.1 | Cada passo mostra o progresso no topo e "Pular" no canto. Pular a introdução leva ao veículo, pular o veículo conclui, pular o resultado leva às permissões e pular as permissões leva ao fim | Jest |
+| F4.2.2 | O cadastro rápido do veículo oferece gasolina, etanol, GNV e elétrico. No elétrico, o consumo usa kWh | Jest |

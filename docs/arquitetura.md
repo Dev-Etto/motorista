@@ -323,3 +323,5 @@ Spec: `docs/specs/redesign-0.14.md`.
 - **Relatórios dentro de Jornadas:** o conteúdo virou `ReportSummary`, sem `Screen` própria, e Jornadas alterna Lista e Resumo com `Segmented`.
 - **Jornadas por dia:** `groupShiftsByDay` soma km e lucro de cada dia, e `ShiftDayCard` mostra esse total no topo do card, com o rótulo "Lucro do dia". O cabeçalho é um `header` com o resumo do dia lido de uma vez.
 - **Status da oferta como selo:** a linha da oferta segue a ordem bandeira, valor e nota. O status vira um selo no canto da bandeira (check, X ou setas), e o texto continua só na descrição para o leitor de tela.
+- **Logo dentro do app:** `BrandMark` desenha o símbolo com `react-native-svg` nas cores `primary` e `onPrimary`, então acompanha o tema. As boas-vindas usam a logo no lugar da ilustração.
+- **Pular em cada passo:** `StepHeader` junta o progresso e "Pular" no topo dos passos do primeiro uso, e os botões secundários de pular saem do rodapé.
