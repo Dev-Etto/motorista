@@ -46,7 +46,7 @@ describe('privacidade', () => {
   });
 
   it('abre a política de privacidade completa no site', async () => {
-    const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+    const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined);
     await renderScreen();
 
     await fireEvent.press(screen.getByText('Ler a política de privacidade completa'));
