@@ -60,12 +60,9 @@
   "list": {
     "addExpense": "Lançar despesa ou abastecimento",
     "emptyDay": "Nenhuma jornada neste dia",
-    "emptyMonth": "Nenhuma jornada neste mês",
     "emptyMessage": "Registre sua primeira jornada para ver seu lucro real.",
     "shiftSubtitle": "{{gross}} em {{duration}}",
     "shiftSubtitlePartial": "{{gross}} em {{duration}} • parcial",
-    "looseTitle": "Lançamentos avulsos",
-    "looseHint": "Toque em um lançamento para editar ou excluir.",
     "deleteExpense": {
       "title": "Excluir {{label}}?",
       "message": "O lançamento de {{amount}} sai dos seus resultados."
@@ -86,7 +83,9 @@
     "dayShiftsKm_other": "{{count}} jornadas · {{distance}}",
     "dayLabel": "{{day}}, {{shifts}}, lucro do dia {{profit}}",
     "shiftTitle": "Jornada",
-    "shiftTitleHour": "Jornada · {{hour}}"
+    "shiftTitleHour": "Jornada · {{hour}}",
+    "inCostPerKm_km": "já está no custo por km",
+    "inCostPerKm_mi": "já está no custo por milha"
   },
   "detail": {
     "notFoundTitle": "Jornada não encontrada",
@@ -167,5 +166,14 @@
     "fuel": "Lançar abastecimento",
     "expense": "Lançar outra despesa",
     "close": "Fechar"
+  },
+  "week": {
+    "weekRange": "{{start}} a {{end}}",
+    "previousWeek": "Semana anterior",
+    "nextWeek": "Próxima semana",
+    "today": "hoje",
+    "dayEmpty": "{{day}}, sem jornada",
+    "dayProfit": "{{day}}, lucro de {{profit}}",
+    "emptyWeek": "Nenhuma jornada nesta semana"
   }
 }

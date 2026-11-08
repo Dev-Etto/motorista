@@ -1,13 +1,15 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ShiftsScreen from '@features/shifts/ShiftsScreen';
+import { DEFAULT_FORMAT } from '@shared/i18n/format';
 import { showDialog } from '@shared/ui/dialog';
-import { addDays, monthBounds, today } from '@shared/utils/dates';
+import { addDays, today, weekBounds } from '@shared/utils/dates';
 
 const mockPush = jest.fn();
-const MOCK_FIRST_DAY = monthBounds(today()).start;
-const MOCK_SECOND_DAY = addDays(MOCK_FIRST_DAY, 1);
-const mockShifts: { list: object[] } = { list: [] };
+const MOCK_WEEK = weekBounds(today(), DEFAULT_FORMAT.firstWeekday);
+const MOCK_FIRST_DAY = MOCK_WEEK.start;
+const MOCK_SECOND_DAY = addDays(MOCK_FIRST_DAY, 1) <= today() ? addDays(MOCK_FIRST_DAY, 1) : MOCK_FIRST_DAY;
+const mockData: { shifts: object[]; expenses: object[] } = { shifts: [], expenses: [] };
 const shiftOn = (id: number, date: string, startHour: number | null) => ({
   id,
   date,
@@ -36,15 +38,7 @@ jest.mock('@features/reports', () => ({
     return <Text>Resumo do período</Text>;
   },
 }));
-jest.mock('@features/shifts/shiftQueries', () => ({
-  loadMonth: jest.fn(async () => ({
-    shifts: mockShifts.list,
-    expenses: [
-      { id: 1, date: MOCK_FIRST_DAY, category: 'fuel', cents: 20000 },
-      { id: 2, date: MOCK_SECOND_DAY, category: 'other', cents: 1500 },
-    ],
-  })),
-}));
+jest.mock('@features/shifts/shiftQueries', () => ({ loadPeriod: jest.fn(async () => mockData) }));
 
 const METRICS = { frame: { x: 0, y: 0, width: 390, height: 800 }, insets: { top: 0, left: 0, right: 0, bottom: 0 } };
 const renderScreen = () =>
@@ -57,7 +51,8 @@ const renderScreen = () =>
 describe('tela Jornadas', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockShifts.list = [];
+    mockData.shifts = [];
+    mockData.expenses = [];
   });
 
   it('um botão Adicionar oferece jornada, abastecimento e outra despesa', async () => {
@@ -69,22 +64,43 @@ describe('tela Jornadas', () => {
     expect(labels).toEqual(['Jornada', 'Abastecimento', 'Outra despesa', 'Cancelar']);
   });
 
-  it('tocar num lançamento abre a edição', async () => {
+  it('mostra os 7 dias da semana numa faixa', async () => {
+    await renderScreen();
+
+    expect(await screen.findAllByLabelText(/(sem jornada|lucro de)/)).toHaveLength(7);
+  });
+
+  it('os lançamentos ficam no card do dia e abrem a edição', async () => {
+    mockData.expenses = [{ id: 1, date: MOCK_FIRST_DAY, category: 'fuel', cents: 20000 }];
     await renderScreen();
 
     await fireEvent.press(await screen.findByText('Abastecimento'));
 
     expect(mockPush).toHaveBeenCalledWith({ pathname: '/expense/new', params: { id: '1' } });
+    expect(screen.getByText('já está no custo por km')).toBeTruthy();
   });
 
-  it('o dia escolhido filtra também os lançamentos', async () => {
+  it('agrupa as jornadas por dia, com o lucro do dia no topo do card', async () => {
+    mockData.shifts = [shiftOn(3, MOCK_FIRST_DAY, 6), shiftOn(2, MOCK_FIRST_DAY, null)];
+    await renderScreen();
+
+    const headers = await screen.findAllByRole('header', { name: /lucro do dia/ });
+    expect(headers).toHaveLength(1);
+    expect(headers[0]?.props.accessibilityLabel).toMatch(/2 jornadas · 200,0 km, lucro do dia R\$\s500,00$/);
+    expect(screen.getByText('Lucro do dia')).toBeTruthy();
+    expect(screen.getByText(/^Jornada · 0?6/)).toBeTruthy();
+  });
+
+  it('o dia escolhido filtra a lista', async () => {
+    mockData.shifts = [shiftOn(1, MOCK_FIRST_DAY, 6)];
+    mockData.expenses = [{ id: 2, date: MOCK_SECOND_DAY, category: 'other', cents: 1500 }];
     await renderScreen();
     expect(await screen.findByText('Outra despesa')).toBeTruthy();
 
-    await fireEvent.press(screen.getByLabelText(/^Dia 1,/));
+    await fireEvent.press(screen.getAllByLabelText(/lucro de R\$\s250,00/)[0]!);
 
-    expect(screen.getByText('Abastecimento')).toBeTruthy();
-    expect(screen.queryByText('Outra despesa')).toBeNull();
+    expect(screen.getByText('Lucro do dia')).toBeTruthy();
+    if (MOCK_SECOND_DAY !== MOCK_FIRST_DAY) expect(screen.queryByText('Outra despesa')).toBeNull();
   });
 
   it('Lista e Resumo trocam a visão. Resumo traz o antigo Relatórios', async () => {
@@ -95,18 +111,5 @@ describe('tela Jornadas', () => {
 
     expect(screen.getByText('Resumo do período')).toBeTruthy();
     expect(screen.queryByText('Adicionar')).toBeNull();
-  });
-
-  it('agrupa as jornadas por dia, com o lucro do dia no topo do card', async () => {
-    mockShifts.list = [shiftOn(3, MOCK_SECOND_DAY, 6), shiftOn(2, MOCK_SECOND_DAY, null), shiftOn(1, MOCK_FIRST_DAY, 15)];
-    await renderScreen();
-
-    const headers = await screen.findAllByRole('header', { name: /lucro do dia/ });
-    expect(headers).toHaveLength(2);
-    expect(headers[0]?.props.accessibilityLabel).toMatch(/2 jornadas · 200,0 km, lucro do dia R\$\s500,00$/);
-    expect(headers[1]?.props.accessibilityLabel).toMatch(/1 jornada · 100,0 km, lucro do dia R\$\s250,00$/);
-    expect(screen.getAllByText('Lucro do dia')).toHaveLength(2);
-    expect(screen.getByText(/^Jornada · 0?6/)).toBeTruthy();
-    expect(screen.getByText('Jornada')).toBeTruthy();
   });
 });

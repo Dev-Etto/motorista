@@ -2,10 +2,9 @@ import { expenseRepository } from '@data/repositories/expenseRepository';
 import { shiftRepository } from '@data/repositories/shiftRepository';
 import { vehicleRepository } from '@data/repositories/vehicleRepository';
 import { copilot } from '@modules/copilot';
-import { dayRange, monthBounds } from '@shared/utils/dates';
+import { dayRange } from '@shared/utils/dates';
 
-export async function loadMonth(date: string) {
-  const { start, end } = monthBounds(date);
+export async function loadPeriod(start: string, end: string) {
   const [shifts, expenses] = await Promise.all([shiftRepository.listFacts(start, end), expenseRepository.listLoose(start, end)]);
   return { shifts, expenses };
 }

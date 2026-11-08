@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
+import type { ExpenseCategory } from '@domain/expense/expense';
 import type { ShiftDay } from '@domain/shift/days';
 import { useFormat } from '@shared/i18n/format';
 import { radius, spacing, useTheme } from '@shared/theme/theme';
@@ -19,11 +20,19 @@ export interface DayShiftRow {
   partial: boolean;
 }
 
-export function ShiftDayCard({ day }: { day: ShiftDay<DayShiftRow> }) {
+export interface DayExpenseRow {
+  id: number;
+  date: string;
+  cents: number;
+  countable: boolean;
+  category: ExpenseCategory;
+}
+
+export function ShiftDayCard({ day }: { day: ShiftDay<DayShiftRow, DayExpenseRow> }) {
   const router = useRouter();
   const colors = useTheme();
   const format = useFormat();
-  const { t } = useTranslation('shifts');
+  const { t } = useTranslation(['shifts', 'expenses']);
   const now = today();
   const dayName = day.date === now ? t('list.today') : day.date === addDays(now, -1) ? t('list.yesterday') : format.date(day.date);
   const count = day.shifts.length;
@@ -67,6 +76,16 @@ export function ShiftDayCard({ day }: { day: ShiftDay<DayShiftRow> }) {
             />
           );
         })}
+        {day.expenses.map((expense) => (
+          <ListRow
+            key={`expense-${expense.id}`}
+            title={t(`expenses:category.${expense.category}`)}
+            subtitle={expense.countable ? undefined : t('list.inCostPerKm', { context: format.distanceUnit })}
+            value={format.money(expense.cents)}
+            valueTone="muted"
+            onPress={() => router.push({ pathname: '/expense/new', params: { id: String(expense.id) } })}
+          />
+        ))}
       </View>
     </View>
   );

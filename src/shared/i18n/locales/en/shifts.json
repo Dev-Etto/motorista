@@ -60,12 +60,9 @@
   "list": {
     "addExpense": "Add expense or refuel",
     "emptyDay": "No shifts on this day",
-    "emptyMonth": "No shifts this month",
     "emptyMessage": "Log your first shift to see your real profit.",
     "shiftSubtitle": "{{gross}} in {{duration}}",
     "shiftSubtitlePartial": "{{gross}} in {{duration}} • partial",
-    "looseTitle": "Standalone expenses",
-    "looseHint": "Tap an entry to edit or delete it.",
     "deleteExpense": {
       "title": "Delete {{label}}?",
       "message": "The {{amount}} expense will be removed from your results."
@@ -86,7 +83,9 @@
     "dayShiftsKm_other": "{{count}} shifts · {{distance}}",
     "dayLabel": "{{day}}, {{shifts}}, day's profit {{profit}}",
     "shiftTitle": "Shift",
-    "shiftTitleHour": "Shift · {{hour}}"
+    "shiftTitleHour": "Shift · {{hour}}",
+    "inCostPerKm_km": "already in the cost per km",
+    "inCostPerKm_mi": "already in the cost per mile"
   },
   "detail": {
     "notFoundTitle": "Shift not found",
@@ -167,5 +166,14 @@
     "fuel": "Log fuel",
     "expense": "Log another expense",
     "close": "Close"
+  },
+  "week": {
+    "weekRange": "{{start}} to {{end}}",
+    "previousWeek": "Previous week",
+    "nextWeek": "Next week",
+    "today": "today",
+    "dayEmpty": "{{day}}, no shift",
+    "dayProfit": "{{day}}, profit of {{profit}}",
+    "emptyWeek": "No shifts this week"
   }
 }

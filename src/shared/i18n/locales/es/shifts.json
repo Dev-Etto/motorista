@@ -60,12 +60,9 @@
   "list": {
     "addExpense": "Registrar gasto o carga de combustible",
     "emptyDay": "No hay jornadas este día",
-    "emptyMonth": "No hay jornadas este mes",
     "emptyMessage": "Registra tu primera jornada para ver tu ganancia real.",
     "shiftSubtitle": "{{gross}} en {{duration}}",
     "shiftSubtitlePartial": "{{gross}} en {{duration}} • parcial",
-    "looseTitle": "Gastos sueltos",
-    "looseHint": "Toca un registro para editarlo o eliminarlo.",
     "deleteExpense": {
       "title": "¿Eliminar {{label}}?",
       "message": "El gasto de {{amount}} sale de tus resultados."
@@ -86,7 +83,9 @@
     "dayShiftsKm_other": "{{count}} jornadas · {{distance}}",
     "dayLabel": "{{day}}, {{shifts}}, ganancia del día {{profit}}",
     "shiftTitle": "Jornada",
-    "shiftTitleHour": "Jornada · {{hour}}"
+    "shiftTitleHour": "Jornada · {{hour}}",
+    "inCostPerKm_km": "ya está en el costo por km",
+    "inCostPerKm_mi": "ya está en el costo por milla"
   },
   "detail": {
     "notFoundTitle": "Jornada no encontrada",
@@ -167,5 +166,14 @@
     "fuel": "Registrar carga de combustible",
     "expense": "Registrar otro gasto",
     "close": "Cerrar"
+  },
+  "week": {
+    "weekRange": "{{start}} al {{end}}",
+    "previousWeek": "Semana anterior",
+    "nextWeek": "Próxima semana",
+    "today": "hoy",
+    "dayEmpty": "{{day}}, sin jornada",
+    "dayProfit": "{{day}}, ganancia de {{profit}}",
+    "emptyWeek": "Ninguna jornada esta semana"
   }
 }
