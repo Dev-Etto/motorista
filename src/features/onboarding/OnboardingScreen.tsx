@@ -4,18 +4,33 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useRegional } from '@application/useRegional';
 import { APP_NAME } from '@config/app';
+import { useCopilotStatus } from '@features/copilot';
+import { OfferRow } from '@features/offers';
 import { enableCopilotIfGranted, PermissionsList } from '@features/permissions';
-import { CostExample, useVehicleForm, VehicleQuickForm } from '@features/vehicle';
+import { CostExample, CostHero, useVehicleForm, VehicleQuickForm } from '@features/vehicle';
+import type { OfferHistoryEntry } from '@modules/copilot';
 import { useSubmit } from '@shared/hooks/useSubmit';
 import { useFormat } from '@shared/i18n/format';
-import { MIN_TOUCH_TARGET, spacing } from '@shared/theme/theme';
+import { MIN_TOUCH_TARGET, spacing, useTheme } from '@shared/theme/theme';
+import { AppIcon } from '@shared/ui/AppIcon';
 import { BrandMark } from '@shared/ui/BrandMark';
 import { Illustration } from '@shared/ui/illustrations/Illustration';
-import { AppText, Button, Notice, Screen } from '@shared/ui/primitives';
+import { AppText, Button, Card, ListRow, Notice, Screen } from '@shared/ui/primitives';
 import { markOnboarded } from './finishOnboarding';
 import { StepHeader } from './StepHeader';
 
 const BRAND_SIZE = 132;
+const SAMPLE_OFFER: OfferHistoryEntry = {
+  timestamp: new Date(2026, 0, 1, 14, 22).getTime(),
+  source: '99',
+  valueCents: 1800,
+  km: 8.5,
+  minutes: 22,
+  perKmCents: 212,
+  perHourCents: 4909,
+  color: 'green',
+  score: 4.2,
+};
 
 type Step = 'welcome' | 'register' | 'offers' | 'setup' | 'result' | 'permissions' | 'done';
 
@@ -27,8 +42,9 @@ export default function OnboardingScreen() {
   const regional = useRegional();
   const { t } = useTranslation(['onboarding', 'common']);
   const [step, setStep] = useState<Step>('welcome');
+  const copilotReady = useCopilotStatus().current.accessibilityGranted;
 
-  const finish = async (nextRoute: '/' | '/vehicle' | '/shift/new') => {
+  const finish = async (nextRoute: '/' | '/vehicle' | '/shift/new' | '/goal') => {
     await markOnboarded();
     router.replace('/');
     if (nextRoute !== '/') router.push(nextRoute);
@@ -122,13 +138,7 @@ export default function OnboardingScreen() {
     return (
       <Screen safeTop>
         <StepHeader step="result" onSkip={() => setStep('permissions')} />
-        <Illustration name="result" height={110} />
-        <AppText variant="caption" tone="muted" center>
-          {t('result.caption', { context: format.distanceUnit })}
-        </AppText>
-        <AppText variant="display" bold tone="accent" center>
-          {format.perDistance(form.costs.fullPerKm)}
-        </AppText>
+        <CostHero costs={form.costs} />
         <CostExample costPerKm={form.costs.fullPerKm} />
         {form.costs.fixedMonthly > 0 ? null : <Notice tone="accent" message={t('result.firstEstimate')} />}
         <Button label={t('common:actions.continue')} onPress={() => setStep('permissions')} />
@@ -147,6 +157,9 @@ export default function OnboardingScreen() {
         <AppText tone="muted" center>
           {t('permissions.hint')}
         </AppText>
+        <Card title={t('permissions.previewTitle')}>
+          <OfferRow entry={SAMPLE_OFFER} />
+        </Card>
         <PermissionsList />
         <Notice tone="accent" message={t('permissions.notice')} />
         <Button label={t('common:actions.continue')} onPress={finishPermissions} />
@@ -155,17 +168,32 @@ export default function OnboardingScreen() {
   }
 
   return (
-    <Screen safeTop centered>
-      <Illustration name="welcome" />
-      <AppText variant="title" bold center>
+    <Screen safeTop>
+      <AppText variant="title" bold accessibilityRole="header">
         {t('done.title')}
       </AppText>
-      <AppText variant="subtitle" center>
+      <AppText variant="subtitle" tone="muted">
         {t('done.message')}
       </AppText>
-      <Button label={t('done.registerShift')} onPress={() => finish('/shift/new')} />
-      <Button label={replay ? t('done.backHome') : t('done.seeHome')} variant="secondary" onPress={() => finish('/')} />
+      <Card>
+        <DoneItem done label={t('done.costItem', { cost: format.perDistance(form.costs.fullPerKm) })} />
+        <DoneItem done={copilotReady} label={copilotReady ? t('done.copilotOn') : t('done.copilotOff')} />
+        <ListRow icon="goal" title={t('done.goalItem')} subtitle={t('done.optional')} chevron onPress={() => finish('/goal')} />
+      </Card>
+      <Notice tone="accent" message={t('done.startHint')} />
+      <Button label={replay ? t('done.backHome') : t('done.seeHome')} onPress={() => finish('/')} />
+      <Button label={t('done.registerShift')} variant="secondary" onPress={() => finish('/shift/new')} />
     </Screen>
+  );
+}
+
+function DoneItem({ done, label }: { done: boolean; label: string }) {
+  const colors = useTheme();
+  return (
+    <View accessible accessibilityLabel={label} accessibilityState={{ checked: done }} style={styles.doneItem}>
+      <AppIcon name={done ? 'check' : 'help'} color={done ? colors.positive : colors.textMuted} size={22} />
+      <AppText style={styles.flex}>{label}</AppText>
+    </View>
   );
 }
 
@@ -173,4 +201,6 @@ const styles = StyleSheet.create({
   terms: { minHeight: MIN_TOUCH_TARGET, justifyContent: 'center' },
   hero: { flex: 1, minHeight: BRAND_SIZE + spacing.xxl * 2, alignItems: 'center', justifyContent: 'center' },
   headline: { gap: spacing.sm, marginBottom: spacing.lg },
+  flex: { flex: 1 },
+  doneItem: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: MIN_TOUCH_TARGET },
 });

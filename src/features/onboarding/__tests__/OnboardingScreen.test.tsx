@@ -3,6 +3,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import OnboardingScreen from '@features/onboarding/OnboardingScreen';
 
 const mockReplace = jest.fn();
+const mockSave = jest.fn(async () => false);
 
 jest.mock('expo-router', () => ({
   useRouter: () => ({ push: jest.fn(), replace: mockReplace }),
@@ -11,10 +12,13 @@ jest.mock('expo-router', () => ({
 jest.mock('@application/useRegional', () => ({ useRegional: () => ({ language: 'pt-BR' }) }));
 jest.mock('@features/permissions', () => ({ PermissionsList: () => null, enableCopilotIfGranted: jest.fn(async () => undefined) }));
 jest.mock('@features/vehicle', () => ({
-  useVehicleForm: () => ({ save: jest.fn(async () => false), costs: { fullPerKm: 69, fixedMonthly: 0 }, error: null }),
+  useVehicleForm: () => ({ save: mockSave, costs: { fullPerKm: 69, fixedMonthly: 0 }, error: null }),
   VehicleQuickForm: () => null,
   CostExample: () => null,
+  CostHero: () => null,
 }));
+jest.mock('@features/copilot', () => ({ useCopilotStatus: () => ({ current: { accessibilityGranted: false } }) }));
+jest.mock('@features/offers', () => ({ OfferRow: () => null }));
 jest.mock('@features/onboarding/finishOnboarding', () => ({ markOnboarded: jest.fn(async () => undefined) }));
 
 const METRICS = { frame: { x: 0, y: 0, width: 390, height: 800 }, insets: { top: 0, left: 0, right: 0, bottom: 0 } };
@@ -53,5 +57,22 @@ describe('primeiro uso', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Pular' }));
 
     expect(mockReplace).toHaveBeenCalledWith('/');
+  });
+
+  it('no fim, mostra o que ficou pronto e a meta como opcional', async () => {
+    mockSave.mockResolvedValueOnce(true);
+    await renderScreen();
+    await fireEvent.press(screen.getByRole('button', { name: 'Pular introdução' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Ver meu custo' }));
+    expect(await screen.findByLabelText('Passo 4 de 5')).toBeTruthy();
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Pular' }));
+    expect(screen.getByText('Assim aparece uma oferta')).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: 'Pular' }));
+
+    expect(screen.getByRole('header', { name: 'Tudo pronto' })).toBeTruthy();
+    expect(screen.getByLabelText(/^Custo do carro · R\$\s0,69\/km$/)).toBeTruthy();
+    expect(screen.getByLabelText('Copiloto ainda desligado')).toBeTruthy();
+    expect(screen.getByRole('button', { name: /Definir a meta do mês/ })).toBeTruthy();
   });
 });

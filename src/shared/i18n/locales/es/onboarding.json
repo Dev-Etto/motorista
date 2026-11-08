@@ -23,22 +23,27 @@
     "seeCost": "Ver mi costo"
   },
   "result": {
-    "caption_km": "Cada km te cuesta",
-    "caption_mi": "Cada milla te cuesta",
     "firstEstimate": "Es una primera cuenta. Agrega el seguro, el impuesto vehicular, la cuota o el alquiler para ver el valor completo.",
     "addOtherCosts": "Agregar los otros costos"
   },
   "permissions": {
     "title": "Deja todo listo para usar",
     "hint": "Así no tienes que detenerte a mitad de la jornada. Todo queda en tu celular, y puedes cambiarlo después.",
-    "notice": "Quien decide los viajes siempre eres tú: la app no toca la pantalla. Cada plataforma tiene sus reglas sobre apps de apoyo, y conviene conocerlas. Mientras manejas, la voz te avisa: toca el celular solo con el carro detenido."
+    "notice": "Quien decide los viajes siempre eres tú: la app no toca la pantalla. Cada plataforma tiene sus reglas sobre apps de apoyo, y conviene conocerlas. Mientras manejas, la voz te avisa: toca el celular solo con el carro detenido.",
+    "previewTitle": "Así se ve una oferta"
   },
   "done": {
     "title": "Todo listo",
-    "message": "Registra tu primera jornada y mira cuánto te quedó de verdad.",
+    "message": "Empieza la jornada con el botón redondo de la barra. Siempre está a mano.",
     "registerShift": "Registrar una jornada",
     "backHome": "Volver al inicio",
-    "seeHome": "Ver el inicio"
+    "seeHome": "Ver el inicio",
+    "costItem": "Costo del vehículo · {{cost}}",
+    "copilotOn": "Copiloto encendido",
+    "copilotOff": "Copiloto todavía apagado",
+    "goalItem": "Definir la meta del mes",
+    "optional": "Opcional",
+    "startHint": "Con la jornada en curso, el mismo botón muestra el tiempo y abre los controles."
   },
   "nextStep": {
     "caption": "Tu próximo paso",

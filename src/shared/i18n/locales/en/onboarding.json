@@ -23,22 +23,27 @@
     "seeCost": "See my cost"
   },
   "result": {
-    "caption_km": "Each kilometer costs you",
-    "caption_mi": "Each mile costs you",
     "firstEstimate": "This is a first estimate. Add insurance, vehicle tax, loan payments, or rent to see the full amount.",
     "addOtherCosts": "Add the other costs"
   },
   "permissions": {
     "title": "Get everything ready to use",
     "hint": "That way you don't need to stop in the middle of your shift. Everything stays on your phone, and you can change it later.",
-    "notice": "You always decide on the rides: the app doesn't touch the screen. Each platform has its own rules about helper apps, and it's worth knowing them. While driving, the voice tells you: only touch your phone when the car is stopped."
+    "notice": "You always decide on the rides: the app doesn't touch the screen. Each platform has its own rules about helper apps, and it's worth knowing them. While driving, the voice tells you: only touch your phone when the car is stopped.",
+    "previewTitle": "This is how an offer looks"
   },
   "done": {
     "title": "All set",
-    "message": "Log your first shift and see how much you really kept.",
+    "message": "Start your shift with the round button on the bar. It's always at hand.",
     "registerShift": "Log a shift",
     "backHome": "Back to home",
-    "seeHome": "Go to home"
+    "seeHome": "Go to home",
+    "costItem": "Vehicle cost · {{cost}}",
+    "copilotOn": "Copilot on",
+    "copilotOff": "Copilot still off",
+    "goalItem": "Set the monthly goal",
+    "optional": "Optional",
+    "startHint": "With a shift running, the same button shows the time and opens the controls."
   },
   "nextStep": {
     "caption": "Your next step",

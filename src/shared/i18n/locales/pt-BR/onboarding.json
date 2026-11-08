@@ -23,22 +23,27 @@
     "seeCost": "Ver meu custo"
   },
   "result": {
-    "caption_km": "Cada km custa para você",
-    "caption_mi": "Cada milha custa para você",
     "firstEstimate": "É uma primeira conta. Inclua seguro, IPVA, parcela ou aluguel para ver o valor completo.",
     "addOtherCosts": "Incluir os outros custos"
   },
   "permissions": {
     "title": "Deixe tudo pronto para usar",
     "hint": "Assim você não precisa parar no meio da jornada. Tudo fica no seu celular, e você pode mudar depois.",
-    "notice": "Quem decide as corridas é sempre você: o app não toca na tela. Cada plataforma tem suas regras sobre apps de apoio, e vale conhecê-las. Dirigindo, a voz avisa: toque no celular só com o carro parado."
+    "notice": "Quem decide as corridas é sempre você: o app não toca na tela. Cada plataforma tem suas regras sobre apps de apoio, e vale conhecê-las. Dirigindo, a voz avisa: toque no celular só com o carro parado.",
+    "previewTitle": "Assim aparece uma oferta"
   },
   "done": {
     "title": "Tudo pronto",
-    "message": "Registre sua primeira jornada e veja quanto sobrou de verdade.",
+    "message": "Comece a jornada pelo botão redondo da barra. Ele fica sempre à mão.",
     "registerShift": "Registrar uma jornada",
     "backHome": "Voltar ao início",
-    "seeHome": "Ver o início"
+    "seeHome": "Ver o início",
+    "costItem": "Custo do carro · {{cost}}",
+    "copilotOn": "Copiloto ligado",
+    "copilotOff": "Copiloto ainda desligado",
+    "goalItem": "Definir a meta do mês",
+    "optional": "Opcional",
+    "startHint": "Com a jornada iniciada, o mesmo botão mostra o tempo e abre os controles."
   },
   "nextStep": {
     "caption": "Seu próximo passo",
