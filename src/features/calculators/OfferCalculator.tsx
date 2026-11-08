@@ -1,10 +1,12 @@
+import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { classifyOffer, compareToTarget, TargetComparison } from '@domain/offer/offer';
-import { OfferTargetsSummary, useOfferTargets } from '@features/copilot';
+import { useOfferTargets } from '@features/copilot';
 import { useFormFields } from '@shared/hooks/useFormFields';
 import { useFormat } from '@shared/i18n/format';
+import { MIN_TOUCH_TARGET, spacing } from '@shared/theme/theme';
 import { IntegerField, MoneyField, NumberField } from '@shared/ui/fields';
 import { LearnMore } from '@shared/ui/LearnMore';
 import { AppText, Card, Stat, StatGrid } from '@shared/ui/primitives';
@@ -19,6 +21,7 @@ const BELOW_COST_SCORE = 2;
 export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
   const { bind, values } = useFormFields({ value: '', km: '', minutes: '' });
   const targets = useOfferTargets();
+  const router = useRouter();
   const { t } = useTranslation(['calculators', 'common']);
   const { t: tOffers } = useTranslation('offers');
   const format = useFormat();
@@ -32,31 +35,39 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
 
   return (
     <>
-      <Card title={t('offer.title')}>
-        <AppText tone="muted">{t('offer.intro')}</AppText>
+      <Card>
         <MoneyField label={t('offer.value')} {...bind('value')} />
-        <NumberField label={t('offer.distance')} suffix={format.distanceUnit} hint={t('offer.distanceHint')} {...bind('km')} />
-        <IntegerField label={t('offer.time')} suffix={t('common:unit.minutes')} {...bind('minutes')} />
+        <View style={styles.row}>
+          <View style={styles.flex}>
+            <NumberField label={t('offer.distance')} suffix={format.distanceUnit} {...bind('km')} />
+          </View>
+          <View style={styles.flex}>
+            <IntegerField label={t('offer.time')} suffix={t('common:unit.minutes')} {...bind('minutes')} />
+          </View>
+        </View>
+        <AppText variant="caption" tone="muted">
+          {t('offer.distanceHint')}
+        </AppText>
       </Card>
       {ready ? (
         <Card>
-          {result.profitCents === null ? null : (
-            <>
-              <AppText variant="caption" tone="muted" center>
-                {t('offer.profit')}
-              </AppText>
-              <AppText variant="display" bold center tone={profitTone(result.profitCents)}>
-                {format.money(result.profitCents)}
-              </AppText>
-            </>
-          )}
-          {result.score === null ? null : (
-            <View style={styles.score}>
-              <ScoreBadge score={result.score} color={result.color} height={SCORE_BADGE_HEIGHT} />
-            </View>
-          )}
-          <AppText center>{describeOfferReason(result.reason, tOffers, format.distanceUnit)}</AppText>
-          <StatGrid>
+          <View style={styles.result}>
+            {result.score === null ? null : <ScoreBadge score={result.score} color={result.color} height={SCORE_BADGE_HEIGHT} />}
+            {result.profitCents === null ? null : (
+              <View>
+                <AppText variant="caption" tone="muted">
+                  {t('offer.profit')}
+                </AppText>
+                <AppText variant="title" bold tone={profitTone(result.profitCents)}>
+                  {format.money(result.profitCents)}
+                </AppText>
+              </View>
+            )}
+          </View>
+          <AppText variant="caption" tone="muted">
+            {describeOfferReason(result.reason, tOffers, format.distanceUnit)}
+          </AppText>
+          <StatGrid columns={2}>
             <ComparedStat
               label={t('offer.perDistance', { unit: format.distanceUnit })}
               value={format.perDistance(result.perKm)}
@@ -68,6 +79,17 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
               comparison={compareToTarget(result.perHour, targets.values.targetPerHourCents)}
             />
           </StatGrid>
+          <AppText variant="caption" tone="muted">
+            {t('offer.comparedTo', {
+              perDistance: format.perDistance(targets.values.targetPerKmCents),
+              perHour: format.perHour(targets.values.targetPerHourCents),
+            })}
+          </AppText>
+          <Pressable accessibilityRole="link" onPress={() => router.push('/goal')} style={styles.link}>
+            <AppText variant="caption" bold>
+              {t('offer.changeTargets')}
+            </AppText>
+          </Pressable>
           <LearnMore title={t('offer.scoreTitle')}>
             <AppText variant="caption">
               {t('offer.scoreExplain', { target: format.number(TARGET_SCORE), belowCost: format.number(BELOW_COST_SCORE, 0) })}
@@ -76,13 +98,15 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
           </LearnMore>
         </Card>
       ) : null}
-      <OfferTargetsSummary targets={targets} />
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  score: { alignItems: 'center' },
+  flex: { flex: 1 },
+  row: { flexDirection: 'row', gap: spacing.sm },
+  result: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  link: { minHeight: MIN_TOUCH_TARGET, justifyContent: 'center' },
 });
 
 function ComparedStat({ label, value, comparison }: { label: string; value: string; comparison: TargetComparison }) {

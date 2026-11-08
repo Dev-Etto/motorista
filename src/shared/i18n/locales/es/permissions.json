@@ -1,10 +1,10 @@
 {
-  "intro": "Todo se procesa en tu celular. Nada se envía afuera.",
-  "granted": "Permitido",
+  "intro": "Cada permiso activa una parte de la app. Nada sale de tu celular.",
+  "granted": "Activo",
   "allow": "Permitir",
   "accessibility": {
-    "title": "Leer las ofertas",
-    "description": "Para evaluar las ofertas de Uber, 99 e inDrive. Android lo llama accesibilidad.",
+    "title": "Leer la pantalla",
+    "description": "El Copiloto lee las ofertas de las apps",
     "howTo": {
       "title": "Cómo activar la lectura",
       "step1": "1. Busca Copiloto de ofertas y activa la primera opción. Deja el acceso directo desactivado.",
@@ -14,16 +14,22 @@
     }
   },
   "overlay": {
-    "title": "Mostrar sobre otras apps",
-    "description": "Para que el cronómetro aparezca mientras usas Uber o 99."
+    "title": "Mostrar sobre apps",
+    "description": "Muestra la tarjeta encima de la oferta"
   },
   "location": {
     "title": "Ubicación",
-    "description_km": "Para medir los km de la jornada por GPS. Elige permitir mientras se usa la app.",
-    "description_mi": "Para medir las millas de la jornada por GPS. Elige permitir mientras se usa la app."
+    "description_km": "Mide los km de la jornada por GPS",
+    "description_mi": "Mide las millas de la jornada por GPS"
   },
   "notifications": {
     "title": "Notificaciones",
-    "description": "Para recordatorios de mantenimiento y para consultar las ofertas después."
+    "description": "Jornada en curso y recordatorios",
+    "missing": "Sin notificaciones no verás la jornada en curso ni los recordatorios del carro."
+  },
+  "adjust": "Ajustar",
+  "battery": {
+    "title": "Sin ahorro de batería",
+    "description": "Evita que Android detenga el Copiloto"
   }
 }

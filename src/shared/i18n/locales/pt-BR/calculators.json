@@ -1,7 +1,7 @@
 {
   "tabs": {
     "offer": "Avaliar oferta",
-    "quote": "Corrida particular"
+    "quote": "Orçamento particular"
   },
   "costNotice": {
     "title": "Primeiro, descubra seu custo por {{unit}}",
@@ -9,8 +9,6 @@
     "action": "Calcular custo"
   },
   "offer": {
-    "title": "Essa corrida compensa?",
-    "intro": "Digite o que aparece na oferta e veja quanto sobra para você.",
     "value": "Quanto a corrida paga",
     "distance": "Distância total",
     "distanceHint": "Some o caminho até o passageiro e a viagem.",
@@ -22,41 +20,38 @@
     "scoreExplain": "A nota compara a corrida com o seu custo e os seus mínimos. De {{target}} para cima, ela atinge os dois mínimos. Abaixo de {{belowCost}}, não cobre o custo do carro.",
     "scoreDisclaimer": "A nota só ajuda: quem decide é sempre você.",
     "aboveTarget": "▲ {{percent}}%",
-    "belowTarget": "▼ {{percent}}%"
+    "belowTarget": "▼ {{percent}}%",
+    "comparedTo": "Comparado com seus mínimos: {{perDistance}} e {{perHour}}.",
+    "changeTargets": "Alterar os mínimos"
   },
   "quote": {
-    "title": "Quanto cobrar nessa corrida?",
-    "intro": "Para corridas combinadas direto com o passageiro, fora dos apps.",
-    "toPassenger": "Até buscar o passageiro",
-    "trip": "Da viagem",
-    "time": "Tempo total",
-    "timeHint": "Inclua o caminho até o passageiro.",
-    "moreOptions": "Mais opções",
-    "return": "Volta sem passageiro",
-    "returnHint": "Se precisar voltar por sua conta.",
+    "toPassenger": "Até buscar",
+    "trip": "Viagem",
+    "time": "Tempo",
+    "moreOptions": "Pedágio, extras e valor mínimo",
     "profitPerHour": "Quanto quer ganhar por hora",
     "profitPerHourHint": "É o valor do seu tempo no preço sugerido.",
     "toll": "Pedágio",
     "extras": "Espera ou outros extras",
     "minimum": "Não cobrar menos que",
     "minimumHint": "Corrida curta pode dar um preço muito baixo. Se isso acontecer, o app sugere este valor.",
-    "price": "Preço sugerido",
-    "vehicle": "Para o carro",
-    "vehicleDetail": "{{distance}} com o seu custo por {{unit}}",
-    "timeValue": "Pelo seu tempo",
-    "tollAndExtras": "Pedágio e extras",
-    "profit": "Sobra para você",
-    "description": "Descrição (opcional)",
-    "descriptionPlaceholder": "Centro ao aeroporto",
-    "share": "Compartilhar",
+    "price": "Cobre",
+    "description": "Para quem ou para onde",
+    "descriptionPlaceholder": "Aeroporto · Dona Rita",
+    "share": "Enviar ao cliente",
     "shareMessage": "Valor: {{price}}",
     "shareMessageWithTrip": "Viagem: {{trip}}\nValor: {{price}}",
     "savedTitle": "Orçamentos salvos",
     "noDescription": "Sem descrição",
-    "tapToRemove": "Toque para remover",
     "removeTitle": "Remover orçamento?",
     "tapToOpen": "Toque para abrir ou remover",
-    "open": "Abrir"
+    "open": "Abrir",
+    "countReturn": "Contar a volta vazia",
+    "covers": "Cobre o carro em {{distance}} e paga {{perHour}}",
+    "yourMinimum": ", seu mínimo por hora",
+    "includesExtras": "Inclui {{value}} de pedágio e extras",
+    "savedCount_one": "Salvo (1)",
+    "savedCount_other": "Salvos ({{count}})"
   },
   "costOf": "Custo do {{name}}: {{cost}}"
 }

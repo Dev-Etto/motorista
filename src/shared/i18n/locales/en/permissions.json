@@ -1,10 +1,10 @@
 {
-  "intro": "Everything is processed on your phone. Nothing is sent out.",
-  "granted": "Allowed",
+  "intro": "Each permission turns on a part of the app. Nothing leaves your phone.",
+  "granted": "On",
   "allow": "Allow",
   "accessibility": {
-    "title": "Read offers",
-    "description": "To evaluate offers from Uber, 99, and inDrive. Android calls this accessibility.",
+    "title": "Read the screen",
+    "description": "The Copilot reads offers from the apps",
     "howTo": {
       "title": "How to turn on reading",
       "step1": "1. Find Offer Copilot and turn on the first option. Leave the shortcut off.",
@@ -14,16 +14,22 @@
     }
   },
   "overlay": {
-    "title": "Display over other apps",
-    "description": "So the timer shows up while you use Uber or 99."
+    "title": "Display over apps",
+    "description": "Shows the card on top of the offer"
   },
   "location": {
     "title": "Location",
-    "description_km": "To track your shift's kilometers by GPS. Choose to allow while using the app.",
-    "description_mi": "To track your shift's miles by GPS. Choose to allow while using the app."
+    "description_km": "Tracks your shift's kilometers by GPS",
+    "description_mi": "Tracks your shift's miles by GPS"
   },
   "notifications": {
     "title": "Notifications",
-    "description": "For maintenance reminders and to check offers later."
+    "description": "Shift in progress and reminders",
+    "missing": "Without notifications you won't see the shift in progress or your car reminders."
+  },
+  "adjust": "Adjust",
+  "battery": {
+    "title": "No battery saving",
+    "description": "Keeps Android from stopping the Copilot"
   }
 }

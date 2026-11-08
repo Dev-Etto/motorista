@@ -50,4 +50,18 @@ describe('desligar plataforma', () => {
 
     expect(mockToggle).toHaveBeenCalledWith(4, false);
   });
+
+  it('separa os apps de corrida, com o selo e o que é lido, dos ganhos fora dos apps', async () => {
+    await render(
+      <SafeAreaProvider initialMetrics={METRICS}>
+        <PlatformsScreen />
+      </SafeAreaProvider>,
+    );
+
+    expect(screen.getByText('Apps de corrida')).toBeTruthy();
+    expect(screen.getByText('Uber')).toBeTruthy();
+    expect(screen.getByText('Ganhos e ofertas')).toBeTruthy();
+    expect(screen.getByText('Seus ganhos fora dos apps')).toBeTruthy();
+    expect(screen.getByText('Particular')).toBeTruthy();
+  });
 });

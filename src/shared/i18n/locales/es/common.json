@@ -44,7 +44,7 @@
     "vehicles": "Vehículos",
     "vehicle": "Vehículo y costos",
     "goal": "Meta y mínimos",
-    "copilot": "Copiloto de ofertas",
+    "copilot": "Copiloto",
     "offers": "Ofertas e ingresos",
     "copilotSetup": "Configurar el Copiloto",
     "help": "Ayuda",
@@ -64,7 +64,9 @@
     "regionFormat": "Formato regional",
     "calculator": "Calculadora",
     "about": "Acerca de",
-    "appearance": "Apariencia"
+    "appearance": "Apariencia",
+    "copilotCard": "Apariencia de la tarjeta",
+    "copilotReading": "Ajustar la lectura"
   },
   "tabs": {
     "home": "Inicio",
@@ -130,6 +132,9 @@
   },
   "marketName": {
     "BR": "Brasil"
+  },
+  "marketCurrencyName": {
+    "BR": "real brasileño"
   },
   "formatLocaleName": {
     "pt-BR": "Português (Brasil)",

@@ -11,6 +11,7 @@ export interface PermissionsState {
   location: boolean;
   overlay: boolean;
   accessibility: boolean;
+  battery: boolean;
 }
 
 const toState = (notifications: boolean, location: boolean, status: CopilotStatus): PermissionsState => ({
@@ -18,6 +19,7 @@ const toState = (notifications: boolean, location: boolean, status: CopilotStatu
   location,
   overlay: status.overlayGranted,
   accessibility: status.accessibilityGranted,
+  battery: !status.batteryRestricted,
 });
 
 async function readPermissions(): Promise<PermissionsState> {
@@ -34,7 +36,7 @@ export async function enableCopilotIfGranted(): Promise<void> {
 }
 
 export function usePermissions() {
-  const [state, setState] = useState<PermissionsState>({ notifications: false, location: false, overlay: false, accessibility: false });
+  const [state, setState] = useState<PermissionsState>({ notifications: false, location: false, overlay: false, accessibility: false, battery: false });
 
   const refresh = useCallback(async () => {
     setState(await readPermissions());
@@ -69,5 +71,6 @@ export function usePermissions() {
     openOverlay: copilot.openOverlaySettings,
     openAccessibility: copilot.openAccessibilitySettings,
     openAppSettings: copilot.openAppSettings,
+    openBattery: copilot.openBatterySettings,
   };
 }

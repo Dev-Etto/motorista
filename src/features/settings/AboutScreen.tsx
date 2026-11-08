@@ -1,17 +1,18 @@
 import Constants from 'expo-constants';
+import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Linking, StyleSheet, View } from 'react-native';
 import { APP_NAME, DONATION_URL, RELEASES_URL, REPOSITORY_URL } from '@config/app';
 import { spacing } from '@shared/theme/theme';
 import { BrandMark } from '@shared/ui/BrandMark';
 import { AppText, Card, ListRow, Screen } from '@shared/ui/primitives';
-import { MenuSection } from './MenuSection';
 import { ABOUT_SECTIONS } from './moreMenu';
 
 const BRAND_SIZE = 72;
 
 export default function AboutScreen() {
   const { t } = useTranslation('settings');
+  const router = useRouter();
   const version = Constants.expoConfig?.version ?? '';
 
   return (
@@ -26,13 +27,20 @@ export default function AboutScreen() {
         </AppText>
       </View>
       {ABOUT_SECTIONS.map((section) => (
-        <MenuSection key={section.id} title={t(`more.aboutSection.${section.id}`)} items={section.items} />
+        <Card key={section.id}>
+          {section.items.map((item) => (
+            <ListRow key={item.id} title={t(`more.item.${item.id}.title`)} chevron onPress={() => router.push(item.href)} />
+          ))}
+          {section.id === 'yours' ? <ListRow title={t('more.about.donateTitle')} chevron onPress={() => Linking.openURL(DONATION_URL)} /> : null}
+        </Card>
       ))}
-      <Card title={t('more.about.title')}>
-        <ListRow icon="heart" title={t('more.about.donateTitle')} subtitle={t('more.about.donateSubtitle')} onPress={() => Linking.openURL(DONATION_URL)} />
-        <ListRow icon="update" title={t('more.about.updateTitle')} subtitle={t('more.about.updateSubtitle')} onPress={() => Linking.openURL(RELEASES_URL)} />
-        <ListRow icon="document" title={t('more.about.codeTitle')} subtitle={t('more.about.versionSubtitle')} onPress={() => Linking.openURL(REPOSITORY_URL)} />
+      <Card>
+        <ListRow title={t('more.about.updateTitle')} chevron onPress={() => Linking.openURL(RELEASES_URL)} />
+        <ListRow title={t('more.about.codeTitle')} chevron onPress={() => Linking.openURL(REPOSITORY_URL)} />
       </Card>
+      <AppText variant="caption" tone="muted" center>
+        {t('more.about.dataStays')}
+      </AppText>
     </Screen>
   );
 }

@@ -177,3 +177,24 @@ As fases anteriores trouxeram a marca, a barra e os componentes, mas várias tel
 | F6.5.4 | Ajuda começa com uma corrida de exemplo calculada com o custo do veículo atual | Jest |
 | F6.5.5 | O veículo mostra "Cada km custa" com a barra de combustível, desgaste e fixos | Jest |
 | F6.5.6 | A Meta mostra o progresso primeiro e a edição recolhida. Sem meta, o formulário fica aberto | Manual |
+
+### F6.6 Ofertas e Copiloto
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F6.6.1 | Avaliar oferta e Orçamento particular são telas separadas, cada uma com o próprio título e sem seletor de abas | Jest |
+| F6.6.2 | O orçamento pede "Para quem ou para onde", Até buscar, Viagem e Tempo numa linha e "Contar a volta vazia". Pedágio, extras e valor mínimo ficam recolhidos | Jest |
+| F6.6.3 | O preço aparece em "Cobre", num card escuro, com os km cobertos e o valor por hora. Os botões são Salvar e Enviar ao cliente, e "Salvos (n)" no topo mostra os salvos | Jest |
+| F6.6.4 | Os ajustes do Copiloto mostram Ler ofertas com o estado da permissão, Ler pela imagem da tela, "Como avisar", "Cartão" com o resumo da aparência e Testar o cartão agora, Apps lidos e "Leitura não funcionou?" | Jest |
+| F6.6.5 | A configuração do Copiloto tem a barra "Passo 1 de 2", "Deixe o Copiloto ler a tela", os passos numerados, o aviso de configuração restrita e Abrir configurações e Fazer depois no rodapé | Jest |
+| F6.6.6 | O cartão da oferta tem no topo uma faixa na cor da nota, com o selo da plataforma e a nota escrita. Abaixo, o valor, a distância e o tempo, e Por km, Por hora e Sobra | Manual |
+| F6.6.7 | O botão flutuante mostra horas e minutos, como 2:14, e um ponto verde com a jornada rodando ou amarelo com ela pausada | Kotlin e manual |
+
+### F6.7 Mais
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F6.7.1 | Plataformas tem "Apps de corrida", com o selo de cada app e "Ganhos e ofertas", e "Seus ganhos fora dos apps", com Particular e Outros | Jest |
+| F6.7.2 | Idioma e região começa com uma prévia escura de Dinheiro, Data, Distância e Consumo. Idioma, Formato e País ficam numa lista, e Unidades tem Distância, Combustível e Semana começa | Jest |
+| F6.7.3 | Permissões lista Ler a tela, Sobrepor apps, Localização, Notificações e Sem economia de bateria, cada uma com "Ativa" ou o botão para ligar. Sem notificações, um aviso explica o que se perde | Jest |
+| F6.7.4 | Sobre mostra a logo, o nome e a versão, depois Meu resumo para compartilhar, Relatar um problema e Apoiar o projeto, depois Privacidade e Termos de uso, e fecha com "Seus dados ficam só no seu celular." | Jest |
