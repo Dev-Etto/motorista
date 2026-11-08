@@ -12,6 +12,7 @@ import {
   SYSTEM_PLATFORMS_SCHEMA_VERSION,
   SYSTEM_PLATFORMS_SQL,
 } from '@data/database/connection';
+import { insertRow, RowValues } from '@data/database/insertRow';
 import { isJsonOf } from '@data/database/jsonColumn';
 import { SETTING_KEYS, settingsRepository } from '@data/repositories/settingsRepository';
 import { workWeekdaysSchema } from '@domain/goal/goal';
@@ -87,17 +88,8 @@ export function parseBackup(text: string): ParseResult {
   return { ok: true, backup: parsed.data };
 }
 
-async function insertRows(tx: SqlExecutor, table: string, records: Record<string, string | number | null>[]) {
-  for (const record of records) {
-    const columns = Object.keys(record);
-    if (columns.length === 0) continue;
-
-    const placeholders = columns.map(() => '?').join(', ');
-    await tx.runAsync(
-      `INSERT INTO ${table} (${columns.join(', ')}) VALUES (${placeholders})`,
-      columns.map((column) => record[column] ?? null),
-    );
-  }
+async function insertRows(tx: SqlExecutor, table: string, records: RowValues[]) {
+  for (const record of records) await insertRow(tx, table, record);
 }
 
 export async function restoreBackup(backup: BackupFile): Promise<void> {

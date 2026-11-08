@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { i18n } from '@shared/i18n';
 import { reportError } from '@shared/utils/reportError';
+import { subscribeDataChanges } from './dataChanges';
 import { useLatest } from './useLatest';
 
 export interface AsyncData<T> {
@@ -53,7 +54,11 @@ export function useAsyncData<T>(loader: () => Promise<T>, deps: readonly unknown
       const subscription = AppState.addEventListener('change', (state) => {
         if (state === 'active') void reload();
       });
-      return () => subscription.remove();
+      const unsubscribe = subscribeDataChanges(() => void reload());
+      return () => {
+        subscription.remove();
+        unsubscribe();
+      };
     }, [reload]),
   );
 

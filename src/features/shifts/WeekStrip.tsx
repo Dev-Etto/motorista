@@ -10,6 +10,7 @@ import { today, weekdayOf } from '@shared/utils/dates';
 const SHORT_WEEKDAY = 3;
 const DOT = 6;
 const DAY_HEIGHT = 60;
+const DAY_MAX_FONT_SCALE = 1.3;
 
 interface WeekStripProps {
   days: WeekDay[];
@@ -68,10 +69,14 @@ export function WeekStrip({ days, selected, onSelect, onPrevious, onNext }: Week
               onPress={() => onSelect(day.date)}
               style={[styles.day, { backgroundColor: dark ? colors.primary : future ? 'transparent' : colors.surface }]}
             >
-              <AppText variant="caption" style={{ color: dark ? colors.onPrimary : colors.textMuted }}>
+              <AppText variant="caption" maxFontSizeMultiplier={DAY_MAX_FONT_SCALE} style={{ color: dark ? colors.onPrimary : colors.textMuted }}>
                 {isToday ? t('week.today') : name.slice(0, SHORT_WEEKDAY).toLocaleLowerCase()}
               </AppText>
-              <AppText bold style={[styles.number, { color: dark ? colors.onPrimary : future ? colors.textMuted : colors.text }]}>
+              <AppText
+                bold
+                maxFontSizeMultiplier={DAY_MAX_FONT_SCALE}
+                style={[styles.number, { color: dark ? colors.onPrimary : future ? colors.textMuted : colors.text }]}
+              >
                 {Number(day.date.slice(-2))}
               </AppText>
               <View style={[styles.dot, dot ? { backgroundColor: dark && dot === colors.positive ? colors.onPrimary : dot } : null]} />
@@ -90,7 +95,7 @@ const styles = StyleSheet.create({
   back: { transform: [{ scaleX: -1 }] },
   disabled: { opacity: 0.35 },
   days: { flexDirection: 'row', gap: spacing.xs },
-  day: { flex: 1, height: DAY_HEIGHT, borderRadius: radius.md - 2, alignItems: 'center', justifyContent: 'center', gap: 2 },
+  day: { flex: 1, minHeight: DAY_HEIGHT, paddingVertical: spacing.sm, borderRadius: radius.md - 2, alignItems: 'center', justifyContent: 'center', gap: 2 },
   number: { fontFamily: fonts.bold },
   dot: { width: DOT, height: DOT, borderRadius: radius.pill },
 });

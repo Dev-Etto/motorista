@@ -30,7 +30,8 @@
     "later": "Fazer isso depois",
     "clear": "Limpar",
     "retry": "Tentar de novo",
-    "back": "Voltar"
+    "back": "Voltar",
+    "undo": "Desfazer"
   },
   "irreversible": "Essa ação não pode ser desfeita.",
   "invalidNumber": "Confira os números digitados. Use só números, como {{example}}.",

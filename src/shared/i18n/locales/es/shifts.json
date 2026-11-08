@@ -48,7 +48,8 @@
     "endsAround": "Paró alrededor de las {{time}}",
     "resultMath": "{{gross}} de ganancias − {{vehicle}} del vehículo − {{expenses}} de gastos",
     "inCostHint_km": "El combustible y el mantenimiento ya están en el costo por km. Regístralos con el botón de la jornada para comparar lo previsto con lo pagado.",
-    "inCostHint_mi": "El combustible y el mantenimiento ya están en el costo por milla. Regístralos con el botón de la jornada para comparar lo previsto con lo pagado."
+    "inCostHint_mi": "El combustible y el mantenimiento ya están en el costo por milla. Regístralos con el botón de la jornada para comparar lo previsto con lo pagado.",
+    "saved": "Jornada guardada"
   },
   "result": {
     "title": "Resultado",
@@ -63,6 +64,7 @@
     "profitPerHour": "Ganancia por hora"
   },
   "list": {
+    "activeShift": "{{status}}, {{details}}. Abrir los controles de la jornada",
     "addExpense": "Registrar gasto o carga de combustible",
     "emptyDay": "No hay jornadas este día",
     "emptyMessage": "Registra tu primera jornada para ver tu ganancia real.",
@@ -92,7 +94,7 @@
     "notFoundTitle": "Jornada no encontrada",
     "notFoundMessage": "Puede que se haya eliminado.",
     "deleteTitle": "¿Eliminar la jornada?",
-    "deleteMessage": "Se eliminará la jornada del {{date}}, con {{value}} de ganancias. Esta acción no se puede deshacer.",
+    "deleteMessage": "Se eliminará la jornada del {{date}}, con {{value}} de ganancias.",
     "time": "Tiempo",
     "distance": "Distancia",
     "dayOffers": "Ofertas del día",
@@ -102,7 +104,8 @@
     "earnings": "Ganancias",
     "vehicleCost_km": "Costo del vehículo · {{cost}}/km",
     "vehicleCost_mi": "Costo del vehículo · {{cost}}/mi",
-    "byPlatform": "Por plataforma"
+    "byPlatform": "Por plataforma",
+    "deleted": "Jornada eliminada"
   },
   "live": {
     "idleTitle": "Medir ahora",

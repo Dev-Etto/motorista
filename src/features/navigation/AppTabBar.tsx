@@ -12,6 +12,7 @@ import { useUnseenOffers } from './useUnseenOffers';
 const BADGE_SIZE = 16;
 const BADGE_TEXT_SIZE = 10;
 const LABEL_SIZE = 14;
+const LABEL_MAX_FONT_SCALE = 1.2;
 const ICON_SIZE = 22;
 const BAR_GAP = 10;
 
@@ -47,7 +48,7 @@ export function AppTabBar({ state, descriptors, emitter, navigateToTab, insets }
             >
               <AppIcon name={icon} color={focused ? colors.onPrimary : colors.textMuted} size={ICON_SIZE} />
               {focused ? (
-                <AppText numberOfLines={1} style={[styles.label, { color: colors.onPrimary }]}>
+                <AppText numberOfLines={1} maxFontSizeMultiplier={LABEL_MAX_FONT_SCALE} style={[styles.label, { color: colors.onPrimary }]}>
                   {label}
                 </AppText>
               ) : null}
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: spacing.sm,
   },
-  tabActive: { paddingHorizontal: spacing.md + 2 },
+  tabActive: { paddingHorizontal: spacing.md + 2, flexShrink: 1 },
   label: { fontFamily: fonts.bold, fontSize: LABEL_SIZE },
   badge: {
     position: 'absolute',

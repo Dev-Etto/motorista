@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
-    minHeight: MIN_TOUCH_TARGET - spacing.sm,
+    minHeight: MIN_TOUCH_TARGET,
     maxWidth: '50%',
     paddingHorizontal: spacing.md,
     borderRadius: radius.pill,

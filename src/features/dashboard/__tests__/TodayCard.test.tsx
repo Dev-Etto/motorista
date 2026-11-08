@@ -1,8 +1,12 @@
-import { render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 import type { ShiftSummary } from '@domain/shift/summary';
 import { TodayCard } from '@features/dashboard/TodayCard';
 
-jest.mock('expo-router', () => ({ useRouter: () => ({ push: jest.fn() }) }));
+const mockPush = jest.fn();
+const mockLive = { started: false, start: jest.fn(async () => undefined) };
+
+jest.mock('expo-router', () => ({ useRouter: () => ({ push: mockPush }) }));
+jest.mock('@features/shifts', () => ({ useLiveTracking: () => mockLive }));
 
 const summary = {
   grossCents: 26800,
@@ -36,5 +40,25 @@ describe('card Sobrou hoje', () => {
     await render(<TodayCard summary={summary} goal={null} />);
 
     expect(screen.queryByText(/da meta de hoje/)).toBeNull();
+  });
+
+  it('dia sem jornada mostra como começar no lugar dos números vazios', async () => {
+    mockLive.started = false;
+    await render(<TodayCard summary={{ ...summary, count: 0 }} goal={null} />);
+
+    expect(screen.getByText('Nenhuma jornada hoje ainda.')).toBeTruthy();
+    expect(screen.queryByText('Por hora')).toBeNull();
+    await fireEvent.press(screen.getByRole('button', { name: 'Iniciar jornada' }));
+    expect(mockLive.start).toHaveBeenCalled();
+    await fireEvent.press(screen.getByRole('button', { name: 'Registrar passada' }));
+    expect(mockPush).toHaveBeenCalledWith('/shift/new');
+  });
+
+  it('com jornada rodando e nada encerrado, explica quando os números aparecem', async () => {
+    mockLive.started = true;
+    await render(<TodayCard summary={{ ...summary, count: 0 }} goal={null} />);
+
+    expect(screen.getByText('Os valores aparecem quando você encerrar a jornada.')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Iniciar jornada' })).toBeNull();
   });
 });

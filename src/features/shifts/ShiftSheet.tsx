@@ -43,8 +43,16 @@ export function ShiftSheet({ live, visible, onClose }: { live: LiveTrackingState
         {measured ? <AppText tone="muted">{measured}</AppText> : null}
         {isShiftForgotten(live.started, live.elapsedMs) ? <Notice message={t('active.forgotten')} /> : null}
         <ButtonRow>
-          <Button label={live.running ? t('bar.pause') : t('bar.resume')} variant="secondary" onPress={run(live.running ? live.pause : live.start)} />
-          <Button label={t('bar.finish')} onPress={go(() => router.push({ pathname: '/shift/new', params: { finish: '1' } }))} />
+          <Button
+            label={live.running ? t('bar.pause') : t('bar.resume')}
+            variant={live.running ? 'secondary' : 'primary'}
+            onPress={run(live.running ? live.pause : live.start)}
+          />
+          <Button
+            label={t('bar.finish')}
+            variant={live.running ? 'primary' : 'secondary'}
+            onPress={go(() => router.push({ pathname: '/shift/new', params: { finish: '1' } }))}
+          />
         </ButtonRow>
         <View>
           <ListRow icon="fuel" title={t('sheet.fuel')} chevron onPress={go(() => router.push({ pathname: '/expense/new', params: { category: 'fuel' } }))} />

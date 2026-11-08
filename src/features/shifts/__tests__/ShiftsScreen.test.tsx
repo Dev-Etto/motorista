@@ -39,6 +39,8 @@ jest.mock('@features/reports', () => ({
   },
 }));
 jest.mock('@features/shifts/shiftQueries', () => ({ loadPeriod: jest.fn(async () => mockData) }));
+const mockLive = { started: false, running: false, elapsedMs: 0, km: 0, startedAt: 0, measureKm: false };
+jest.mock('@features/shifts/useLiveTracking', () => ({ useLiveTracking: () => mockLive }));
 
 const METRICS = { frame: { x: 0, y: 0, width: 390, height: 800 }, insets: { top: 0, left: 0, right: 0, bottom: 0 } };
 const renderScreen = () =>
@@ -53,6 +55,24 @@ describe('tela Jornadas', () => {
     jest.clearAllMocks();
     mockData.shifts = [];
     mockData.expenses = [];
+    Object.assign(mockLive, { started: false, running: false, elapsedMs: 0, km: 0 });
+  });
+
+  it('com jornada pausada, mostra a jornada no topo e abre os controles', async () => {
+    Object.assign(mockLive, { started: true, running: false, elapsedMs: 20_000 });
+    await renderScreen();
+
+    const row = await screen.findByRole('button', { name: 'Jornada pausada, 00:00:20. Abrir os controles da jornada' });
+    await fireEvent.press(row);
+
+    expect(screen.getByRole('button', { name: 'Retomar' })).toBeTruthy();
+  });
+
+  it('sem jornada iniciada, não mostra a jornada no topo', async () => {
+    await renderScreen();
+
+    expect(await screen.findByText('Nenhuma jornada nesta semana')).toBeTruthy();
+    expect(screen.queryByText('Jornada pausada')).toBeNull();
   });
 
   it('um botão Adicionar oferece jornada, abastecimento e outra despesa', async () => {

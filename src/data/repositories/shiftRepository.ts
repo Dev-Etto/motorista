@@ -1,4 +1,5 @@
 import { getDb, runInTransaction, SqlExecutor } from '@data/database/connection';
+import { insertRow } from '@data/database/insertRow';
 import { countsAgainstProfit, ExpenseCategory } from '@domain/expense/expense';
 import { ShiftFact } from '@domain/insights/types';
 import { KmTotals } from '@domain/reminder/reminder';
@@ -7,7 +8,7 @@ import { vehicleRepository } from './vehicleRepository';
 
 export type KmSource = 'manual' | 'odometer' | 'gps';
 
-interface ShiftRow {
+export interface ShiftRow {
   id: number;
   vehicle_id: number | null;
   date: string;
@@ -133,6 +134,19 @@ async function insertChildren(tx: SqlExecutor, shiftId: number, input: ShiftInpu
   }
 }
 
+interface EarningRow {
+  id: number;
+  shift_id: number;
+  platform_id: number;
+  cents: number;
+}
+
+export interface ShiftSnapshot {
+  shift: ShiftRow & { created_at: number };
+  earnings: EarningRow[];
+  expenses: ExpenseRow[];
+}
+
 export function createShiftRepository(connection: () => SqlExecutor = getDb, vehicles = vehicleRepository) {
   return {
     async save(input: ShiftInput): Promise<number> {
@@ -153,6 +167,26 @@ export function createShiftRepository(connection: () => SqlExecutor = getDb, veh
 
     async remove(id: number): Promise<void> {
       await connection().runAsync('DELETE FROM shifts WHERE id = ?', id);
+    },
+
+    async snapshot(id: number): Promise<ShiftSnapshot | null> {
+      const db = connection();
+      const shift = await db.getFirstAsync<ShiftRow & { created_at: number }>('SELECT * FROM shifts WHERE id = ?', id);
+      if (!shift) return null;
+
+      const [earnings, expenses] = await Promise.all([
+        db.getAllAsync<EarningRow>('SELECT * FROM shift_earnings WHERE shift_id = ?', id),
+        db.getAllAsync<ExpenseRow>('SELECT * FROM expenses WHERE shift_id = ?', id),
+      ]);
+      return { shift, earnings, expenses };
+    },
+
+    async restore({ shift, earnings, expenses }: ShiftSnapshot): Promise<void> {
+      await runInTransaction(async (tx) => {
+        await insertRow(tx, 'shifts', shift);
+        for (const earning of earnings) await insertRow(tx, 'shift_earnings', earning);
+        for (const expense of expenses) await insertRow(tx, 'expenses', expense);
+      });
     },
 
     async findById(id: number) {

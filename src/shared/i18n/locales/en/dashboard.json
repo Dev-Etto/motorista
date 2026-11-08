@@ -6,7 +6,7 @@
   },
   "gpsProblem_km": "Kilometers aren't being tracked. {{problem}}",
   "gpsProblem_mi": "Miles aren't being tracked. {{problem}}",
-  "missingFixedCosts": "This profit doesn't include insurance, vehicle tax, loan payments, or rent yet. Add them in Vehicle and costs to see the real amount.",
+  "missingFixedCosts": "This profit doesn't include insurance, vehicle tax, loan payments, or rent yet. Add them in More › Vehicles and costs to see the real amount.",
   "backup": {
     "action": "Back up now"
   },
@@ -27,13 +27,17 @@
   },
   "today": {
     "title": "Left today",
-    "details": "Details",
     "gross": "Earned",
     "perKm_km": "Per km",
     "perKm_mi": "Per mile",
     "perHour": "Per hour",
     "goal": "{{percent}}% of today's goal · {{remaining}} to go",
-    "goalReached": "Today's goal reached · {{percent}}%"
+    "goalReached": "Today's goal reached · {{percent}}%",
+    "seeGoal": "See goal",
+    "empty": "No shifts today yet.",
+    "emptyRunning": "The numbers show up when you finish the shift.",
+    "recordPast": "Log a past one",
+    "start": "Start shift"
   },
   "lastOffer": {
     "title": "Last offer · {{ago}}",

@@ -14,6 +14,7 @@ import { AppSplash, keepNativeSplash } from '@shared/ui/AppSplash';
 import { DialogHost } from '@shared/ui/DialogHost';
 import { Notice, Screen } from '@shared/ui/primitives';
 import { ThemedStatusBar } from '@shared/ui/ThemedStatusBar';
+import { ToastHost } from '@shared/ui/ToastHost';
 import { reportError } from '@shared/utils/reportError';
 
 keepNativeSplash();
@@ -118,6 +119,7 @@ function AppStack() {
         ))}
       </Stack>
       <DialogHost />
+      <ToastHost />
     </>
   );
 }

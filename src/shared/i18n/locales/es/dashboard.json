@@ -6,7 +6,7 @@
   },
   "gpsProblem_km": "Los km no se están midiendo. {{problem}}",
   "gpsProblem_mi": "Las millas no se están midiendo. {{problem}}",
-  "missingFixedCosts": "Esta ganancia todavía no considera seguro, impuesto vehicular, cuota o alquiler. Inclúyelos en Vehículo y costos para ver el valor real.",
+  "missingFixedCosts": "Esta ganancia todavía no considera seguro, impuesto vehicular, cuota o alquiler. Inclúyelos en Más › Vehículos y costos para ver el valor real.",
   "backup": {
     "action": "Hacer copia de seguridad"
   },
@@ -27,13 +27,17 @@
   },
   "today": {
     "title": "Te quedó hoy",
-    "details": "Detalles",
     "gross": "Facturaste",
     "perKm_km": "Por km",
     "perKm_mi": "Por milla",
     "perHour": "Por hora",
     "goal": "{{percent}}% de la meta de hoy · faltan {{remaining}}",
-    "goalReached": "Meta de hoy cumplida · {{percent}}%"
+    "goalReached": "Meta de hoy cumplida · {{percent}}%",
+    "seeGoal": "Ver meta",
+    "empty": "Todavía no hay jornadas hoy.",
+    "emptyRunning": "Los valores aparecen cuando termines la jornada.",
+    "recordPast": "Registrar pasada",
+    "start": "Iniciar jornada"
   },
   "lastOffer": {
     "title": "Última oferta · {{ago}}",

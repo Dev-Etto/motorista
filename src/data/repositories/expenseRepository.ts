@@ -1,4 +1,5 @@
 import { getDb, SqlExecutor } from '@data/database/connection';
+import { insertRow } from '@data/database/insertRow';
 import { countsAgainstProfit, ExpenseCategory } from '@domain/expense/expense';
 
 export interface ExpenseRow {
@@ -48,6 +49,10 @@ export function createExpenseRepository(connection: () => SqlExecutor = getDb) {
 
     async remove(id: number): Promise<void> {
       await connection().runAsync('DELETE FROM expenses WHERE id = ?', id);
+    },
+
+    async restore(row: ExpenseRow): Promise<void> {
+      await insertRow(connection(), 'expenses', row);
     },
 
     listLoose(start: string, end: string): Promise<ExpenseRow[]> {

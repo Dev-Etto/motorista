@@ -30,7 +30,8 @@
     "later": "Do this later",
     "clear": "Clear",
     "retry": "Try again",
-    "back": "Back"
+    "back": "Back",
+    "undo": "Undo"
   },
   "irreversible": "This action can't be undone.",
   "invalidNumber": "Check the numbers you entered. Use numbers only, like {{example}}.",

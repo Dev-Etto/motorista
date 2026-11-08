@@ -48,7 +48,8 @@
     "endsAround": "Stopped around {{time}}",
     "resultMath": "{{gross}} earned − {{vehicle}} for the vehicle − {{expenses}} in expenses",
     "inCostHint_km": "Fuel and maintenance are already in the cost per km. Log them from the shift button to compare planned and paid.",
-    "inCostHint_mi": "Fuel and maintenance are already in the cost per mile. Log them from the shift button to compare planned and paid."
+    "inCostHint_mi": "Fuel and maintenance are already in the cost per mile. Log them from the shift button to compare planned and paid.",
+    "saved": "Shift saved"
   },
   "result": {
     "title": "Result",
@@ -63,6 +64,7 @@
     "profitPerHour": "Profit per hour"
   },
   "list": {
+    "activeShift": "{{status}}, {{details}}. Open the shift controls",
     "addExpense": "Add expense or refuel",
     "emptyDay": "No shifts on this day",
     "emptyMessage": "Log your first shift to see your real profit.",
@@ -92,7 +94,7 @@
     "notFoundTitle": "Shift not found",
     "notFoundMessage": "It may have been deleted.",
     "deleteTitle": "Delete shift?",
-    "deleteMessage": "The {{date}} shift, with {{value}} in earnings, will be deleted. This can't be undone.",
+    "deleteMessage": "The {{date}} shift, with {{value}} in earnings, will be deleted.",
     "time": "Time",
     "distance": "Distance",
     "dayOffers": "Offers for the day",
@@ -102,7 +104,8 @@
     "earnings": "Earnings",
     "vehicleCost_km": "Vehicle cost · {{cost}}/km",
     "vehicleCost_mi": "Vehicle cost · {{cost}}/mi",
-    "byPlatform": "By platform"
+    "byPlatform": "By platform",
+    "deleted": "Shift deleted"
   },
   "live": {
     "idleTitle": "Measure now",
