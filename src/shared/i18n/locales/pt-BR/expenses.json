@@ -26,7 +26,8 @@
       "title": "Excluir {{label}}?",
       "message": "O lançamento de {{amount}} sai dos seus resultados."
     },
-    "vehicleLabel": "Veículo"
+    "vehicleLabel": "Veículo",
+    "today": "Hoje"
   },
   "alreadyInCost_km": "{{category}} já está no custo por km. O valor serve para comparar o previsto com o pago.",
   "alreadyInCost_mi": "{{category}} já está no custo por milha. O valor serve para comparar o previsto com o pago.",

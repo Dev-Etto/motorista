@@ -26,7 +26,8 @@
       "title": "¿Eliminar {{label}}?",
       "message": "El registro de {{amount}} sale de tus resultados."
     },
-    "vehicleLabel": "Vehículo"
+    "vehicleLabel": "Vehículo",
+    "today": "Hoy"
   },
   "alreadyInCost_km": "{{category}} ya está en el costo por km. El valor sirve para comparar lo previsto con lo pagado.",
   "alreadyInCost_mi": "{{category}} ya está en el costo por milla. El valor sirve para comparar lo previsto con lo pagado.",
