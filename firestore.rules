@@ -1,0 +1,28 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /reports/{reportId} {
+      allow create: if request.resource.data.keys().hasOnly([
+          'description', 'version', 'android', 'device', 'language',
+          'accessibilityGranted', 'failedReads', 'readings', 'createdAt'
+        ])
+        && request.resource.data.description is string
+        && request.resource.data.description.size() > 0
+        && request.resource.data.description.size() <= 4000
+        && request.resource.data.version is string && request.resource.data.version.size() <= 20
+        && request.resource.data.android is string && request.resource.data.android.size() <= 10
+        && request.resource.data.device is string && request.resource.data.device.size() <= 100
+        && request.resource.data.language is string && request.resource.data.language.size() <= 10
+        && request.resource.data.accessibilityGranted is bool
+        && request.resource.data.failedReads is int
+        && request.resource.data.readings is list && request.resource.data.readings.size() <= 50
+        && request.resource.data.createdAt == request.time;
+      allow read, update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
