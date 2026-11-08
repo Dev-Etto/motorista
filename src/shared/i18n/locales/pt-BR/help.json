@@ -81,5 +81,11 @@
     "title": "Como instalar uma atualização",
     "howTo": "Em Mais, toque em Verificar atualização, baixe a nova versão e instale por cima da atual. Seus dados continuam no app.",
     "backupFirst": "Faça um backup antes, por segurança."
+  },
+  "example": {
+    "title": "Uma corrida de exemplo",
+    "gross": "Ganho",
+    "cost": "Custo · {{distance}} × {{cost}}",
+    "profit": "Lucro"
   }
 }

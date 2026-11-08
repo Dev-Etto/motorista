@@ -61,6 +61,10 @@
       "about": {
         "title": "Acerca de la app",
         "subtitle": "Privacidad, términos, versión y apoyo"
+      },
+      "appearance": {
+        "title": "Apariencia",
+        "subtitle": "Automático, claro u oscuro"
       }
     },
     "about": {
@@ -82,14 +86,15 @@
     "title": "Tema",
     "system": "Automático",
     "light": "Claro",
-    "dark": "Oscuro"
+    "dark": "Oscuro",
+    "hint": "Automático sigue el tema del celular. El oscuro cansa menos la vista de noche.",
+    "cardTitle": "Tarjeta del Copiloto",
+    "cardSubtitle": "Tiene su propio tema, para leer sobre la app de viajes"
   },
   "backup": {
     "never": "Nunca",
     "tip": "Guarda el archivo fuera del celular, como en Drive o en tu correo. Al cambiar de dispositivo, usa Restaurar.",
     "intro": "Tus datos quedan solo en este celular. Con una copia de seguridad, te los llevas adonde quieras, incluso si cambias de dispositivo o reinstalas la app. El archivo no tiene contraseña: guárdalo en un lugar solo tuyo.",
-    "cardTitle": "Copia de seguridad",
-    "lastBackup": "Última copia de seguridad",
     "exportButton": "Hacer copia de seguridad",
     "restoreButton": "Restaurar desde un archivo",
     "undoButton": "Deshacer la última restauración",
@@ -127,7 +132,11 @@
       "yes": "Lo guardé",
       "no": "No lo guardé"
     },
-    "preview": "Copia del {{date}}. Jornadas: {{shifts}}. Vehículos: {{vehicles}}."
+    "preview": "Copia del {{date}}. Jornadas: {{shifts}}. Vehículos: {{vehicles}}.",
+    "protected": "Datos protegidos",
+    "attention": "Haz una copia de seguridad",
+    "lastLine": "Última copia: {{date}}",
+    "othersTitle": "Otras opciones"
   },
   "dailyReminder": {
     "title": "Fin del día",
@@ -261,6 +270,10 @@
       "title": "¿Crear el próximo?",
       "message": "Recordar \"{{title}}\" de nuevo dentro de {{distance}}.",
       "action": "Crear"
+    },
+    "urgency": {
+      "overdue": "Atrasado",
+      "soon": "Pronto"
     }
   },
   "report": {

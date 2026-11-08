@@ -61,6 +61,10 @@
       "about": {
         "title": "About the app",
         "subtitle": "Privacy, terms, version and support"
+      },
+      "appearance": {
+        "title": "Appearance",
+        "subtitle": "Automatic, light or dark"
       }
     },
     "about": {
@@ -82,14 +86,15 @@
     "title": "Theme",
     "system": "Automatic",
     "light": "Light",
-    "dark": "Dark"
+    "dark": "Dark",
+    "hint": "Automatic follows your phone's theme. Dark is easier on the eyes at night.",
+    "cardTitle": "Copilot card",
+    "cardSubtitle": "Has its own theme, to read over the ride app"
   },
   "backup": {
     "never": "Never",
     "tip": "Keep the file outside your phone, like in Drive or your email. When you switch devices, use Restore.",
     "intro": "Your data is stored only on this phone. With a backup, you can take it anywhere, including if you switch devices or reinstall the app. The file has no password: keep it somewhere only you can access.",
-    "cardTitle": "Backup",
-    "lastBackup": "Last backup",
     "exportButton": "Back up now",
     "restoreButton": "Restore from a file",
     "undoButton": "Undo the last restore",
@@ -127,7 +132,11 @@
       "yes": "I saved it",
       "no": "I didn't"
     },
-    "preview": "Backup from {{date}}. Shifts: {{shifts}}. Vehicles: {{vehicles}}."
+    "preview": "Backup from {{date}}. Shifts: {{shifts}}. Vehicles: {{vehicles}}.",
+    "protected": "Data protected",
+    "attention": "Make a backup",
+    "lastLine": "Last backup: {{date}}",
+    "othersTitle": "Other options"
   },
   "dailyReminder": {
     "title": "End of day",
@@ -261,6 +270,10 @@
       "title": "Create the next one?",
       "message": "Remind about \"{{title}}\" again in {{distance}}.",
       "action": "Create"
+    },
+    "urgency": {
+      "overdue": "Overdue",
+      "soon": "Soon"
     }
   },
   "report": {

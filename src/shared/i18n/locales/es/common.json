@@ -63,7 +63,8 @@
     "regionLanguage": "Idioma",
     "regionFormat": "Formato regional",
     "calculator": "Calculadora",
-    "about": "Acerca de"
+    "about": "Acerca de",
+    "appearance": "Apariencia"
   },
   "tabs": {
     "home": "Inicio",

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { reminderUrgency, SOON_DAYS } from '@domain/reminder/reminder';
 import { useFormFields } from '@shared/hooks/useFormFields';
 import { useSubmit } from '@shared/hooks/useSubmit';
 import { useFormat } from '@shared/i18n/format';
@@ -7,7 +8,8 @@ import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
 import { DateField } from '@shared/ui/DateField';
 import { showDialog } from '@shared/ui/dialog';
 import { NumberField, TextField } from '@shared/ui/fields';
-import { Button, ButtonRow, Card, EmptyState, ListRow, Notice, Screen } from '@shared/ui/primitives';
+import { Button, ButtonRow, Card, Collapsible, EmptyState, ListRow, Notice, Screen } from '@shared/ui/primitives';
+import { addDays, today } from '@shared/utils/dates';
 import { DailyReminderCard } from './DailyReminderCard';
 import { describeReminderDue } from './describeReminderDue';
 import { Reminder, useReminders } from './useReminders';
@@ -21,6 +23,13 @@ export default function RemindersScreen() {
   const format = useFormat();
   const unitContext = { context: format.distanceUnit };
   const describeDue = (reminder: Reminder) => describeReminderDue(reminder, kmOf(reminder), t, format);
+  const now = today();
+  const urgencyOf = (reminder: Reminder) =>
+    reminderUrgency({ dueKm: reminder.dueKm, dueDate: reminder.dueDate, totalKm: kmOf(reminder), today: now, soonDate: addDays(now, SOON_DAYS) });
+  const urgencyLabel = (reminder: Reminder) => {
+    const urgency = urgencyOf(reminder);
+    return urgency ? t(`reminders.urgency.${urgency}`) : undefined;
+  };
   const [dueDate, setDueDate] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
@@ -72,7 +81,27 @@ export default function RemindersScreen() {
   return (
     <Screen>
       {warning ? <Notice tone="accent" message={warning} /> : null}
-      <Card title={t('reminders.newTitle')}>
+      <AsyncBoundary state={state}>
+        {() =>
+          pending.length === 0 ? (
+            <EmptyState title={t('reminders.emptyTitle')} message={t('reminders.emptyMessage')} />
+          ) : (
+            <Card title={t('reminders.pendingTitle')}>
+              {pending.map((reminder) => (
+                <ListRow
+                  key={reminder.id}
+                  title={reminder.title}
+                  subtitle={describeDue(reminder)}
+                  value={urgencyLabel(reminder)}
+                  valueTone={urgencyOf(reminder) === 'overdue' ? 'negative' : 'warning'}
+                  onPress={() => chooseAction(reminder)}
+                />
+              ))}
+            </Card>
+          )
+        }
+      </AsyncBoundary>
+      <Collapsible title={t('reminders.newTitle')} forceOpen={failure !== null}>
         {profile ? (
           <ButtonRow>
             <Button
@@ -97,21 +126,8 @@ export default function RemindersScreen() {
         />
         {failure ? <Notice tone="negative" message={failure} /> : null}
         <Button label={t('common:actions.add')} busy={saving.busy} onPress={saving.submit} />
-      </Card>
+      </Collapsible>
       <DailyReminderCard />
-      <AsyncBoundary state={state}>
-        {() =>
-          pending.length === 0 ? (
-            <EmptyState title={t('reminders.emptyTitle')} message={t('reminders.emptyMessage')} />
-          ) : (
-            <Card title={t('reminders.pendingTitle')}>
-              {pending.map((reminder) => (
-                <ListRow key={reminder.id} title={reminder.title} subtitle={describeDue(reminder)} onPress={() => chooseAction(reminder)} />
-              ))}
-            </Card>
-          )
-        }
-      </AsyncBoundary>
     </Screen>
   );
 }

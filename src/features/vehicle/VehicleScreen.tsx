@@ -5,6 +5,7 @@ import { useAsyncData } from '@shared/hooks/useAsyncData';
 import { useSubmit } from '@shared/hooks/useSubmit';
 import { confirmAction, showDialog } from '@shared/ui/dialog';
 import { Button, Notice, Screen } from '@shared/ui/primitives';
+import { CostHero } from './CostHero';
 import { CostSummaryCard } from './CostSummaryCard';
 import { useVehicleForm, VehicleTarget } from './useVehicleForm';
 import { VehicleCostForm } from './VehicleCostForm';
@@ -67,6 +68,7 @@ export default function VehicleScreen() {
 
   return (
     <Screen>
+      <CostHero costs={form.costs} />
       <VehicleCostForm form={form} />
       <CostSummaryCard costs={form.costs} detailed />
       <Notice tone="accent" message={t('manage.validFromToday')} />

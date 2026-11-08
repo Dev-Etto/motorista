@@ -66,7 +66,7 @@ function ShiftDetailContent({ shiftId, detail }: { shiftId: number; detail: Shif
         <AppText variant="display" bold tone={profitTone(result.profitCents)}>
           {format.money(result.profitCents)}
         </AppText>
-        <StatGrid>
+        <StatGrid columns={3}>
           <Stat label={t('detail.time')} value={format.duration(shift.minutes)} />
           <Stat label={t('detail.distance')} value={format.distance(shift.km)} />
           <Stat label={t('result.profitPerHour')} value={format.perHour(result.profitPerHour)} />

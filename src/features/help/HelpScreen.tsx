@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useFormat } from '@shared/i18n/format';
 import { AppText, Button, Collapsible, Screen } from '@shared/ui/primitives';
+import { ExampleRideCard } from './ExampleRideCard';
 import { helpSections } from './helpContent';
 
 export default function HelpScreen() {
@@ -11,6 +12,7 @@ export default function HelpScreen() {
 
   return (
     <Screen>
+      <ExampleRideCard />
       {helpSections(t, format).map((section) => (
         <Collapsible key={section.id} title={section.title}>
           {section.paragraphs.map((paragraph) => (

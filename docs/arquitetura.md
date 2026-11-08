@@ -327,3 +327,7 @@ Spec: `docs/specs/redesign-0.14.md`.
 - **Pular em cada passo:** `StepHeader` junta o progresso e "Pular" no topo dos passos do primeiro uso, e os botões secundários de pular saem do rodapé.
 - **Mais em três grupos:** `MORE_SECTIONS` tem Trabalho, App e Ajuda e sobre. O que se usa pouco (resumo, relato, privacidade, termos, versão e apoio) foi para `/about`, listado por `ABOUT_SECTIONS`. `MenuSection` desenha os dois.
 - **Nova jornada em etapas:** `SHIFT_FORM_STEPS` divide o formulário em Tempo e km, Ganhos, e Despesas e resultado. `stepOfError` liga cada erro à etapa. Continuar só para por erro da etapa atual, e salvar com erro volta para a etapa dele. A edição mostra tudo numa tela, porque quem edita costuma mudar um campo só.
+- **Gaveta da jornada:** `ShiftSheet` é um `Modal` que sobe de baixo, aberto pelo botão da barra. Ele recebe o `live` do botão, então a gaveta e o botão mostram sempre o mesmo estado.
+- **Início enxuto:** o Início mostra só o que importa no dia: jornada, lucro de hoje com a meta do dia (`todayGoal`), pendências e a última oferta. Semana, mês e dicas ficaram no Resumo, e a explicação do lucro na Ajuda.
+- **Semana na lista:** Jornadas carrega uma semana por vez (`loadPeriod`) e `buildWeek` monta a faixa de 7 dias. `groupShiftsByDay` também recebe os lançamentos avulsos, e só os que contam no lucro descontam do dia.
+- **Hora de carregar como dado:** "há 4 min" e a situação do backup usam a hora gravada no carregamento (`loadedAt`), porque chamar `Date.now()` durante a renderização deixa o componente impuro.

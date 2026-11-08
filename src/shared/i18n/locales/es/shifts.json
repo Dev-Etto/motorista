@@ -165,7 +165,7 @@
   },
   "sheet": {
     "since": "En curso desde {{time}}",
-    "pausedAt": "En pausa en {{time}}",
+    "pausedAt": "En pausa · empezó a las {{time}}",
     "measured_km": "{{distance}} medidos por GPS",
     "measured_mi": "{{distance}} medidas por GPS",
     "fuel": "Registrar carga de combustible",

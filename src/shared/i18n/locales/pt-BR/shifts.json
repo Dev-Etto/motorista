@@ -165,7 +165,7 @@
   },
   "sheet": {
     "since": "Em andamento desde {{time}}",
-    "pausedAt": "Pausada em {{time}}",
+    "pausedAt": "Pausada · começou às {{time}}",
     "measured_km": "{{distance}} medidos por GPS",
     "measured_mi": "{{distance}} medidas por GPS",
     "fuel": "Lançar abastecimento",

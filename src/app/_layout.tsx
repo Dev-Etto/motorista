@@ -34,6 +34,7 @@ const SCREENS = [
   { name: 'privacy', titleKey: 'screens.privacy' },
   { name: 'terms', titleKey: 'screens.terms' },
   { name: 'about', titleKey: 'screens.about' },
+  { name: 'appearance', titleKey: 'screens.appearance' },
   { name: 'shift/new', titleKey: 'screens.shiftNew' },
   { name: 'shift/[id]', titleKey: 'screens.shiftDetail' },
   { name: 'expense/new', titleKey: 'screens.expenseNew' },

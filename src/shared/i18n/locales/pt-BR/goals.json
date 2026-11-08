@@ -60,6 +60,7 @@
       "dayTarget": "Confira o lucro de hoje. Use só números, como {{example}}."
     },
     "carried": "Repetindo a meta de {{month}}. Salve para usar neste mês ou mude os valores.",
-    "planVehicle": "O plano usa o custo do {{name}}, o veículo atual. O Mês fechado, em Relatórios, soma o custo de cada veículo usado."
+    "planVehicle": "O plano usa o custo do {{name}}, o veículo atual. O Mês fechado, em Relatórios, soma o custo de cada veículo usado.",
+    "editGoal": "Editar a meta"
   }
 }

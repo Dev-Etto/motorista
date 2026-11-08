@@ -39,7 +39,7 @@ export function TodayCard({ summary, goal }: { summary: ShiftSummary; goal: Toda
           </AppText>
         </View>
       ) : null}
-      <StatGrid>
+      <StatGrid columns={3}>
         <Stat label={t('today.gross')} value={format.money(summary.grossCents)} />
         <Stat label={t('today.perKm', { context: format.distanceUnit })} value={format.perDistance(summary.grossPerKm)} />
         <Stat label={t('today.perHour')} value={format.perHour(summary.profitPerHour)} />

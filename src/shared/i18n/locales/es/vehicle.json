@@ -116,5 +116,10 @@
       "title": "¿Reactivar {{name}}?",
       "message": "Vuelve a las opciones de jornada y gasto."
     }
+  },
+  "costHero": {
+    "title_km": "Cada km cuesta",
+    "title_mi": "Cada milla cuesta",
+    "breakdown": "Combustible {{fuel}} · desgaste {{wear}} · fijos {{fixed}}"
   }
 }

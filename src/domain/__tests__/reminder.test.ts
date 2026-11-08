@@ -1,4 +1,4 @@
-import { isDueByKm, kmFor, kmRemaining } from '@domain/reminder/reminder';
+import { isDueByKm, kmFor, kmRemaining, reminderUrgency } from '@domain/reminder/reminder';
 
 describe('lembrete por km', () => {
   it('vence quando o total de km chega ao combinado', () => {
@@ -27,5 +27,23 @@ describe('km do lembrete por veículo', () => {
 
   it('lembrete antigo, sem veículo, conta todas as jornadas', () => {
     expect(kmFor(null, totals)).toBe(140);
+  });
+});
+
+describe('urgência do lembrete', () => {
+  const base = { dueKm: null, dueDate: null, totalKm: 48320, today: '2026-11-07', soonDate: '2026-11-14' };
+
+  it('passou do km ou da data, está atrasado', () => {
+    expect(reminderUrgency({ ...base, dueKm: 48000 })).toBe('overdue');
+    expect(reminderUrgency({ ...base, dueDate: '2026-11-06' })).toBe('overdue');
+  });
+
+  it('faltando até 1.000 km ou 7 dias, vem em breve', () => {
+    expect(reminderUrgency({ ...base, dueKm: 49000 })).toBe('soon');
+    expect(reminderUrgency({ ...base, dueDate: '2026-11-14' })).toBe('soon');
+  });
+
+  it('longe do km e da data, sem selo', () => {
+    expect(reminderUrgency({ ...base, dueKm: 53000, dueDate: '2026-12-15' })).toBeNull();
   });
 });
