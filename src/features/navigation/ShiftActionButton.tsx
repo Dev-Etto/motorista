@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text } from 'react-native';
-import { useLiveTracking } from '@features/shifts';
+import { ShiftSheet, useLiveTracking } from '@features/shifts';
 import { fonts, radius, ThemeColors, useTheme } from '@shared/theme/theme';
 import { AppIcon } from '@shared/ui/AppIcon';
 import { formatElapsedShort } from '@shared/utils/dates';
@@ -21,10 +22,11 @@ const FILL: Record<ShiftButtonState, { fill: keyof ThemeColors; ink: keyof Theme
   paused: { fill: 'shiftPaused', ink: 'onShiftPaused' },
 };
 
-export function ShiftButton({ onOpen }: { onOpen: () => void }) {
+export function ShiftButton() {
   const colors = useTheme();
   const { t } = useTranslation();
   const live = useLiveTracking(ignoreApply);
+  const [sheetOpen, setSheetOpen] = useState(false);
   const state = shiftButtonState(live.started, live.running);
   const ink = colors[FILL[state].ink];
   const time = formatElapsedShort(live.elapsedMs);
@@ -32,26 +34,29 @@ export function ShiftButton({ onOpen }: { onOpen: () => void }) {
   const label = state === 'idle' ? t('tabs.shiftButton.start') : t(`tabs.shiftButton.${state}`, { time: spoken });
 
   const press = () => {
-    if (state !== 'idle') return onOpen();
+    if (state !== 'idle') return setSheetOpen(true);
     live.start().catch(reportError);
   };
 
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      onPress={press}
-      style={({ pressed }) => [styles.button, { backgroundColor: colors[FILL[state].fill], boxShadow: colors.floatingShadow, opacity: pressed ? 0.85 : 1 }]}
-    >
-      {state === 'idle' ? (
-        <AppIcon name="play" color={ink} size={ICON_SIZE} />
-      ) : (
-        <Text maxFontSizeMultiplier={1} style={[styles.time, { color: ink, fontSize: time.length >= LONG_TIME_LENGTH ? LONG_TIME_SIZE : TIME_SIZE }]}>
-          {time}
-        </Text>
-      )}
-      {state === 'paused' ? <AppIcon name="pause" color={ink} size={PAUSE_ICON_SIZE} /> : null}
-    </Pressable>
+    <>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        onPress={press}
+        style={({ pressed }) => [styles.button, { backgroundColor: colors[FILL[state].fill], boxShadow: colors.floatingShadow, opacity: pressed ? 0.85 : 1 }]}
+      >
+        {state === 'idle' ? (
+          <AppIcon name="play" color={ink} size={ICON_SIZE} />
+        ) : (
+          <Text maxFontSizeMultiplier={1} style={[styles.time, { color: ink, fontSize: time.length >= LONG_TIME_LENGTH ? LONG_TIME_SIZE : TIME_SIZE }]}>
+            {time}
+          </Text>
+        )}
+        {state === 'paused' ? <AppIcon name="pause" color={ink} size={PAUSE_ICON_SIZE} /> : null}
+      </Pressable>
+      <ShiftSheet live={live} visible={sheetOpen && state !== 'idle'} onClose={() => setSheetOpen(false)} />
+    </>
   );
 }
 

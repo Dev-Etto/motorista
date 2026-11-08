@@ -74,8 +74,8 @@
     "unseenOffers_other": "{{count}} ofertas novas",
     "shiftButton": {
       "start": "Iniciar jornada",
-      "running": "Jornada em andamento, {{time}}. Abrir o Início",
-      "paused": "Jornada pausada em {{time}}. Abrir o Início",
+      "running": "Jornada em andamento, {{time}}. Abrir os controles",
+      "paused": "Jornada pausada em {{time}}. Abrir os controles",
       "overDay": "mais de 24 horas",
       "lessThanMinute": "menos de 1 minuto",
       "hours_one": "{{count}} hora",
