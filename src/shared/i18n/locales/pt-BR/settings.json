@@ -192,7 +192,8 @@
     "estimates": {
       "title": "Estimativas",
       "body": "Os resultados são estimativas feitas com os dados que você informa. Não são aconselhamento financeiro nem fiscal."
-    }
+    },
+    "fullPolicy": "Ler a política de privacidade completa"
   },
   "terms": {
     "about": {
@@ -237,9 +238,10 @@
     },
     "changes": {
       "title": "Mudanças",
-      "body": "Estes termos podem mudar em novas versões do app. Dúvidas e problemas podem ser enviados pela opção Relatar um problema, em Mais."
+      "body": "Estes termos podem mudar em novas versões do app. Dúvidas e problemas podem ser enviados pela opção Relatar um problema, em Mais, ou para {{email}}."
     },
-    "updatedAt": "Atualizados em 8 de novembro de 2026."
+    "updatedAt": "Atualizados em 8 de novembro de 2026.",
+    "fullTerms": "Ler os termos no site"
   },
   "reminders": {
     "newTitle": "Novo lembrete",

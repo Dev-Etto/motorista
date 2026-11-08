@@ -192,7 +192,8 @@
     "estimates": {
       "title": "Estimates",
       "body": "The results are estimates based on the data you enter. They aren't financial or tax advice."
-    }
+    },
+    "fullPolicy": "Read the full privacy policy"
   },
   "terms": {
     "about": {
@@ -237,9 +238,10 @@
     },
     "changes": {
       "title": "Changes",
-      "body": "These terms may change in new versions of the app. Questions and problems can be sent through the Report a problem option, in More."
+      "body": "These terms may change in new versions of the app. Questions and problems can be sent through the Report a problem option, in More, or to {{email}}."
     },
-    "updatedAt": "Updated on November 8, 2026."
+    "updatedAt": "Updated on November 8, 2026.",
+    "fullTerms": "Read the terms on the website"
   },
   "reminders": {
     "newTitle": "New reminder",

@@ -1,6 +1,8 @@
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { Linking } from 'react-native';
 import { deleteAllData } from '@application/deleteAllData';
+import { PRIVACY_POLICY_URL } from '@config/app';
 import { confirmAction } from '@shared/ui/dialog';
 import { Button } from '@shared/ui/primitives';
 import { InfoScreen } from './InfoScreen';
@@ -27,6 +29,7 @@ export default function PrivacyScreen() {
         <>
           <Button label={t('privacyChoices.open')} onPress={() => router.push('/privacy-choices')} />
           <Button label={t('deleteData.action')} variant="secondary" onPress={deleteAll} />
+          <Button label={t('privacy.fullPolicy')} variant="secondary" onPress={() => Linking.openURL(PRIVACY_POLICY_URL)} />
         </>
       }
     />
