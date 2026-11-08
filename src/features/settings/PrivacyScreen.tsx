@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { copilot } from '@modules/copilot';
+import { deleteAllData } from '@application/deleteAllData';
 import { confirmAction } from '@shared/ui/dialog';
 import { Button } from '@shared/ui/primitives';
 import { InfoScreen } from './InfoScreen';
@@ -17,9 +17,7 @@ export default function PrivacyScreen() {
       title: t('deleteData.title'),
       message: t('deleteData.message'),
       actionLabel: t('deleteData.confirm'),
-      onConfirm: () => {
-        copilot.clearAllData();
-      },
+      onConfirm: deleteAllData,
     });
 
   return (

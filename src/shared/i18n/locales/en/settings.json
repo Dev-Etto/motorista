@@ -367,7 +367,7 @@
   "deleteData": {
     "action": "Delete all my data",
     "title": "Delete all data?",
-    "message": "Vehicles, shifts, expenses, goals, offers and settings are removed from this phone, and the app closes and starts over. This cannot be undone. If you want to keep a copy, make a backup first.",
+    "message": "Vehicles, shifts, expenses, goals, offers and settings are removed from this phone, and the app closes and starts over. Usage metrics stop being linked to this phone and crash reports not yet sent are discarded. This cannot be undone. If you want to keep a copy, make a backup first.",
     "confirm": "Delete everything"
   }
 }

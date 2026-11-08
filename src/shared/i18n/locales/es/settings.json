@@ -367,7 +367,7 @@
   "deleteData": {
     "action": "Borrar todos mis datos",
     "title": "¿Borrar todos los datos?",
-    "message": "Vehículos, jornadas, gastos, metas, ofertas y ajustes se eliminan de este celular, y la app se cierra y vuelve como nueva. No se puede deshacer. Si quieres guardar una copia, haz una copia de seguridad antes.",
+    "message": "Vehículos, jornadas, gastos, metas, ofertas y ajustes se eliminan de este celular, y la app se cierra y vuelve como nueva. Las métricas de uso dejan de estar vinculadas a este celular y los informes de fallos aún no enviados se descartan. No se puede deshacer. Si quieres guardar una copia, haz una copia de seguridad antes.",
     "confirm": "Borrar todo"
   }
 }

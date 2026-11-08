@@ -1,3 +1,5 @@
+import { resetAnalyticsData } from '@react-native-firebase/analytics';
+import { deleteUnsentReports } from '@react-native-firebase/crashlytics';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import PrivacyScreen from '@features/settings/PrivacyScreen';
@@ -37,6 +39,8 @@ describe('privacidade', () => {
     expect(copilot.clearAllData).not.toHaveBeenCalled();
 
     await options?.onConfirm();
+    expect(resetAnalyticsData).toHaveBeenCalled();
+    expect(deleteUnsentReports).toHaveBeenCalled();
     expect(copilot.clearAllData).toHaveBeenCalled();
   });
 });

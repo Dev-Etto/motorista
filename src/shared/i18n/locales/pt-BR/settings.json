@@ -367,7 +367,7 @@
   "deleteData": {
     "action": "Apagar todos os meus dados",
     "title": "Apagar todos os dados?",
-    "message": "Veículos, jornadas, despesas, metas, ofertas e ajustes saem deste celular, e o app fecha e volta como novo. Isso não pode ser desfeito. Se quiser guardar uma cópia, faça um backup antes.",
+    "message": "Veículos, jornadas, despesas, metas, ofertas e ajustes saem deste celular, e o app fecha e volta como novo. As métricas de uso deixam de ser ligadas a este aparelho e os relatórios de falha ainda não enviados são descartados. Isso não pode ser desfeito. Se quiser guardar uma cópia, faça um backup antes.",
     "confirm": "Apagar tudo"
   }
 }
