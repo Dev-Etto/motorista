@@ -21,21 +21,11 @@ describe('jornada no Início', () => {
     Object.assign(mockLive, { started: false, running: false, elapsedMs: 0, km: 0 });
   });
 
-  it('iniciar liga a medição sem abrir o formulário', async () => {
+  it('sem jornada, o card não aparece. Iniciar fica no botão da barra', async () => {
+    mockLive.started = false;
     await render(<ShiftControls />);
 
-    await fireEvent.press(screen.getByText('Iniciar jornada'));
-
-    expect(mockLive.start).toHaveBeenCalled();
-    expect(mockPush).not.toHaveBeenCalled();
-  });
-
-  it('registrar uma jornada passada abre o formulário', async () => {
-    await render(<ShiftControls />);
-
-    await fireEvent.press(screen.getByText('Registrar jornada passada'));
-
-    expect(mockPush).toHaveBeenCalledWith('/shift/new');
+    expect(screen.toJSON()).toBeNull();
   });
 
   it('com jornada iniciada, mostra o andamento, pausa e encerra', async () => {

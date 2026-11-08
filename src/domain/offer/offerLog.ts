@@ -103,3 +103,14 @@ export function matchPlatforms<T extends { id: number; name: string }>(estimate:
   }
   return { matched, unmatched };
 }
+
+export interface OfferDay {
+  read: number;
+  accepted: number;
+  estimatedCents: number;
+}
+
+export function summarizeOfferDay(entries: OfferLogEntry[]): OfferDay {
+  const estimate = estimateEarnings(entries);
+  return { read: entries.length, accepted: estimate.trips, estimatedCents: estimate.totalCents };
+}

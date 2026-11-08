@@ -6,6 +6,7 @@ import {
   formatDayOfMonth,
   formatDuration,
   formatHourOfDay,
+  formatLongDay,
   formatMonth,
   formatMonthShort,
   HourCycle,
@@ -116,6 +117,7 @@ export function createFormatter(format: RegionalFormat) {
     consumptionOrZero: (text: string) => consumptionToKmPerLiter(decimalOrZero(text, locale), consumptionUnit),
 
     date: (iso: string) => formatDate(iso, locale),
+    longDay: (iso: string) => formatLongDay(iso, locale),
     dayMonth: (iso: string) => formatDayMonth(iso, locale),
     month: (iso: string) => formatMonth(iso, format.language),
     monthShort: (iso: string) => formatMonthShort(iso, format.language),
