@@ -358,5 +358,11 @@
       "message": "Decida se o app pode enviar estatísticas de uso anônimas e relatórios de falha. Tudo fica desligado até você escolher.",
       "choose": "Escolher"
     }
+  },
+  "deleteData": {
+    "action": "Apagar todos os meus dados",
+    "title": "Apagar todos os dados?",
+    "message": "Veículos, jornadas, despesas, metas, ofertas e ajustes saem deste celular, e o app fecha e volta como novo. Isso não pode ser desfeito. Se quiser guardar uma cópia, faça um backup antes.",
+    "confirm": "Apagar tudo"
   }
 }

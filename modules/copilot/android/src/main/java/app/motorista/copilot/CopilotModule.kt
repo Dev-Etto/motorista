@@ -1,5 +1,6 @@
 package app.motorista.copilot
 
+import android.app.ActivityManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -104,6 +105,7 @@ class CopilotModule : Module() {
       ShiftTimer(context).refreshNotification()
     }
     Function("stopFloating") { context.stopService(Intent(context, FloatingTimerService::class.java)) }
+    Function("clearAllData") { (context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).clearApplicationUserData() }
   }
 
   private fun openIntent(intent: Intent) {
