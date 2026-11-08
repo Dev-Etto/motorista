@@ -12,7 +12,13 @@ const STROKE = 12;
 const DOT = { x: 92, y: 30, r: 7 };
 const BACKGROUND = palette.light.primary;
 const INK = palette.light.surface;
-const LIGHT = palette.dark.positive;
+export type SplashShift = 'idle' | 'running' | 'paused';
+
+const LIGHTS: Record<SplashShift, string | null> = {
+  idle: null,
+  running: palette.dark.shiftRunning,
+  paused: palette.dark.shiftPaused,
+};
 const LIGHT_MS = 260;
 const HOLD_MS = 140;
 const EXIT_MS = 320;
@@ -32,7 +38,8 @@ const DOT_FRAME = {
 };
 const MARK_TRANSFORM = `translate(${VIEW_BOX / 2} ${VIEW_BOX / 2}) scale(${MARK_SCALE}) translate(${-MARK_CENTER.x} ${-MARK_CENTER.y})`;
 
-export function AppSplash({ ready, onDone }: { ready: boolean; onDone: () => void }) {
+export function AppSplash({ ready, shift = 'idle', onDone }: { ready: boolean; shift?: SplashShift; onDone: () => void }) {
+  const light = LIGHTS[shift];
   const [lit] = useState(() => new Animated.Value(0));
   const [exit] = useState(() => new Animated.Value(0));
 
@@ -49,9 +56,9 @@ export function AppSplash({ ready, onDone }: { ready: boolean; onDone: () => voi
         useNativeDriver: true,
       });
       const lightUp = Animated.timing(lit, { toValue: 1, duration: LIGHT_MS, easing: Easing.out(Easing.cubic), useNativeDriver: true });
-      Animated.sequence(reduced ? [fadeOut] : [lightUp, Animated.delay(HOLD_MS), fadeOut]).start(onDone);
+      Animated.sequence(reduced || !light ? [fadeOut] : [lightUp, Animated.delay(HOLD_MS), fadeOut]).start(onDone);
     }
-  }, [ready, lit, exit, onDone]);
+  }, [ready, light, lit, exit, onDone]);
 
   const hideNativeSplash = () => void SplashScreen.hideAsync().catch(() => undefined);
   const opacity = exit.interpolate({ inputRange: [0, 1], outputRange: [1, 0] });
@@ -85,7 +92,10 @@ export function AppSplash({ ready, onDone }: { ready: boolean; onDone: () => voi
         </Svg>
         <Animated.View style={[styles.dot, DOT_FRAME, { transform: [{ scale: dotScale }] }]}>
           <Animated.View style={[styles.dotLayer, { borderRadius: DOT_FRAME.borderRadius, backgroundColor: INK, opacity: inkOpacity }]} />
-          <Animated.View style={[styles.dotLayer, { borderRadius: DOT_FRAME.borderRadius, backgroundColor: LIGHT, transform: [{ scale: lightFill }] }]} />
+          <Animated.View
+            style={[styles.dotLayer, { borderRadius: DOT_FRAME.borderRadius, backgroundColor: light ?? INK, transform: [{ scale: lightFill }] }]}
+            testID="splash-light"
+          />
         </Animated.View>
       </Animated.View>
     </Animated.View>

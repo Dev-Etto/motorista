@@ -31,9 +31,27 @@ describe('abertura do app', () => {
     expect(SplashScreen.hideAsync).toHaveBeenCalled();
   });
 
+  it.each([
+    ['running', '#4FD08D'],
+    ['paused', '#F1B84B'],
+  ] as const)('com a jornada %s, o ponto acende em %s', async (shift, color) => {
+    await render(<AppSplash ready={false} shift={shift} onDone={jest.fn()} />);
+
+    expect(screen.getByTestId('splash-light', { includeHiddenElements: true })).toHaveStyle({ backgroundColor: color });
+  });
+
+  it('sem jornada, o ponto fica branco e a marca só some', async () => {
+    const onDone = jest.fn();
+    await render(<AppSplash ready shift="idle" onDone={onDone} />);
+
+    expect(screen.getByTestId('splash-light', { includeHiddenElements: true })).toHaveStyle({ backgroundColor: '#FFFFFF' });
+    await act(async () => jest.advanceTimersByTime(400));
+    expect(onDone).toHaveBeenCalled();
+  });
+
   it('com o app pronto, acende o ponto, some e libera o toque', async () => {
     const onDone = jest.fn();
-    await render(<AppSplash ready onDone={onDone} />);
+    await render(<AppSplash ready shift="running" onDone={onDone} />);
 
     expect(screen.getByTestId('app-splash', { includeHiddenElements: true })).toHaveProp('pointerEvents', 'none');
     await act(async () => jest.advanceTimersByTime(1000));

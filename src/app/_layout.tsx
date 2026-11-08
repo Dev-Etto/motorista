@@ -7,6 +7,7 @@ import { useDeviceLocaleSync } from '@application/useRegional';
 import { useFloatingVisibility } from '@features/copilot/useFloatingVisibility';
 import { restoreThemeMode } from '@features/settings/themePreference';
 import { useRescheduleOnLanguageChange } from '@features/settings/useRescheduleOnLanguageChange';
+import { shiftStatusNow } from '@features/shifts';
 import '@features/shifts/gpsTask';
 import { fonts, useTheme } from '@shared/theme/theme';
 import { AppSplash, keepNativeSplash } from '@shared/ui/AppSplash';
@@ -69,6 +70,7 @@ function useAppBootstrap() {
 export default function RootLayout() {
   const state = useAppBootstrap();
   const [splashDone, setSplashDone] = useState(false);
+  const [splashShift] = useState(shiftStatusNow);
   const finishSplash = useCallback(() => setSplashDone(true), []);
   useFloatingVisibility();
   useDeviceLocaleSync();
@@ -79,7 +81,7 @@ export default function RootLayout() {
       <ThemedStatusBar />
       {state === 'ready' ? <AppStack /> : null}
       {state === 'failed' ? <OpenFailed /> : null}
-      {splashDone ? null : <AppSplash ready={state !== 'loading'} onDone={finishSplash} />}
+      {splashDone ? null : <AppSplash ready={state !== 'loading'} shift={splashShift} onDone={finishSplash} />}
     </SafeAreaProvider>
   );
 }
