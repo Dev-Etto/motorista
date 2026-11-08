@@ -1,5 +1,5 @@
-import { getAnalytics, logEvent, setAnalyticsCollectionEnabled } from '@react-native-firebase/analytics';
-import { getCrashlytics, setCrashlyticsCollectionEnabled } from '@react-native-firebase/crashlytics';
+import { getAnalytics, logEvent, resetAnalyticsData, setAnalyticsCollectionEnabled } from '@react-native-firebase/analytics';
+import { deleteUnsentReports, getCrashlytics, setCrashlyticsCollectionEnabled } from '@react-native-firebase/crashlytics';
 import { addDoc, collection, getFirestore, serverTimestamp } from '@react-native-firebase/firestore';
 import type { AnalyticsTransport } from './analytics';
 import type { ProblemReportTransport } from './problemReports';
@@ -19,3 +19,7 @@ export const firestoreProblemReportTransport: ProblemReportTransport = {
     await addDoc(collection(getFirestore(), 'reports'), { ...payload, createdAt: serverTimestamp() });
   },
 };
+
+export async function forgetSentData(): Promise<void> {
+  await Promise.allSettled([resetAnalyticsData(getAnalytics()), deleteUnsentReports(getCrashlytics())]);
+}
