@@ -358,5 +358,11 @@
       "message": "Decide whether the app can send anonymous usage statistics and crash reports. Everything stays off until you choose.",
       "choose": "Choose"
     }
+  },
+  "deleteData": {
+    "action": "Delete all my data",
+    "title": "Delete all data?",
+    "message": "Vehicles, shifts, expenses, goals, offers and settings are removed from this phone, and the app closes and starts over. This cannot be undone. If you want to keep a copy, make a backup first.",
+    "confirm": "Delete everything"
   }
 }

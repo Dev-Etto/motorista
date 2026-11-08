@@ -31,6 +31,11 @@ As issues da Fase 2 e da Fase 5 vão acrescentar saídas. Cada uma deve ser regi
 | Cobrança (Google Play e RevenueCat) | #78 | Compra e estado da assinatura, com ID anônimo | Execução do contrato |
 | ML Kit | #89 | Verificar se envia métricas de uso ao Google com a internet liberada | A confirmar |
 
+## Exclusão
+
+- **No aparelho:** Mais → Sobre → Privacidade → Apagar todos os meus dados. Usa `ActivityManager.clearApplicationUserData()`, que apaga banco, preferências e arquivos do app e o fecha (#62).
+- **Fora do aparelho:** a definir com o Firebase (#59) e a página pública de exclusão (#64).
+
 ## Nunca sai do aparelho
 
 - Texto e imagem lidos das telas das plataformas.
