@@ -1,4 +1,13 @@
-import { estimateEarnings, filterOffers, listSources, matchPlatforms, OfferLogEntry, statusOf, summarizeOutcomes } from '@domain/offer/offerLog';
+import {
+  estimateEarnings,
+  filterOffers,
+  listSources,
+  matchPlatforms,
+  OfferLogEntry,
+  statusOf,
+  summarizeOfferDay,
+  summarizeOutcomes,
+} from '@domain/offer/offerLog';
 
 const offer = (over: Partial<OfferLogEntry>): OfferLogEntry => ({ timestamp: 100, source: 'Uber', valueCents: 1000, km: 5, ...over });
 
@@ -78,5 +87,18 @@ describe('ligação com as plataformas da jornada', () => {
       { platformId: 1, cents: 1000 },
     ]);
     expect(unmatched).toEqual(['inDrive']);
+  });
+});
+
+describe('ofertas do dia', () => {
+  it('conta as lidas, as aceitas e soma o estimado das aceitas', () => {
+    const entries = [
+      { timestamp: 1, source: 'Uber', valueCents: 1840, km: 8.5, status: 'accepted' as const },
+      { timestamp: 2, source: '99', valueCents: 920, km: 7.8, status: 'declined' as const },
+      { timestamp: 3, source: 'inDrive', valueCents: 1300, km: 4.3, status: 'accepted' as const },
+      { timestamp: 4, source: 'Uber', valueCents: 1500, km: 6 },
+    ];
+
+    expect(summarizeOfferDay(entries)).toEqual({ read: 4, accepted: 2, estimatedCents: 3140 });
   });
 });
