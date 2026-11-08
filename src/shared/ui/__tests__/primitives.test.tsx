@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { MIN_TOUCH_TARGET } from '@shared/theme/theme';
-import { ListRow, Segmented } from '@shared/ui/primitives';
+import { EmptyState, ListRow, Segmented } from '@shared/ui/primitives';
 
 const OPTIONS = [
   { value: 'km', label: 'Quilômetros' },
@@ -32,5 +32,15 @@ describe('ListRow', () => {
   it('linha de navegação é um botão', async () => {
     await render(<ListRow title="Idioma" chevron onPress={jest.fn()} />);
     expect(screen.getByRole('button', { name: 'Idioma' })).toBeTruthy();
+  });
+});
+
+describe('EmptyState', () => {
+  it('centraliza o ícone, o título e a mensagem', async () => {
+    await render(<EmptyState icon="shifts" title="Sem jornadas neste período" message="Registre uma jornada" />);
+
+    expect(screen.getByTestId('empty-state-icon').parent).toHaveStyle({ alignItems: 'center' });
+    expect(screen.getByRole('header', { name: 'Sem jornadas neste período' })).toHaveStyle({ textAlign: 'center' });
+    expect(screen.getByText('Registre uma jornada')).toHaveStyle({ textAlign: 'center' });
   });
 });
