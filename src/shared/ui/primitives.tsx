@@ -12,6 +12,7 @@ type Variant = 'caption' | 'body' | 'subtitle' | 'title' | 'display';
 
 const TABULAR: ['tabular-nums'] = ['tabular-nums'];
 const SEGMENTS = 12;
+const STAT_MIN_FONT_SCALE = 0.75;
 
 const TONE_COLORS: Record<Tone, keyof ThemeColors> = {
   default: 'text',
@@ -189,7 +190,9 @@ export function Segmented<T extends string>({ value, options, onChange, label }:
             onPress={() => onChange(option.value)}
             style={[styles.segment, selected && { backgroundColor: colors.primary }]}
           >
-            <Text style={{ color: selected ? colors.onPrimary : colors.text, fontFamily: fonts.semibold, textAlign: 'center' }}>{option.label}</Text>
+            <Text style={{ color: selected ? colors.onPrimary : colors.text, fontFamily: fonts.semibold, fontSize: fontSize.body, textAlign: 'center' }}>
+              {option.label}
+            </Text>
           </Pressable>
         );
       })}
@@ -224,7 +227,7 @@ export function ToggleRow({ label, hint, hintTone = 'muted', leading, value, onC
         value={value}
         onValueChange={onChange}
         trackColor={{ false: colors.borderStrong, true: colors.primary }}
-        thumbColor={value ? colors.onPrimary : colors.textMuted}
+        thumbColor={value ? colors.onPrimary : colors.switchThumbOff}
       />
     </View>
   );
@@ -319,7 +322,7 @@ export function Stat({ label, value, tone = 'default' }: { label: string; value:
       <AppText variant="caption" tone="muted">
         {label}
       </AppText>
-      <AppText variant="subtitle" bold tone={tone}>
+      <AppText variant="subtitle" bold tone={tone} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={STAT_MIN_FONT_SCALE}>
         {value}
       </AppText>
     </View>

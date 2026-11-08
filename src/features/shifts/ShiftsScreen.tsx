@@ -11,6 +11,7 @@ import { useFormat } from '@shared/i18n/format';
 import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
 import { showDialog } from '@shared/ui/dialog';
 import { Button, EmptyState, Screen, Segmented } from '@shared/ui/primitives';
+import { ActiveShiftRow } from './ActiveShiftRow';
 import { ShiftDayCard } from './ShiftDayCard';
 import { loadPeriod } from './shiftQueries';
 import { WeekStrip } from './WeekStrip';
@@ -73,6 +74,7 @@ function ShiftList() {
         onPrevious={week.previous}
         onNext={week.next}
       />
+      <ActiveShiftRow />
       <AsyncBoundary state={period}>
         {() =>
           days.length === 0 ? (

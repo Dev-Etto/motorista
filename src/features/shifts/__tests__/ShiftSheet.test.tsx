@@ -65,6 +65,13 @@ describe('controle da jornada', () => {
     expect(mockPush).toHaveBeenCalledWith({ pathname: '/shift/new', params: { finish: '1' } });
   });
 
+  it('pausada, Retomar é a ação principal e Encerrar fica secundária', async () => {
+    await renderSheet(live({ running: false }));
+
+    expect(screen.getByRole('button', { name: 'Retomar' })).toHaveStyle({ backgroundColor: '#171717' });
+    expect(screen.getByRole('button', { name: 'Encerrar' })).toHaveStyle({ backgroundColor: '#E8E8E8' });
+  });
+
   it('lança abastecimento sem sair da jornada', async () => {
     await renderSheet(live());
 

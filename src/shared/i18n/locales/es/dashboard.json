@@ -6,7 +6,7 @@
   },
   "gpsProblem_km": "Los km no se están midiendo. {{problem}}",
   "gpsProblem_mi": "Las millas no se están midiendo. {{problem}}",
-  "missingFixedCosts": "Esta ganancia todavía no considera seguro, impuesto vehicular, cuota o alquiler. Inclúyelos en Vehículo y costos para ver el valor real.",
+  "missingFixedCosts": "Esta ganancia todavía no considera seguro, impuesto vehicular, cuota o alquiler. Inclúyelos en Más › Vehículos y costos para ver el valor real.",
   "backup": {
     "action": "Hacer copia de seguridad"
   },

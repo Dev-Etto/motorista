@@ -6,7 +6,7 @@
   },
   "gpsProblem_km": "Os km não estão sendo medidos. {{problem}}",
   "gpsProblem_mi": "As milhas não estão sendo medidas. {{problem}}",
-  "missingFixedCosts": "Esse lucro ainda não considera seguro, IPVA, parcela ou aluguel. Inclua em Veículo e custos para ver o valor real.",
+  "missingFixedCosts": "Esse lucro ainda não considera seguro, IPVA, parcela ou aluguel. Inclua em Mais › Veículos e custos para ver o valor real.",
   "backup": {
     "action": "Fazer backup"
   },

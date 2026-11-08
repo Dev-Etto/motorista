@@ -63,6 +63,7 @@
     "profitPerHour": "Ganancia por hora"
   },
   "list": {
+    "activeShift": "{{status}}, {{details}}. Abrir los controles de la jornada",
     "addExpense": "Registrar gasto o carga de combustible",
     "emptyDay": "No hay jornadas este día",
     "emptyMessage": "Registra tu primera jornada para ver tu ganancia real.",

@@ -6,7 +6,7 @@
   },
   "gpsProblem_km": "Kilometers aren't being tracked. {{problem}}",
   "gpsProblem_mi": "Miles aren't being tracked. {{problem}}",
-  "missingFixedCosts": "This profit doesn't include insurance, vehicle tax, loan payments, or rent yet. Add them in Vehicle and costs to see the real amount.",
+  "missingFixedCosts": "This profit doesn't include insurance, vehicle tax, loan payments, or rent yet. Add them in More › Vehicles and costs to see the real amount.",
   "backup": {
     "action": "Back up now"
   },

@@ -63,6 +63,7 @@
     "profitPerHour": "Lucro por hora"
   },
   "list": {
+    "activeShift": "{{status}}, {{details}}. Abrir os controles da jornada",
     "addExpense": "Lançar despesa ou abastecimento",
     "emptyDay": "Nenhuma jornada neste dia",
     "emptyMessage": "Registre sua primeira jornada para ver seu lucro real.",

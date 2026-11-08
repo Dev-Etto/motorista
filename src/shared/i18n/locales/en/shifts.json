@@ -63,6 +63,7 @@
     "profitPerHour": "Profit per hour"
   },
   "list": {
+    "activeShift": "{{status}}, {{details}}. Open the shift controls",
     "addExpense": "Add expense or refuel",
     "emptyDay": "No shifts on this day",
     "emptyMessage": "Log your first shift to see your real profit.",
