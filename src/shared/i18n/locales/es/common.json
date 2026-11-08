@@ -4,7 +4,6 @@
     "other": "Otras"
   },
   "app": {
-    "loading": "Cargando…",
     "openFailed": "No se pudieron abrir los datos de la app. Reiníciala e inténtalo de nuevo."
   },
   "weekday": {

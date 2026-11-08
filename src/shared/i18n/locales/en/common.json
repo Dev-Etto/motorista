@@ -4,7 +4,6 @@
     "other": "Other"
   },
   "app": {
-    "loading": "Loading…",
     "openFailed": "Couldn't open the app data. Restart the app and try again."
   },
   "weekday": {
