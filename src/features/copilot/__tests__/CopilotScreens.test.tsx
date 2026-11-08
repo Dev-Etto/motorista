@@ -18,7 +18,10 @@ const mockTests = { test: jest.fn(), testOutside: jest.fn(), testNotification: j
 const METRICS = { frame: { x: 0, y: 0, width: 390, height: 844 }, insets: { top: 0, left: 0, right: 0, bottom: 0 } };
 
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: mockPush, back: jest.fn() }) }));
-jest.mock('@modules/copilot/platforms', () => ({ PLATFORM_PACKAGES: { uber: 'uber', ninetyNine: '99', inDrive: 'indrive' } }));
+jest.mock('@modules/copilot/platforms', () => ({
+  ...jest.requireActual('@modules/copilot/platforms'),
+  PLATFORM_PACKAGES: { uber: 'uber', ninetyNine: '99', inDrive: 'indrive' },
+}));
 jest.mock('@features/copilot/useCopilot', () => ({
   useCopilot: () => ({
     message: null,
@@ -32,7 +35,7 @@ jest.mock('@features/copilot/useCopilot', () => ({
         cardSize: 'large',
         durationSeconds: 12,
         imageReading: false,
-        monitoredPackages: ['uber', '99', 'indrive'],
+        monitoredPackages: ['com.ubercab.driver', 'com.app99.driver', 'sinet.startup.inDriver'],
       },
       update: jest.fn(),
       setFloating: jest.fn(),

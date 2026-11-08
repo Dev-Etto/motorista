@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { CardLayout, CardSize, PrimaryMetric } from '@modules/copilot';
-import { PLATFORM_PACKAGES } from '@modules/copilot/platforms';
+import { RIDE_APPS } from '@modules/copilot/platforms';
 import { useFormat } from '@shared/i18n/format';
 import { LearnMore } from '@shared/ui/LearnMore';
 import { AppText, Button, Card, ListRow, Notice, Section, Segmented, ToggleRow } from '@shared/ui/primitives';
@@ -13,11 +13,6 @@ import { CopilotTestsState } from './useCopilotTests';
 const LAYOUTS: CardLayout[] = ['complete', 'summary'];
 const SIZES: CardSize[] = ['compact', 'large', 'extra'];
 const DURATIONS = [8, 12, 15];
-const APPS = [
-  { packageName: PLATFORM_PACKAGES.uber, label: 'Uber' },
-  { packageName: PLATFORM_PACKAGES.ninetyNine, label: '99' },
-  { packageName: PLATFORM_PACKAGES.inDrive, label: 'inDrive' },
-];
 
 export function CopilotStatusCard({ copilot, preferences }: { copilot: CopilotStatusState; preferences: CopilotPreferencesState }) {
   const { t } = useTranslation('copilot');
@@ -114,7 +109,7 @@ export function CopilotCardSection({
 export function CopilotMoreCard({ preferences }: { preferences: CopilotPreferencesState }) {
   const { t } = useTranslation('copilot');
   const router = useRouter();
-  const monitored = APPS.filter((app) => preferences.current.monitoredPackages.includes(app.packageName)).map((app) => app.label);
+  const monitored = RIDE_APPS.filter((app) => preferences.current.monitoredPackages.includes(app.packageName)).map((app) => app.label);
 
   return (
     <Card>
