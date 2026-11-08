@@ -336,5 +336,27 @@
       "distance": "Distância",
       "consumption": "Consumo"
     }
+  },
+  "privacyChoices": {
+    "open": "Escolhas de privacidade",
+    "intro": "Você decide o que o app pode enviar. Seus ganhos, jornadas e ofertas continuam só no seu celular.",
+    "usageStats": {
+      "label": "Ajudar a melhorar o app",
+      "hint": "Envia estatísticas de uso anônimas, como quais telas são abertas e se o Copiloto está ligado, sem seu nome nem seus valores."
+    },
+    "crashReports": {
+      "label": "Enviar relatórios de falha",
+      "hint": "Quando o app trava, envia o erro, o modelo do aparelho e a versão do Android, para a falha ser corrigida."
+    },
+    "never": {
+      "title": "O que nunca é enviado",
+      "body": "O texto e a imagem lidos das ofertas, nomes e endereços de passageiros e clientes, sua localização e seus valores de ganho."
+    },
+    "save": "Salvar escolhas",
+    "card": {
+      "title": "Suas escolhas de privacidade",
+      "message": "Decida se o app pode enviar estatísticas de uso anônimas e relatórios de falha. Tudo fica desligado até você escolher.",
+      "choose": "Escolher"
+    }
   }
 }

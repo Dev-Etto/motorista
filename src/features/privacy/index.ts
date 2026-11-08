@@ -1,0 +1,1 @@
+export { PrivacyChoicesCard } from './PrivacyChoicesCard';

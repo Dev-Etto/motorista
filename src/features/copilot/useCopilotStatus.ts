@@ -1,6 +1,7 @@
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'react-native';
+import { track } from '@application/analytics';
 import { syncCopilotTargets } from '@application/offerSettings';
 import { copilot, CopilotStatus, OfferHistoryEntry } from '@modules/copilot';
 import { reportError } from '@shared/utils/reportError';
@@ -27,6 +28,7 @@ export function useCopilotStatus() {
   const setEnabled = async (value: boolean) => {
     await syncCopilotTargets();
     copilot.setEnabled(value);
+    if (value) void track('copilot_enabled');
     refresh();
   };
 
