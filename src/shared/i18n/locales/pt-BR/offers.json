@@ -68,7 +68,7 @@
     "autoRecord": "O app registra sozinho o que você aceita. Se o valor sugerido estiver diferente do que recebeu, é só corrigir ao registrar a jornada.",
     "settingsTitle": "Ajustes",
     "estimating": "Estimar faturamento pelos aceites",
-    "estimatingHint": "Nota quando você toca em aceitar ou recusar nos apps de corrida. Nada sai do celular.",
+    "estimatingHint": "Nota quando você toca em aceitar ou recusar nos apps de corrida. Isso fica só no seu celular.",
     "clearButton": "Limpar as ofertas",
     "clearConfirm": {
       "title": "Limpar as ofertas?",

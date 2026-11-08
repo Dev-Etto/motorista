@@ -68,7 +68,7 @@
     "autoRecord": "The app automatically records what you accept. If the suggested amount differs from what you got paid, just correct it when you log the shift.",
     "settingsTitle": "Settings",
     "estimating": "Estimate earnings from accepted rides",
-    "estimatingHint": "Notes when you tap accept or decline in ride-hailing apps. Nothing leaves your phone.",
+    "estimatingHint": "Notes when you tap accept or decline in ride-hailing apps. This stays on your phone.",
     "clearButton": "Clear offers",
     "clearConfirm": {
       "title": "Clear offers?",
