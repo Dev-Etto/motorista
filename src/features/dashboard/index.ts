@@ -1,1 +1,0 @@
-export { ProfitCard } from './ProfitCard';

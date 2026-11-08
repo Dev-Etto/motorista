@@ -14,11 +14,6 @@
     "action": "Buscar actualización"
   },
   "profitCard": {
-    "gross": "Ingresos",
-    "time": "Tiempo",
-    "perKm_km": "Por km",
-    "perKm_mi": "Por milla",
-    "profitPerHour": "Ganancia por hora",
     "partial_km_one": "{{count}} jornada sin km o sin costo: no se le descontó el costo del vehículo.",
     "partial_km_other": "{{count}} jornadas sin km o sin costo: no se les descontó el costo del vehículo.",
     "partial_mi_one": "{{count}} jornada sin millas o sin costo: no se le descontó el costo del vehículo.",
