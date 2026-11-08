@@ -40,6 +40,7 @@ const SCREENS = [
   { name: 'backup', titleKey: 'screens.backup' },
   { name: 'report', titleKey: 'screens.report' },
   { name: 'privacy', titleKey: 'screens.privacy' },
+  { name: 'privacy-choices', titleKey: 'screens.privacyChoices' },
   { name: 'terms', titleKey: 'screens.terms' },
   { name: 'about', titleKey: 'screens.about' },
   { name: 'appearance', titleKey: 'screens.appearance' },

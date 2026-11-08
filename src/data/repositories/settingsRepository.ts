@@ -25,6 +25,7 @@ export const SETTING_KEYS = {
   shiftVehicle: 'shift_vehicle',
   offersSeenAt: 'offers_seen_at',
   accessibilityConsentAt: 'accessibility_consent_at',
+  privacyChoices: 'privacy_choices',
 } as const;
 
 export type SettingKey = (typeof SETTING_KEYS)[keyof typeof SETTING_KEYS];

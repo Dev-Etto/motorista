@@ -336,5 +336,27 @@
       "distance": "Distance",
       "consumption": "Fuel economy"
     }
+  },
+  "privacyChoices": {
+    "open": "Privacy choices",
+    "intro": "You decide what the app can send. Your earnings, shifts and offers stay on your phone.",
+    "usageStats": {
+      "label": "Help improve the app",
+      "hint": "Sends anonymous usage statistics, such as which screens are opened and whether the Copilot is on, without your name or your amounts."
+    },
+    "crashReports": {
+      "label": "Send crash reports",
+      "hint": "When the app crashes, sends the error, the phone model and the Android version so the crash can be fixed."
+    },
+    "never": {
+      "title": "What is never sent",
+      "body": "The text and image read from offers, names and addresses of passengers and customers, your location and your earnings."
+    },
+    "save": "Save choices",
+    "card": {
+      "title": "Your privacy choices",
+      "message": "Decide whether the app can send anonymous usage statistics and crash reports. Everything stays off until you choose.",
+      "choose": "Choose"
+    }
   }
 }

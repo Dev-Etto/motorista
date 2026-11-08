@@ -23,8 +23,8 @@ As issues da Fase 2 e da Fase 5 vão acrescentar saídas. Cada uma deve ser regi
 
 | Saída | Issue | Dados | Base |
 | --- | --- | --- | --- |
-| Relatórios de falha (Crashlytics) | #59 | A definir na implementação | Legítimo interesse, com opção de desligar |
-| Métricas de uso (Analytics) | #59 | A definir na implementação | Consentimento, desligado por padrão |
+| Relatórios de falha (Crashlytics) | #59 | Erro, modelo do aparelho, versão do Android e do app | Legítimo interesse, ligado por padrão, com opção de desligar em Escolhas de privacidade |
+| Métricas de uso (Analytics) | #59 | Eventos anônimos: `onboarding_complete`, `copilot_enabled` (lista em `src/application/analytics.ts`) | Consentimento, desligado por padrão. Escolha guardada em `privacy_choices` |
 | Relatar problema | #60 | A definir na implementação | Ação do usuário |
 | Backup automático do Android | #61 | Banco e preferências, criptografado na conta Google do usuário | Configuração do sistema |
 | Backup no Google Drive | #75 | Arquivo de backup na pasta privada do app no Drive do usuário | Ação do usuário |
