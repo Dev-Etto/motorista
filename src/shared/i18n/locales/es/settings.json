@@ -35,7 +35,7 @@
         "subtitle": "Guardar y restaurar tus datos"
       },
       "summary": {
-        "title": "Mi resumen",
+        "title": "Mi resumen para compartir",
         "subtitle": "Números de uso para compartir"
       },
       "privacy": {
@@ -68,18 +68,16 @@
       }
     },
     "about": {
-      "title": "Sobre la app",
       "donateTitle": "Apoyar el proyecto",
-      "donateSubtitle": "La app es gratuita. Ayuda a mantenerla.",
       "updateTitle": "Buscar actualización",
-      "updateSubtitle": "Abre la página de versiones en el navegador.",
       "versionTitle": "Versión {{version}}",
-      "versionSubtitle": "Ver el código y las novedades.",
-      "codeTitle": "Código y novedades"
+      "codeTitle": "Código y novedades",
+      "dataStays": "Tus datos se quedan solo en tu celular."
     },
-    "aboutSection": {
-      "yours": "Tus datos y sugerencias",
-      "legal": "Privacidad y términos"
+    "summary": {
+      "vehicle": "Vehículo actual",
+      "goal": "Meta de {{month}}",
+      "goalDone": "{{percent}}% hecho"
     }
   },
   "appearance": {
@@ -161,15 +159,13 @@
     "shareMessage": "Resumen de la app {{appName}}\nVersión: {{version}}\nJornadas: {{total}}\nDías con jornada: {{days}}\nPrimera: {{first}}\nÚltima: {{last}}"
   },
   "platforms": {
-    "intro": "Activa las plataformas en las que trabajas. Solo las activas aparecen en la jornada, los informes y el Copiloto.",
+    "intro": "Las plataformas activas aparecen en las ganancias de la jornada. En las apps, el Copiloto también lee las ofertas.",
     "keepOne": "Mantén al menos una plataforma activa para registrar tus ganancias.",
-    "appsTitle": "Apps con Copiloto",
-    "ownTitle": "Otras ganancias",
+    "appsTitle": "Apps de viajes",
+    "ownTitle": "Tus ganancias fuera de las apps",
     "legacyTitle": "Agregadas por ti",
     "hint": {
-      "copilot": "El Copiloto lee las ofertas de esta app",
-      "private": "Viajes acordados directamente con el pasajero",
-      "other": "Otra app de viajes o entregas. Sin Copiloto",
+      "copilot": "Ganancias y ofertas",
       "legacy": "Al desactivarla, sale de la lista. Las jornadas anteriores mantienen el nombre"
     },
     "turnOff": {
@@ -299,18 +295,16 @@
     }
   },
   "region": {
-    "previewTitle": "Cómo se ven los valores",
-    "languageAndFormat": "Idioma y formato",
     "language": {
       "title": "Idioma",
-      "automatic": "Automático ({{language}})",
+      "automatic": "Automático · {{language}}",
       "automaticHint": "Sigue el idioma del celular."
     },
     "format": {
-      "title": "Formato regional",
-      "automatic": "Automático ({{format}})",
+      "title": "Formato",
+      "automatic": "Automático · {{format}}",
       "automaticHint": "Sigue el formato del teléfono.",
-      "firstWeekday": "La semana empieza el"
+      "firstWeekday": "La semana empieza"
     },
     "market": {
       "title": "País donde manejas",
@@ -319,7 +313,9 @@
       "confirmMessage": "Los valores guardados mantienen los mismos números, ahora en {{currency}}. La app no convierte divisas.",
       "confirmAction": "Cambiar",
       "learnMore": "¿Por qué la moneda sigue al país?",
-      "soon": "Pronto habrá más países."
+      "soon": "Pronto habrá más países.",
+      "short": "País",
+      "value": "{{market}} · {{currency}}"
     },
     "units": {
       "title": "Unidades",
@@ -333,6 +329,12 @@
       "kmPerLiter": "km/L",
       "litersPer100km": "L/100 km",
       "mpg": "mpg"
+    },
+    "preview": {
+      "money": "Dinero",
+      "date": "Fecha",
+      "distance": "Distancia",
+      "consumption": "Consumo"
     }
   }
 }

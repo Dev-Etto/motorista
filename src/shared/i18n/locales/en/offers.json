@@ -73,7 +73,10 @@
     "clearConfirm": {
       "title": "Clear offers?",
       "message": "The history and the earnings estimate will be deleted. Saved shifts won't change."
-    }
+    },
+    "read": "Read",
+    "accepted": "Accepted",
+    "averageScore": "Average score"
   },
   "hub": {
     "copilotTitle": "Copilot",

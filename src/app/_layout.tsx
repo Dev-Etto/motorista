@@ -21,6 +21,8 @@ const SCREENS = [
   { name: 'offers', titleKey: 'screens.offers' },
   { name: 'calculator', titleKey: 'screens.calculator' },
   { name: 'copilot-setup', titleKey: 'screens.copilotSetup' },
+  { name: 'copilot-card', titleKey: 'screens.copilotCard' },
+  { name: 'copilot-reading', titleKey: 'screens.copilotReading' },
   { name: 'help', titleKey: 'screens.help' },
   { name: 'permissions', titleKey: 'screens.permissions' },
   { name: 'summary', titleKey: 'screens.summary' },

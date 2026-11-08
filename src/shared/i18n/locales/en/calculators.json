@@ -1,7 +1,7 @@
 {
   "tabs": {
     "offer": "Evaluate offer",
-    "quote": "Private ride"
+    "quote": "Private ride quote"
   },
   "costNotice": {
     "title": "First, find out your cost per {{unit}}",
@@ -9,8 +9,6 @@
     "action": "Calculate cost"
   },
   "offer": {
-    "title": "Is this ride worth it?",
-    "intro": "Enter what the offer shows and see how much you keep.",
     "value": "What the ride pays",
     "distance": "Total distance",
     "distanceHint": "Add the drive to the pickup and the trip itself.",
@@ -20,41 +18,40 @@
     "perHour": "Pays per hour",
     "scoreTitle": "How is the score calculated?",
     "scoreExplain": "The score compares the ride with your cost and your minimums. At {{target}} or higher, it meets both minimums. Below {{belowCost}}, it doesn't cover the cost of the car.",
-    "scoreDisclaimer": "The score is only a guide: the decision is always yours."
+    "scoreDisclaimer": "The score is only a guide: the decision is always yours.",
+    "aboveTarget": "▲ {{percent}}%",
+    "belowTarget": "▼ {{percent}}%",
+    "comparedTo": "Compared with your minimums: {{perDistance}} and {{perHour}}.",
+    "changeTargets": "Change minimums"
   },
   "quote": {
-    "title": "How much to charge for this ride?",
-    "intro": "For rides arranged directly with the passenger, outside the apps.",
-    "toPassenger": "To the pickup",
+    "toPassenger": "To pickup",
     "trip": "Trip",
-    "time": "Total time",
-    "timeHint": "Include the drive to the pickup.",
-    "moreOptions": "More options",
-    "return": "Return trip without a passenger",
-    "returnHint": "If you need to drive back on your own.",
+    "time": "Time",
+    "moreOptions": "Tolls, extras and minimum price",
     "profitPerHour": "How much you want to make per hour",
     "profitPerHourHint": "This is the value of your time in the suggested price.",
     "toll": "Tolls",
     "extras": "Waiting time or other extras",
     "minimum": "Don't charge less than",
     "minimumHint": "A short ride can result in a very low price. If that happens, the app suggests this amount.",
-    "price": "Suggested price",
-    "vehicle": "For the car",
-    "vehicleDetail": "{{distance}} at your cost per {{unit}}",
-    "timeValue": "For your time",
-    "tollAndExtras": "Tolls and extras",
-    "profit": "What you keep",
-    "description": "Description (optional)",
-    "descriptionPlaceholder": "Downtown to the airport",
-    "share": "Share",
+    "price": "Charge",
+    "description": "Who or where",
+    "descriptionPlaceholder": "Airport · Ms. Rita",
+    "share": "Send to customer",
     "shareMessage": "Price: {{price}}",
     "shareMessageWithTrip": "Trip: {{trip}}\nPrice: {{price}}",
     "savedTitle": "Saved quotes",
     "noDescription": "No description",
-    "tapToRemove": "Tap to remove",
     "removeTitle": "Remove quote?",
     "tapToOpen": "Tap to open or remove",
-    "open": "Open"
+    "open": "Open",
+    "countReturn": "Count the empty return",
+    "covers": "Covers the car for {{distance}} and pays {{perHour}}",
+    "yourMinimum": ", your minimum per hour",
+    "includesExtras": "Includes {{value}} in tolls and extras",
+    "savedCount_one": "Saved (1)",
+    "savedCount_other": "Saved ({{count}})"
   },
   "costOf": "{{name}} cost: {{cost}}"
 }

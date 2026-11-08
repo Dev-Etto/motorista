@@ -73,7 +73,10 @@
     "clearConfirm": {
       "title": "Limpar as ofertas?",
       "message": "O histórico e a estimativa de faturamento serão apagados. As jornadas salvas não mudam."
-    }
+    },
+    "read": "Lidas",
+    "accepted": "Aceitas",
+    "averageScore": "Nota média"
   },
   "hub": {
     "copilotTitle": "Copiloto",

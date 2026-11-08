@@ -27,8 +27,6 @@
     "expensesTitle": "Despesas do dia",
     "otherExpenses": "Outras despesas",
     "moreDetails": "Mais detalhes",
-    "startHourLabel": "Hora de início",
-    "startHourHint": "Ajuda a descobrir seu melhor período.",
     "tripsLabel": "Corridas",
     "saveButton": "Salvar jornada",
     "errors": {
@@ -45,7 +43,12 @@
       "result": "Gastou com algo hoje?"
     },
     "stepOf": "Etapa {{current}} de {{total}}",
-    "earnedTotal": "Faturou"
+    "earnedTotal": "Faturou",
+    "startedLabel": "Começou às",
+    "endsAround": "Parou por volta das {{time}}",
+    "resultMath": "{{gross}} de ganhos − {{vehicle}} do carro − {{expenses}} de despesas",
+    "inCostHint_km": "Abastecimento e manutenção já estão no custo por km. Lance-os pelo botão da jornada, para comparar o previsto com o pago.",
+    "inCostHint_mi": "Abastecimento e manutenção já estão no custo por milha. Lance-os pelo botão da jornada, para comparar o previsto com o pago."
   },
   "result": {
     "title": "Resultado",

@@ -7,6 +7,7 @@ import {
   dayRange,
   daysBetween,
   formatClock,
+  clockAfter,
   formatElapsedShort,
   formatDate,
   formatDuration,
@@ -130,13 +131,13 @@ describe('tempo de jornada abreviado', () => {
   const MINUTE = 60_000;
 
   it.each([
-    [0, '<1min'],
+    [0, '0min'],
     [45 * MINUTE, '45min'],
     [120 * MINUTE, '2h'],
     [134 * MINUTE + 59_000, '2h14'],
     [750 * MINUTE, '12h30'],
     [24 * 60 * MINUTE, '24h+'],
-    [-MINUTE, '<1min'],
+    [-MINUTE, '0min'],
   ])('%i ms vira %s', (elapsedMs, text) => {
     expect(formatElapsedShort(elapsedMs)).toBe(text);
   });
@@ -145,5 +146,12 @@ describe('tempo de jornada abreviado', () => {
 describe('dia por extenso', () => {
   it('mostra o dia da semana, o dia e o mês, com maiúscula', () => {
     expect(formatLongDay('2026-11-07', 'pt-BR')).toBe('Sábado, 7 de novembro');
+  });
+});
+
+describe('hora de parada', () => {
+  it('soma as horas trabalhadas ao início, virando o dia', () => {
+    expect(clockAfter(6, 500)).toBe('14:20');
+    expect(clockAfter(20, 300)).toBe('01:00');
   });
 });

@@ -1,13 +1,15 @@
 package app.motorista.copilot
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 
@@ -42,15 +44,29 @@ class OfferCardView(private val context: Context) {
   }
 
   private fun header(evaluation: OfferEvaluation, format: OfferFormat, theme: ThemeMode, scale: Float) = LinearLayout(context).apply {
+    val night = cardTheme.isNight(theme)
+    val color = evaluation.color
     orientation = LinearLayout.HORIZONTAL
     gravity = Gravity.CENTER_VERTICAL
-    setPadding(context.dp(PADDING_DP), context.dp(PADDING_DP), context.dp(PADDING_DP), 0)
+    setBackgroundColor(if (night) color.nightAccent else color.dayBackground)
+    setPadding(context.dp(PADDING_DP), context.dp(HEADER_VERTICAL_DP), context.dp(PADDING_DP), context.dp(HEADER_VERTICAL_DP))
     addView(sourceColumn(evaluation, scale), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-    addView(scoreBadge(evaluation, format, theme, scale))
+    addView(scoreText(evaluation, format, if (night) color.nightText else color.dayText, scale))
   }
 
-  private fun scoreBadge(evaluation: OfferEvaluation, format: OfferFormat, theme: ThemeMode, scale: Float) = ImageView(context).apply {
-    setImageBitmap(ScoreBadge.bitmap(context, evaluation, format, context.dp((BADGE_DP * scale).toInt()), cardTheme.isNight(theme)))
+  private fun scoreText(evaluation: OfferEvaluation, format: OfferFormat, ink: Int, scale: Float) = TextView(context).apply {
+    val score = evaluation.score?.let { format.decimal(it) } ?: EMPTY_SCORE
+    val spanned = SpannableStringBuilder(score)
+    if (evaluation.score != null) {
+      val start = spanned.length
+      spanned.append(SCORE_SCALE)
+      spanned.setSpan(RelativeSizeSpan(SCALE_RATIO), start, spanned.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+      spanned.setSpan(ForegroundColorSpan((ink and 0x00FFFFFF) or SCALE_ALPHA), start, spanned.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+    text = spanned
+    setTextColor(ink)
+    setTextSize(TypedValue.COMPLEX_UNIT_SP, SCORE_SP * scale)
+    typeface = AppFonts.bold(context)
     contentDescription = format.scoreDescription(evaluation)
   }
 
@@ -118,12 +134,11 @@ class OfferCardView(private val context: Context) {
     typeface = face
   }
 
-
   private companion object {
     const val SCREEN_MARGIN_DP = 12
     const val MAX_WIDTH_DP = 380
     const val PADDING_DP = 16
-    const val BODY_TOP_DP = 12
+    const val BODY_TOP_DP = 14
     const val METRICS_TOP_DP = 12
     const val CORNER_DP = 20
     const val ELEVATION_DP = 8
@@ -131,7 +146,12 @@ class OfferCardView(private val context: Context) {
     const val SOURCE_SP = 18f
     const val SOURCE_WIDTH_DP = 84
     const val SOURCE_HEIGHT_DP = 36
-    const val BADGE_DP = 48
+    const val HEADER_VERTICAL_DP = 12
+    const val SCORE_SP = 30f
+    const val SCALE_RATIO = 0.53f
+    const val SCALE_ALPHA = 0xB3000000.toInt()
+    const val SCORE_SCALE = "/5"
+    const val EMPTY_SCORE = "—"
     const val VALUE_SP = 28f
     const val DETAIL_SP = 17f
     const val METRIC_SP = 20f

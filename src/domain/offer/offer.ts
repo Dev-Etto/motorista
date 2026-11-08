@@ -83,7 +83,7 @@ export type TargetComparison = { kind: 'no-target' } | { kind: 'at-target' } | {
 
 export type OfferReason = { kind: 'no-costs' } | { kind: 'below-cost' } | { kind: 'targets'; perKm: TargetComparison; perHour: TargetComparison | null };
 
-function compareToTarget(value: number, target: number): TargetComparison {
+export function compareToTarget(value: number, target: number): TargetComparison {
   if (target <= 0) return { kind: 'no-target' };
 
   const percent = Math.round((value / target - 1) * 100);

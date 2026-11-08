@@ -6,6 +6,7 @@ import { useFormat } from '@shared/i18n/format';
 import { MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@shared/theme/theme';
 import { AppIcon, AppIconName } from '@shared/ui/AppIcon';
 import { AppText, Button, Card, Screen } from '@shared/ui/primitives';
+import { StatTile, StatTiles } from '@shared/ui/StatTile';
 import { OfferRow } from './OfferRow';
 import { useTodayOffers } from './useTodayOffers';
 
@@ -45,11 +46,11 @@ export default function OffersHubScreen() {
         </Card>
       )}
 
-      <View style={styles.stats}>
-        <DayStat label={t('hub.readToday')} value={String(offers.day.read)} />
-        <DayStat label={t('hub.acceptedToday')} value={String(offers.day.accepted)} />
-        <DayStat label={t('hub.estimatedToday')} value={format.money(offers.day.estimatedCents)} />
-      </View>
+      <StatTiles>
+        <StatTile label={t('hub.readToday')} value={String(offers.day.read)} />
+        <StatTile label={t('hub.acceptedToday')} value={String(offers.day.accepted)} />
+        <StatTile label={t('hub.estimatedToday')} value={format.money(offers.day.estimatedCents)} />
+      </StatTiles>
 
       <View style={styles.sectionHeader}>
         <AppText bold accessibilityRole="header" style={styles.flex}>
@@ -76,20 +77,6 @@ export default function OffersHubScreen() {
   );
 }
 
-function DayStat({ label, value }: { label: string; value: string }) {
-  const colors = useTheme();
-  return (
-    <View accessible accessibilityLabel={`${label}, ${value}`} style={[styles.stat, { backgroundColor: colors.surface, boxShadow: colors.cardShadow }]}>
-      <AppText variant="caption" tone="muted">
-        {label}
-      </AppText>
-      <AppText variant="subtitle" bold numberOfLines={1} adjustsFontSizeToFit>
-        {value}
-      </AppText>
-    </View>
-  );
-}
-
 function Tool({ icon, label, onPress }: { icon: AppIconName; label: string; onPress: () => void }) {
   const colors = useTheme();
   return (
@@ -111,8 +98,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
   dot: { width: DOT, height: DOT, borderRadius: radius.pill },
-  stats: { flexDirection: 'row', gap: spacing.sm },
-  stat: { flex: 1, borderRadius: radius.md, padding: spacing.md, gap: 2 },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.xs },
   link: { minHeight: MIN_TOUCH_TARGET, justifyContent: 'center', paddingLeft: spacing.md },
   tools: { flexDirection: 'row', gap: spacing.sm },

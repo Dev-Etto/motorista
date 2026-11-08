@@ -155,5 +155,10 @@ class OfferFormat(private val regional: RegionalSettings, private val texts: Off
       val totalSeconds = elapsedMs / MS_PER_SECOND
       return "%02d:%02d:%02d".format(totalSeconds / SECONDS_PER_HOUR, totalSeconds % SECONDS_PER_HOUR / SECONDS_PER_MINUTE, totalSeconds % SECONDS_PER_MINUTE)
     }
+
+    fun shortClock(elapsedMs: Long): String {
+      val totalSeconds = elapsedMs / MS_PER_SECOND
+      return "%d:%02d".format(totalSeconds / SECONDS_PER_HOUR, totalSeconds % SECONDS_PER_HOUR / SECONDS_PER_MINUTE)
+    }
   }
 }

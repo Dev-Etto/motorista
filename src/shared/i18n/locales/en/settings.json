@@ -35,7 +35,7 @@
         "subtitle": "Save and restore your data"
       },
       "summary": {
-        "title": "My summary",
+        "title": "My summary to share",
         "subtitle": "Usage numbers to share"
       },
       "privacy": {
@@ -68,18 +68,16 @@
       }
     },
     "about": {
-      "title": "About the app",
       "donateTitle": "Support the project",
-      "donateSubtitle": "The app is free. Help keep it going.",
       "updateTitle": "Check for updates",
-      "updateSubtitle": "Opens the releases page in your browser.",
       "versionTitle": "Version {{version}}",
-      "versionSubtitle": "See the code and what's new.",
-      "codeTitle": "Code and what's new"
+      "codeTitle": "Code and what's new",
+      "dataStays": "Your data stays on your phone only."
     },
-    "aboutSection": {
-      "yours": "Your data and feedback",
-      "legal": "Privacy and terms"
+    "summary": {
+      "vehicle": "Current vehicle",
+      "goal": "Goal for {{month}}",
+      "goalDone": "{{percent}}% done"
     }
   },
   "appearance": {
@@ -161,15 +159,13 @@
     "shareMessage": "{{appName}} app summary\nVersion: {{version}}\nShifts: {{total}}\nDays with shifts: {{days}}\nFirst: {{first}}\nLast: {{last}}"
   },
   "platforms": {
-    "intro": "Turn on the platforms you work with. Only active ones show up in shifts, reports and the Copilot.",
+    "intro": "Platforms that are on show up in your shift earnings. In the apps, the Copilot also reads the offers.",
     "keepOne": "Keep at least one platform active to record your earnings.",
-    "appsTitle": "Apps with Copilot",
-    "ownTitle": "Other earnings",
+    "appsTitle": "Ride-hailing apps",
+    "ownTitle": "Your earnings outside the apps",
     "legacyTitle": "Added by you",
     "hint": {
-      "copilot": "The Copilot reads offers from this app",
-      "private": "Rides arranged directly with the passenger",
-      "other": "Another ride or delivery app. No Copilot",
+      "copilot": "Earnings and offers",
       "legacy": "Once off, it leaves the list. Past shifts keep the name"
     },
     "turnOff": {
@@ -299,18 +295,16 @@
     }
   },
   "region": {
-    "previewTitle": "How values look",
-    "languageAndFormat": "Language and format",
     "language": {
       "title": "Language",
-      "automatic": "Automatic ({{language}})",
+      "automatic": "Automatic · {{language}}",
       "automaticHint": "Follows your phone's language."
     },
     "format": {
-      "title": "Regional format",
-      "automatic": "Automatic ({{format}})",
+      "title": "Format",
+      "automatic": "Automatic · {{format}}",
       "automaticHint": "Follows the phone's format.",
-      "firstWeekday": "Week starts on"
+      "firstWeekday": "Week starts"
     },
     "market": {
       "title": "Country where you drive",
@@ -319,7 +313,9 @@
       "confirmMessage": "Saved amounts keep the same numbers, now in {{currency}}. The app does not convert currency.",
       "confirmAction": "Change",
       "learnMore": "Why does the currency follow the country?",
-      "soon": "More countries coming soon."
+      "soon": "More countries coming soon.",
+      "short": "Country",
+      "value": "{{market}} · {{currency}}"
     },
     "units": {
       "title": "Units",
@@ -333,6 +329,12 @@
       "kmPerLiter": "km/L",
       "litersPer100km": "L/100 km",
       "mpg": "mpg"
+    },
+    "preview": {
+      "money": "Money",
+      "date": "Date",
+      "distance": "Distance",
+      "consumption": "Fuel economy"
     }
   }
 }

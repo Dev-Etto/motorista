@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { OutcomeFilter } from '@domain/offer/offerLog';
+import { useFormat } from '@shared/i18n/format';
 import { DateField } from '@shared/ui/DateField';
 import { confirmAction } from '@shared/ui/dialog';
 import { FilterChips } from '@shared/ui/FilterChips';
 import { Button, Card, EmptyState, Notice, Screen, ToggleRow } from '@shared/ui/primitives';
+import { StatTile, StatTiles } from '@shared/ui/StatTile';
 import { toJsDate } from '@shared/utils/dates';
 import { EstimateCard } from './EstimateCard';
 import { OFFER_PERIODS } from './offerPeriod';
@@ -16,6 +18,7 @@ const OUTCOMES: OutcomeFilter[] = ['accepted', 'notAccepted', 'all'];
 export default function OffersScreen() {
   const { t } = useTranslation(['offers', 'common']);
   const offers = useOffers();
+  const format = useFormat();
   const periodOptions = OFFER_PERIODS.map((value) => ({ value, label: t(`screen.period.${value}`) }));
   const outcomeOptions = OUTCOMES.map((value) => ({ value, label: t(`screen.outcome.${value}`) }));
   const sourceOptions = [{ value: ALL_SOURCES, label: t('screen.allSources') }, ...offers.sources.map((source) => ({ value: source, label: source }))];
@@ -31,6 +34,11 @@ export default function OffersScreen() {
 
   return (
     <Screen>
+      <StatTiles>
+        <StatTile label={t('screen.read')} value={String(offers.summary.received)} />
+        <StatTile label={t('screen.accepted')} value={String(offers.summary.accepted)} />
+        <StatTile label={t('screen.averageScore')} value={offers.averageScore === null ? '—' : format.number(offers.averageScore)} />
+      </StatTiles>
       <Card>
         <FilterChips label={t('screen.periodLabel')} value={offers.period} options={periodOptions} onChange={offers.setPeriod} />
         {offers.period === 'custom' ? (

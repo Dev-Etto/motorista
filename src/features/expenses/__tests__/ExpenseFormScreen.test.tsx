@@ -105,4 +105,16 @@ describe('editar lançamento avulso', () => {
     await options?.actions[1]?.onPress?.();
     expect(updateFuelPrice).toHaveBeenCalledWith(2, 650);
   });
+
+  it('Também troca o tipo do lançamento', async () => {
+    delete mockParams.id;
+    mockParams.category = 'fuel';
+    await renderForm();
+
+    expect(screen.getByLabelText(/Litros/)).toBeTruthy();
+    await fireEvent.press(screen.getByRole('button', { name: 'Lançar Manutenção' }));
+
+    expect(screen.queryByLabelText(/Litros/)).toBeNull();
+    expect(screen.getByRole('button', { name: 'Lançar Abastecimento' })).toBeTruthy();
+  });
 });

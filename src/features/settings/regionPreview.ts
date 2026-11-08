@@ -1,10 +1,9 @@
 import type { ConsumptionUnit } from '@domain/regional/regional';
 import type { Formatter } from '@shared/i18n/format';
 
-const EXAMPLE_CENTS = 123456;
-const EXAMPLE_KM = 12.5;
-const EXAMPLE_PER_KM_CENTS = 250;
-const EXAMPLE_KM_PER_LITER = 10.5;
+const EXAMPLE_CENTS = 123680;
+const EXAMPLE_KM = 8.5;
+const EXAMPLE_KM_PER_LITER = 11;
 
 export const CONSUMPTION_KEYS: Record<ConsumptionUnit, 'kmPerLiter' | 'litersPer100km' | 'mpg'> = {
   'km/L': 'kmPerLiter',
@@ -12,12 +11,13 @@ export const CONSUMPTION_KEYS: Record<ConsumptionUnit, 'kmPerLiter' | 'litersPer
   mpg: 'mpg',
 };
 
-export function buildRegionPreview(format: Formatter, date: string, consumptionUnitLabel: string): string[] {
+export type RegionPreviewItem = { id: 'money' | 'date' | 'distance' | 'consumption'; value: string };
+
+export function buildRegionPreview(format: Formatter, date: string, consumptionUnitLabel: string): RegionPreviewItem[] {
   return [
-    format.money(EXAMPLE_CENTS),
-    format.distance(EXAMPLE_KM),
-    format.perDistance(EXAMPLE_PER_KM_CENTS),
-    format.date(date),
-    `${format.consumptionInput(EXAMPLE_KM_PER_LITER)} ${consumptionUnitLabel}`,
+    { id: 'money', value: format.money(EXAMPLE_CENTS) },
+    { id: 'date', value: format.date(date) },
+    { id: 'distance', value: format.distance(EXAMPLE_KM) },
+    { id: 'consumption', value: `${format.consumptionInput(EXAMPLE_KM_PER_LITER)} ${consumptionUnitLabel}` },
   ];
 }

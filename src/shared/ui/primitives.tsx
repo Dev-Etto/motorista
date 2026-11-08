@@ -7,7 +7,7 @@ import { fonts, fontSize, MIN_TOUCH_TARGET, radius, spacing, ThemeColors, useThe
 import { AppIcon, AppIconName } from './AppIcon';
 import { Illustration, IllustrationName } from './illustrations/Illustration';
 
-type Tone = 'default' | 'muted' | 'positive' | 'warning' | 'negative' | 'accent';
+type Tone = 'default' | 'muted' | 'positive' | 'warning' | 'negative' | 'accent' | 'inverse' | 'inverseMuted';
 type Variant = 'caption' | 'body' | 'subtitle' | 'title' | 'display';
 
 const TABULAR: ['tabular-nums'] = ['tabular-nums'];
@@ -20,6 +20,8 @@ const TONE_COLORS: Record<Tone, keyof ThemeColors> = {
   warning: 'warning',
   negative: 'negative',
   accent: 'accent',
+  inverse: 'onPrimary',
+  inverseMuted: 'onPrimaryMuted',
 };
 
 interface AppTextProps extends TextProps {
@@ -85,6 +87,26 @@ export function Card({ children, title }: { children: ReactNode; title?: string 
   );
 }
 
+export function HeroCard({ children, accessibilityLabel }: { children: ReactNode; accessibilityLabel?: string }) {
+  const colors = useTheme();
+  return (
+    <View accessible={Boolean(accessibilityLabel)} accessibilityLabel={accessibilityLabel} style={[styles.hero, { backgroundColor: colors.primary }]}>
+      {children}
+    </View>
+  );
+}
+
+export function Section({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <View style={styles.section}>
+      <AppText variant="caption" bold tone="muted" accessibilityRole="header" style={styles.sectionTitle}>
+        {title}
+      </AppText>
+      <Card>{children}</Card>
+    </View>
+  );
+}
+
 interface ButtonProps {
   label: string;
   onPress: () => void;
@@ -116,6 +138,20 @@ export function Button({ label, onPress, variant = 'primary', disabled, busy, ac
       ]}
     >
       <Text style={{ color: labelColor, fontSize: fontSize.body, fontFamily: fonts.bold }}>{label}</Text>
+    </Pressable>
+  );
+}
+
+export function PillButton({ label, onPress, accessibilityLabel }: { label: string; onPress: () => void; accessibilityLabel?: string }) {
+  const colors = useTheme();
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      onPress={onPress}
+      style={({ pressed }) => [styles.pill, { borderColor: colors.primary, opacity: pressed ? 0.7 : 1 }]}
+    >
+      <Text style={{ color: colors.text, fontSize: fontSize.caption, fontFamily: fonts.bold }}>{label}</Text>
     </Pressable>
   );
 }
@@ -161,14 +197,24 @@ export function Segmented<T extends string>({ value, options, onChange, label }:
   );
 }
 
-export function ToggleRow({ label, hint, value, onChange }: { label: string; hint?: string; value: boolean; onChange: (next: boolean) => void }) {
+interface ToggleRowProps {
+  label: string;
+  hint?: string;
+  hintTone?: Tone;
+  leading?: ReactNode;
+  value: boolean;
+  onChange: (next: boolean) => void;
+}
+
+export function ToggleRow({ label, hint, hintTone = 'muted', leading, value, onChange }: ToggleRowProps) {
   const colors = useTheme();
   return (
     <View style={styles.rowBetween}>
+      {leading}
       <View style={styles.flex}>
-        <AppText>{label}</AppText>
+        {leading ? null : <AppText>{label}</AppText>}
         {hint ? (
-          <AppText variant="caption" tone="muted">
+          <AppText variant="caption" tone={hintTone} bold={hintTone !== 'muted'}>
             {hint}
           </AppText>
         ) : null}
@@ -366,6 +412,8 @@ const NOTICE_ICONS: Record<Tone, AppIconName> = {
   positive: 'check',
   warning: 'alert',
   negative: 'alert',
+  inverse: 'help',
+  inverseMuted: 'help',
 };
 
 const NOTICE_LIVE_REGIONS: Partial<Record<Tone, 'polite' | 'assertive'>> = { negative: 'assertive', warning: 'polite' };
@@ -393,6 +441,9 @@ const styles = StyleSheet.create({
   screen: { padding: spacing.lg, gap: spacing.lg, flexGrow: 1 },
   centered: { justifyContent: 'center' },
   card: { borderRadius: radius.lg, padding: spacing.lg, gap: spacing.md },
+  hero: { borderRadius: radius.lg, padding: spacing.lg, gap: spacing.xs },
+  section: { gap: spacing.sm },
+  sectionTitle: { paddingHorizontal: spacing.xs },
   button: {
     minHeight: MIN_TOUCH_TARGET,
     minWidth: MIN_TOUCH_TARGET,
@@ -402,6 +453,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
   buttonRow: { flexDirection: 'row', gap: spacing.sm },
+  pill: {
+    minHeight: MIN_TOUCH_TARGET,
+    borderWidth: 1,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.lg,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   segmented: { flexDirection: 'row', borderRadius: radius.md, padding: spacing.xs, gap: spacing.xs },
   segment: {
     flex: 1,

@@ -35,7 +35,7 @@
         "subtitle": "Salvar e restaurar seus dados"
       },
       "summary": {
-        "title": "Meu resumo",
+        "title": "Meu resumo para compartilhar",
         "subtitle": "Números de uso para compartilhar"
       },
       "privacy": {
@@ -68,18 +68,16 @@
       }
     },
     "about": {
-      "title": "Sobre o app",
       "donateTitle": "Apoiar o projeto",
-      "donateSubtitle": "O app é gratuito. Ajude a mantê-lo.",
       "updateTitle": "Verificar atualização",
-      "updateSubtitle": "Abre a página de versões no navegador.",
       "versionTitle": "Versão {{version}}",
-      "versionSubtitle": "Ver o código e as novidades.",
-      "codeTitle": "Código e novidades"
+      "codeTitle": "Código e novidades",
+      "dataStays": "Seus dados ficam só no seu celular."
     },
-    "aboutSection": {
-      "yours": "Seus dados e sugestões",
-      "legal": "Privacidade e termos"
+    "summary": {
+      "vehicle": "Veículo atual",
+      "goal": "Meta de {{month}}",
+      "goalDone": "{{percent}}% feito"
     }
   },
   "appearance": {
@@ -161,15 +159,13 @@
     "shareMessage": "Resumo do app {{appName}}\nVersão: {{version}}\nJornadas: {{total}}\nDias com jornada: {{days}}\nPrimeira: {{first}}\nÚltima: {{last}}"
   },
   "platforms": {
-    "intro": "Ative as plataformas em que você trabalha. Só as ativas aparecem na jornada, nos relatórios e no Copiloto.",
+    "intro": "As plataformas ligadas aparecem nos ganhos da jornada. Nos apps, o Copiloto também lê as ofertas.",
     "keepOne": "Mantenha pelo menos uma plataforma ativa para registrar seus ganhos.",
-    "appsTitle": "Apps com Copiloto",
-    "ownTitle": "Outros ganhos",
+    "appsTitle": "Apps de corrida",
+    "ownTitle": "Seus ganhos fora dos apps",
     "legacyTitle": "Adicionadas por você",
     "hint": {
-      "copilot": "O Copiloto lê as ofertas deste app",
-      "private": "Corridas combinadas direto com o passageiro",
-      "other": "Outro app de corrida ou entrega. Sem Copiloto",
+      "copilot": "Ganhos e ofertas",
       "legacy": "Desativada, sai da lista. Jornadas antigas mantêm o nome"
     },
     "turnOff": {
@@ -299,18 +295,16 @@
     }
   },
   "region": {
-    "previewTitle": "Como os valores aparecem",
-    "languageAndFormat": "Idioma e formato",
     "language": {
       "title": "Idioma",
-      "automatic": "Automático ({{language}})",
+      "automatic": "Automático · {{language}}",
       "automaticHint": "Segue o idioma do celular."
     },
     "format": {
-      "title": "Formato regional",
-      "automatic": "Automático ({{format}})",
+      "title": "Formato",
+      "automatic": "Automático · {{format}}",
       "automaticHint": "Segue o formato do celular.",
-      "firstWeekday": "A semana começa em"
+      "firstWeekday": "Semana começa"
     },
     "market": {
       "title": "País onde você dirige",
@@ -319,7 +313,9 @@
       "confirmMessage": "Os valores já salvos continuam com os mesmos números, agora em {{currency}}. O app não converte câmbio.",
       "confirmAction": "Trocar",
       "learnMore": "Por que a moeda segue o país?",
-      "soon": "Mais países em breve."
+      "soon": "Mais países em breve.",
+      "short": "País",
+      "value": "{{market}} · {{currency}}"
     },
     "units": {
       "title": "Unidades",
@@ -333,6 +329,12 @@
       "kmPerLiter": "km/L",
       "litersPer100km": "L/100 km",
       "mpg": "mpg"
+    },
+    "preview": {
+      "money": "Dinheiro",
+      "date": "Data",
+      "distance": "Distância",
+      "consumption": "Consumo"
     }
   }
 }

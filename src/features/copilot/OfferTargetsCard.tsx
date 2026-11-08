@@ -1,9 +1,8 @@
-import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { OfferMode, OfferTargets } from '@domain/offer/offer';
 import { useFormat } from '@shared/i18n/format';
 import { MoneyField } from '@shared/ui/fields';
-import { AppText, Button, Card, ListRow, Notice, Segmented, ToggleRow } from '@shared/ui/primitives';
+import { AppText, Card, ListRow, Notice, Segmented, ToggleRow } from '@shared/ui/primitives';
 import { OfferTargetsState } from './useOfferTargets';
 
 const MODES: OfferMode[] = ['normal', 'low'];
@@ -55,21 +54,6 @@ export function OfferTargetsEditor({ targets, suggestion }: { targets: OfferTarg
           {targets.saveError ? <Notice tone="negative" message={targets.saveError} /> : null}
         </>
       )}
-    </Card>
-  );
-}
-
-export function OfferTargetsSummary({ targets }: { targets: OfferTargetsState }) {
-  const { t } = useTranslation('copilot');
-  const router = useRouter();
-  const modes = useModeOptions();
-
-  return (
-    <Card title={t('targets.title')}>
-      <AppText tone="muted">{t('targets.summaryIntro')}</AppText>
-      <Segmented value={targets.mode} options={modes} onChange={targets.setMode} />
-      <TargetValues targets={targets} />
-      <Button label={t('targets.change')} variant="secondary" onPress={() => router.push('/goal')} />
     </Card>
   );
 }

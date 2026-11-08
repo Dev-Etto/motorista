@@ -114,3 +114,9 @@ export function summarizeOfferDay(entries: OfferLogEntry[]): OfferDay {
   const estimate = estimateEarnings(entries);
   return { read: entries.length, accepted: estimate.trips, estimatedCents: estimate.totalCents };
 }
+
+export function averageScore(entries: { score?: number | null }[]): number | null {
+  const scores = entries.map((entry) => entry.score).filter((score): score is number => typeof score === 'number');
+  if (scores.length === 0) return null;
+  return Math.round((scores.reduce((sum, score) => sum + score, 0) / scores.length) * 10) / 10;
+}

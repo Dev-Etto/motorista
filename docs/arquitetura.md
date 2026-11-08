@@ -86,7 +86,7 @@ app -> features -> application -> data -> domain -> shared/utils
 
 **Sem tempo, nota até 4.** Sem a duração não dá para saber se a corrida compensa por hora, então a nota não passa de 4.
 
-**Selo de nota.** A nota de 0 a 5 aparece sempre no mesmo selo, com a cor da faixa e o número escrito, para a faixa não depender só da cor. Cartão e notificação têm fundo neutro, e o selo é o único ponto de cor. O selo é desenhado em `ScoreBadge`, em TypeScript e em Kotlin, com as mesmas proporções e cores. O histórico mudou de chave ao trocar a escala, para não misturar notas de 0 a 10.
+**Selo de nota.** A nota de 0 a 5 aparece sempre no mesmo selo, com a cor da faixa e o número escrito, para a faixa não depender só da cor. No cartão da oferta, a faixa do topo leva a cor da nota com a nota escrita por cima, como no selo. A notificação tem fundo neutro, e o selo é o único ponto de cor. O selo é desenhado em `ScoreBadge`, em TypeScript e em Kotlin, com as mesmas proporções e cores. O histórico mudou de chave ao trocar a escala, para não misturar notas de 0 a 10.
 
 **Leitura de todas as janelas do app monitorado.** Uma oferta pode abrir em outra janela ou em views marcadas como não importantes. Por isso o serviço usa `flagRetrieveInteractiveWindows` e `flagIncludeNotImportantViews`, e `monitoredRoots` descarta as janelas de qualquer outro app. Só o texto visível é lido.
 

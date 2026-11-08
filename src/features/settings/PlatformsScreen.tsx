@@ -2,10 +2,9 @@ import { useTranslation } from 'react-i18next';
 import { hasCopilot, type PlatformEntry } from '@application/platforms';
 import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
 import { confirmAction } from '@shared/ui/dialog';
-import { AppText, Card, Notice, Screen, ToggleRow } from '@shared/ui/primitives';
+import { PlatformBadge } from '@shared/ui/PlatformBadge';
+import { AppText, Notice, Screen, Section, ToggleRow } from '@shared/ui/primitives';
 import { usePlatforms } from './usePlatforms';
-
-const OWN_HINT_KEYS = { private: 'platforms.hint.private', other: 'platforms.hint.other' } as const;
 
 export default function PlatformsScreen() {
   const { t } = useTranslation('settings');
@@ -27,8 +26,8 @@ export default function PlatformsScreen() {
 
   const hintOf = (platform: PlatformEntry) => {
     if (hasCopilot(platform.key)) return t('platforms.hint.copilot');
-    if (platform.key === 'private' || platform.key === 'other') return t(OWN_HINT_KEYS[platform.key]);
-    return t('platforms.hint.legacy');
+    if (platform.key === null) return t('platforms.hint.legacy');
+    return undefined;
   };
 
   return (
@@ -42,6 +41,7 @@ export default function PlatformsScreen() {
               key={platform.id}
               label={platform.name}
               hint={hintOf(platform)}
+              leading={hasCopilot(platform.key) ? <PlatformBadge name={platform.name} /> : undefined}
               value={platform.active}
               onChange={(active) => (active || activeCount > 1 ? change(platform, active) : undefined)}
             />
@@ -53,9 +53,9 @@ export default function PlatformsScreen() {
           return (
             <>
               {activeCount === 1 ? <Notice tone="accent" message={t('platforms.keepOne')} /> : null}
-              <Card title={t('platforms.appsTitle')}>{apps.map(rowOf)}</Card>
-              <Card title={t('platforms.ownTitle')}>{own.map(rowOf)}</Card>
-              {legacy.length > 0 ? <Card title={t('platforms.legacyTitle')}>{legacy.map(rowOf)}</Card> : null}
+              <Section title={t('platforms.appsTitle')}>{apps.map(rowOf)}</Section>
+              <Section title={t('platforms.ownTitle')}>{own.map(rowOf)}</Section>
+              {legacy.length > 0 ? <Section title={t('platforms.legacyTitle')}>{legacy.map(rowOf)}</Section> : null}
             </>
           );
         }}

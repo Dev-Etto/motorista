@@ -3,7 +3,8 @@
     "gasoline": "Gasoline",
     "ethanol": "Ethanol",
     "cng": "CNG",
-    "electric": "Electric"
+    "electric": "Electric",
+    "diesel": "Diesel"
   },
   "kind": {
     "car": "Car",
@@ -90,7 +91,6 @@
   },
   "manage": {
     "intro": "The current vehicle sets the cost per distance for the Copilot, the calculator and the goal. On each shift, you pick the vehicle used.",
-    "currentName": "{{name}} · current",
     "add": "Add vehicle",
     "useNow": "Use now",
     "archive": "Archive",
@@ -115,7 +115,8 @@
     "reactivateConfirm": {
       "title": "Reactivate {{name}}?",
       "message": "It returns to the shift and expense choices."
-    }
+    },
+    "currentBadge": "Current"
   },
   "costHero": {
     "title_km": "Each km costs",
