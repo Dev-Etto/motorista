@@ -97,7 +97,7 @@ app -> features -> application -> data -> domain -> shared/utils
 
 **Cronômetro no lado nativo.** O botão flutuante e o app precisam ver o mesmo estado, mesmo com o app fechado. Por isso o estado fica em `ShiftTimer`, no Kotlin.
 
-**Internet só no build de desenvolvimento.** O Metro exige `INTERNET`. Com `APP_VARIANT=release`, a permissão é removida em `app.config.ts`.
+**Internet só para o que o produto precisa.** Desde o plano de lançamento pago, o release tem `INTERNET` e `ACCESS_NETWORK_STATE`, para cobrança, relato de problemas, relatórios de falha, backup na conta Google e métricas opcionais. O conteúdo das ofertas lidas e a localização nunca saem do aparelho. As outras permissões que bibliotecas trazem sem uso continuam bloqueadas no release em `app.config.ts`.
 
 **Copiloto só leitura.** O serviço declara `canPerformGestures=false`. O cartão recebe toques só para ser arrastado e usa `FLAG_NOT_TOUCH_MODAL`, para os toques fora dele chegarem ao app embaixo. Qualquer automação de toque, aceite ou recusa está fora do produto.
 
@@ -176,7 +176,7 @@ app -> features -> application -> data -> domain -> shared/utils
 
 ## Decisões da versão 0.8.2
 
-- **Permissões conferidas no release:** `scripts/verificar-permissoes.sh` para o script de release se o APK pedir uma permissão fora da lista, como `INTERNET`.
+- **Permissões conferidas no release:** `scripts/verificar-permissoes.sh` para o script de release se o APK pedir uma permissão fora da lista aprovada.
 - **Relato sem conta:** `ReportScreen` monta o texto e usa o menu de compartilhar do Android, sem internet no app. O motorista vê o que será enviado antes.
 - **Aviso de versão antiga:** `extra.buildDate` guarda a data do build, e o início sugere verificar a atualização depois de 30 dias, sem consultar nada na internet.
 - **Restauração completa:** `applyRestoredState` volta os ajustes do Copiloto, as metas, o tema e reagenda as notificações. Uma falha nessa etapa não vira "restauração falhou", porque os dados já foram trocados. A cópia de segurança pode ser restaurada em Backup.
@@ -191,7 +191,7 @@ app -> features -> application -> data -> domain -> shared/utils
 - **Cartão da Uber sem botão:** produto e duas pernas de rota já contam como oferta. Só o trecho até o passageiro é leitura incompleta, para não mostrar um R$/km inflado.
 - **Texto da tela:** `ScreenText` ordena por posição e só une repetições quando um texto está dentro do outro, então dois trechos iguais em pontos diferentes continuam contando. Na Uber, os 15% de cima são ignorados, por causa dos ganhos do dia, e não mais que isso, porque o cartão pode ser alto.
 - **Imagem como reforço opcional:** com `imageReading` ligado, na Uber e na 99, sem oferta no texto, `OfferImageReader` lê a imagem da tela com ML Kit embutido, no máximo uma vez por segundo. `OfferReadPolicy` decide quando: nunca em viagem nem com o cartão aberto, para não ler o próprio cartão. Por isso, oferta lida por imagem fecha pelo tempo do cartão, não por leitura vazia.
-- **Sem internet:** o ML Kit traz `INTERNET` e `ACCESS_NETWORK_STATE`, bloqueadas no release por `blockedPermissions`. O modelo é embutido e funciona sem rede.
+- **Modelo embutido:** o ML Kit usa o modelo que vai dentro do app e lê a imagem sem rede. A imagem da tela e o texto lido nunca são enviados.
 - **Botão flutuante:** o cronômetro aparece sempre, mesmo zerado. `FloatingPanel` só refaz o visual quando o estado muda, e `WindowDrag` usa a tolerância de toque do Android.
 - **Decisões separadas do Android:** `OfferReadPolicy`, `OfferTextTracker`, `WindowEventGate` e `ScanPacer` não dependem do Android e têm teste. `OfferTreeReader` e `OfferImageReader` só coletam. A spec fica em `docs/specs/leitura-de-ofertas.md`.
 - **Gravar fora da thread principal:** a oferta é gravada na thread de leitura. Como é uma fila única, gravação e atualização mantêm a ordem.

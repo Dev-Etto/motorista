@@ -3,7 +3,6 @@ const NAME = 'Motorista';
 const PACKAGE = 'app.motorista.android';
 const isRelease = process.env.APP_VARIANT === 'release';
 const UNUSED_LIBRARY_PERMISSIONS = [
-  'android.permission.ACCESS_NETWORK_STATE',
   'com.google.android.c2dm.permission.RECEIVE',
   'com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE',
   'android.permission.READ_APP_BADGE',
@@ -45,7 +44,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
     predictiveBackGestureEnabled: false,
     blockedPermissions: [
-      ...(isRelease ? ['android.permission.INTERNET', ...UNUSED_LIBRARY_PERMISSIONS] : []),
+      ...(isRelease ? UNUSED_LIBRARY_PERMISSIONS : []),
       'android.permission.ACCESS_BACKGROUND_LOCATION',
       'android.permission.CAMERA',
       'android.permission.RECORD_AUDIO',
