@@ -95,7 +95,7 @@ class FloatingCardPresenter(
     val screen = ScreenBounds.of(context)
     val width = cardView.width() + context.dp(SHADOW_MARGIN_DP) * 2
     val x = saved?.first ?: window.params.x
-    val y = saved?.second ?: OfferCardMotion.defaultCardY(window.params.y, height, screen.height)
+    val y = OfferCardMotion.cardY(saved?.second ?: window.params.y, height, screen.height)
     window.moveTo(ScreenBounds.clamp(x, y, width, height, screen))
   }
 

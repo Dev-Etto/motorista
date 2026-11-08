@@ -20,6 +20,13 @@ class CopilotPreferencesCorruptionTest {
   }
 
   @Test
+  fun pacoteForaDasPlataformasSuportadasNaoELido() {
+    val uber = OfferSources.packages.first()
+    val packages = CopilotPreferences.fromJson("""{"monitoredPackages":["$uber","com.whatsapp"]}""").monitoredPackages
+    assertEquals(setOf(uber), packages)
+  }
+
+  @Test
   fun preferenciaValidaContinuaSendoLida() {
     assertEquals(false, CopilotPreferences.fromJson("""{"voice":false}""").voice)
   }

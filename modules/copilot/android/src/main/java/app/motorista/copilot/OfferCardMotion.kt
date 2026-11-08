@@ -8,9 +8,9 @@ object OfferCardMotion {
   const val OPEN_MS = 200L
   const val CLOSE_MS = 140L
 
-  fun defaultCardY(pillY: Int, cardHeight: Int, screenHeight: Int): Int {
+  fun cardY(preferredY: Int, cardHeight: Int, screenHeight: Int): Int {
     val lowestY = screenHeight * 2 / 3 - cardHeight
-    return pillY.coerceAtMost(lowestY).coerceAtLeast(0)
+    return preferredY.coerceAtMost(lowestY).coerceAtLeast(0)
   }
 
   fun from(pill: ScreenRect, card: ScreenRect): CardMotionStart {
