@@ -292,6 +292,11 @@ app -> features -> application -> data -> domain -> shared/utils
 - **Rádios acessíveis:** opções de `Segmented` e linhas de `ListRow` com `selected` usam o papel `radio` com o estado `checked`, e cada opção tem a altura mínima de toque.
 - **Perfil regional só depois de carregar:** `regionalStore.refresh` não faz nada antes de `load`. Na primeira abertura, o app pode voltar ao primeiro plano antes de a migração criar as tabelas, e aplicar o perfil nesse momento renomearia plataformas que ainda não existem.
 - **Tempo estimado na oferta:** algumas telas de oferta mostram só preço e distância. `TripTimeEstimator` estima o tempo pela velocidade mediana das últimas 200 ofertas com tempo lido, guardada em `CopilotStore.tripSpeedKmh`, e marca `minutesEstimated`. A avaliação usa o tempo estimado como qualquer outro, e só a exibição muda, com `~`. Assim as regras de oferta continuam iguais às do TypeScript.
+
+## Decisões da versão 0.13.0
+
+Spec: `docs/specs/fluxos-e-regras-0.13.md`.
+
 - **Veículo da jornada:** o cronômetro é nativo e pode ser iniciado pelo botão flutuante, então o veículo da jornada não é gravado no início, e sim na primeira consulta com o cronômetro iniciado (`application/vehicleInUse.ts`). Copiloto, calculadora e o encerramento usam o veículo em uso. Trocar o atual no meio da jornada só vale para a próxima.
 - **Backup confirmado:** o compartilhamento do Android não diz se o arquivo foi salvo, então o app pergunta. Só a resposta "Salvei" grava `last_backup_at`.
 - **Meta vigente:** `goalRepository.findInEffect` usa a meta mais recente até o mês pedido, sem copiar linhas. Salvar na tela da Meta grava o mês atual.
