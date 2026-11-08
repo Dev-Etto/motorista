@@ -16,6 +16,12 @@ jest.mock('expo-router', () => ({
   },
 }));
 jest.mock('@shared/ui/dialog', () => ({ showDialog: jest.fn() }));
+jest.mock('@features/reports', () => ({
+  ReportSummary: () => {
+    const { Text } = jest.requireActual('react-native');
+    return <Text>Resumo do período</Text>;
+  },
+}));
 jest.mock('@features/shifts/shiftQueries', () => ({
   loadMonth: jest.fn(async () => ({
     shifts: [],
@@ -62,5 +68,15 @@ describe('tela Jornadas', () => {
 
     expect(screen.getByText('Abastecimento')).toBeTruthy();
     expect(screen.queryByText('Outra despesa')).toBeNull();
+  });
+
+  it('Lista e Resumo trocam a visão. Resumo traz o antigo Relatórios', async () => {
+    await renderScreen();
+    expect(screen.getByRole('radio', { name: 'Lista', checked: true })).toBeTruthy();
+
+    await fireEvent.press(screen.getByRole('radio', { name: 'Resumo' }));
+
+    expect(screen.getByText('Resumo do período')).toBeTruthy();
+    expect(screen.queryByText('Adicionar')).toBeNull();
   });
 });

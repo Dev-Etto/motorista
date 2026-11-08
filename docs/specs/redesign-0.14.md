@@ -60,7 +60,7 @@ A barra tem cinco abas presas à borda, e Relatórios repete o que Jornadas já 
 | ID | Critério de aceite | Teste |
 | --- | --- | --- |
 | F2.3.1 | Jornadas tem duas visões, Lista e Resumo. Resumo é o antigo Relatórios, com período, gráfico, plataformas e exportação | Jest |
-| F2.3.2 | Os atalhos que abriam Relatórios abrem Jornadas no Resumo | Jest |
+| F2.3.2 | A rota da aba Relatórios sai do app. O Resumo mostra cada plataforma só pela bandeira, com o nome lido pelo leitor de tela | Jest |
 
 ## Fase 3. Listas
 

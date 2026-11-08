@@ -140,5 +140,10 @@
     "finish": "Finish",
     "openHint": "Opens the shift tracking",
     "forgotten": "Shift open for a long time"
+  },
+  "view": {
+    "label": "View",
+    "list": "List",
+    "summary": "Summary"
   }
 }

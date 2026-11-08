@@ -10,7 +10,7 @@ import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
 import { BarChart } from '@shared/ui/BarChart';
 import { PeriodSwitcher } from '@shared/ui/MonthSwitcher';
 import { PlatformBadge } from '@shared/ui/PlatformBadge';
-import { Button, ButtonRow, Card, EmptyState, ListRow, Notice, Screen, Segmented } from '@shared/ui/primitives';
+import { Button, ButtonRow, Card, EmptyState, ListRow, Notice, Segmented } from '@shared/ui/primitives';
 import { today } from '@shared/utils/dates';
 import { profitTone } from '@shared/utils/format';
 import { ChartDataList } from './ChartDataList';
@@ -20,7 +20,7 @@ import { useReport } from './useReport';
 
 const PERIODS: ReportPeriod[] = ['week', 'month', 'year'];
 
-export default function ReportsScreen() {
+export function ReportSummary() {
   const [period, setPeriod] = useState<ReportPeriod>('month');
   const [date, setDate] = useState(today);
   const report = useReport(period, date);
@@ -39,7 +39,7 @@ export default function ReportsScreen() {
   };
 
   return (
-    <Screen>
+    <>
       <TipBanner id="reports" message={t('tip')} />
       <Segmented value={period} options={periods} onChange={setPeriod} />
       <PeriodSwitcher
@@ -79,7 +79,12 @@ export default function ReportsScreen() {
                 ) : null}
                 <Card title={t('byPlatform')}>
                   {data.platforms.map((item) => (
-                    <ListRow key={item.platform} leading={<PlatformBadge name={item.platform} />} title={item.platform} value={format.money(item.cents)} />
+                    <ListRow
+                      key={item.platform}
+                      leading={<PlatformBadge name={item.platform} />}
+                      value={format.money(item.cents)}
+                      accessibilityLabel={`${item.platform}, ${format.money(item.cents)}`}
+                    />
                   ))}
                 </Card>
                 <ButtonRow>
@@ -97,6 +102,6 @@ export default function ReportsScreen() {
           </>
         )}
       </AsyncBoundary>
-    </Screen>
+    </>
   );
 }

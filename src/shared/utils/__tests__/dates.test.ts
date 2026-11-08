@@ -7,6 +7,7 @@ import {
   dayRange,
   daysBetween,
   formatClock,
+  formatElapsedShort,
   formatDate,
   formatDuration,
   formatMonth,
@@ -121,5 +122,21 @@ describe('formatos de data por região', () => {
   it('hora do dia em 24 ou 12 horas', () => {
     expect(formatHourOfDay(20, 'pt-BR', 'h23')).toBe('20');
     expect(formatHourOfDay(20, 'en-US', 'h12')).toMatch(/^8\sPM$/);
+  });
+});
+
+describe('tempo de jornada abreviado', () => {
+  const MINUTE = 60_000;
+
+  it.each([
+    [0, '<1min'],
+    [45 * MINUTE, '45min'],
+    [120 * MINUTE, '2h'],
+    [134 * MINUTE + 59_000, '2h14'],
+    [750 * MINUTE, '12h30'],
+    [24 * 60 * MINUTE, '24h+'],
+    [-MINUTE, '<1min'],
+  ])('%i ms vira %s', (elapsedMs, text) => {
+    expect(formatElapsedShort(elapsedMs)).toBe(text);
   });
 });

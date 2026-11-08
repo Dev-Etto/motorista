@@ -194,6 +194,7 @@ interface ListRowProps {
   selected?: boolean;
   chevron?: boolean;
   onPress?: () => void;
+  accessibilityLabel?: string;
 }
 
 function rowRole(selected: boolean | undefined, onPress: (() => void) | undefined) {
@@ -201,10 +202,10 @@ function rowRole(selected: boolean | undefined, onPress: (() => void) | undefine
   return onPress ? 'button' : undefined;
 }
 
-export function ListRow({ icon, leading, title, subtitle, value, valueTone = 'default', selected, chevron, onPress }: ListRowProps) {
+export function ListRow({ icon, leading, title, subtitle, value, valueTone = 'default', selected, chevron, onPress, accessibilityLabel }: ListRowProps) {
   const colors = useTheme();
   const role = rowRole(selected, onPress);
-  const readOnlyLabel = role ? undefined : [title, subtitle, value].filter(Boolean).join(', ');
+  const readOnlyLabel = role ? accessibilityLabel : (accessibilityLabel ?? [title, subtitle, value].filter(Boolean).join(', '));
   return (
     <Pressable
       accessible
