@@ -137,7 +137,7 @@
   "unsavedChanges": {
     "title": "¿Descartar los cambios?",
     "message": "Lo que escribiste todavía no se guardó.",
-    "keep": "Seguir editando",
+    "keep": "Seguir",
     "discard": "Descartar"
   }
 }

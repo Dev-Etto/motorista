@@ -3,9 +3,7 @@ import { usePreventRemove } from 'expo-router';
 import { useUnsavedChangesGuard } from '@shared/hooks/useUnsavedChangesGuard';
 import { showDialog } from '@shared/ui/dialog';
 
-const mockAllow = jest.fn();
-
-jest.mock('expo-router', () => ({ usePreventRemove: jest.fn(() => mockAllow) }));
+jest.mock('expo-router', () => ({ usePreventRemove: jest.fn() }));
 jest.mock('@shared/ui/dialog', () => ({ showDialog: jest.fn() }));
 
 describe('alterações não salvas', () => {
@@ -32,9 +30,13 @@ describe('alterações não salvas', () => {
     expect(repeat).toHaveBeenCalled();
   });
 
-  it('salvar libera a saída', async () => {
+  it('salvar desliga a proteção antes de navegar', async () => {
     const { result } = await renderHook(() => useUnsavedChangesGuard(true));
-    result.current();
-    expect(mockAllow).toHaveBeenCalled();
+    const navigate = jest.fn();
+
+    await act(async () => result.current(navigate));
+
+    expect(jest.mocked(usePreventRemove).mock.calls.at(-1)?.[0]).toBe(false);
+    expect(navigate).toHaveBeenCalled();
   });
 });

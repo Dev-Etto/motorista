@@ -1,4 +1,4 @@
-import { CostProfile, defaultDepreciationEnabled, FuelType, Ownership, suggestedProfile, VehicleKind } from '@domain/vehicle/costs';
+import { CostProfile, defaultDepreciationEnabled, FuelType, MAX_FUEL_PRICE_CENTS, Ownership, suggestedProfile, VehicleKind } from '@domain/vehicle/costs';
 import type { Formatter } from '@shared/i18n/format';
 import type { ConsumptionUnit } from '@shared/utils/units';
 
@@ -89,8 +89,6 @@ export function fieldsToProfile(fields: CostFields, choices: ProfileChoices, for
     plannedKmMonth: format.distanceOrZero(fields.plannedKm),
   };
 }
-
-const MAX_FUEL_PRICE_CENTS = 5000;
 
 export type ProfileProblem = 'consumption' | 'plannedDistance' | 'fuelPrice' | 'fuelPriceTooHigh';
 

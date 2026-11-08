@@ -1,5 +1,5 @@
 import { type Vehicle, vehicleRepository } from '@data/repositories/vehicleRepository';
-import { type CostBreakdown } from '@domain/vehicle/costs';
+import { type CostBreakdown, MAX_FUEL_PRICE_CENTS } from '@domain/vehicle/costs';
 import { today } from '@shared/utils/dates';
 import { syncCopilotTargets } from './offerSettings';
 import { shiftVehicle } from './vehicleInUse';
@@ -67,6 +67,7 @@ export async function fuelPriceSuggestion(
   if (!vehicle || !profile || !LIQUID_FUELS.includes(vehicle.fuel)) return null;
 
   const priceCents = Math.round(cents / liters);
+  if (priceCents > MAX_FUEL_PRICE_CENTS) return null;
   return Math.abs(priceCents - profile.fuelPriceCents) >= MIN_PRICE_CHANGE_CENTS ? { vehicle, priceCents } : null;
 }
 

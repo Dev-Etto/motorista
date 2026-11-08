@@ -43,7 +43,7 @@ export default function ExpenseFormScreen() {
   const vehicleId = chosenVehicleId ?? inUseId;
   const snapshot = JSON.stringify([category, date, value, liters, odometer, note]);
   const [baseline, setBaseline] = useState<string | null>(expenseId ? null : snapshot);
-  const allowLeave = useUnsavedChangesGuard(baseline !== null && snapshot !== baseline);
+  const leave = useUnsavedChangesGuard(baseline !== null && snapshot !== baseline);
 
   useEffect(() => {
     if (!expenseId) return;
@@ -79,8 +79,7 @@ export default function ExpenseFormScreen() {
       actionLabel: t('common:actions.delete'),
       onConfirm: async () => {
         await removeExpense(expenseId);
-        allowLeave();
-        router.back();
+        leave(() => router.back());
       },
     });
   };
@@ -109,8 +108,7 @@ export default function ExpenseFormScreen() {
       expenseId,
     );
     const suggestion = category === 'fuel' ? await fuelPriceSuggestion(vehicleId, cents, savedLiters) : null;
-    allowLeave();
-    router.back();
+    leave(() => router.back());
     if (!suggestion) return;
 
     showDialog({

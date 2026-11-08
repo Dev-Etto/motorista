@@ -205,7 +205,7 @@ A fase 1 prendeu o veículo à jornada. Ainda faltam o Mês fechado com o custo 
 | ID | Critério de aceite | Teste |
 | --- | --- | --- |
 | F5.2.1 | Despesas guardam o veículo, numa migração nova (`expenses.vehicle_id`). Com mais de um veículo, o formulário mostra a escolha, com o veículo em uso marcado | Jest |
-| F5.2.2 | Abastecimento com valor e litros oferece atualizar o preço do combustível do veículo para o valor pago por litro, a partir de hoje | Jest |
+| F5.2.2 | Abastecimento com valor e litros oferece atualizar o preço do combustível do veículo para o valor pago por litro, a partir de hoje. Preço acima de R$ 50/L não é sugerido | Jest |
 | F5.2.3 | Backups antigos restauram, com as despesas sem veículo | Jest |
 
 ### F5.3 Arquivar e reativar

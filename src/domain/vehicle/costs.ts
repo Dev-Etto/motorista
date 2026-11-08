@@ -85,6 +85,8 @@ export function computeCosts(p: CostProfile): CostBreakdown {
   };
 }
 
+export const MAX_FUEL_PRICE_CENTS = 5000;
+
 const FUEL_SUGGESTIONS: Record<FuelType, { priceCents: number; car: number; motorcycle: number }> = {
   gasoline: { priceCents: 600, car: 11, motorcycle: 30 },
   ethanol: { priceCents: 420, car: 8, motorcycle: 21 },
