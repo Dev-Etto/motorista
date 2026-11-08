@@ -31,6 +31,9 @@ jobs:
           distribution: temurin
           java-version: 17
       - run: npm ci
+      - run: echo "$GOOGLE_SERVICES_JSON" > google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
       - run: npx expo prebuild --platform android --no-install
       - run: ./gradlew :copilot:testDebugUnitTest --console=plain
         working-directory: android
@@ -48,6 +51,9 @@ jobs:
           distribution: temurin
           java-version: 17
       - run: npm ci
+      - run: echo "$GOOGLE_SERVICES_JSON" > google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
       - run: npx expo prebuild --platform android --no-install
         env:
           APP_VARIANT: release

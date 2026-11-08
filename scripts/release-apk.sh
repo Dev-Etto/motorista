@@ -13,6 +13,7 @@ UNSIGNED="$ROOT/android/app/build/outputs/apk/release/app-release.apk"
 export MOTORISTA_KEYSTORE_PASSWORD="${MOTORISTA_KEYSTORE_PASSWORD:-$(security find-generic-password -a motorista -s motorista-release-keystore -w)}"
 
 cd "$ROOT"
+[ -f google-services.json ] || { echo "google-services.json não encontrado na raiz do projeto." >&2; exit 1; }
 npm run typecheck
 npm run lint
 npm test
