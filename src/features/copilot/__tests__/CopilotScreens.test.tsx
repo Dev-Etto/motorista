@@ -15,9 +15,12 @@ const mockStatus = {
   batteryRestricted: false,
 };
 const mockTests = { test: jest.fn(), testOutside: jest.fn(), testNotification: jest.fn() };
+const mockConsent = { accepted: true as boolean | null, accept: jest.fn() };
+const mockBack = jest.fn();
 const METRICS = { frame: { x: 0, y: 0, width: 390, height: 844 }, insets: { top: 0, left: 0, right: 0, bottom: 0 } };
 
-jest.mock('expo-router', () => ({ useRouter: () => ({ push: mockPush, back: jest.fn() }) }));
+jest.mock('expo-router', () => ({ useRouter: () => ({ push: mockPush, back: mockBack }) }));
+jest.mock('@features/copilot/useAccessibilityConsent', () => ({ useAccessibilityConsent: () => mockConsent }));
 jest.mock('@modules/copilot/platforms', () => ({
   ...jest.requireActual('@modules/copilot/platforms'),
   PLATFORM_PACKAGES: { uber: 'uber', ninetyNine: '99', inDrive: 'indrive' },
@@ -84,5 +87,22 @@ describe('configuração do Copiloto', () => {
     expect(screen.getByText(/configuração restrita/)).toBeTruthy();
     expect(screen.getByText('Abrir configurações')).toBeTruthy();
     expect(screen.getByText('Fazer depois')).toBeTruthy();
+  });
+
+  it('sem o aceite, mostra a divulgação antes de qualquer passo da permissão', async () => {
+    mockStatus.accessibilityGranted = false;
+    mockConsent.accepted = false;
+    await renderScreen(<CopilotSetupScreen />);
+
+    expect(screen.getByText('Antes de ligar: o que o Copiloto lê')).toBeTruthy();
+    for (const title of ['O que é lido', 'Para quê', 'O que fica guardado', 'O que não acontece', 'Você controla'])
+      expect(screen.getByText(title)).toBeTruthy();
+    expect(screen.queryByText('Abrir configurações')).toBeNull();
+
+    await fireEvent.press(screen.getByText('Concordo e continuar'));
+    expect(mockConsent.accept).toHaveBeenCalled();
+    await fireEvent.press(screen.getByText('Agora não'));
+    expect(mockBack).toHaveBeenCalled();
+    mockConsent.accepted = true;
   });
 });

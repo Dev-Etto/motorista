@@ -113,6 +113,32 @@
       "testAgain": "Test again"
     },
     "stepOf": "Step {{current}} of {{total}}",
-    "later": "Do it later"
+    "later": "Do it later",
+    "disclosure": {
+      "title": "Before you turn it on: what the Copilot reads",
+      "intro": "To rate offers, the Copilot uses Android's accessibility permission. Here is what that means before you decide.",
+      "read": {
+        "title": "What is read",
+        "body": "The text on the offer screens of the apps you choose in the Copilot, such as Uber, 99 and inDrive. If you turn on image reading, also an image of that screen, read on your phone."
+      },
+      "purpose": {
+        "title": "What for",
+        "body": "To calculate each offer's rating, earnings per distance, earnings per hour and estimated profit, and show them on the card, by voice or in a notification."
+      },
+      "stored": {
+        "title": "What is kept",
+        "body": "Only each offer's numbers, such as amount, distance, time and rating, on your phone, for the history. Names, phone numbers and addresses are not kept."
+      },
+      "never": {
+        "title": "What never happens",
+        "body": "The text and image read are not sent to us or anyone else. The Copilot does not tap the screen and does not accept or decline offers for you."
+      },
+      "control": {
+        "title": "You are in control",
+        "body": "You can turn it off at any time, in the app or in Android's accessibility settings."
+      },
+      "accept": "I agree, continue",
+      "decline": "Not now"
+    }
   }
 }
