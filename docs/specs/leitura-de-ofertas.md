@@ -14,7 +14,7 @@ Cada requisito tem um critério de aceite e o teste que o confirma:
 
 - **Só leitura.** O app não toca na tela e não aceita nem recusa corridas.
 - **Sem contornar proteções.** O app não se declara ferramenta de acessibilidade e não tenta burlar bloqueio de captura nem ocultação de janelas. Se uma plataforma esconder a oferta, o app fica sem leitura.
-- **Nada sai do aparelho.** O release continua sem a permissão `INTERNET`.
+- **Nada sai do aparelho.** O app tem internet para cobrança, suporte e backup, mas o conteúdo lido das ofertas (texto e imagem) nunca é enviado.
 - **Decisão do motorista.** O que traz mais risco para a conta fica desligado até o motorista ligar, com o aviso na mesma tela.
 
 ## R1. Leitura por imagem opcional
