@@ -10,6 +10,7 @@ import { showDialog } from '@shared/ui/dialog';
 import { PlatformBadge } from '@shared/ui/PlatformBadge';
 import { AppText } from '@shared/ui/primitives';
 import { ScoreBadge } from '@shared/ui/ScoreBadge';
+import { clockOfMillis } from '@shared/utils/dates';
 import { reportError } from '@shared/utils/reportError';
 
 const REASON_SEPARATOR = ' · ';
@@ -105,7 +106,7 @@ export function OfferRow({ entry, onCorrected }: { entry: OfferHistoryEntry; onC
         <AppText variant="subtitle" bold>
           {format.money(entry.valueCents)}
         </AppText>
-        <AppText variant="caption">{describeDistance(entry, t, format)}</AppText>
+        <AppText variant="caption">{`${clockOfMillis(entry.timestamp)} · ${describeDistance(entry, t, format)}`}</AppText>
         <AppText variant="caption" tone="muted">
           {describeRates(entry, format)}
         </AppText>

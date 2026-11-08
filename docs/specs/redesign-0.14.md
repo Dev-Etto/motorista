@@ -126,3 +126,54 @@ Mais tem cinco grupos e mistura ajustes do dia a dia com termos e versão. O for
 | F5.2.2 | Continuar valida a etapa atual. O erro de um campo dela segura o avanço e aparece no campo. Erros de outras etapas não seguram | Jest |
 | F5.2.3 | Salvar com erro volta para a etapa do erro | Jest |
 | F5.2.4 | Editar uma jornada salva continua numa tela só | Jest |
+
+## Fase 6. Telas no novo design
+
+As fases anteriores trouxeram a marca, a barra e os componentes, mas várias telas ainda tinham o layout antigo. Esta fase leva cada tela ao design aprovado.
+
+### F6.1 Barra e jornada
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F6.1.1 | Ofertas usa o ícone de velocímetro, e Mais o de pessoa | Manual |
+| F6.1.2 | Com jornada, o botão da barra abre uma gaveta com desde quando, o cronômetro, os km medidos, Pausar ou Retomar, Encerrar, Lançar abastecimento, Lançar outra despesa e Medir km por GPS | Jest |
+
+### F6.2 Início
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F6.2.1 | O topo mostra o dia por extenso e o veículo atual, que leva a Veículos | Jest |
+| F6.2.2 | "Sobrou hoje" mostra o lucro, a meta do dia ("62% da meta de hoje · faltam R$ 113,60") e Faturou, Por km e Por hora | Jest |
+| F6.2.3 | Pendências e a última oferta do dia, com "há 4 min" e "Ver ofertas" | Jest |
+| F6.2.4 | Semana, mês, dica e o card "por que o lucro é menor" saem do Início. Ficam no Resumo e na Ajuda | Manual |
+
+### F6.3 Ofertas
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F6.3.1 | O topo diz se o Copiloto está lendo ou pausado e leva aos ajustes | Jest |
+| F6.3.2 | Lidas hoje, Aceitas e Estimado em três números | Jest |
+| F6.3.3 | As ofertas de hoje, com "Todas as ofertas", e os atalhos Avaliar oferta e Orçamento | Jest |
+| F6.3.4 | Cada oferta mostra a hora em que chegou | Manual |
+
+### F6.4 Jornadas
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F6.4.1 | A lista tem uma faixa com os 7 dias da semana, com um ponto verde ou vermelho nos dias trabalhados, e setas para a semana anterior e a próxima | Jest |
+| F6.4.2 | Os lançamentos avulsos ficam no card do dia deles. Os que já estão no custo por km avisam isso e não descontam do lucro do dia | Jest |
+| F6.4.3 | O Resumo mostra "Sobrou no mês" com o número de jornadas e o gráfico no mesmo card, a fatia de cada plataforma e "Mês fechado e exportar" recolhido | Jest |
+| F6.4.4 | O detalhe mostra o que sobrou com horário e veículo, tempo, distância e por hora, "A conta" com os descontos e "Por plataforma" | Jest |
+| F6.4.5 | As etapas do encerramento são perguntas ("Quanto você ganhou?"), com "Etapa 1 de 3" e o total faturado | Jest |
+| F6.4.6 | O lançamento pede o valor primeiro. Data e veículo ficam numa linha recolhida, como "Hoje · Meu carro" | Jest |
+
+### F6.5 Mais
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F6.5.1 | Aparência é uma tela com três quadros de prévia em grupo de rádios | Jest |
+| F6.5.2 | Lembretes lista primeiro os pendentes, com "Atrasado" ou "Em breve" (até 1.000 km ou 7 dias). Novo lembrete fica recolhido | Jest |
+| F6.5.3 | Backup mostra "Dados protegidos" ou "Faça um backup" no topo, com a data do último | Jest |
+| F6.5.4 | Ajuda começa com uma corrida de exemplo calculada com o custo do veículo atual | Jest |
+| F6.5.5 | O veículo mostra "Cada km custa" com a barra de combustível, desgaste e fixos | Jest |
+| F6.5.6 | A Meta mostra o progresso primeiro e a edição recolhida. Sem meta, o formulário fica aberto | Manual |
