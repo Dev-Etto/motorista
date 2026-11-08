@@ -19,7 +19,7 @@
   <string name="panel_start">Iniciar cronómetro</string>
   <string name="card_per_distance">Por %1$s</string>
   <string name="card_per_hour">Por hora</string>
-  <string name="card_profit">Ganancia</string>
+  <string name="card_profit">Te queda</string>
   <string name="forgotten_channel_name">Jornada</string>
   <string name="forgotten_title">El cronómetro sigue encendido</string>
   <string name="forgotten_text">Si la jornada ya terminó, abre la app y revisa las horas.</string>

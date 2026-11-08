@@ -32,6 +32,7 @@ class FloatingPanel(
   private var rendered: PanelState? = null
   private val cardTheme = CardTheme(context)
   private val logo = icon(R.drawable.ic_stat_motorista, LOGO_DP).apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
+  private val statusDot = View(context).apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
   private val title = text(TITLE_SP, bold = true)
   private val status = text(CAPTION_SP, bold = false)
   private val close = icon(R.drawable.ic_panel_close, ICON_DP).apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
@@ -63,6 +64,7 @@ class FloatingPanel(
     minimumHeight = context.dp(HANDLE_DP)
     minimumWidth = context.dp(HANDLE_DP)
     addView(logo, LinearLayout.LayoutParams(context.dp(LOGO_DP), context.dp(LOGO_DP)))
+    addView(statusDot, LinearLayout.LayoutParams(context.dp(DOT_DP), context.dp(DOT_DP)).apply { marginEnd = context.dp(SPACE_S_DP) })
     addView(titles, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
     addView(close, LinearLayout.LayoutParams(context.dp(ICON_DP), context.dp(ICON_DP)))
   }
@@ -80,7 +82,8 @@ class FloatingPanel(
 
   fun render(timer: TimerState, lastOffer: OfferEvaluation?, open: Boolean, theme: ThemeMode, format: OfferFormat) {
     val clock = OfferFormat.clock(timer.elapsedMs)
-    if (title.text.toString() != clock) title.text = clock
+    val shown = if (open) clock else OfferFormat.shortClock(timer.elapsedMs)
+    if (title.text.toString() != shown) title.text = shown
     describeHandle(clock, timer, open)
 
     val night = cardTheme.isNight(theme)
@@ -89,7 +92,7 @@ class FloatingPanel(
 
     rendered = next
     menu.visibility = if (open) View.VISIBLE else View.GONE
-    if (open) renderOpen(timer, lastOffer, cardTheme.palette(theme), night, format) else renderClosed()
+    if (open) renderOpen(timer, lastOffer, cardTheme.palette(theme), night, format) else renderClosed(timer)
   }
 
   private fun describeHandle(clock: String, timer: TimerState, open: Boolean) {
@@ -106,7 +109,7 @@ class FloatingPanel(
     }
   }
 
-  private fun renderClosed() {
+  private fun renderClosed(timer: TimerState) {
     view.background = rounded(PILL_COLOR, CLOSED_CORNER_DP).apply { setStroke(context.dp(1), PILL_STROKE) }
     view.elevation = context.dp(ELEVATION_DP).toFloat()
     view.setPadding(0, 0, 0, 0)
@@ -121,6 +124,15 @@ class FloatingPanel(
     title.setTextColor(Color.WHITE)
     status.visibility = View.GONE
     close.visibility = View.GONE
+    renderDot(timer)
+  }
+
+  private fun renderDot(timer: TimerState) {
+    statusDot.visibility = if (timer.started) View.VISIBLE else View.GONE
+    statusDot.background = GradientDrawable().apply {
+      shape = GradientDrawable.OVAL
+      setColor(if (timer.running) DOT_RUNNING else DOT_PAUSED)
+    }
   }
 
   private fun renderOpen(timer: TimerState, lastOffer: OfferEvaluation?, colors: CardPalette, night: Boolean, format: OfferFormat) {
@@ -133,6 +145,7 @@ class FloatingPanel(
     logo.visibility = View.VISIBLE
     logo.layoutParams = LinearLayout.LayoutParams(context.dp(LOGO_DP), context.dp(LOGO_DP)).apply { marginEnd = context.dp(SPACE_S_DP) }
     logo.imageTintList = ColorStateList.valueOf(colors.text)
+    statusDot.visibility = View.GONE
     titles.visibility = View.VISIBLE
     titles.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
     title.setTextColor(colors.text)
@@ -224,6 +237,9 @@ class FloatingPanel(
   private companion object {
     const val PILL_COLOR = OverlayColors.INK
     const val PILL_STROKE = OverlayColors.HAIRLINE
+    const val DOT_RUNNING = 0xFF4FD08D.toInt()
+    const val DOT_PAUSED = 0xFFF1B84B.toInt()
+    const val DOT_DP = 8
     const val RIPPLE_ALPHA = 0x33000000
     const val CLOSED_CORNER_DP = 18
     const val OPEN_CORNER_DP = 20

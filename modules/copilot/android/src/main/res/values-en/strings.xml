@@ -19,7 +19,7 @@
   <string name="panel_start">Start timer</string>
   <string name="card_per_distance">Per %1$s</string>
   <string name="card_per_hour">Per hour</string>
-  <string name="card_profit">Profit</string>
+  <string name="card_profit">You keep</string>
   <string name="forgotten_channel_name">Shift</string>
   <string name="forgotten_title">The timer is still running</string>
   <string name="forgotten_text">If your shift is already over, open the app and review the hours.</string>
