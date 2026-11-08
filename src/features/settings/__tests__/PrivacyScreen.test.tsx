@@ -1,6 +1,7 @@
 import { resetAnalyticsData } from '@react-native-firebase/analytics';
 import { deleteUnsentReports } from '@react-native-firebase/crashlytics';
 import { fireEvent, render, screen } from '@testing-library/react-native';
+import { Linking } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import PrivacyScreen from '@features/settings/PrivacyScreen';
 import { copilot } from '@modules/copilot';
@@ -42,5 +43,13 @@ describe('privacidade', () => {
     expect(resetAnalyticsData).toHaveBeenCalled();
     expect(deleteUnsentReports).toHaveBeenCalled();
     expect(copilot.clearAllData).toHaveBeenCalled();
+  });
+
+  it('abre a política de privacidade completa no site', async () => {
+    const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(undefined);
+    await renderScreen();
+
+    await fireEvent.press(screen.getByText('Ler a política de privacidade completa'));
+    expect(openURL).toHaveBeenCalledWith('https://motorista-app-br.web.app/privacidade');
   });
 });

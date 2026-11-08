@@ -34,7 +34,7 @@ As issues da Fase 2 e da Fase 5 vão acrescentar saídas. Cada uma deve ser regi
 ## Exclusão
 
 - **No aparelho:** Mais → Sobre → Privacidade → Apagar todos os meus dados. Usa `ActivityManager.clearApplicationUserData()`, que apaga banco, preferências e arquivos do app e o fecha (#62).
-- **Fora do aparelho:** o mesmo botão zera o ID do Analytics (`resetAnalyticsData`), então as métricas antigas deixam de ser ligadas ao aparelho, e descarta os relatórios de falha ainda não enviados (`deleteUnsentReports`). Os relatos (#60) não têm nenhum identificador e não dá para achar os de uma pessoa. O Analytics apaga eventos sozinho pela retenção configurada no console. A página pública de pedido de exclusão fica no site (#64).
+- **Fora do aparelho:** o mesmo botão zera o ID do Analytics (`resetAnalyticsData`), então as métricas antigas deixam de ser ligadas ao aparelho, e descarta os relatórios de falha ainda não enviados (`deleteUnsentReports`). Os relatos (#60) não têm nenhum identificador e não dá para achar os de uma pessoa. O Analytics apaga eventos sozinho pela retenção configurada no console. A página pública de pedido de exclusão é https://motorista-app-br.web.app/excluir-dados (#64), com pedido por e-mail.
 
 ## Nunca sai do aparelho
 

@@ -1,5 +1,9 @@
 export const APP_NAME = 'Motorista';
 export const REPOSITORY_URL = 'https://github.com/Dev-Etto/motorista';
 export const RELEASES_URL = `${REPOSITORY_URL}/releases/latest`;
+export const SITE_URL = 'https://motorista-app-br.web.app';
+export const PRIVACY_POLICY_URL = `${SITE_URL}/privacidade`;
+export const TERMS_URL = `${SITE_URL}/termos`;
+export const SUPPORT_EMAIL = 'contato.devetto@gmail.com';
 export const BACKUP_REMINDER_DAYS = 7;
 export const UPDATE_REMINDER_DAYS = 30;
