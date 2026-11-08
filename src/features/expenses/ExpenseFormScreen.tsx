@@ -1,16 +1,18 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { fuelPriceSuggestion, updateFuelPrice } from '@application/vehicles';
 import { countsAgainstProfit } from '@domain/expense/expense';
 import { useSubmit } from '@shared/hooks/useSubmit';
 import { useUnsavedChangesGuard } from '@shared/hooks/useUnsavedChangesGuard';
 import { useFormat } from '@shared/i18n/format';
+import { MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@shared/theme/theme';
 import { DateField } from '@shared/ui/DateField';
 import { confirmAction, showDialog } from '@shared/ui/dialog';
 import { MoneyField, NumberField, TextField } from '@shared/ui/fields';
 import { FilterChips } from '@shared/ui/FilterChips';
-import { Button, Card, Collapsible, Notice, Screen, Segmented } from '@shared/ui/primitives';
+import { AppText, Button, Card, Collapsible, Notice, Screen } from '@shared/ui/primitives';
 import { today } from '@shared/utils/dates';
 import { reportError } from '@shared/utils/reportError';
 import { ExpenseField, ExpenseFieldError, expenseFormErrors } from './expenseFormErrors';
@@ -30,6 +32,7 @@ export default function ExpenseFormScreen() {
   const format = useFormat();
   const params = useLocalSearchParams<{ id?: string; category?: string }>();
   const expenseId = params.id ? Number(params.id) : undefined;
+  const colors = useTheme();
   const options = CATEGORIES.map((value) => ({ value, label: t(`form.option.${value}`) }));
   const [category, setCategory] = useState<LooseCategory>(() => categoryOf(params.category));
   const [date, setDate] = useState(today());
@@ -132,7 +135,6 @@ export default function ExpenseFormScreen() {
   return (
     <Screen>
       <Stack.Screen options={{ title: expenseId ? t('form.editTitle') : t(`category.${category}`) }} />
-      <Segmented value={category} options={options} onChange={setCategory} />
       {countsAgainstProfit(category) ? null : (
         <Notice tone="accent" message={t('alreadyInCost', { context: format.distanceUnit, category: t(`category.${category}`) })} />
       )}
@@ -155,9 +157,30 @@ export default function ExpenseFormScreen() {
           />
         ) : null}
       </Collapsible>
+      <View style={styles.also}>
+        <AppText tone="muted">{t('form.also')}</AppText>
+        {options
+          .filter((option) => option.value !== category)
+          .map((option) => (
+            <Pressable
+              key={option.value}
+              accessibilityRole="button"
+              accessibilityLabel={t('form.switchTo', { category: t(`category.${option.value}`) })}
+              onPress={() => setCategory(option.value)}
+              style={[styles.chip, { borderColor: colors.borderStrong }]}
+            >
+              <AppText bold>{t(`category.${option.value}`)}</AppText>
+            </Pressable>
+          ))}
+      </View>
       {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
       <Button label={t('common:actions.save')} busy={saving.busy} onPress={saving.submit} />
       {expenseId ? <Button label={t('common:actions.delete')} variant="danger" onPress={confirmRemove} /> : null}
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  also: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: spacing.sm },
+  chip: { minHeight: MIN_TOUCH_TARGET - spacing.sm, justifyContent: 'center', paddingHorizontal: spacing.md, borderRadius: radius.pill, borderWidth: 1 },
+});

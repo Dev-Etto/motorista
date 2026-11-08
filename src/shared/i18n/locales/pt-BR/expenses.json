@@ -27,7 +27,9 @@
       "message": "O lançamento de {{amount}} sai dos seus resultados."
     },
     "vehicleLabel": "Veículo",
-    "today": "Hoje"
+    "today": "Hoje",
+    "also": "Também:",
+    "switchTo": "Lançar {{category}}"
   },
   "alreadyInCost_km": "{{category}} já está no custo por km. O valor serve para comparar o previsto com o pago.",
   "alreadyInCost_mi": "{{category}} já está no custo por milha. O valor serve para comparar o previsto com o pago.",

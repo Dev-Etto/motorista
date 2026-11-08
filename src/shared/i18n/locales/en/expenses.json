@@ -27,7 +27,9 @@
       "message": "The {{amount}} entry will be removed from your results."
     },
     "vehicleLabel": "Vehicle",
-    "today": "Today"
+    "today": "Today",
+    "also": "Also:",
+    "switchTo": "Log {{category}}"
   },
   "alreadyInCost_km": "{{category}} is already included in the cost per km. The amount is used to compare the estimate with what you paid.",
   "alreadyInCost_mi": "{{category}} is already included in the cost per mile. The amount is used to compare the estimate with what you paid.",

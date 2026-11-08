@@ -80,6 +80,11 @@
     "aboutSection": {
       "yours": "Seus dados e sugestões",
       "legal": "Privacidade e termos"
+    },
+    "summary": {
+      "vehicle": "Veículo atual",
+      "goal": "Meta de {{month}}",
+      "goalDone": "{{percent}}% feito"
     }
   },
   "appearance": {
