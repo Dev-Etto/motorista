@@ -87,6 +87,11 @@ export function formatHourOfDay(hour: number, locale: string, hourCycle: HourCyc
   return DateTime.fromObject({ hour }).setLocale(locale).toLocaleString({ hour: 'numeric', hourCycle });
 }
 
+export function formatLongDay(iso: string, locale: string): string {
+  const text = dateOf(iso).setLocale(locale).toLocaleString({ weekday: 'long', day: 'numeric', month: 'long' });
+  return text.charAt(0).toLocaleUpperCase(locale) + text.slice(1);
+}
+
 export function formatDayMonth(iso: string, locale: string): string {
   return dateOf(iso).setLocale(locale).toLocaleString({ day: '2-digit', month: '2-digit' });
 }

@@ -4,24 +4,9 @@
     "message": "El permiso de accesibilidad se desactivó. Actívalo de nuevo para volver a evaluar las ofertas.",
     "action": "Reactivar el Copiloto"
   },
-  "gpsRunning_km": "Midiendo tus km por GPS. En trayectos personales, solo tienes que pausar.",
-  "gpsRunning_mi": "Midiendo tus millas por GPS. En trayectos personales, solo tienes que pausar.",
   "gpsProblem_km": "Los km no se están midiendo. {{problem}}",
   "gpsProblem_mi": "Las millas no se están midiendo. {{problem}}",
-  "todayTitle": "Ganancia de hoy",
-  "weekTitle": "Esta semana",
-  "monthTitle": "Este mes",
-  "estimated": {
-    "title": "Ingresos estimados hoy",
-    "subtitle": "Según las ofertas aceptadas. Confírmalo al registrar la jornada."
-  },
   "missingFixedCosts": "Esta ganancia todavía no considera seguro, impuesto vehicular, cuota o alquiler. Inclúyelos en Vehículo y costos para ver el valor real.",
-  "whyLess": {
-    "title": "¿Por qué la ganancia es menor que lo que recibí?",
-    "body": "Parte de lo que recibes paga el carro: combustible, desgaste, seguro y otros costos. La ganancia es lo que queda después de eso.",
-    "costToday_km": "Hoy, cada km cuesta cerca de {{cost}}.",
-    "costToday_mi": "Hoy, cada milla cuesta cerca de {{cost}}."
-  },
   "backup": {
     "action": "Hacer copia de seguridad"
   },
@@ -45,11 +30,21 @@
     "backup": "Guarda tus datos también fuera del teléfono.",
     "update": "Esta versión tiene más de un mes. Una nueva puede corregir la lectura de ofertas."
   },
-  "periodsTitle": "Semana y mes",
-  "periods": {
-    "week": "Esta semana",
-    "month": "Este mes",
-    "gross": "Facturó {{amount}}",
-    "time": "en {{duration}}"
+  "today": {
+    "title": "Te quedó hoy",
+    "details": "Detalles",
+    "gross": "Facturaste",
+    "perKm_km": "Por km",
+    "perKm_mi": "Por milla",
+    "perHour": "Por hora",
+    "goal": "{{percent}}% de la meta de hoy · faltan {{remaining}}",
+    "goalReached": "Meta de hoy cumplida · {{percent}}%"
+  },
+  "lastOffer": {
+    "title": "Última oferta · {{ago}}",
+    "seeAll": "Ver ofertas",
+    "now": "ahora",
+    "minutes": "hace {{count}} min",
+    "hours": "hace {{count}} h"
   }
 }

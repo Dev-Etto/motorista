@@ -4,24 +4,9 @@
     "message": "The accessibility permission was turned off. Turn it back on to evaluate offers again.",
     "action": "Turn Copilot back on"
   },
-  "gpsRunning_km": "Tracking your kilometers by GPS. For personal trips, just pause it.",
-  "gpsRunning_mi": "Tracking your miles by GPS. For personal trips, just pause it.",
   "gpsProblem_km": "Kilometers aren't being tracked. {{problem}}",
   "gpsProblem_mi": "Miles aren't being tracked. {{problem}}",
-  "todayTitle": "Today's profit",
-  "weekTitle": "This week",
-  "monthTitle": "This month",
-  "estimated": {
-    "title": "Estimated earnings today",
-    "subtitle": "Based on accepted rides. Check it when you log the shift."
-  },
   "missingFixedCosts": "This profit doesn't include insurance, vehicle tax, loan payments, or rent yet. Add them in Vehicle and costs to see the real amount.",
-  "whyLess": {
-    "title": "Why is my profit lower than what I got paid?",
-    "body": "Part of what you get paid covers the car: fuel, wear and tear, insurance, and other costs. Profit is what's left after that.",
-    "costToday_km": "Right now, each kilometer costs about {{cost}}.",
-    "costToday_mi": "Right now, each mile costs about {{cost}}."
-  },
   "backup": {
     "action": "Back up now"
   },
@@ -45,11 +30,21 @@
     "backup": "Keep your data outside the phone too.",
     "update": "This version is over a month old. A new one may fix offer reading."
   },
-  "periodsTitle": "Week and month",
-  "periods": {
-    "week": "This week",
-    "month": "This month",
-    "gross": "Earned {{amount}}",
-    "time": "in {{duration}}"
+  "today": {
+    "title": "Left today",
+    "details": "Details",
+    "gross": "Earned",
+    "perKm_km": "Per km",
+    "perKm_mi": "Per mile",
+    "perHour": "Per hour",
+    "goal": "{{percent}}% of today's goal · {{remaining}} to go",
+    "goalReached": "Today's goal reached · {{percent}}%"
+  },
+  "lastOffer": {
+    "title": "Last offer · {{ago}}",
+    "seeAll": "See offers",
+    "now": "just now",
+    "minutes": "{{count}} min ago",
+    "hours": "{{count}} h ago"
   }
 }

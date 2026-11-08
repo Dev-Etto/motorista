@@ -1,17 +1,18 @@
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { GoalProgressCard } from '@features/goals';
-import { InsightCard } from '@features/insights';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { NextStepCard } from '@features/onboarding';
 import { ShiftControls } from '@features/shifts';
 import { useFormat } from '@shared/i18n/format';
+import { MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@shared/theme/theme';
+import { AppIcon } from '@shared/ui/AppIcon';
 import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
-import { LearnMore } from '@shared/ui/LearnMore';
-import { AppText, Button, Card, ListRow, Notice, Screen } from '@shared/ui/primitives';
+import { AppText, Button, Card, Notice, Screen } from '@shared/ui/primitives';
+import { today } from '@shared/utils/dates';
+import { LastOfferCard } from './LastOfferCard';
 import { PendingCard } from './PendingCard';
 import { pendingItems } from './pendingItems';
-import { PeriodsCard } from './PeriodsCard';
-import { ProfitCard } from './ProfitCard';
+import { TodayCard } from './TodayCard';
 import { DashboardData, useDashboard } from './useDashboard';
 
 export default function DashboardScreen() {
@@ -26,55 +27,59 @@ export default function DashboardScreen() {
 
 function DashboardContent({ data, onReload }: { data: DashboardData; onReload: () => Promise<void> }) {
   const router = useRouter();
+  const colors = useTheme();
   const { t } = useTranslation(['dashboard', 'vehicle']);
   const format = useFormat();
   const unit = { context: format.distanceUnit };
 
   return (
     <>
+      <View style={styles.header}>
+        <AppText tone="muted" style={styles.flex}>
+          {format.longDay(today())}
+        </AppText>
+        {data.vehicle ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`${t('vehicle:manage.currentRow')}, ${data.vehicle.name}`}
+            onPress={() => router.push('/vehicles')}
+            style={[styles.vehicle, { backgroundColor: colors.surface, boxShadow: colors.cardShadow }]}
+          >
+            <AppIcon name={data.vehicle.kind === 'motorcycle' ? 'motorcycle' : 'vehicle'} color={colors.text} size={18} />
+            <AppText bold numberOfLines={1} style={styles.vehicleName}>
+              {data.vehicle.name}
+            </AppText>
+          </Pressable>
+        ) : null}
+      </View>
       {data.copilotStopped ? (
         <Card title={t('copilotStopped.title')}>
           <Notice tone="negative" message={t('copilotStopped.message')} />
           <Button label={t('copilotStopped.action')} variant="secondary" onPress={() => router.push('/copilot')} />
         </Card>
       ) : null}
-      {data.gpsRunning ? <Notice tone="accent" message={t('gpsRunning', unit)} /> : null}
       {data.gpsProblem ? <Notice tone="negative" message={t('gpsProblem', { ...unit, problem: data.gpsProblem })} /> : null}
       <ShiftControls />
-      {data.currentVehicle ? (
-        <Card>
-          <ListRow
-            icon={data.currentVehicle.kind === 'motorcycle' ? 'motorcycle' : 'vehicle'}
-            title={t('vehicle:manage.currentRow')}
-            value={data.currentVehicle.name}
-            onPress={() => router.push('/vehicles')}
-          />
-        </Card>
-      ) : null}
       <NextStepCard step={data.nextStep} onDismiss={onReload} />
-      <ProfitCard title={t('todayTitle')} summary={data.today} hero />
-      {data.estimatedToday && data.estimatedToday.trips > 0 ? (
-        <Card>
-          <ListRow
-            icon="layers"
-            title={t('estimated.title')}
-            subtitle={t('estimated.subtitle')}
-            value={format.money(data.estimatedToday.totalCents)}
-            onPress={() => router.push('/offers')}
-          />
-        </Card>
-      ) : null}
+      <TodayCard summary={data.today} goal={data.todayGoal} />
       {data.missingFixedCosts ? <Notice tone="accent" message={t('missingFixedCosts')} /> : null}
-      <Card>
-        <LearnMore title={t('whyLess.title')}>
-          <AppText variant="caption">{t('whyLess.body')}</AppText>
-          {data.costs ? <AppText variant="caption">{t('whyLess.costToday', { ...unit, cost: format.perDistance(data.costs.fullPerKm) })}</AppText> : null}
-        </LearnMore>
-      </Card>
-      {data.goal ? <GoalProgressCard progress={data.goal} onOpenDetails={() => router.push('/goal')} /> : null}
-      {data.topInsight ? <InsightCard insight={data.topInsight} /> : null}
       <PendingCard items={pendingItems(data)} />
-      <PeriodsCard week={data.week} month={data.month} />
+      {data.lastOffer ? <LastOfferCard entry={data.lastOffer} now={data.loadedAt} /> : null}
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  flex: { flex: 1 },
+  header: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  vehicle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    minHeight: MIN_TOUCH_TARGET - spacing.sm,
+    maxWidth: '50%',
+    paddingHorizontal: spacing.md,
+    borderRadius: radius.pill,
+  },
+  vehicleName: { flexShrink: 1 },
+});

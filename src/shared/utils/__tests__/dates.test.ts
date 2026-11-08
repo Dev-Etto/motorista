@@ -18,6 +18,7 @@ import {
   weekdayOf,
   weekdaysFrom,
   formatHourOfDay,
+  formatLongDay,
   workDaysInMonth,
   workDaysLeft,
 } from '@shared/utils/dates';
@@ -138,5 +139,11 @@ describe('tempo de jornada abreviado', () => {
     [-MINUTE, '<1min'],
   ])('%i ms vira %s', (elapsedMs, text) => {
     expect(formatElapsedShort(elapsedMs)).toBe(text);
+  });
+});
+
+describe('dia por extenso', () => {
+  it('mostra o dia da semana, o dia e o mês, com maiúscula', () => {
+    expect(formatLongDay('2026-11-07', 'pt-BR')).toBe('Sábado, 7 de novembro');
   });
 });

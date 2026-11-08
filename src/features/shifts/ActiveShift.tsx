@@ -16,14 +16,7 @@ export function ShiftControls() {
   const live = useLiveTracking(ignoreApply);
   const run = (action: () => Promise<void>) => () => action().catch(reportError);
 
-  if (!live.started) {
-    return (
-      <>
-        <Button label={t('active.start')} onPress={run(live.start)} />
-        <Button label={t('active.registerPast')} variant="secondary" onPress={() => router.push('/shift/new')} />
-      </>
-    );
-  }
+  if (!live.started) return null;
 
   const details = [formatClock(live.elapsedMs), live.km > 0 ? format.distance(live.km) : null].filter(Boolean).join(' · ');
 
