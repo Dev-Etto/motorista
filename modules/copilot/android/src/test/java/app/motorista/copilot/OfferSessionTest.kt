@@ -357,7 +357,7 @@ class OfferSessionTest {
 
   @Test
   fun preferenciasSobrevivemAoJson() {
-    val original = CopilotPreferences(voice = false, notification = true, primaryMetric = PrimaryMetric.PROFIT, cardSize = CardSize.EXTRA, theme = ThemeMode.DARK, durationSeconds = 8, monitoredPackages = setOf("a"), estimateEarnings = false)
+    val original = CopilotPreferences(voice = false, notification = true, primaryMetric = PrimaryMetric.PROFIT, cardSize = CardSize.EXTRA, theme = ThemeMode.DARK, durationSeconds = 8, monitoredPackages = setOf(OfferSources.packages.first()), estimateEarnings = false)
     assertEquals(original, CopilotPreferences.fromJson(original.toJson()))
   }
 
