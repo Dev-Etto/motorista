@@ -34,3 +34,26 @@ jobs:
       - run: npx expo prebuild --platform android --no-install
       - run: ./gradlew :copilot:testDebugUnitTest --console=plain
         working-directory: android
+
+  android-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - run: npm ci
+      - run: npx expo prebuild --platform android --no-install
+        env:
+          APP_VARIANT: release
+      - run: ./gradlew bundleRelease --console=plain
+        working-directory: android
+        env:
+          APP_VARIANT: release
+          NODE_ENV: production
+      - run: bash scripts/verificar-permissoes.sh "$(find android/app/build/intermediates -path '*merged_manifest*' -path '*release*' -name AndroidManifest.xml | head -1)"

@@ -84,6 +84,12 @@ A chave de assinatura nunca muda: é ela que permite instalar cada versão nova 
 
 Distribuição: só no canal privado dos testers, com as notas da versão. O APK não deve ser publicado em lugar aberto.
 
+## Build para a Play (AAB)
+
+`npm run build:aab` roda as mesmas verificações, gera `dist/motorista.aab` assinado com a mesma chave e confere no manifesto final as permissões e o targetSdk (mínimo 36, exigência da Play). As variáveis são as mesmas da tabela acima.
+
+A assinatura do AAB vem do plugin `plugins/withReleaseSigning.js`: quando `MOTORISTA_KEYSTORE` está definida, o build de release usa essa chave. Sem ela, usa a chave de debug. O CI gera o AAB assim, só para conferir que o build e as permissões estão certos.
+
 ## Checklist de versão
 
 1. Atualizar `version` em `package.json` e `app.config.ts` e subir o `versionCode`.
