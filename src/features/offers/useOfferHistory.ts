@@ -6,7 +6,7 @@ export function useOfferHistory({ from, to }: OfferRange) {
   const history = useAsyncData(() => copilot.getOffers(from, to), [from, to]);
 
   const clear = async () => {
-    copilot.clearHistory();
+    await copilot.clearHistory();
     await history.reload();
   };
 

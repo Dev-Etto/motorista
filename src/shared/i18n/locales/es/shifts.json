@@ -70,10 +70,6 @@
     "emptyMessage": "Registra tu primera jornada para ver tu ganancia real.",
     "shiftSubtitle": "{{gross}} en {{duration}}",
     "shiftSubtitlePartial": "{{gross}} en {{duration}} • parcial",
-    "deleteExpense": {
-      "title": "¿Eliminar {{label}}?",
-      "message": "El gasto de {{amount}} sale de tus resultados."
-    },
     "add": {
       "button": "Agregar",
       "title": "¿Qué quieres agregar?",

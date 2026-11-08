@@ -51,6 +51,16 @@ class TripTimeEstimatorTest {
   }
 
   @Test
+  fun tempoEstimadoLimitaANotaComoOfertaSemTempo() {
+    val offer = ParsedOffer(3000, 8.0, 0)
+    val estimated = OfferEvaluator.evaluate(TripTimeEstimator.withEstimatedTime(offer, 25.0), targets)
+    val read = OfferEvaluator.evaluate(offer.copy(minutes = 19), targets)
+    assertEquals(OfferColor.GREEN, estimated.color)
+    assertEquals(4.0, estimated.score!!, 0.001)
+    assertEquals(5.0, read.score!!, 0.001)
+  }
+
+  @Test
   fun cartaoTemUmaDescricaoSemSetas() {
     val result = OfferEvaluator.evaluate(ParsedOffer(1300, 4.3, 12), targets, "inDrive")
     val description = format.cardDescription(result)

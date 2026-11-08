@@ -53,7 +53,7 @@ class CopilotModule : Module() {
     AsyncFunction("getOffers") { from: Double, to: Double -> CopilotStore.get(context).offers(from.toLong(), to.toLong()) }
     AsyncFunction("getRecentOffers") { limit: Int -> CopilotStore.get(context).recentOffers(limit) }
     AsyncFunction("setHistory") { json: String -> CopilotStore.get(context).replaceHistory(json) }
-    Function("clearHistory") { CopilotStore.get(context).clearHistory() }
+    AsyncFunction("clearHistory") { CopilotStore.get(context).clearHistory() }
     AsyncFunction("setOfferStatus") { timestamp: Long, status: String ->
       val outcome = OfferStatus.entries.firstOrNull { it.id == status } ?: return@AsyncFunction
       CopilotStore.get(context).markOutcome(timestamp, OfferOutcome(outcome))

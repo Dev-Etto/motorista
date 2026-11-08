@@ -13,6 +13,7 @@ import { useFormat } from '@shared/i18n/format';
 import { shareTextFile } from '@shared/platform/share';
 import { confirmAction, showDialog } from '@shared/ui/dialog';
 import { isoFromMillis, today } from '@shared/utils/dates';
+import { reportError } from '@shared/utils/reportError';
 import { applyRestoredState } from './afterRestore';
 
 const SAFETY_COPY_NAME = 'antes-de-restaurar.json';
@@ -71,7 +72,8 @@ export function useBackup() {
     try {
       await shareTextFile(`backup-${today()}.json`, JSON.stringify(await fullBackup()), 'application/json');
       askIfSaved();
-    } catch {
+    } catch (error) {
+      reportError(error);
       setMessage({ tone: 'negative', text: t('backup.exportFailed') });
     }
   });
@@ -101,7 +103,8 @@ export function useBackup() {
         actionLabel: otherMarket ? t('backup.marketConfirm.action') : t('backup.restoreConfirm.action'),
         onConfirm: () => replaceData(parsed.backup, 'restored').catch(() => setMessage({ tone: 'negative', text: t('backup.restoreFailed') })),
       });
-    } catch {
+    } catch (error) {
+      reportError(error);
       setMessage({ tone: 'negative', text: t('backup.restoreFailed') });
     }
   });
@@ -112,7 +115,8 @@ export function useBackup() {
       if (!parsed.ok) return setMessage({ tone: 'negative', text: t(`backup.invalid.${parsed.error}`) });
 
       await replaceData(parsed.backup, 'undone');
-    } catch {
+    } catch (error) {
+      reportError(error);
       setMessage({ tone: 'negative', text: t('backup.restoreFailed') });
     }
   });

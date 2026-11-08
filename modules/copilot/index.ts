@@ -33,7 +33,7 @@ interface CopilotNativeModule {
   resetCardPosition(): void;
   getHistory(): Promise<string>;
   setHistory(json: string): Promise<void>;
-  clearHistory(): void;
+  clearHistory(): Promise<void>;
   getOffers(from: number, to: number): Promise<string>;
   getRecentOffers(limit: number): Promise<string>;
   setOfferStatus(timestamp: number, status: string): Promise<void>;

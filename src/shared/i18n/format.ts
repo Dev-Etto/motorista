@@ -84,7 +84,7 @@ export function createFormatter(format: RegionalFormat) {
     perDistanceInput: (centsPerKm: number) => Money.fromCents(perKmToPerDistance(centsPerKm, distanceUnit)).toInput(spec),
     parsePerDistance: (text: string) => {
       const cents = centsOrNull(text, spec);
-      return cents === null ? null : Math.round(perDistanceToPerKm(cents, distanceUnit));
+      return cents === null ? null : perDistanceToPerKm(cents, distanceUnit);
     },
 
     number: (value: number, decimals = 1) => formatNumber(value, locale, { decimals }),
@@ -112,7 +112,7 @@ export function createFormatter(format: RegionalFormat) {
       return value === null ? null : volumeToLiters(value, volumeUnit);
     },
     perVolumeInput: (centsPerLiter: number) => Money.fromCents(perLiterToPerVolume(centsPerLiter, volumeUnit)).toInput(spec),
-    perVolumeOrZero: (text: string) => Math.round(perVolumeToPerLiter(centsOrZero(text, spec), volumeUnit)),
+    perVolumeOrZero: (text: string) => perVolumeToPerLiter(centsOrZero(text, spec), volumeUnit),
     consumptionInput: (kmPerLiter: number) => decimalToInput(kmPerLiterToConsumption(kmPerLiter, consumptionUnit), locale),
     consumptionOrZero: (text: string) => consumptionToKmPerLiter(decimalOrZero(text, locale), consumptionUnit),
 

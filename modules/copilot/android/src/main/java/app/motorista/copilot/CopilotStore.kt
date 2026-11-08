@@ -4,11 +4,13 @@ import android.content.Context
 import android.content.SharedPreferences
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.concurrent.Executors
 
 class CopilotStore private constructor(private val context: Context) {
   private val prefs: SharedPreferences = context.applicationContext.getSharedPreferences(FILE, Context.MODE_PRIVATE)
 
   private val log = OfferLogDatabase.get(context)
+  private val worker = Executors.newSingleThreadExecutor()
   @Volatile
   private var cachedPreferences: Pair<String?, CopilotPreferences>? = null
 
@@ -17,9 +19,11 @@ class CopilotStore private constructor(private val context: Context) {
     private set
 
   init {
-    if (prefs.contains(KEY_LEGACY_HISTORY)) prefs.edit().remove(KEY_LEGACY_HISTORY).apply()
-    migrateHistoryFromPreferences()
-    refreshTripSpeed()
+    worker.execute {
+      if (prefs.contains(KEY_LEGACY_HISTORY)) prefs.edit().remove(KEY_LEGACY_HISTORY).apply()
+      migrateHistoryFromPreferences()
+      refreshTripSpeed()
+    }
   }
 
   var enabled: Boolean
@@ -78,18 +82,18 @@ class CopilotStore private constructor(private val context: Context) {
   fun replaceHistory(json: String) {
     val entries = runCatching { JSONArray(json) }.getOrNull() ?: return
     log.replaceAll(entries)
-    refreshTripSpeed()
+    refreshTripSpeedLater()
   }
 
   fun clearHistory() {
     log.clear()
     prefs.edit().remove(KEY_FAILED_READS).apply()
-    refreshTripSpeed()
+    refreshTripSpeedLater()
   }
 
   fun record(evaluation: OfferEvaluation, source: String, timestamp: Long): Long {
     log.insert(toJson(evaluation, source, timestamp), timestamp - RETENTION_MS)
-    refreshTripSpeed()
+    refreshTripSpeedLater()
     return timestamp
   }
 
@@ -100,8 +104,10 @@ class CopilotStore private constructor(private val context: Context) {
 
   fun refine(offerId: Long, evaluation: OfferEvaluation) {
     log.update(offerId) { entry -> putEvaluation(entry, evaluation) }
-    refreshTripSpeed()
+    refreshTripSpeedLater()
   }
+
+  private fun refreshTripSpeedLater() = worker.execute(::refreshTripSpeed)
 
   private fun refreshTripSpeed() {
     val entries = runCatching { JSONArray(log.recent(SPEED_SAMPLE_LIMIT)) }.getOrNull() ?: return

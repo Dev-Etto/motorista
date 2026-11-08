@@ -50,7 +50,7 @@ app -> features -> application -> data -> domain -> shared/utils
 |---|---|
 | Repository | `src/data/repositories` |
 | Strategy | Regras em `src/domain/insights/rules.ts` e canais `OfferChannel` do Copiloto |
-| Custom Hooks | `useAsyncData`, `useFormFields`, `useInterval`, `useMonthCursor` e hooks de cada funcionalidade |
+| Custom Hooks | `useAsyncData`, `useFormFields`, `useInterval`, `useWeekCursor` e hooks de cada funcionalidade |
 | Facade | `modules/copilot/index.ts` esconde o módulo nativo |
 | Composition | Telas montadas com componentes de `shared/ui` |
 | Memento | Cópia do custo por km salva em cada jornada |
@@ -83,9 +83,9 @@ app -> features -> application -> data -> domain -> shared/utils
 
 **Preço por km não é valor da corrida.** Plataformas mostram `R$ 2,3/km` antes do valor. `OfferParser` ignora valores seguidos de `/km`, `/h` ou `por km`. Quando a tela traz esse preço, o km total é o valor dividido por ele, porque a distância escrita pode ser só o trecho até o passageiro.
 
-**Tempo da corrida pode faltar.** `2 min.` com ponto indica há quanto tempo o pedido foi feito, não a duração, e por isso é ignorado. Sem tempo na oferta, `minutes` é 0: a nota usa só o R$/km, e o R$/h fica vazio. Nunca estimamos o tempo.
+**Tempo da corrida pode faltar.** `2 min.` com ponto indica há quanto tempo o pedido foi feito, não a duração, e por isso é ignorado. Sem tempo na oferta, o Copiloto estima a duração pela velocidade das últimas ofertas (ver Tempo estimado na oferta) e mostra o valor com `~`. Na calculadora, sem tempo digitado, `minutes` é 0 e o R$/h fica vazio.
 
-**Sem tempo, nota até 4.** Sem a duração não dá para saber se a corrida compensa por hora, então a nota não passa de 4.
+**Sem tempo lido, nota até 4.** Sem a duração real não dá para saber se a corrida compensa por hora, então a nota não passa de 4. Vale também quando o tempo é estimado.
 
 **Selo de nota.** A nota de 0 a 5 aparece sempre no mesmo selo, com a cor da faixa e o número escrito, para a faixa não depender só da cor. No cartão da oferta, a faixa do topo leva a cor da nota com a nota escrita por cima, como no selo. A notificação tem fundo neutro, e o selo é o único ponto de cor. O selo é desenhado em `ScoreBadge`, em TypeScript e em Kotlin, com as mesmas proporções e cores. O histórico mudou de chave ao trocar a escala, para não misturar notas de 0 a 10.
 
@@ -196,9 +196,9 @@ app -> features -> application -> data -> domain -> shared/utils
 - **Decisões separadas do Android:** `OfferReadPolicy`, `OfferTextTracker`, `WindowEventGate` e `ScanPacer` não dependem do Android e têm teste. `OfferTreeReader` e `OfferImageReader` só coletam. A spec fica em `docs/specs/leitura-de-ofertas.md`.
 - **Gravar fora da thread principal:** a oferta é gravada na thread de leitura. Como é uma fila única, gravação e atualização mantêm a ordem.
 - **Botão flutuante ligado por padrão:** `floatingButton` nasce ligado, e `useFloatingVisibility` inicia o botão ao abrir o app ou voltar a ele, se houver permissão de sobreposição. Desligar nas configurações fica salvo. "Ocultar o botão", ou arrastar o botão até a `DismissZone`, é temporário: `FloatingVisibility` esconde até o motorista entrar no app e sair dele, com o serviço ativo e as ofertas no cartão avulso. Sem a permissão, o app não insiste: ela segue sendo pedida só quando o motorista liga a opção.
-- **Selo da plataforma:** nome e cor, em tamanho fixo, para Uber, 99 e inDrive ficarem na mesma proporção. Nenhuma imagem de marca entra no repositório.
+- **Selo da plataforma:** nome e cor, em tamanho fixo, para Uber, 99 e inDrive ficarem na mesma proporção. Nenhuma imagem de marca entra no repositório. Pacote, nome e cores de cada app ficam só em `modules/copilot/rideApps.json`, lido pelo TypeScript, e `RideAppsCatalogTest` confere que o `OfferSources` do Kotlin bate com ele.
 - **Nota do passageiro:** não aparece no cartão, no botão nem na notificação. O parser só a reconhece com estrela ou contagem de avaliações.
-- **Idade do pedido não é tempo de viagem:** no inDrive, `N min.` com ponto e `Agora mesmo` dizem há quanto tempo o pedido existe, e `~N km` é a distância até o passageiro. Sem os dois trechos, "Por hora" fica vazio, sem estimativa.
+- **Idade do pedido não é tempo de viagem:** no inDrive, `N min.` com ponto e `Agora mesmo` dizem há quanto tempo o pedido existe, e `~N km` é a distância até o passageiro. Sem os dois trechos, o tempo vem da estimativa, com `~`.
 - **Cartão no botão flutuante:** o cartão cresce a partir do botão e encolhe de volta. `OfferCardMotion` calcula o ponto de partida e não depende do Android. Um toque em qualquer ponto, ou arrastar até a `DismissZone`, fecha o cartão e a voz, via `OfferSession.dismiss`. A sessão guarda a oferta, para ela não reabrir enquanto seguir na tela.
 
 ## Decisões da versão 0.10.0
@@ -292,7 +292,7 @@ app -> features -> application -> data -> domain -> shared/utils
 - **Erro no campo:** `fieldOfError` liga cada erro da jornada ao campo que precisa de correção. Só o que não tem campo próprio, como a falta de ganhos, fica no aviso geral. `Collapsible` com `forceOpen` abre a seção que tem um campo com erro.
 - **Rádios acessíveis:** opções de `Segmented` e linhas de `ListRow` com `selected` usam o papel `radio` com o estado `checked`, e cada opção tem a altura mínima de toque.
 - **Perfil regional só depois de carregar:** `regionalStore.refresh` não faz nada antes de `load`. Na primeira abertura, o app pode voltar ao primeiro plano antes de a migração criar as tabelas, e aplicar o perfil nesse momento renomearia plataformas que ainda não existem.
-- **Tempo estimado na oferta:** algumas telas de oferta mostram só preço e distância. `TripTimeEstimator` estima o tempo pela velocidade mediana das últimas 200 ofertas com tempo lido, guardada em `CopilotStore.tripSpeedKmh`, e marca `minutesEstimated`. A avaliação usa o tempo estimado como qualquer outro, e só a exibição muda, com `~`. Assim as regras de oferta continuam iguais às do TypeScript.
+- **Tempo estimado na oferta:** algumas telas de oferta mostram só preço e distância. `TripTimeEstimator` estima o tempo pela velocidade mediana das últimas 200 ofertas com tempo lido, guardada em `CopilotStore.tripSpeedKmh`, e marca `minutesEstimated`. A avaliação usa o tempo estimado para a cor e o R$/h, mostrados com `~`, mas a nota fica limitada a 4, como em oferta sem tempo. Assim a mesma oferta tem a mesma nota no Copiloto e na calculadora.
 
 ## Decisões da versão 0.13.0
 

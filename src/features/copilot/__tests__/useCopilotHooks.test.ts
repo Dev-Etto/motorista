@@ -31,7 +31,10 @@ jest.mock('@modules/copilot', () => ({
     resetCardPosition: jest.fn(),
   },
 }));
-jest.mock('@modules/copilot/platforms', () => ({ PLATFORM_PACKAGES: { uber: 'uber', ninetyNine: '99', inDrive: 'indrive' } }));
+jest.mock('@modules/copilot/platforms', () => ({
+  ...jest.requireActual('@modules/copilot/platforms'),
+  PLATFORM_PACKAGES: { uber: 'uber', ninetyNine: '99', inDrive: 'indrive' },
+}));
 
 describe('preferências do Copiloto', () => {
   it('não liga a notificação sem permissão e avisa', async () => {

@@ -70,10 +70,6 @@
     "emptyMessage": "Log your first shift to see your real profit.",
     "shiftSubtitle": "{{gross}} in {{duration}}",
     "shiftSubtitlePartial": "{{gross}} in {{duration}} • partial",
-    "deleteExpense": {
-      "title": "Delete {{label}}?",
-      "message": "The {{amount}} expense will be removed from your results."
-    },
     "add": {
       "button": "Add",
       "title": "What do you want to add?",

@@ -80,7 +80,7 @@ const TEXT_PROPS = [
 module.exports = defineConfig([
   expoConfig,
   {
-    ignores: ['dist/*', 'android/*', '**/build/**'],
+    ignores: ['dist/*', 'android/*', '**/build/**', 'docs/interno/**'],
   },
   {
     rules: {

@@ -1,0 +1,5 @@
+[
+  { "key": "uber", "packageName": "com.ubercab.driver", "label": "Uber", "background": "#000000", "text": "#FFFFFF" },
+  { "key": "ninetyNine", "packageName": "com.app99.driver", "label": "99", "background": "#FFDD00", "text": "#111111" },
+  { "key": "inDrive", "packageName": "sinet.startup.inDriver", "label": "inDrive", "background": "#C1F11D", "text": "#111111" }
+]
