@@ -2,7 +2,7 @@ import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Linking, StyleSheet, View } from 'react-native';
-import { APP_NAME, DONATION_URL, RELEASES_URL, REPOSITORY_URL } from '@config/app';
+import { APP_NAME, RELEASES_URL } from '@config/app';
 import { spacing } from '@shared/theme/theme';
 import { BrandMark } from '@shared/ui/BrandMark';
 import { AppText, Card, ListRow, Screen } from '@shared/ui/primitives';
@@ -31,12 +31,10 @@ export default function AboutScreen() {
           {section.items.map((item) => (
             <ListRow key={item.id} title={t(`more.item.${item.id}.title`)} chevron onPress={() => router.push(item.href)} />
           ))}
-          {section.id === 'yours' ? <ListRow title={t('more.about.donateTitle')} chevron onPress={() => Linking.openURL(DONATION_URL)} /> : null}
         </Card>
       ))}
       <Card>
         <ListRow title={t('more.about.updateTitle')} chevron onPress={() => Linking.openURL(RELEASES_URL)} />
-        <ListRow title={t('more.about.codeTitle')} chevron onPress={() => Linking.openURL(REPOSITORY_URL)} />
       </Card>
       <AppText variant="caption" tone="muted" center>
         {t('more.about.dataStays')}

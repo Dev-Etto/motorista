@@ -3,7 +3,7 @@ import { APP_NAME } from '@config/app';
 import { AppText } from '@shared/ui/primitives';
 import { InfoScreen } from './InfoScreen';
 
-const SECTION_IDS = ['about', 'estimates', 'decisions', 'traffic', 'platforms', 'data', 'warranty', 'license', 'changes'] as const;
+const SECTION_IDS = ['about', 'estimates', 'decisions', 'traffic', 'platforms', 'data', 'warranty', 'subscription', 'license', 'provider', 'changes'] as const;
 
 export default function TermsScreen() {
   const { t } = useTranslation('settings');

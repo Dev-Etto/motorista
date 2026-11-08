@@ -90,7 +90,7 @@
   "setup": {
     "permission": {
       "title": "Deixe o Copiloto ler a tela",
-      "explanation": "Ele lê o valor, a distância e o tempo da oferta para dar a nota. Não toca em nada, não aceita nem recusa corridas, e nada sai do seu celular.",
+      "explanation": "Ele lê o valor, a distância e o tempo da oferta para dar a nota. Não toca em nada, não aceita nem recusa corridas, e o que ele lê fica no seu celular.",
       "openAccessibility": "Abrir configurações",
       "step1": "Toque em Abrir configurações.",
       "step2": "Entre em Apps instalados › Copiloto de ofertas.",

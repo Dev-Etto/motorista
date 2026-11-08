@@ -90,7 +90,7 @@
   "setup": {
     "permission": {
       "title": "Let the Copilot read the screen",
-      "explanation": "It reads the offer's price, distance and time to give it a score. It doesn't tap anything, doesn't accept or decline rides, and nothing leaves your phone.",
+      "explanation": "It reads the offer's price, distance and time to give it a score. It doesn't tap anything, doesn't accept or decline rides, and what it reads stays on your phone.",
       "openAccessibility": "Open settings",
       "step1": "Tap Open settings.",
       "step2": "Go to Installed apps › Offer Copilot.",

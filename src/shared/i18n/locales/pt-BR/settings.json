@@ -68,11 +68,9 @@
       }
     },
     "about": {
-      "donateTitle": "Apoiar o projeto",
       "updateTitle": "Verificar atualização",
       "versionTitle": "Versão {{version}}",
-      "codeTitle": "Código e novidades",
-      "dataStays": "Seus dados ficam só no seu celular."
+      "dataStays": "Seus dados de trabalho ficam no seu celular."
     },
     "summary": {
       "vehicle": "Veículo atual",
@@ -177,7 +175,7 @@
   "privacy": {
     "data": {
       "title": "Seus dados",
-      "body": "Tudo fica no seu celular. O app não tem conta, servidor nem permissão de internet. Os links do projeto abrem no seu navegador."
+      "body": "Seus veículos, jornadas, despesas, metas e ofertas ficam no seu celular. O app não pede conta. Com a internet, ele envia relatórios de falha (dá para desligar em Escolhas de privacidade), métricas de uso só se você permitir, e o relato de problema só quando você toca em Enviar."
     },
     "permissions": {
       "title": "Permissões",
@@ -189,7 +187,7 @@
     },
     "backup": {
       "title": "Backup",
-      "body": "Só sai do aparelho quando você compartilha o arquivo. Ele traz seus dados financeiros e não tem senha, então guarde em um lugar só seu."
+      "body": "O backup automático do Android guarda uma cópia na sua conta Google, com criptografia, quando o bloqueio de tela está ativo. O arquivo de backup manual só sai do aparelho quando você o compartilha. Ele traz seus dados financeiros e não tem senha, então guarde em um lugar só seu."
     },
     "estimates": {
       "title": "Estimativas",
@@ -199,7 +197,7 @@
   "terms": {
     "about": {
       "title": "O que é o app",
-      "body": "O {{appName}} ajuda você a entender custos, lucro e ofertas. É gratuito, não pede conta e funciona sem internet."
+      "body": "O {{appName}} ajuda motoristas e entregadores de carro e moto a entender custos, lucro e ofertas. Não pede conta nem exibe anúncios."
     },
     "estimates": {
       "title": "Estimativas",
@@ -215,25 +213,33 @@
     },
     "platforms": {
       "title": "Plataformas",
-      "body": "O {{appName}} é independente e não tem vínculo com Uber, 99, inDrive ou outras plataformas. Cada uma tem regras próprias sobre apps de apoio, e cabe a você conhecê-las antes de usar o Copiloto. As plataformas podem identificar apps que usam acessibilidade ou sobreposição, e o uso pode ter consequências na sua conta."
+      "body": "O {{appName}} é independente e não é afiliado, patrocinado nem aprovado por Uber, 99, inDrive, iFood, 99Food, Keeta, Zé Delivery ou outras plataformas. As marcas citadas pertencem aos seus donos. Cada plataforma tem regras próprias sobre apps de apoio, e cabe a você conhecê-las antes de usar o Copiloto. As plataformas podem identificar apps que usam acessibilidade ou sobreposição, e o uso pode ter consequências na sua conta."
     },
     "data": {
       "title": "Seus dados",
-      "body": "Seus dados ficam no seu celular, sem cópia em nossos servidores. Se você perder o aparelho ou desinstalar o app, eles se perdem. Por isso, faça backups e guarde o arquivo em um lugar só seu."
+      "body": "Seus dados de trabalho ficam no seu celular e na cópia de backup da sua conta Google, sem cópia em nossos servidores. O que sai do aparelho está descrito em Privacidade. Você pode apagar tudo em Privacidade → Apagar todos os meus dados."
     },
     "warranty": {
       "title": "Sem garantia",
       "body": "O app é oferecido como está, sem garantia de funcionamento contínuo ou de compatibilidade com as plataformas. Na medida permitida pela lei, os responsáveis pelo projeto não respondem por perdas decorrentes do uso."
     },
+    "subscription": {
+      "title": "Assinatura",
+      "body": "Na versão da Google Play, o uso completo depende de uma assinatura ativa, mensal, trimestral ou anual. Preço, período de teste, renovação automática e cancelamento seguem as regras da Google Play e podem ser gerenciados na sua conta Google Play a qualquer momento."
+    },
     "license": {
       "title": "Licença",
-      "body": "Você pode usar o app no seu trabalho de motorista. É proibido vender o app ou versões derivadas, cobrar por ele ou exibir anúncios nele. O texto completo está no arquivo LICENSE do repositório do projeto."
+      "body": "Você recebe uma licença pessoal, não exclusiva e intransferível para usar o app. Não é permitido copiar, modificar, revender, redistribuir ou fazer engenharia reversa do app, nem usá-lo para automatizar o aceite de corridas ou entregas."
+    },
+    "provider": {
+      "title": "Responsável",
+      "body": "O app é oferecido por 69.232.074 JOAO F. S. N., CNPJ 69.232.074/0001-50."
     },
     "changes": {
       "title": "Mudanças",
       "body": "Estes termos podem mudar em novas versões do app. Dúvidas e problemas podem ser enviados pela opção Relatar um problema, em Mais."
     },
-    "updatedAt": "Atualizados em 5 de novembro de 2026."
+    "updatedAt": "Atualizados em 8 de novembro de 2026."
   },
   "reminders": {
     "newTitle": "Novo lembrete",

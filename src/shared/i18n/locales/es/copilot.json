@@ -90,7 +90,7 @@
   "setup": {
     "permission": {
       "title": "Deja que el Copiloto lea la pantalla",
-      "explanation": "Lee el valor, la distancia y el tiempo de la oferta para darle una puntuación. No toca nada, no acepta ni rechaza viajes, y nada sale de tu celular.",
+      "explanation": "Lee el valor, la distancia y el tiempo de la oferta para darle una puntuación. No toca nada, no acepta ni rechaza viajes, y lo que lee queda en tu celular.",
       "openAccessibility": "Abrir configuración",
       "step1": "Toca Abrir configuración.",
       "step2": "Entra en Apps instaladas › Copiloto de ofertas.",

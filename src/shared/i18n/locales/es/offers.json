@@ -68,7 +68,7 @@
     "autoRecord": "La app registra sola lo que aceptas. Si el valor sugerido es distinto de lo que recibiste, solo tienes que corregirlo al registrar la jornada.",
     "settingsTitle": "Ajustes",
     "estimating": "Estimar ingresos según lo aceptado",
-    "estimatingHint": "Anota cuando tocas aceptar o rechazar en las apps de viajes. Nada sale del celular.",
+    "estimatingHint": "Anota cuando tocas aceptar o rechazar en las apps de viajes. Esto queda solo en tu celular.",
     "clearButton": "Borrar las ofertas",
     "clearConfirm": {
       "title": "¿Borrar las ofertas?",

@@ -16,9 +16,11 @@ describe('sobre', () => {
     );
 
     expect(screen.getByText('Versão 0.16.0')).toBeTruthy();
-    for (const row of ['Meu resumo para compartilhar', 'Relatar um problema', 'Apoiar o projeto', 'Privacidade', 'Termos de uso']) {
+    for (const row of ['Meu resumo para compartilhar', 'Relatar um problema', 'Privacidade', 'Termos de uso']) {
       expect(screen.getByText(row)).toBeTruthy();
     }
-    expect(screen.getByText('Seus dados ficam só no seu celular.')).toBeTruthy();
+    expect(screen.queryByText('Apoiar o projeto')).toBeNull();
+    expect(screen.queryByText('Código e novidades')).toBeNull();
+    expect(screen.getByText('Seus dados de trabalho ficam no seu celular.')).toBeTruthy();
   });
 });

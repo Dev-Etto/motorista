@@ -1,5 +1,5 @@
 {
-  "intro": "Each permission turns on a part of the app. Nothing leaves your phone.",
+  "intro": "Each permission turns on a part of the app. Each one is only used by the features you turn on.",
   "granted": "On",
   "allow": "Allow",
   "accessibility": {
