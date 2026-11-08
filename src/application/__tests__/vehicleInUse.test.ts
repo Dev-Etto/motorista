@@ -111,6 +111,7 @@ describe('veículo da jornada', () => {
   it('abastecimento com preço diferente sugere atualizar só combustível líquido', async () => {
     expect(await fuelPriceSuggestion(1, 19500, 30)).toEqual({ vehicle: CAR, priceCents: 650 });
     expect(await fuelPriceSuggestion(1, 18000, 30)).toBeNull();
+    expect(await fuelPriceSuggestion(1, 2000000, 30)).toBeNull();
     expect(await fuelPriceSuggestion(1, 19500, null)).toBeNull();
     expect(await fuelPriceSuggestion(null, 19500, 30)).toBeNull();
   });

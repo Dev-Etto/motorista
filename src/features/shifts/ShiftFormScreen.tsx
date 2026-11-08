@@ -48,7 +48,7 @@ export default function ShiftFormScreen() {
     void live.apply();
   }, [finish, live]);
 
-  const allowLeave = useUnsavedChangesGuard(form.dirty);
+  const leave = useUnsavedChangesGuard(form.dirty);
 
   const saving = useSubmit(async () => {
     if (!id && live.pending) return setMeasureError(t('form.measurePending', { context: format.distanceUnit }));
@@ -57,10 +57,9 @@ export default function ShiftFormScreen() {
     const savedId = await form.save();
     if (!savedId) return;
 
-    allowLeave();
-    if (id) return router.back();
+    if (id) return leave(() => router.back());
     if (live.started) await live.discard();
-    router.replace(`/shift/${savedId}`);
+    leave(() => router.replace(`/shift/${savedId}`));
   });
 
   return (
