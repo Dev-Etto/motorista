@@ -35,7 +35,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     package: PACKAGE,
     versionCode: 25,
-    allowBackup: false,
+    allowBackup: true,
     adaptiveIcon: {
       backgroundColor: '#171717',
       foregroundImage: './assets/android-icon-foreground.png',
@@ -63,6 +63,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ['expo-location', { isAndroidForegroundServiceEnabled: true, isAndroidBackgroundLocationEnabled: false }],
     ['expo-notifications', { color: '#171717' }],
     './plugins/withReleaseSigning',
+    './plugins/withBackupRules',
   ],
   extra: { buildDate: new Date().toISOString().slice(0, 10) },
   experiments: { typedRoutes: false },
