@@ -1,21 +1,19 @@
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { buildCalendar } from '@domain/calendar/calendar';
-import { groupShiftsByDay } from '@domain/shift/days';
+import { countsAgainstProfit } from '@domain/expense/expense';
+import { buildWeek, groupShiftsByDay } from '@domain/shift/days';
 import { computeShift } from '@domain/shift/shift';
 import { ReportSummary } from '@features/reports';
 import { useAsyncData } from '@shared/hooks/useAsyncData';
-import { useMonthCursor } from '@shared/hooks/useMonthCursor';
+import { useWeekCursor } from '@shared/hooks/useWeekCursor';
 import { useFormat } from '@shared/i18n/format';
 import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
 import { showDialog } from '@shared/ui/dialog';
-import { MonthCalendar } from '@shared/ui/MonthCalendar';
-import { MonthSwitcher } from '@shared/ui/MonthSwitcher';
-import { AppText, Button, Card, EmptyState, ListRow, Screen, Segmented } from '@shared/ui/primitives';
-import { monthKey } from '@shared/utils/dates';
+import { Button, EmptyState, Screen, Segmented } from '@shared/ui/primitives';
 import { ShiftDayCard } from './ShiftDayCard';
-import { loadMonth } from './shiftQueries';
+import { loadPeriod } from './shiftQueries';
+import { WeekStrip } from './WeekStrip';
 
 type ShiftsView = 'list' | 'summary';
 
@@ -37,27 +35,22 @@ export default function ShiftsScreen() {
 
 function ShiftList() {
   const router = useRouter();
-  const { t } = useTranslation(['shifts', 'expenses', 'common']);
+  const { t } = useTranslation(['shifts', 'common']);
   const format = useFormat();
-  const cursor = useMonthCursor();
-  const month = useAsyncData(() => loadMonth(cursor.date), [cursor.date]);
-  const { data } = month;
+  const week = useWeekCursor(format.profile.firstWeekday);
+  const period = useAsyncData(() => loadPeriod(week.start, week.end), [week.start, week.end]);
   const [pickedDate, setSelectedDate] = useState<string | null>(null);
-  const selectedDate = pickedDate?.startsWith(monthKey(cursor.date)) ? pickedDate : null;
-  const allShifts = useMemo(() => data?.shifts ?? [], [data?.shifts]);
-  const shifts = selectedDate ? allShifts.filter((shift) => shift.date === selectedDate) : allShifts;
-  const calendar = useMemo(
+  const selectedDate = pickedDate && pickedDate >= week.start && pickedDate <= week.end ? pickedDate : null;
+  const allDays = useMemo(
     () =>
-      buildCalendar(
-        cursor.date,
-        allShifts.map((shift) => ({ date: shift.date, profitCents: computeShift(shift).profitCents })),
-        format.profile.firstWeekday,
+      groupShiftsByDay(
+        (period.data?.shifts ?? []).map((shift) => ({ ...shift, profitCents: computeShift(shift).profitCents })),
+        (period.data?.expenses ?? []).map((expense) => ({ ...expense, countable: countsAgainstProfit(expense.category) })),
       ),
-    [cursor.date, allShifts, format.profile.firstWeekday],
+    [period.data],
   );
-  const days = useMemo(() => groupShiftsByDay(shifts.map((shift) => ({ ...shift, profitCents: computeShift(shift).profitCents }))), [shifts]);
-  const allExpenses = data?.expenses ?? [];
-  const expenses = selectedDate ? allExpenses.filter((expense) => expense.date === selectedDate) : allExpenses;
+  const strip = useMemo(() => buildWeek(week.start, allDays), [week.start, allDays]);
+  const days = selectedDate ? allDays.filter((day) => day.date === selectedDate) : allDays;
 
   const chooseWhatToAdd = () => {
     showDialog({
@@ -73,42 +66,27 @@ function ShiftList() {
 
   return (
     <>
-      <MonthSwitcher date={cursor.date} onPrevious={cursor.previous} onNext={cursor.next} />
-      <Button label={t('list.add.button')} onPress={chooseWhatToAdd} />
-
-      <Card>
-        <MonthCalendar weeks={calendar} selectedDate={selectedDate} onSelect={(date) => setSelectedDate((current) => (current === date ? null : date))} />
-      </Card>
-
-      <AsyncBoundary state={month}>
-        {() => (
-          <>
-            {shifts.length === 0 ? (
-              <EmptyState icon="shifts" title={selectedDate ? t('list.emptyDay') : t('list.emptyMonth')} message={t('list.emptyMessage')} />
-            ) : (
-              days.map((day) => <ShiftDayCard key={day.date} day={day} />)
-            )}
-
-            {expenses.length === 0 ? null : (
-              <Card title={t('list.looseTitle')}>
-                <AppText variant="caption" tone="muted">
-                  {t('list.looseHint')}
-                </AppText>
-                {expenses.map((expense) => (
-                  <ListRow
-                    key={expense.id}
-                    title={t(`expenses:category.${expense.category}`)}
-                    subtitle={format.date(expense.date)}
-                    value={format.money(expense.cents)}
-                    chevron
-                    onPress={() => router.push({ pathname: '/expense/new', params: { id: String(expense.id) } })}
-                  />
-                ))}
-              </Card>
-            )}
-          </>
-        )}
+      <WeekStrip
+        days={strip}
+        selected={selectedDate}
+        onSelect={(date) => setSelectedDate((current) => (current === date ? null : date))}
+        onPrevious={week.previous}
+        onNext={week.next}
+      />
+      <AsyncBoundary state={period}>
+        {() =>
+          days.length === 0 ? (
+            <EmptyState icon="shifts" title={selectedDate ? t('list.emptyDay') : t('week.emptyWeek')} message={t('list.emptyMessage')} />
+          ) : (
+            <>
+              {days.map((day) => (
+                <ShiftDayCard key={day.date} day={day} />
+              ))}
+            </>
+          )
+        }
       </AsyncBoundary>
+      <Button label={t('list.add.button')} variant="secondary" onPress={chooseWhatToAdd} />
     </>
   );
 }

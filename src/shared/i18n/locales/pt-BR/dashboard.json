@@ -14,11 +14,6 @@
     "action": "Verificar atualização"
   },
   "profitCard": {
-    "gross": "Faturamento",
-    "time": "Tempo",
-    "perKm_km": "Por km",
-    "perKm_mi": "Por milha",
-    "profitPerHour": "Lucro por hora",
     "partial_km_one": "{{count}} jornada sem km ou sem custo: o custo do veículo não foi descontado dela.",
     "partial_km_other": "{{count}} jornadas sem km ou sem custo: o custo do veículo não foi descontado delas.",
     "partial_mi_one": "{{count}} jornada sem milhas ou sem custo: o custo do veículo não foi descontado dela.",

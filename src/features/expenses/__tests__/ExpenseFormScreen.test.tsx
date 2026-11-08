@@ -83,7 +83,9 @@ describe('editar lançamento avulso', () => {
     delete mockParams.id;
     await renderForm();
 
-    expect(await screen.findByText('Moto')).toBeTruthy();
+    await fireEvent.press(await screen.findByRole('button', { name: /^Hoje · / }));
+
+    expect(screen.getByText('Moto')).toBeTruthy();
     expect(screen.getByText('Carro')).toBeTruthy();
   });
 
@@ -92,7 +94,7 @@ describe('editar lançamento avulso', () => {
     mockParams.category = 'fuel';
     jest.mocked(fuelPriceSuggestion).mockResolvedValueOnce({ vehicle: { id: 2, name: 'Moto' }, priceCents: 650 } as never);
     await renderForm();
-    await screen.findByText('Moto');
+    await screen.findByRole('button', { name: /^Hoje · / });
 
     await fireEvent.changeText(screen.getByLabelText(/Valor/), '13000');
     await fireEvent.press(screen.getByText('Salvar'));

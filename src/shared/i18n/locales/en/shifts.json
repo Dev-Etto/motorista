@@ -40,10 +40,12 @@
     },
     "vehicleLabel": "Vehicle",
     "step": {
-      "time": "Time and distance",
-      "earnings": "Earnings",
-      "result": "Expenses and result"
-    }
+      "time": "Check the time and distance",
+      "earnings": "How much did you earn?",
+      "result": "Did you spend on anything today?"
+    },
+    "stepOf": "Step {{current}} of {{total}}",
+    "earnedTotal": "Earned"
   },
   "result": {
     "title": "Result",
@@ -60,12 +62,9 @@
   "list": {
     "addExpense": "Add expense or refuel",
     "emptyDay": "No shifts on this day",
-    "emptyMonth": "No shifts this month",
     "emptyMessage": "Log your first shift to see your real profit.",
     "shiftSubtitle": "{{gross}} in {{duration}}",
     "shiftSubtitlePartial": "{{gross}} in {{duration}} • partial",
-    "looseTitle": "Standalone expenses",
-    "looseHint": "Tap an entry to edit or delete it.",
     "deleteExpense": {
       "title": "Delete {{label}}?",
       "message": "The {{amount}} expense will be removed from your results."
@@ -86,20 +85,25 @@
     "dayShiftsKm_other": "{{count}} shifts · {{distance}}",
     "dayLabel": "{{day}}, {{shifts}}, day's profit {{profit}}",
     "shiftTitle": "Shift",
-    "shiftTitleHour": "Shift · {{hour}}"
+    "shiftTitleHour": "Shift · {{hour}}",
+    "inCostPerKm_km": "already in the cost per km",
+    "inCostPerKm_mi": "already in the cost per mile"
   },
   "detail": {
     "notFoundTitle": "Shift not found",
     "notFoundMessage": "It may have been deleted.",
     "deleteTitle": "Delete shift?",
     "deleteMessage": "The {{date}} shift, with {{value}} in earnings, will be deleted. This can't be undone.",
-    "title": "Details",
     "time": "Time",
     "distance": "Distance",
-    "costPerKm_km": "Cost per km for the day",
-    "costPerKm_mi": "Cost per mile for the day",
     "dayOffers": "Offers for the day",
-    "edit": "Edit"
+    "edit": "Edit",
+    "profitLabel": "Left",
+    "math": "The math",
+    "earnings": "Earnings",
+    "vehicleCost_km": "Vehicle cost · {{cost}}/km",
+    "vehicleCost_mi": "Vehicle cost · {{cost}}/mi",
+    "byPlatform": "By platform"
   },
   "live": {
     "idleTitle": "Measure now",
@@ -167,5 +171,14 @@
     "fuel": "Log fuel",
     "expense": "Log another expense",
     "close": "Close"
+  },
+  "week": {
+    "weekRange": "{{start}} to {{end}}",
+    "previousWeek": "Previous week",
+    "nextWeek": "Next week",
+    "today": "today",
+    "dayEmpty": "{{day}}, no shift",
+    "dayProfit": "{{day}}, profit of {{profit}}",
+    "emptyWeek": "No shifts this week"
   }
 }

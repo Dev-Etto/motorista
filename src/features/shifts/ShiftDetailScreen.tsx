@@ -8,9 +8,10 @@ import { useAsyncData } from '@shared/hooks/useAsyncData';
 import { useFormat } from '@shared/i18n/format';
 import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
 import { confirmAction } from '@shared/ui/dialog';
-import { AppText, Button, Card, EmptyState, ListRow, Screen } from '@shared/ui/primitives';
+import { PlatformBadge } from '@shared/ui/PlatformBadge';
+import { AppText, Button, Card, EmptyState, ListRow, Notice, Screen, Stat, StatGrid } from '@shared/ui/primitives';
+import { profitTone } from '@shared/utils/format';
 import { loadShiftDetail, removeShift, ShiftDetail } from './shiftQueries';
-import { ShiftResultCard } from './ShiftResultCard';
 
 export default function ShiftDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -52,24 +53,49 @@ function ShiftDetailContent({ shiftId, detail }: { shiftId: number; detail: Shif
     });
   };
 
+  const heading = [t('detail.profitLabel'), shift.startHour === null ? null : format.hourOfDay(shift.startHour), vehicleName].filter(Boolean).join(' · ');
+  const minus = (cents: number) => `− ${format.money(cents)}`;
+
   return (
     <>
-      <AppText variant="title" bold>
-        {format.date(shift.date)}
-      </AppText>
-      <ShiftResultCard result={result} />
-      <Card title={t('detail.title')}>
-        {vehicleName ? <ListRow title={t('form.vehicleLabel')} value={vehicleName} /> : null}
-        <ListRow title={t('detail.time')} value={format.duration(shift.minutes)} />
-        <ListRow title={t('detail.distance')} value={format.distance(shift.km)} />
-        <ListRow title={t('detail.costPerKm', { context: format.distanceUnit })} value={format.perDistanceAmount(shift.costPerKm)} />
-        {earnings.map((earning) => (
-          <ListRow key={earning.platformId} title={earning.name} value={format.money(earning.cents)} />
-        ))}
+      <AppText tone="muted">{format.longDay(shift.date)}</AppText>
+      <Card>
+        <AppText bold tone="muted" accessibilityRole="header">
+          {heading}
+        </AppText>
+        <AppText variant="display" bold tone={profitTone(result.profitCents)}>
+          {format.money(result.profitCents)}
+        </AppText>
+        <StatGrid>
+          <Stat label={t('detail.time')} value={format.duration(shift.minutes)} />
+          <Stat label={t('detail.distance')} value={format.distance(shift.km)} />
+          <Stat label={t('result.profitPerHour')} value={format.perHour(result.profitPerHour)} />
+        </StatGrid>
+        {result.partial ? <Notice message={t('result.partial', { context: format.distanceUnit })} /> : null}
+      </Card>
+      <Card title={t('detail.math')}>
+        <ListRow title={t('detail.earnings')} value={format.money(result.grossCents)} />
+        <ListRow
+          title={t('detail.vehicleCost', { context: format.distanceUnit, cost: format.perDistanceAmount(shift.costPerKm) })}
+          value={minus(result.vehicleCostCents)}
+          valueTone="muted"
+        />
         {expenses.map((expense) => (
-          <ListRow key={expense.id} title={t(`expenses:category.${expense.category}`)} value={format.money(expense.cents)} />
+          <ListRow key={expense.id} title={t(`expenses:category.${expense.category}`)} value={minus(expense.cents)} valueTone="muted" />
         ))}
       </Card>
+      {earnings.length > 0 ? (
+        <Card title={t('detail.byPlatform')}>
+          {earnings.map((earning) => (
+            <ListRow
+              key={earning.platformId}
+              leading={<PlatformBadge name={earning.name} />}
+              value={format.money(earning.cents)}
+              accessibilityLabel={`${earning.name}, ${format.money(earning.cents)}`}
+            />
+          ))}
+        </Card>
+      ) : null}
       {dayOffers.length > 0 ? <OutcomeSummaryCard title={t('detail.dayOffers')} summary={summarizeOutcomes(dayOffers)} /> : null}
       <Button label={t('detail.edit')} variant="secondary" onPress={() => router.push({ pathname: '/shift/new', params: { id: shiftId } })} />
       <Button label={t('common:actions.delete')} variant="danger" onPress={confirmDelete} />

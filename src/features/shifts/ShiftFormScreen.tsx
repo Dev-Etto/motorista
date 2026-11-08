@@ -15,7 +15,7 @@ import { DateField } from '@shared/ui/DateField';
 import { DurationField, IntegerField, MoneyField, NumberField } from '@shared/ui/fields';
 import { FilterChips } from '@shared/ui/FilterChips';
 import { PlatformBadge } from '@shared/ui/PlatformBadge';
-import { AppText, Button, ButtonRow, Card, Collapsible, Notice, Screen, Segmented, StepDots } from '@shared/ui/primitives';
+import { AppText, Button, ButtonRow, Card, Collapsible, ListRow, Notice, Screen, Segmented, StepDots } from '@shared/ui/primitives';
 import { dayRange } from '@shared/utils/dates';
 import { LiveTrackingCard } from './LiveTrackingCard';
 import { ShiftResultCard } from './ShiftResultCard';
@@ -136,6 +136,7 @@ export default function ShiftFormScreen() {
             <MoneyField label={platform.name} hideLabel value={form.earnings[platform.id] ?? ''} onChangeText={(text) => form.setEarning(platform.id, text)} />
           </View>
         ))}
+        {form.preview.grossCents > 0 ? <ListRow title={t('form.earnedTotal')} value={format.money(form.preview.grossCents)} /> : null}
       </Card>
     </>
   );
@@ -173,6 +174,9 @@ export default function ShiftFormScreen() {
       <Stack.Screen options={{ title: t('form.newTitle') }} />
       {step === 'time' ? <TipBanner id="shift" message={t('form.tip', { context: format.distanceUnit })} /> : null}
       <StepDots total={SHIFT_FORM_STEPS.length} current={stepIndex} />
+      <AppText variant="caption" tone="muted">
+        {t('form.stepOf', { current: stepIndex + 1, total: SHIFT_FORM_STEPS.length })}
+      </AppText>
       <AppText variant="title" bold accessibilityRole="header">
         {t(`form.step.${step}`)}
       </AppText>

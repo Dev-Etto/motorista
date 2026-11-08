@@ -113,10 +113,6 @@
     "accessibilityLabel": "{{label}}: {{value}}",
     "clearLabel": "Clear {{label}}"
   },
-  "monthCalendar": {
-    "dayEmpty": "Day {{day}}, no shift",
-    "dayProfit": "Day {{day}}, profit of {{profit}}"
-  },
   "progressBar": {
     "label": "{{percent}} complete"
   },

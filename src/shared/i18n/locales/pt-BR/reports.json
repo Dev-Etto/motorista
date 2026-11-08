@@ -9,7 +9,6 @@
   "exportFailed": "Não foi possível gerar o arquivo.",
   "emptyTitle": "Sem jornadas neste período",
   "emptyMessage": "Registre jornadas para ver gráficos e relatórios.",
-  "periodProfit": "Lucro no período",
   "chart": {
     "byMonth": "Lucro por mês",
     "byDay": "Lucro por dia",
@@ -59,5 +58,14 @@
     "distance_mi": "Milhas",
     "costPerDistance_km": "Custo por km ({{currency}})",
     "costPerDistance_mi": "Custo por milha ({{currency}})"
+  },
+  "summary": {
+    "profitIn_week": "Sobrou na semana",
+    "profitIn_month": "Sobrou no mês",
+    "profitIn_year": "Sobrou no ano",
+    "shifts_one": "{{count}} jornada",
+    "shifts_other": "{{count}} jornadas",
+    "closeAndExport": "Mês fechado e exportar",
+    "export": "Exportar"
   }
 }

@@ -42,7 +42,7 @@ jest.mock('@features/shifts/useShiftForm', () => ({
     expenses: {},
     setExpense: jest.fn(),
     dirty: false,
-    preview: null,
+    preview: { grossCents: 26800 },
     error: null,
     fieldError: () => null,
   }),
@@ -65,18 +65,21 @@ describe('nova jornada em etapas', () => {
 
   it('passa por tempo e km, ganhos e despesas e resultado', async () => {
     await renderScreen();
-    expect(screen.getByRole('header', { name: 'Tempo e km' })).toBeTruthy();
+    expect(screen.getByRole('header', { name: 'Confira o tempo e os km' })).toBeTruthy();
     expect(screen.getByLabelText('Passo 1 de 3')).toBeTruthy();
 
-    await fireEvent.press(screen.getByRole('button', { name: 'Continuar' }));
-    expect(screen.getByRole('header', { name: 'Ganhos' })).toBeTruthy();
+    expect(screen.getByText('Etapa 1 de 3')).toBeTruthy();
 
     await fireEvent.press(screen.getByRole('button', { name: 'Continuar' }));
-    expect(screen.getByRole('header', { name: 'Despesas e resultado' })).toBeTruthy();
+    expect(screen.getByRole('header', { name: 'Quanto você ganhou?' })).toBeTruthy();
+    expect(screen.getByText('Faturou')).toBeTruthy();
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Continuar' }));
+    expect(screen.getByRole('header', { name: 'Gastou com algo hoje?' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Salvar jornada' })).toBeTruthy();
 
     await fireEvent.press(screen.getByRole('button', { name: 'Voltar' }));
-    expect(screen.getByRole('header', { name: 'Ganhos' })).toBeTruthy();
+    expect(screen.getByRole('header', { name: 'Quanto você ganhou?' })).toBeTruthy();
   });
 
   it('erro da etapa atual segura o avanço e aparece no campo', async () => {
@@ -86,7 +89,7 @@ describe('nova jornada em etapas', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Continuar' }));
 
     expect(mockForm.showProblem).toHaveBeenCalledWith('invalid-hours');
-    expect(screen.getByRole('header', { name: 'Tempo e km' })).toBeTruthy();
+    expect(screen.getByRole('header', { name: 'Confira o tempo e os km' })).toBeTruthy();
   });
 
   it('erro de outra etapa não segura o avanço', async () => {
@@ -96,7 +99,7 @@ describe('nova jornada em etapas', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Continuar' }));
 
     expect(mockForm.showProblem).toHaveBeenCalledWith(null);
-    expect(screen.getByRole('header', { name: 'Ganhos' })).toBeTruthy();
+    expect(screen.getByRole('header', { name: 'Quanto você ganhou?' })).toBeTruthy();
   });
 
   it('salvar com erro volta para a etapa do erro', async () => {
@@ -107,7 +110,7 @@ describe('nova jornada em etapas', () => {
 
     await fireEvent.press(screen.getByRole('button', { name: 'Salvar jornada' }));
 
-    expect(await screen.findByRole('header', { name: 'Ganhos' })).toBeTruthy();
+    expect(await screen.findByRole('header', { name: 'Quanto você ganhou?' })).toBeTruthy();
   });
 
   it('a edição continua numa tela só', async () => {

@@ -14,11 +14,6 @@
     "action": "Check for updates"
   },
   "profitCard": {
-    "gross": "Earnings",
-    "time": "Time",
-    "perKm_km": "Per km",
-    "perKm_mi": "Per mile",
-    "profitPerHour": "Profit per hour",
     "partial_km_one": "{{count}} shift has no kilometers or no cost: the vehicle cost wasn't deducted from it.",
     "partial_km_other": "{{count}} shifts have no kilometers or no cost: the vehicle cost wasn't deducted from them.",
     "partial_mi_one": "{{count}} shift has no miles or no cost: the vehicle cost wasn't deducted from it.",

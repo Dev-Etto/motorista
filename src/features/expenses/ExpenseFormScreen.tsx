@@ -10,7 +10,7 @@ import { DateField } from '@shared/ui/DateField';
 import { confirmAction, showDialog } from '@shared/ui/dialog';
 import { MoneyField, NumberField, TextField } from '@shared/ui/fields';
 import { FilterChips } from '@shared/ui/FilterChips';
-import { Button, Card, Notice, Screen, Segmented } from '@shared/ui/primitives';
+import { Button, Card, Collapsible, Notice, Screen, Segmented } from '@shared/ui/primitives';
 import { today } from '@shared/utils/dates';
 import { reportError } from '@shared/utils/reportError';
 import { ExpenseField, ExpenseFieldError, expenseFormErrors } from './expenseFormErrors';
@@ -69,6 +69,8 @@ export default function ExpenseFormScreen() {
       if (expense.vehicle_id) setVehicleId(expense.vehicle_id);
     }, reportError);
   }, [expenseId, format]);
+
+  const vehicleName = vehicles.length > 1 ? (vehicles.find((vehicle) => vehicle.id === vehicleId)?.name ?? null) : null;
 
   const confirmRemove = () => {
     if (!expenseId) return;
@@ -129,12 +131,21 @@ export default function ExpenseFormScreen() {
 
   return (
     <Screen>
-      {expenseId ? <Stack.Screen options={{ title: t('form.editTitle') }} /> : null}
+      <Stack.Screen options={{ title: expenseId ? t('form.editTitle') : t(`category.${category}`) }} />
       <Segmented value={category} options={options} onChange={setCategory} />
       {countsAgainstProfit(category) ? null : (
         <Notice tone="accent" message={t('alreadyInCost', { context: format.distanceUnit, category: t(`category.${category}`) })} />
       )}
       <Card>
+        <MoneyField label={t('form.valueLabel')} value={value} onChangeText={setValue} error={messageOf('value')} />
+        {category === 'fuel' ? (
+          <NumberField label={t('form.litersLabel', { context: format.volumeUnit })} value={liters} onChangeText={setLiters} error={messageOf('liters')} />
+        ) : null}
+        <NumberField label={t('form.odometerLabel')} value={odometer} onChangeText={setOdometer} suffix={format.distanceUnit} error={messageOf('odometer')} />
+        <TextField label={t('form.noteLabel')} value={note} onChangeText={setNote} />
+      </Card>
+      <Collapsible title={[date === today() ? t('form.today') : format.date(date), vehicleName].filter(Boolean).join(' · ')}>
+        <DateField label={t('form.dateLabel')} value={date} onChange={(next) => next && setDate(next)} maximumDate={new Date()} />
         {vehicles.length > 1 ? (
           <FilterChips
             label={t('form.vehicleLabel')}
@@ -143,14 +154,7 @@ export default function ExpenseFormScreen() {
             onChange={(id) => setVehicleId(Number(id))}
           />
         ) : null}
-        <DateField label={t('form.dateLabel')} value={date} onChange={(next) => next && setDate(next)} maximumDate={new Date()} />
-        <MoneyField label={t('form.valueLabel')} value={value} onChangeText={setValue} error={messageOf('value')} />
-        {category === 'fuel' ? (
-          <NumberField label={t('form.litersLabel', { context: format.volumeUnit })} value={liters} onChangeText={setLiters} error={messageOf('liters')} />
-        ) : null}
-        <NumberField label={t('form.odometerLabel')} value={odometer} onChangeText={setOdometer} suffix={format.distanceUnit} error={messageOf('odometer')} />
-        <TextField label={t('form.noteLabel')} value={note} onChangeText={setNote} />
-      </Card>
+      </Collapsible>
       {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
       <Button label={t('common:actions.save')} busy={saving.busy} onPress={saving.submit} />
       {expenseId ? <Button label={t('common:actions.delete')} variant="danger" onPress={confirmRemove} /> : null}
