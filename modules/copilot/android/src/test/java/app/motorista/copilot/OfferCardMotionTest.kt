@@ -36,17 +36,22 @@ class OfferCardMotionTest {
 
   @Test
   fun cartaoNaoEntraNoTercoInferior() {
-    assertEquals(1300, OfferCardMotion.defaultCardY(pillY = 1900, cardHeight = 700, screenHeight = 3000))
+    assertEquals(1300, OfferCardMotion.cardY(preferredY = 1900, cardHeight = 700, screenHeight = 3000))
   }
 
   @Test
   fun cartaoFicaAoLadoDoBotaoQuandoCabe() {
-    assertEquals(400, OfferCardMotion.defaultCardY(pillY = 400, cardHeight = 700, screenHeight = 3000))
+    assertEquals(400, OfferCardMotion.cardY(preferredY = 400, cardHeight = 700, screenHeight = 3000))
   }
 
   @Test
   fun cartaoMaiorQueOEspacoFicaNoTopo() {
-    assertEquals(0, OfferCardMotion.defaultCardY(pillY = 400, cardHeight = 2500, screenHeight = 3000))
+    assertEquals(0, OfferCardMotion.cardY(preferredY = 400, cardHeight = 2500, screenHeight = 3000))
+  }
+
+  @Test
+  fun posicaoSalvaNoTercoInferiorSobeParaNaoCobrirOsBotoes() {
+    assertEquals(1300, OfferCardMotion.cardY(preferredY = 2600, cardHeight = 700, screenHeight = 3000))
   }
 
   @Test

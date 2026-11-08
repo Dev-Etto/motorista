@@ -94,7 +94,7 @@ data class CopilotPreferences(
       val packages = json.optJSONArray("monitoredPackages") ?: return DEFAULT_PACKAGES
       val names = (0 until packages.length()).map { packages.opt(it) }.filterIsInstance<String>()
       if (names.size != packages.length()) return DEFAULT_PACKAGES
-      return names.toSet()
+      return names.toSet() intersect DEFAULT_PACKAGES
     }
 
     private fun read(json: JSONObject) = CopilotPreferences(

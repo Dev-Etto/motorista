@@ -99,7 +99,7 @@ app -> features -> application -> data -> domain -> shared/utils
 
 **Internet só para o que o produto precisa.** Desde o plano de lançamento pago, o release tem `INTERNET` e `ACCESS_NETWORK_STATE`, para cobrança, relato de problemas, relatórios de falha, backup na conta Google e métricas opcionais. O conteúdo das ofertas lidas e a localização nunca saem do aparelho. As outras permissões que bibliotecas trazem sem uso continuam bloqueadas no release em `app.config.ts`.
 
-**Copiloto só leitura.** O serviço declara `canPerformGestures=false`. O cartão recebe toques só para ser arrastado e usa `FLAG_NOT_TOUCH_MODAL`, para os toques fora dele chegarem ao app embaixo. Qualquer automação de toque, aceite ou recusa está fora do produto.
+**Copiloto só leitura.** O serviço declara `canPerformGestures=false`. O cartão recebe toques só para ser arrastado e usa `FLAG_NOT_TOUCH_MODAL`, para os toques fora dele chegarem ao app embaixo. Qualquer automação de toque, aceite ou recusa está fora do produto. O cartão nunca fica no terço inferior da tela, onde ficam os botões de aceitar e recusar das plataformas: a posição salva pelo arrasto é ajustada ao mostrar o cartão. Só os pacotes das plataformas suportadas são lidos, mesmo que as preferências tragam outro nome.
 
 **Divulgação antes da acessibilidade.** Exigência da Play para apps que não são ferramentas de acessibilidade. Nenhum caminho abre as configurações de acessibilidade sem o aceite da divulgação, guardado com a data em `accessibility_consent_at`. A regra fica em `application/accessibilityConsent.ts`, e a tela de configuração do Copiloto mostra a divulgação antes do passo da permissão.
 
