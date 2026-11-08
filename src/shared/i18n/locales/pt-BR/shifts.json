@@ -40,10 +40,12 @@
     },
     "vehicleLabel": "Veículo",
     "step": {
-      "time": "Tempo e km",
-      "earnings": "Ganhos",
-      "result": "Despesas e resultado"
-    }
+      "time": "Confira o tempo e os km",
+      "earnings": "Quanto você ganhou?",
+      "result": "Gastou com algo hoje?"
+    },
+    "stepOf": "Etapa {{current}} de {{total}}",
+    "earnedTotal": "Faturou"
   },
   "result": {
     "title": "Resultado",

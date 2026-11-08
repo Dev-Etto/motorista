@@ -40,10 +40,12 @@
     },
     "vehicleLabel": "Vehicle",
     "step": {
-      "time": "Time and distance",
-      "earnings": "Earnings",
-      "result": "Expenses and result"
-    }
+      "time": "Check the time and distance",
+      "earnings": "How much did you earn?",
+      "result": "Did you spend on anything today?"
+    },
+    "stepOf": "Step {{current}} of {{total}}",
+    "earnedTotal": "Earned"
   },
   "result": {
     "title": "Result",
