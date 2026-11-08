@@ -1,11 +1,9 @@
 {
   "more": {
     "section": {
-      "work": "Your work",
-      "preferences": "Preferences",
-      "copilot": "Copilot and permissions",
-      "data": "Your data",
-      "help": "Help"
+      "work": "Work",
+      "app": "App",
+      "help": "Help and about"
     },
     "item": {
       "vehicle": {
@@ -15,10 +13,6 @@
       "goal": {
         "title": "Goal and minimums",
         "subtitle": "Your profit and the minimum per ride"
-      },
-      "offers": {
-        "title": "Offers and earnings",
-        "subtitle": "Accepted, not accepted, and the estimated amount"
       },
       "platforms": {
         "title": "Platforms",
@@ -63,6 +57,10 @@
       "region": {
         "title": "Language and region",
         "subtitle": "Language, currency, units, and date format"
+      },
+      "about": {
+        "title": "About the app",
+        "subtitle": "Privacy, terms, version and support"
       }
     },
     "about": {
@@ -72,7 +70,12 @@
       "updateTitle": "Check for updates",
       "updateSubtitle": "Opens the releases page in your browser.",
       "versionTitle": "Version {{version}}",
-      "versionSubtitle": "See the code and what's new."
+      "versionSubtitle": "See the code and what's new.",
+      "codeTitle": "Code and what's new"
+    },
+    "aboutSection": {
+      "yours": "Your data and feedback",
+      "legal": "Privacy and terms"
     }
   },
   "appearance": {

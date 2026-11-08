@@ -1,7 +1,9 @@
 import type { Href } from 'expo-router';
 import { AppIconName } from '@shared/ui/AppIcon';
 
-export type MoreSectionId = 'work' | 'preferences' | 'copilot' | 'data' | 'help';
+export type MoreSectionId = 'work' | 'app' | 'help';
+
+export type AboutSectionId = 'yours' | 'legal';
 
 export type MoreItemId =
   | 'vehicle'
@@ -16,7 +18,8 @@ export type MoreItemId =
   | 'privacy'
   | 'help'
   | 'report'
-  | 'terms';
+  | 'terms'
+  | 'about';
 
 export interface MoreMenuItem {
   id: MoreItemId;
@@ -30,36 +33,40 @@ export const MORE_SECTIONS: { id: MoreSectionId; items: MoreMenuItem[] }[] = [
     items: [
       { id: 'vehicle', icon: 'vehicle', href: '/vehicles' },
       { id: 'goal', icon: 'goal', href: '/goal' },
+      { id: 'platforms', icon: 'apps', href: '/platforms' },
+      { id: 'copilot', icon: 'copilot', href: '/copilot' },
     ],
   },
   {
-    id: 'preferences',
+    id: 'app',
     items: [
       { id: 'region', icon: 'globe', href: '/region' },
-      { id: 'platforms', icon: 'apps', href: '/platforms' },
       { id: 'reminders', icon: 'bell', href: '/reminders' },
-    ],
-  },
-  {
-    id: 'copilot',
-    items: [
-      { id: 'copilot', icon: 'copilot', href: '/copilot' },
-      { id: 'permissions', icon: 'key', href: '/permissions' },
-    ],
-  },
-  {
-    id: 'data',
-    items: [
       { id: 'backup', icon: 'backup', href: '/backup' },
-      { id: 'summary', icon: 'reports', href: '/summary' },
-      { id: 'privacy', icon: 'shield', href: '/privacy' },
+      { id: 'permissions', icon: 'key', href: '/permissions' },
     ],
   },
   {
     id: 'help',
     items: [
       { id: 'help', icon: 'help', href: '/help' },
+      { id: 'about', icon: 'document', href: '/about' },
+    ],
+  },
+];
+
+export const ABOUT_SECTIONS: { id: AboutSectionId; items: MoreMenuItem[] }[] = [
+  {
+    id: 'yours',
+    items: [
+      { id: 'summary', icon: 'reports', href: '/summary' },
       { id: 'report', icon: 'flag', href: '/report' },
+    ],
+  },
+  {
+    id: 'legal',
+    items: [
+      { id: 'privacy', icon: 'shield', href: '/privacy' },
       { id: 'terms', icon: 'document', href: '/terms' },
     ],
   },

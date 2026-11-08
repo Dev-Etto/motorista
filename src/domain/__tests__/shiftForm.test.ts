@@ -1,4 +1,4 @@
-import { fieldOfError, kmFromEntry, validateShiftForm } from '@domain/shift/shiftForm';
+import { fieldOfError, kmFromEntry, stepOfError, validateShiftForm } from '@domain/shift/shiftForm';
 
 const valid = {
   hasInvalidNumber: false,
@@ -55,5 +55,18 @@ describe('campo de cada erro', () => {
 
   it('erro sem campo próprio fica no aviso geral', () => {
     expect(fieldOfError('no-earnings')).toBeNull();
+  });
+});
+
+describe('etapa de cada erro', () => {
+  it.each([
+    ['invalid-hours', 'time'],
+    ['too-long', 'time'],
+    ['invalid-start-hour', 'time'],
+    ['odometer-order', 'time'],
+    ['no-earnings', 'earnings'],
+    ['invalid-number', null],
+  ] as const)('%s leva à etapa %s', (error, step) => {
+    expect(stepOfError(error)).toBe(step);
   });
 });

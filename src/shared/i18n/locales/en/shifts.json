@@ -38,7 +38,12 @@
       "noEarnings": "Enter earnings for at least one platform.",
       "odometerOrder": "The ending odometer must be greater than the starting one."
     },
-    "vehicleLabel": "Vehicle"
+    "vehicleLabel": "Vehicle",
+    "step": {
+      "time": "Time and distance",
+      "earnings": "Earnings",
+      "result": "Expenses and result"
+    }
   },
   "result": {
     "title": "Result",

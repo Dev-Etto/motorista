@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import type { ExpenseCategory } from '@domain/expense/expense';
 import { isShiftForgotten } from '@domain/shift/forgotten';
-import { KmEntryMode } from '@domain/shift/shiftForm';
+import { KmEntryMode, SHIFT_FORM_STEPS, ShiftFormStep, stepOfError } from '@domain/shift/shiftForm';
 import { ShiftEstimateCard } from '@features/offers';
 import { TipBanner } from '@features/tips';
 import { useSubmit } from '@shared/hooks/useSubmit';
@@ -15,7 +15,7 @@ import { DateField } from '@shared/ui/DateField';
 import { DurationField, IntegerField, MoneyField, NumberField } from '@shared/ui/fields';
 import { FilterChips } from '@shared/ui/FilterChips';
 import { PlatformBadge } from '@shared/ui/PlatformBadge';
-import { Button, Card, Collapsible, Notice, Screen, Segmented } from '@shared/ui/primitives';
+import { AppText, Button, ButtonRow, Card, Collapsible, Notice, Screen, Segmented, StepDots } from '@shared/ui/primitives';
 import { dayRange } from '@shared/utils/dates';
 import { LiveTrackingCard } from './LiveTrackingCard';
 import { ShiftResultCard } from './ShiftResultCard';
@@ -26,7 +26,7 @@ const KM_MODES: KmEntryMode[] = ['manual', 'odometer'];
 
 export default function ShiftFormScreen() {
   const router = useRouter();
-  const { t } = useTranslation(['shifts', 'expenses']);
+  const { t } = useTranslation(['shifts', 'expenses', 'common']);
   const format = useFormat();
   const { id, finish } = useLocalSearchParams<{ id?: string; finish?: string }>();
   const form = useShiftForm(id ? Number(id) : undefined);
@@ -49,25 +49,39 @@ export default function ShiftFormScreen() {
   }, [finish, live]);
 
   const leave = useUnsavedChangesGuard(form.dirty);
+  const [step, setStep] = useState<ShiftFormStep>('time');
+  const stepIndex = SHIFT_FORM_STEPS.indexOf(step);
+  const moveBy = (delta: number) => setStep(SHIFT_FORM_STEPS[stepIndex + delta] ?? step);
+
+  const showStepOfProblem = () => {
+    const problem = form.validate();
+    const problemStep = problem ? stepOfError(problem) : null;
+    if (problemStep) setStep(problemStep);
+  };
+
+  const goNext = () => {
+    const problem = form.validate();
+    if (problem && stepOfError(problem) === step) return form.showProblem(problem);
+
+    form.showProblem(null);
+    moveBy(1);
+  };
 
   const saving = useSubmit(async () => {
     if (!id && live.pending) return setMeasureError(t('form.measurePending', { context: format.distanceUnit }));
 
     setMeasureError(null);
     const savedId = await form.save();
-    if (!savedId) return;
+    if (!savedId) return showStepOfProblem();
 
     if (id) return leave(() => router.back());
     if (live.started) await live.discard();
     leave(() => router.replace(`/shift/${savedId}`));
   });
 
-  return (
-    <Screen>
-      <Stack.Screen options={{ title: id ? t('form.editTitle') : t('form.newTitle') }} />
-      <TipBanner id="shift" message={t('form.tip', { context: format.distanceUnit })} />
+  const timeSection = (
+    <>
       {id ? null : <LiveTrackingCard live={live} />}
-
       <Card>
         <DateField label={t('form.dateLabel')} value={form.date} onChange={(date) => date && form.setDate(date)} maximumDate={new Date()} />
         {form.vehicles.length > 1 ? (
@@ -98,28 +112,6 @@ export default function ShiftFormScreen() {
         )}
       </Card>
 
-      {id ? null : <ShiftEstimateCard range={estimateRange} platforms={form.platforms} onApply={form.setEarning} />}
-
-      <Card title={t('form.earningsTitle')}>
-        {form.platforms.map((platform) => (
-          <View key={platform.id} style={styles.platform}>
-            <PlatformBadge name={platform.name} />
-            <MoneyField label={platform.name} hideLabel value={form.earnings[platform.id] ?? ''} onChangeText={(text) => form.setEarning(platform.id, text)} />
-          </View>
-        ))}
-      </Card>
-
-      <Collapsible title={t('form.expensesTitle')}>
-        {JOURNEY_EXPENSES.map((category) => (
-          <MoneyField
-            key={category}
-            label={expenseLabel(category)}
-            value={form.expenses[category] ?? ''}
-            onChangeText={(text) => form.setExpense(category, text)}
-          />
-        ))}
-      </Collapsible>
-
       <Collapsible title={t('form.moreDetails')} forceOpen={form.fieldError('startHour') !== null}>
         <IntegerField
           label={t('form.startHourLabel')}
@@ -131,12 +123,70 @@ export default function ShiftFormScreen() {
         />
         <IntegerField label={t('form.tripsLabel')} {...form.bind('trips')} />
       </Collapsible>
+    </>
+  );
 
+  const earningsSection = (
+    <>
+      {id ? null : <ShiftEstimateCard range={estimateRange} platforms={form.platforms} onApply={form.setEarning} />}
+      <Card title={t('form.earningsTitle')}>
+        {form.platforms.map((platform) => (
+          <View key={platform.id} style={styles.platform}>
+            <PlatformBadge name={platform.name} />
+            <MoneyField label={platform.name} hideLabel value={form.earnings[platform.id] ?? ''} onChangeText={(text) => form.setEarning(platform.id, text)} />
+          </View>
+        ))}
+      </Card>
+    </>
+  );
+
+  const expenseFields = JOURNEY_EXPENSES.map((category) => (
+    <MoneyField key={category} label={expenseLabel(category)} value={form.expenses[category] ?? ''} onChangeText={(text) => form.setExpense(category, text)} />
+  ));
+
+  const resultSection = (
+    <>
+      {id ? <Collapsible title={t('form.expensesTitle')}>{expenseFields}</Collapsible> : <Card title={t('form.expensesTitle')}>{expenseFields}</Card>}
       <ShiftResultCard result={form.preview} />
       {form.error ? <Notice tone="negative" message={form.error} /> : null}
       {measureError ? <Notice message={measureError} /> : null}
       {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
-      <Button label={t('form.saveButton')} busy={saving.busy} onPress={saving.submit} />
+    </>
+  );
+
+  if (id) {
+    return (
+      <Screen>
+        <Stack.Screen options={{ title: t('form.editTitle') }} />
+        {timeSection}
+        {earningsSection}
+        {resultSection}
+        <Button label={t('form.saveButton')} busy={saving.busy} onPress={saving.submit} />
+      </Screen>
+    );
+  }
+
+  const isLast = stepIndex === SHIFT_FORM_STEPS.length - 1;
+
+  return (
+    <Screen>
+      <Stack.Screen options={{ title: t('form.newTitle') }} />
+      {step === 'time' ? <TipBanner id="shift" message={t('form.tip', { context: format.distanceUnit })} /> : null}
+      <StepDots total={SHIFT_FORM_STEPS.length} current={stepIndex} />
+      <AppText variant="title" bold accessibilityRole="header">
+        {t(`form.step.${step}`)}
+      </AppText>
+      {step === 'time' ? timeSection : null}
+      {step === 'earnings' ? earningsSection : null}
+      {step === 'result' ? resultSection : null}
+      <ButtonRow>
+        {stepIndex > 0 ? <Button label={t('common:actions.back')} variant="secondary" onPress={() => moveBy(-1)} /> : null}
+        {isLast ? (
+          <Button label={t('form.saveButton')} busy={saving.busy} onPress={saving.submit} />
+        ) : (
+          <Button label={t('common:actions.continue')} onPress={goNext} />
+        )}
+      </ButtonRow>
     </Screen>
   );
 }

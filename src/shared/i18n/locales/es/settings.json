@@ -1,11 +1,9 @@
 {
   "more": {
     "section": {
-      "work": "Tu trabajo",
-      "preferences": "Preferencias",
-      "copilot": "Copiloto y permisos",
-      "data": "Tus datos",
-      "help": "Ayuda"
+      "work": "Trabajo",
+      "app": "App",
+      "help": "Ayuda e información"
     },
     "item": {
       "vehicle": {
@@ -15,10 +13,6 @@
       "goal": {
         "title": "Meta y mínimos",
         "subtitle": "Tu ganancia y el mínimo por viaje"
-      },
-      "offers": {
-        "title": "Ofertas e ingresos",
-        "subtitle": "Aceptadas, no aceptadas y el valor estimado"
       },
       "platforms": {
         "title": "Plataformas",
@@ -63,6 +57,10 @@
       "region": {
         "title": "Idioma y región",
         "subtitle": "Idioma, moneda, unidades y formato de fechas"
+      },
+      "about": {
+        "title": "Acerca de la app",
+        "subtitle": "Privacidad, términos, versión y apoyo"
       }
     },
     "about": {
@@ -72,7 +70,12 @@
       "updateTitle": "Buscar actualización",
       "updateSubtitle": "Abre la página de versiones en el navegador.",
       "versionTitle": "Versión {{version}}",
-      "versionSubtitle": "Ver el código y las novedades."
+      "versionSubtitle": "Ver el código y las novedades.",
+      "codeTitle": "Código y novedades"
+    },
+    "aboutSection": {
+      "yours": "Tus datos y sugerencias",
+      "legal": "Privacidad y términos"
     }
   },
   "appearance": {

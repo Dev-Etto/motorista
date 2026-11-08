@@ -325,3 +325,5 @@ Spec: `docs/specs/redesign-0.14.md`.
 - **Status da oferta como selo:** a linha da oferta segue a ordem bandeira, valor e nota. O status vira um selo no canto da bandeira (check, X ou setas), e o texto continua só na descrição para o leitor de tela.
 - **Logo dentro do app:** `BrandMark` desenha o símbolo com `react-native-svg` nas cores `primary` e `onPrimary`, então acompanha o tema. As boas-vindas usam a logo no lugar da ilustração.
 - **Pular em cada passo:** `StepHeader` junta o progresso e "Pular" no topo dos passos do primeiro uso, e os botões secundários de pular saem do rodapé.
+- **Mais em três grupos:** `MORE_SECTIONS` tem Trabalho, App e Ajuda e sobre. O que se usa pouco (resumo, relato, privacidade, termos, versão e apoio) foi para `/about`, listado por `ABOUT_SECTIONS`. `MenuSection` desenha os dois.
+- **Nova jornada em etapas:** `SHIFT_FORM_STEPS` divide o formulário em Tempo e km, Ganhos, e Despesas e resultado. `stepOfError` liga cada erro à etapa. Continuar só para por erro da etapa atual, e salvar com erro volta para a etapa dele. A edição mostra tudo numa tela, porque quem edita costuma mudar um campo só.

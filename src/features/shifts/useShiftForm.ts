@@ -165,8 +165,8 @@ export function useShiftForm(shiftId?: number) {
     ...Object.values(expenses).map((text) => text ?? ''),
   ];
 
-  const save = async (): Promise<number | null> => {
-    const found = validateShiftForm({
+  const validate = (): ShiftFormError | null =>
+    validateShiftForm({
       hasInvalidNumber: typedNumbers.some(format.hasInvalidNumber),
       hasInvalidHours: fields.hours.trim() !== '' && format.parseHours(fields.hours) === null,
       hasInvalidHour: format.hasInvalidHour(fields.startHour),
@@ -176,6 +176,9 @@ export function useShiftForm(shiftId?: number) {
       km,
       odometerTyped: Boolean(fields.odometerStart || fields.odometerEnd),
     });
+
+  const save = async (): Promise<number | null> => {
+    const found = validate();
     setProblem(found);
     if (found) return null;
 
@@ -218,6 +221,8 @@ export function useShiftForm(shiftId?: number) {
     error: problem && !fieldOfError(problem) ? describeFormError(problem, t, format) : null,
     fieldError: (field: ShiftFormField) => (problem && fieldOfError(problem) === field ? describeFormError(problem, t, format) : null),
     applyLive,
+    validate,
+    showProblem: setProblem,
     save,
   };
 }
