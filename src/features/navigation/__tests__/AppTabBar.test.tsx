@@ -8,7 +8,13 @@ const mockUnseen = { count: 0 };
 const mockLive = { started: false, running: false, elapsedMs: 0, start: jest.fn(async () => undefined) };
 
 jest.mock('@features/navigation/useUnseenOffers', () => ({ useUnseenOffers: () => mockUnseen.count }));
-jest.mock('@features/shifts', () => ({ useLiveTracking: () => mockLive }));
+jest.mock('@features/shifts', () => ({
+  useLiveTracking: () => mockLive,
+  ShiftSheet: ({ visible }: { visible: boolean }) => {
+    const { Text } = jest.requireActual('react-native');
+    return visible ? <Text>Controle da jornada</Text> : null;
+  },
+}));
 
 const routes = TABS.map((tab) => ({ key: `${tab.name}-key`, name: tab.name, params: undefined }));
 const descriptors = Object.fromEntries(TABS.map((tab) => [`${tab.name}-key`, { options: { title: tab.name } }]));
@@ -77,14 +83,16 @@ describe('botão da jornada', () => {
     expect(navigateToTab).not.toHaveBeenCalled();
   });
 
-  it('com a jornada rodando, mostra o tempo abreviado e abre o Início', async () => {
+  it('com a jornada rodando, mostra o tempo abreviado e abre o controle da jornada', async () => {
     Object.assign(mockLive, { started: true, running: true, elapsedMs: 134 * MINUTE });
     const { navigateToTab } = await renderBar(2);
 
     expect(screen.getByText('2h14')).toBeTruthy();
-    await act(async () => fireEvent.press(screen.getByRole('button', { name: 'Jornada em andamento, 2 horas e 14 minutos. Abrir o Início' })));
+    expect(screen.queryByText('Controle da jornada')).toBeNull();
+    await act(async () => fireEvent.press(screen.getByRole('button', { name: 'Jornada em andamento, 2 horas e 14 minutos. Abrir os controles' })));
 
-    expect(navigateToTab).toHaveBeenCalledWith('index-key');
+    expect(screen.getByText('Controle da jornada')).toBeTruthy();
+    expect(navigateToTab).not.toHaveBeenCalled();
     expect(mockLive.start).not.toHaveBeenCalled();
   });
 
@@ -93,7 +101,7 @@ describe('botão da jornada', () => {
     await renderBar(0);
 
     expect(screen.getByText('1h')).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'Jornada pausada em 1 hora. Abrir o Início' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Jornada pausada em 1 hora. Abrir os controles' })).toBeTruthy();
   });
 
   it('com 5 caracteres a fonte diminui', async () => {

@@ -158,5 +158,14 @@
     "label": "View",
     "list": "List",
     "summary": "Summary"
+  },
+  "sheet": {
+    "since": "Running since {{time}}",
+    "pausedAt": "Paused at {{time}}",
+    "measured_km": "{{distance}} measured by GPS",
+    "measured_mi": "{{distance}} measured by GPS",
+    "fuel": "Log fuel",
+    "expense": "Log another expense",
+    "close": "Close"
   }
 }

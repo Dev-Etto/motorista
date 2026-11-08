@@ -74,8 +74,8 @@
     "unseenOffers_other": "{{count}} new offers",
     "shiftButton": {
       "start": "Start shift",
-      "running": "Shift running, {{time}}. Open Home",
-      "paused": "Shift paused at {{time}}. Open Home",
+      "running": "Shift running, {{time}}. Open the controls",
+      "paused": "Shift paused at {{time}}. Open the controls",
       "overDay": "over 24 hours",
       "lessThanMinute": "less than 1 minute",
       "hours_one": "{{count}} hour",

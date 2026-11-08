@@ -5,7 +5,7 @@ import { fonts, MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@shared/them
 import { AppIcon } from '@shared/ui/AppIcon';
 import { AppText } from '@shared/ui/primitives';
 import { ShiftButton, SHIFT_BUTTON_SIZE } from './ShiftActionButton';
-import { HOME_TAB, iconOfTab, OFFERS_TAB } from './tabs';
+import { iconOfTab, OFFERS_TAB } from './tabs';
 import { badgeText } from './unseenOffers';
 import { useUnseenOffers } from './useUnseenOffers';
 
@@ -24,11 +24,6 @@ export function AppTabBar({ state, descriptors, emitter, navigateToTab, insets }
   const pressTab = (key: string, focused: boolean) => {
     const event = emitter.emit({ type: 'tabPress', target: key, canPreventDefault: true });
     if (!focused && !event.defaultPrevented) navigateToTab(key);
-  };
-
-  const openHome = () => {
-    const home = state.routes.find((route) => route.name === HOME_TAB);
-    if (home) pressTab(home.key, state.routes[state.index]?.key === home.key);
   };
 
   return (
@@ -65,7 +60,7 @@ export function AppTabBar({ state, descriptors, emitter, navigateToTab, insets }
           );
         })}
       </View>
-      <ShiftButton onOpen={openHome} />
+      <ShiftButton />
     </View>
   );
 }

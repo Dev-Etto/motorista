@@ -158,5 +158,14 @@
     "label": "Visão",
     "list": "Lista",
     "summary": "Resumo"
+  },
+  "sheet": {
+    "since": "Em andamento desde {{time}}",
+    "pausedAt": "Pausada em {{time}}",
+    "measured_km": "{{distance}} medidos por GPS",
+    "measured_mi": "{{distance}} medidas por GPS",
+    "fuel": "Lançar abastecimento",
+    "expense": "Lançar outra despesa",
+    "close": "Fechar"
   }
 }
