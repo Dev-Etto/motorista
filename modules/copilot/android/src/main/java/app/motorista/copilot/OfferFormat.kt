@@ -134,6 +134,7 @@ class OfferFormat(private val regional: RegionalSettings, private val texts: Off
     private const val MS_PER_SECOND = 1000
     private const val SECONDS_PER_MINUTE = 60
     private const val SECONDS_PER_HOUR = 3600
+    private const val HOURS_PER_DAY = 24
     private val WIDE_SPACES = Regex("[\\u00A0\\u202F]")
     private val CURRENCY_NAMES = mapOf(
       "BRL" to (R.plurals.currency_brl_major to R.plurals.currency_brl_minor),
@@ -157,8 +158,12 @@ class OfferFormat(private val regional: RegionalSettings, private val texts: Off
     }
 
     fun shortClock(elapsedMs: Long): String {
-      val totalSeconds = elapsedMs / MS_PER_SECOND
-      return "%d:%02d".format(totalSeconds / SECONDS_PER_HOUR, totalSeconds % SECONDS_PER_HOUR / SECONDS_PER_MINUTE)
+      val totalSeconds = maxOf(0L, elapsedMs / MS_PER_SECOND)
+      val hours = totalSeconds / SECONDS_PER_HOUR
+      val minutes = totalSeconds % SECONDS_PER_HOUR / SECONDS_PER_MINUTE
+      if (hours >= HOURS_PER_DAY) return "${HOURS_PER_DAY}H+"
+      if (hours == 0L) return "%dM:%02d".format(minutes, totalSeconds % SECONDS_PER_MINUTE)
+      return "%dH:%02d".format(hours, minutes)
     }
   }
 }

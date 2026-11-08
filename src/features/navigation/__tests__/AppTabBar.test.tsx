@@ -87,7 +87,7 @@ describe('botão da jornada', () => {
     Object.assign(mockLive, { started: true, running: true, elapsedMs: 134 * MINUTE });
     const { navigateToTab } = await renderBar(2);
 
-    expect(screen.getByText('2h14')).toBeTruthy();
+    expect(screen.getByText('2H:14')).toBeTruthy();
     expect(screen.queryByText('Controle da jornada')).toBeNull();
     await act(async () => fireEvent.press(screen.getByRole('button', { name: 'Jornada em andamento, 2 horas e 14 minutos. Abrir os controles' })));
 
@@ -100,14 +100,14 @@ describe('botão da jornada', () => {
     Object.assign(mockLive, { started: true, running: false, elapsedMs: 60 * MINUTE });
     await renderBar(0);
 
-    expect(screen.getByText('1h')).toBeTruthy();
+    expect(screen.getByText('1H:00')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Jornada pausada em 1 hora. Abrir os controles' })).toBeTruthy();
   });
 
-  it('com 5 caracteres a fonte diminui', async () => {
+  it('com 6 caracteres a fonte diminui', async () => {
     Object.assign(mockLive, { started: true, running: true, elapsedMs: 750 * MINUTE });
     await renderBar(0);
 
-    expect(screen.getByText('12h30')).toHaveStyle({ fontSize: 14 });
+    expect(screen.getByText('12H:30')).toHaveStyle({ fontSize: 14 });
   });
 });

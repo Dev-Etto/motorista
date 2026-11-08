@@ -27,6 +27,14 @@ class ScreenBoundsTest {
   }
 
   @Test
+  fun botaoSoltoEncostaNaBordaMaisProxima() {
+    assertEquals(0, ScreenBounds.dockX(300, 200, screen.width))
+    assertEquals(880, ScreenBounds.dockX(600, 200, screen.width))
+    assertEquals(DockSide.START, ScreenBounds.dockSide(0))
+    assertEquals(DockSide.END, ScreenBounds.dockSide(880))
+  }
+
+  @Test
   fun botaoNaoDesceAbaixoDoTercoInferior() {
     assertEquals(1500, ScreenBounds.pillY(5000, screen.height, touchTarget = 100))
     assertEquals(300, ScreenBounds.pillY(300, screen.height, touchTarget = 100))

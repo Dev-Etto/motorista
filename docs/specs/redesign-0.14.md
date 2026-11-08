@@ -50,9 +50,9 @@ A barra tem cinco abas presas à borda, e Relatórios repete o que Jornadas já 
 | --- | --- | --- |
 | F2.2.1 | Ao lado da cápsula, um botão redondo mostra o estado da jornada. Sem jornada, é preto com o ícone de iniciar | Jest |
 | F2.2.2 | Sem jornada, tocar no botão inicia a jornada, como "Iniciar jornada" no Início | Jest |
-| F2.2.3 | Com a jornada iniciada, o botão é verde e mostra o tempo. Pausada, é amarelo, com o tempo parado e o ícone de pausa | Jest |
-| F2.2.4 | Com jornada, tocar no botão abre o Início, onde ficam pausar, retomar e encerrar | Jest |
-| F2.2.5 | O tempo é abreviado: `0min`, `45min`, `2h`, `2h14` e `12h30`, e passa para `24h+` depois de 24 h. Com 5 caracteres ou mais, a fonte diminui | Jest |
+| F2.2.3 | Com a jornada iniciada, o botão é verde e mostra o tempo. Pausada, é amarelo, com o tempo parado e sem ícone | Jest |
+| F2.2.4 | Com jornada, tocar no botão abre a folha da jornada, com pausar, retomar, encerrar e o aviso de jornada esquecida. O Início não tem card da jornada | Jest |
+| F2.2.5 | O tempo é abreviado: sempre com a letra da unidade: na primeira hora em minutos e segundos, como `0M:08` e `45M:12`; depois em horas e minutos, como `1H:22` e `12H:30`, e passa para `24H+` depois de 24 h. Com 6 caracteres ou mais, a fonte diminui | Jest |
 | F2.2.6 | O leitor de tela lê o estado e o tempo por extenso, como "Jornada em andamento, 2 horas e 14 minutos" | Jest |
 
 ### F2.3 Relatórios dentro de Jornadas
@@ -188,7 +188,8 @@ As fases anteriores trouxeram a marca, a barra e os componentes, mas várias tel
 | F6.6.4 | Os ajustes do Copiloto mostram Ler ofertas com o estado da permissão, Ler pela imagem da tela, "Como avisar", "Cartão" com o resumo da aparência e Testar o cartão agora, Apps lidos e "Leitura não funcionou?" | Jest |
 | F6.6.5 | A configuração do Copiloto tem a barra "Passo 1 de 2", "Deixe o Copiloto ler a tela", os passos numerados, o aviso de configuração restrita e Abrir configurações e Fazer depois no rodapé | Jest |
 | F6.6.6 | O cartão da oferta tem no topo uma faixa na cor da nota, com o selo da plataforma e a nota escrita. Abaixo, o valor, a distância e o tempo, e Por km, Por hora e Sobra | Manual |
-| F6.6.7 | O botão flutuante mostra horas e minutos, como 2:14, e um ponto verde com a jornada rodando ou amarelo com ela pausada | Kotlin e manual |
+| F6.6.7 | O botão flutuante mostra o tempo abreviado como o botão da jornada (`45M:12`, `1H:22`, `24H+`) e um ponto verde com a jornada rodando ou amarelo com ela pausada | Kotlin e manual |
+| F6.6.8 | Ao ser solto, o botão flutuante encosta na borda mais próxima, arredondado só do lado de dentro, com o ponto de status no próprio logo | Kotlin e manual |
 
 ### F6.7 Mais
 

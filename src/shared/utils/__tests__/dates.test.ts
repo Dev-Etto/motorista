@@ -131,13 +131,15 @@ describe('tempo de jornada abreviado', () => {
   const MINUTE = 60_000;
 
   it.each([
-    [0, '0min'],
-    [45 * MINUTE, '45min'],
-    [120 * MINUTE, '2h'],
-    [134 * MINUTE + 59_000, '2h14'],
-    [750 * MINUTE, '12h30'],
-    [24 * 60 * MINUTE, '24h+'],
-    [-MINUTE, '0min'],
+    [0, '0M:00'],
+    [8_000, '0M:08'],
+    [MINUTE + 15_000, '1M:15'],
+    [45 * MINUTE + 12_000, '45M:12'],
+    [120 * MINUTE, '2H:00'],
+    [82 * MINUTE + 59_000, '1H:22'],
+    [750 * MINUTE, '12H:30'],
+    [24 * 60 * MINUTE, '24H+'],
+    [-MINUTE, '0M:00'],
   ])('%i ms vira %s', (elapsedMs, text) => {
     expect(formatElapsedShort(elapsedMs)).toBe(text);
   });

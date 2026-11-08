@@ -40,6 +40,12 @@ describe('controle da jornada', () => {
     expect(screen.getByText(/48,2 km medidos por GPS/)).toBeTruthy();
   });
 
+  it('esquecida, avisa na folha', async () => {
+    await renderSheet(live({ elapsedMs: 15 * 3_600_000 }));
+
+    expect(screen.getByText(/ligado há bastante tempo/)).toBeTruthy();
+  });
+
   it('pausa a jornada rodando', async () => {
     const state = live();
     await renderSheet(state);

@@ -7,7 +7,7 @@ class PillPositionStore(private val context: Context) {
 
   fun load(): Pair<Int, Int> {
     val offset = context.dp(INITIAL_OFFSET_DP)
-    return prefs.getInt(KEY_X, offset) to clampY(prefs.getInt(KEY_Y, offset * INITIAL_Y_FACTOR))
+    return prefs.getInt(KEY_X, ScreenBounds.of(context).width) to clampY(prefs.getInt(KEY_Y, offset * INITIAL_Y_FACTOR))
   }
 
   fun save(x: Int, y: Int) = prefs.edit().putInt(KEY_X, x).putInt(KEY_Y, y).apply()

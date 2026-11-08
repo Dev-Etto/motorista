@@ -2,9 +2,10 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { isShiftForgotten } from '@domain/shift/forgotten';
 import { useFormat } from '@shared/i18n/format';
 import { radius, spacing, useTheme } from '@shared/theme/theme';
-import { AppText, Button, ButtonRow, ListRow, ToggleRow } from '@shared/ui/primitives';
+import { AppText, Button, ButtonRow, ListRow, Notice, ToggleRow } from '@shared/ui/primitives';
 import { clockOfMillis, formatClock } from '@shared/utils/dates';
 import { reportError } from '@shared/utils/reportError';
 import type { LiveTrackingState } from './useLiveTracking';
@@ -40,6 +41,7 @@ export function ShiftSheet({ live, visible, onClose }: { live: LiveTrackingState
           {formatClock(live.elapsedMs)}
         </AppText>
         {measured ? <AppText tone="muted">{measured}</AppText> : null}
+        {isShiftForgotten(live.started, live.elapsedMs) ? <Notice message={t('active.forgotten')} /> : null}
         <ButtonRow>
           <Button label={live.running ? t('bar.pause') : t('bar.resume')} variant="secondary" onPress={run(live.running ? live.pause : live.start)} />
           <Button label={t('bar.finish')} onPress={go(() => router.push({ pathname: '/shift/new', params: { finish: '1' } }))} />

@@ -111,6 +111,7 @@ export function formatClock(elapsedMs: number): string {
 }
 
 const MINUTES_PER_HOUR = 60;
+const SECONDS_PER_MINUTE = 60;
 const HOURS_PER_DAY = 24;
 
 export type ElapsedParts = { hours: number; minutes: number; overDay: boolean };
@@ -128,9 +129,9 @@ export function clockAfter(startHour: number, minutes: number): string {
 
 export function formatElapsedShort(elapsedMs: number): string {
   const { hours, minutes, overDay } = elapsedParts(elapsedMs);
-  if (overDay) return `${HOURS_PER_DAY}h+`;
-  if (hours === 0) return `${minutes}min`;
-  return minutes === 0 ? `${hours}h` : `${hours}h${String(minutes).padStart(2, '0')}`;
+  if (overDay) return `${HOURS_PER_DAY}H+`;
+  if (hours === 0) return `${minutes}M:${String(Math.max(0, Math.floor(elapsedMs / MS_PER_SECOND) % SECONDS_PER_MINUTE)).padStart(2, '0')}`;
+  return `${hours}H:${String(minutes).padStart(2, '0')}`;
 }
 
 export type DayPeriod = 'dawn' | 'morning' | 'afternoon' | 'night';

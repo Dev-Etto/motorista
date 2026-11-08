@@ -2,7 +2,6 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { NextStepCard } from '@features/onboarding';
-import { ShiftControls } from '@features/shifts';
 import { useFormat } from '@shared/i18n/format';
 import { MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@shared/theme/theme';
 import { AppIcon } from '@shared/ui/AppIcon';
@@ -59,7 +58,6 @@ function DashboardContent({ data, onReload }: { data: DashboardData; onReload: (
         </Card>
       ) : null}
       {data.gpsProblem ? <Notice tone="negative" message={t('gpsProblem', { ...unit, problem: data.gpsProblem })} /> : null}
-      <ShiftControls />
       <NextStepCard step={data.nextStep} onDismiss={onReload} />
       <TodayCard summary={data.today} goal={data.todayGoal} />
       {data.missingFixedCosts ? <Notice tone="accent" message={t('missingFixedCosts')} /> : null}
