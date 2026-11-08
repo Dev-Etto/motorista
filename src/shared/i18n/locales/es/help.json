@@ -81,5 +81,11 @@
     "title": "Cómo instalar una actualización",
     "howTo": "En Más, toca Buscar actualización, descarga la nueva versión e instálala sobre la actual. Tus datos siguen en la app.",
     "backupFirst": "Haz una copia de seguridad antes, por si acaso."
+  },
+  "example": {
+    "title": "Un viaje de ejemplo",
+    "gross": "Ganancia",
+    "cost": "Costo · {{distance}} × {{cost}}",
+    "profit": "Te queda"
   }
 }

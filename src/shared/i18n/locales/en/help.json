@@ -81,5 +81,11 @@
     "title": "How to install an update",
     "howTo": "In More, tap Check for updates, download the new version, and install it over the current one. Your data stays in the app.",
     "backupFirst": "Make a backup first, just to be safe."
+  },
+  "example": {
+    "title": "A sample ride",
+    "gross": "Earned",
+    "cost": "Cost · {{distance}} × {{cost}}",
+    "profit": "Profit"
   }
 }
