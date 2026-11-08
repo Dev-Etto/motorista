@@ -105,8 +105,9 @@ export const biggestCostRule: InsightRule = ({ costs }) => {
 export const efficiencyRule: InsightRule = ({ shifts, today }) => {
   const lastStart = addDays(today, -6);
   const previousStart = addDays(today, -13);
-  const last = shifts.filter((shift) => shift.date >= lastStart && shift.date <= today);
-  const previous = shifts.filter((shift) => shift.date >= previousStart && shift.date < lastStart);
+  const timed = shifts.filter((shift) => shift.minutes > 0);
+  const last = timed.filter((shift) => shift.date >= lastStart && shift.date <= today);
+  const previous = timed.filter((shift) => shift.date >= previousStart && shift.date < lastStart);
   const lastMinutes = sumBy(last, (shift) => shift.minutes);
   const previousMinutes = sumBy(previous, (shift) => shift.minutes);
   if (last.length < 2 || previous.length < 2 || lastMinutes <= 0 || previousMinutes <= 0) return null;

@@ -42,13 +42,15 @@ describe('formatador em inglês, dólar e milha', () => {
     expect(unitedStates.distanceInput(160.9344)).toBe('100');
   });
 
-  it('lê o mínimo por milha e guarda por km', () => {
-    expect(unitedStates.parsePerDistance('3.20')).toBe(199);
+  it('lê o mínimo por milha e guarda por km sem perder a fração do centavo', () => {
+    expect(unitedStates.parsePerDistance('3.20')).toBeCloseTo(198.839, 3);
     expect(unitedStates.perDistanceInput(199)).toBe('3.20');
+    expect(unitedStates.perDistanceInput(unitedStates.parsePerDistance('3.00') ?? 0)).toBe('3.00');
   });
 
   it('converte combustível em galão e consumo em mpg', () => {
-    expect(unitedStates.perVolumeOrZero('3.79')).toBe(100);
+    expect(unitedStates.perVolumeOrZero('3.79')).toBeCloseTo(100.121, 3);
+    expect(unitedStates.perVolumeInput(unitedStates.perVolumeOrZero('3.49'))).toBe('3.49');
     expect(unitedStates.consumptionInput(10)).toBe('23.52');
     expect(unitedStates.consumptionOrZero('23.52')).toBeCloseTo(10, 2);
     expect(unitedStates.parseVolume('1')).toBeCloseTo(3.785411784, 9);

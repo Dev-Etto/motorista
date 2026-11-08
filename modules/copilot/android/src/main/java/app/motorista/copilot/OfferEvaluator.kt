@@ -72,7 +72,7 @@ object OfferEvaluator {
       perHour,
       profit,
       color,
-      score(perKm, perHour, hasTime, targets, color),
+      score(perKm, perHour, hasTime, hasTime && !offer.minutesEstimated, targets, color),
       reason(profit, perKm, perHour, hasTime, targets),
       perKm >= targets.targetPerKmCents,
       if (hasTime) perHour >= targets.targetPerHourCents else null,
@@ -93,12 +93,12 @@ object OfferEvaluator {
     return min(MAX_SCORE, TARGET_SCORE + (ratio - 1) * SCORE_PER_RATIO_ABOVE_TARGET)
   }
 
-  private fun score(perKm: Double, perHour: Double, hasTime: Boolean, targets: OfferTargets, color: OfferColor): Double {
+  private fun score(perKm: Double, perHour: Double, hasTime: Boolean, timeRead: Boolean, targets: OfferTargets, color: OfferColor): Double {
     val kmScore = partialScore(perKm, targets.targetPerKmCents)
     val hourScore = partialScore(perHour, targets.targetPerHourCents)
     val base = if (hasTime) (min(kmScore, hourScore) + (kmScore + hourScore) / 2) / 2 else kmScore
     val (low, bandHigh) = bands.getValue(color)
-    val high = if (hasTime) bandHigh else min(bandHigh, NO_TIME_MAX_SCORE)
+    val high = if (timeRead) bandHigh else min(bandHigh, NO_TIME_MAX_SCORE)
     return Math.round(max(low, min(high, base)) * 10) / 10.0
   }
 

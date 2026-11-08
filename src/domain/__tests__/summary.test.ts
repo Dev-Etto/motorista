@@ -33,6 +33,14 @@ describe('resumo', () => {
     expect(totalsByPlatform([shift])[0]).toEqual({ platform: 'A', cents: 20000 });
   });
 
+  it('jornada sem horas não infla o valor por hora', () => {
+    const untimed = { ...shift, minutes: 0 };
+    const summary = summarizeShifts([shift, untimed]);
+    expect(summary.grossCents).toBe(60000);
+    expect(summary.grossPerHour).toBe(3750);
+    expect(summary.profitPerHour).toBe(2300);
+  });
+
   it('despesa avulsa reduz o lucro', () => {
     const summary = withLooseExpenses(summarizeShifts([shift]), 1000);
     expect(summary.profitCents).toBe(17400);
