@@ -92,13 +92,16 @@
     "notFoundMessage": "It may have been deleted.",
     "deleteTitle": "Delete shift?",
     "deleteMessage": "The {{date}} shift, with {{value}} in earnings, will be deleted. This can't be undone.",
-    "title": "Details",
     "time": "Time",
     "distance": "Distance",
-    "costPerKm_km": "Cost per km for the day",
-    "costPerKm_mi": "Cost per mile for the day",
     "dayOffers": "Offers for the day",
-    "edit": "Edit"
+    "edit": "Edit",
+    "profitLabel": "Left",
+    "math": "The math",
+    "earnings": "Earnings",
+    "vehicleCost_km": "Vehicle cost · {{cost}}/km",
+    "vehicleCost_mi": "Vehicle cost · {{cost}}/mi",
+    "byPlatform": "By platform"
   },
   "live": {
     "idleTitle": "Measure now",

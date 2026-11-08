@@ -92,13 +92,16 @@
     "notFoundMessage": "Puede que se haya eliminado.",
     "deleteTitle": "¿Eliminar la jornada?",
     "deleteMessage": "Se eliminará la jornada del {{date}}, con {{value}} de ganancias. Esta acción no se puede deshacer.",
-    "title": "Detalles",
     "time": "Tiempo",
     "distance": "Distancia",
-    "costPerKm_km": "Costo por km del día",
-    "costPerKm_mi": "Costo por milla del día",
     "dayOffers": "Ofertas del día",
-    "edit": "Editar"
+    "edit": "Editar",
+    "profitLabel": "Te quedó",
+    "math": "La cuenta",
+    "earnings": "Ganancias",
+    "vehicleCost_km": "Costo del vehículo · {{cost}}/km",
+    "vehicleCost_mi": "Costo del vehículo · {{cost}}/mi",
+    "byPlatform": "Por plataforma"
   },
   "live": {
     "idleTitle": "Medir ahora",

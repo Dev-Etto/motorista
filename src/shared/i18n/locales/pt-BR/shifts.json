@@ -92,13 +92,16 @@
     "notFoundMessage": "Ela pode ter sido excluída.",
     "deleteTitle": "Excluir jornada?",
     "deleteMessage": "A jornada de {{date}}, com {{value}} de ganhos, será excluída. Essa ação não pode ser desfeita.",
-    "title": "Detalhes",
     "time": "Tempo",
     "distance": "Distância",
-    "costPerKm_km": "Custo por km do dia",
-    "costPerKm_mi": "Custo por milha do dia",
     "dayOffers": "Ofertas do dia",
-    "edit": "Editar"
+    "edit": "Editar",
+    "profitLabel": "Sobrou",
+    "math": "A conta",
+    "earnings": "Ganhos",
+    "vehicleCost_km": "Custo do carro · {{cost}}/km",
+    "vehicleCost_mi": "Custo do carro · {{cost}}/mi",
+    "byPlatform": "Por plataforma"
   },
   "live": {
     "idleTitle": "Medir agora",
