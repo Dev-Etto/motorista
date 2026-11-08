@@ -57,8 +57,6 @@
     "emptyDay": "No shifts on this day",
     "emptyMonth": "No shifts this month",
     "emptyMessage": "Log your first shift to see your real profit.",
-    "title": "Shifts",
-    "dayTitle": "Shifts on {{date}}",
     "shiftSubtitle": "{{gross}} in {{duration}}",
     "shiftSubtitlePartial": "{{gross}} in {{duration}} • partial",
     "looseTitle": "Standalone expenses",
@@ -73,7 +71,17 @@
       "shift": "Shift",
       "fuel": "Refuel",
       "other": "Other expense"
-    }
+    },
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "dayProfit": "Day's profit",
+    "dayShifts_one": "{{count}} shift",
+    "dayShifts_other": "{{count}} shifts",
+    "dayShiftsKm_one": "{{count}} shift · {{distance}}",
+    "dayShiftsKm_other": "{{count}} shifts · {{distance}}",
+    "dayLabel": "{{day}}, {{shifts}}, day's profit {{profit}}",
+    "shiftTitle": "Shift",
+    "shiftTitleHour": "Shift · {{hour}}"
   },
   "detail": {
     "notFoundTitle": "Shift not found",

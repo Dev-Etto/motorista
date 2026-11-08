@@ -4,7 +4,8 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { OfferStatus, statusOf } from '@domain/offer/offerLog';
 import { copilot, OfferHistoryEntry } from '@modules/copilot';
 import { Formatter, useFormat } from '@shared/i18n/format';
-import { spacing, useTheme } from '@shared/theme/theme';
+import { radius, spacing, ThemeColors, useTheme } from '@shared/theme/theme';
+import { AppIcon, AppIconName } from '@shared/ui/AppIcon';
 import { showDialog } from '@shared/ui/dialog';
 import { PlatformBadge } from '@shared/ui/PlatformBadge';
 import { AppText } from '@shared/ui/primitives';
@@ -12,6 +13,14 @@ import { ScoreBadge } from '@shared/ui/ScoreBadge';
 import { reportError } from '@shared/utils/reportError';
 
 const REASON_SEPARATOR = ' · ';
+const STATUS_SEAL_SIZE = 20;
+const STATUS_ICON_SIZE = 12;
+
+const STATUS_SEALS: Partial<Record<OfferStatus, { icon: AppIconName; fill: keyof ThemeColors; ink: keyof ThemeColors }>> = {
+  accepted: { icon: 'check', fill: 'positive', ink: 'surface' },
+  declined: { icon: 'close', fill: 'borderStrong', ink: 'surface' },
+  countered: { icon: 'swap', fill: 'warning', ink: 'surface' },
+};
 const ESTIMATE_MARK = '~';
 
 function describeStatus(entry: OfferHistoryEntry, t: TFunction<'offers'>, format: Formatter): string {
@@ -42,6 +51,8 @@ export function OfferRow({ entry, onCorrected }: { entry: OfferHistoryEntry; onC
   const { t } = useTranslation('offers');
   const colors = useTheme();
   const format = useFormat();
+
+  const seal = STATUS_SEALS[statusOf(entry)];
 
   const spoken = [
     entry.source,
@@ -82,33 +93,46 @@ export function OfferRow({ entry, onCorrected }: { entry: OfferHistoryEntry; onC
       onPress={onCorrected ? chooseOutcome : undefined}
       style={[styles.row, { borderBottomColor: colors.border }]}
     >
-      <View style={styles.header}>
-        <View>
-          <PlatformBadge name={entry.source} />
-        </View>
-        <AppText variant="subtitle" bold style={styles.value}>
+      <View style={styles.flag}>
+        <PlatformBadge name={entry.source} />
+        {seal ? (
+          <View testID="offer-status-seal" style={[styles.seal, { backgroundColor: colors[seal.fill], borderColor: colors.surface }]}>
+            <AppIcon name={seal.icon} color={colors[seal.ink]} size={STATUS_ICON_SIZE} />
+          </View>
+        ) : null}
+      </View>
+      <View style={styles.body}>
+        <AppText variant="subtitle" bold>
           {format.money(entry.valueCents)}
         </AppText>
-        <ScoreBadge score={entry.score} color={entry.color} />
-      </View>
-      <AppText>{describeDistance(entry, t, format)}</AppText>
-      <AppText variant="caption" tone="muted">
-        {describeRates(entry, format)}
-      </AppText>
-      {entry.reason ? (
+        <AppText variant="caption">{describeDistance(entry, t, format)}</AppText>
         <AppText variant="caption" tone="muted">
-          {entry.reason.replace(REASON_SEPARATOR, '\n')}
+          {describeRates(entry, format)}
         </AppText>
-      ) : null}
-      <AppText bold tone={statusOf(entry) === 'accepted' ? 'positive' : 'muted'}>
-        {describeStatus(entry, t, format)}
-      </AppText>
+        {entry.reason ? (
+          <AppText variant="caption" tone="muted">
+            {entry.reason.replace(REASON_SEPARATOR, '\n')}
+          </AppText>
+        ) : null}
+      </View>
+      <ScoreBadge score={entry.score} color={entry.color} />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  row: { gap: spacing.xs, paddingVertical: spacing.md, borderBottomWidth: StyleSheet.hairlineWidth },
-  header: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  value: { flex: 1 },
+  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: spacing.md, borderBottomWidth: StyleSheet.hairlineWidth },
+  flag: { paddingTop: spacing.xs, paddingRight: spacing.xs },
+  seal: {
+    position: 'absolute',
+    top: -2,
+    right: -4,
+    width: STATUS_SEAL_SIZE,
+    height: STATUS_SEAL_SIZE,
+    borderRadius: radius.pill,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  body: { flex: 1, gap: 2 },
 });

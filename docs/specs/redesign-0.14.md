@@ -84,10 +84,11 @@ A lista de jornadas mostra o lucro do dia solto ao lado do título. Nas ofertas,
 
 ### F3.3 Cartão do Copiloto
 
+O cartão nativo já segue o design aprovado: o topo tem só a bandeira do app, em 84x36 para leitura rápida sobre o app de corrida, e a nota com a escala. O rótulo do veredito aparecia apenas na prancha de estudo. Esta fase não muda o cartão.
+
 | ID | Critério de aceite | Teste |
 | --- | --- | --- |
-| F3.3.1 | O topo do cartão mostra a bandeira do app maior e a nota com a escala, como `3,0/5`. O rótulo do veredito sai do topo, porque a cor já diz se a corrida é boa, média ou ruim | Kotlin, Manual |
-| F3.3.2 | O veredito continua na descrição lida pelo leitor de tela | Kotlin |
+| F3.3.1 | O topo do cartão mostra a bandeira do app e a nota com a escala, como `3,0/5`, sem rótulo de veredito | Manual |
 
 ## Fase 4. Primeiro uso
 

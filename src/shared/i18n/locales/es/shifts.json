@@ -57,8 +57,6 @@
     "emptyDay": "No hay jornadas este día",
     "emptyMonth": "No hay jornadas este mes",
     "emptyMessage": "Registra tu primera jornada para ver tu ganancia real.",
-    "title": "Jornadas",
-    "dayTitle": "Jornadas del {{date}}",
     "shiftSubtitle": "{{gross}} en {{duration}}",
     "shiftSubtitlePartial": "{{gross}} en {{duration}} • parcial",
     "looseTitle": "Gastos sueltos",
@@ -73,7 +71,17 @@
       "shift": "Jornada",
       "fuel": "Carga de combustible",
       "other": "Otro gasto"
-    }
+    },
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "dayProfit": "Ganancia del día",
+    "dayShifts_one": "{{count}} jornada",
+    "dayShifts_other": "{{count}} jornadas",
+    "dayShiftsKm_one": "{{count}} jornada · {{distance}}",
+    "dayShiftsKm_other": "{{count}} jornadas · {{distance}}",
+    "dayLabel": "{{day}}, {{shifts}}, ganancia del día {{profit}}",
+    "shiftTitle": "Jornada",
+    "shiftTitleHour": "Jornada · {{hour}}"
   },
   "detail": {
     "notFoundTitle": "Jornada no encontrada",
