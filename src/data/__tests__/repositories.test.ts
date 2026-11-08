@@ -131,6 +131,19 @@ describe('jornadas', () => {
     expect(await expenseRepository.listLoose('2026-11-01', '2026-11-30')).toEqual([]);
   });
 
+  it('desfazer a exclusão devolve a jornada igual, com o custo da época', async () => {
+    await createVehicle();
+    const id = await shiftRepository.save(shiftInput());
+    const before = await shiftRepository.findById(id);
+    const snapshot = await shiftRepository.snapshot(id);
+    if (!snapshot) throw new Error('jornada não encontrada');
+    await shiftRepository.remove(id);
+
+    await shiftRepository.restore(snapshot);
+
+    expect(await shiftRepository.findById(id)).toEqual(before);
+  });
+
   it('resume os fatos do período e marca a jornada parcial', async () => {
     await createVehicle();
     await shiftRepository.save(shiftInput());
@@ -163,6 +176,17 @@ describe('lançamentos avulsos', () => {
     await expenseRepository.remove(saved.id);
 
     expect(await expenseRepository.totalLooseCountable('2026-11-01', '2026-11-30')).toBe(0);
+  });
+
+  it('desfazer a exclusão devolve o lançamento com o mesmo id', async () => {
+    await expenseRepository.add(expense);
+    const [saved] = await expenseRepository.listLoose('2026-11-01', '2026-11-30');
+    if (!saved) throw new Error('despesa não encontrada');
+    await expenseRepository.remove(saved.id);
+
+    await expenseRepository.restore(saved);
+
+    expect(await expenseRepository.find(saved.id)).toEqual(saved);
   });
 
   it('abastecimento não desconta de novo, mas soma no pago', async () => {

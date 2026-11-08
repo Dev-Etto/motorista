@@ -31,7 +31,8 @@
     "later": "Hacerlo después",
     "clear": "Borrar",
     "retry": "Intentar de nuevo",
-    "back": "Volver"
+    "back": "Volver",
+    "undo": "Deshacer"
   },
   "irreversible": "Esta acción no se puede deshacer.",
   "invalidNumber": "Revisa los números que escribiste. Usa solo números, como {{example}}.",

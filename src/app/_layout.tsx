@@ -12,6 +12,7 @@ import { fonts, useTheme } from '@shared/theme/theme';
 import { DialogHost } from '@shared/ui/DialogHost';
 import { AppText, Notice, Screen } from '@shared/ui/primitives';
 import { ThemedStatusBar } from '@shared/ui/ThemedStatusBar';
+import { ToastHost } from '@shared/ui/ToastHost';
 
 const SCREENS = [
   { name: 'vehicles', titleKey: 'screens.vehicles' },
@@ -111,6 +112,7 @@ export default function RootLayout() {
         ))}
       </Stack>
       <DialogHost />
+      <ToastHost />
     </SafeAreaProvider>
   );
 }

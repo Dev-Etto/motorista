@@ -22,14 +22,12 @@
     "odometerLabel": "Odômetro (opcional)",
     "noteLabel": "Observação (opcional)",
     "editTitle": "Editar lançamento",
-    "deleteConfirm": {
-      "title": "Excluir {{label}}?",
-      "message": "O lançamento de {{amount}} sai dos seus resultados."
-    },
     "vehicleLabel": "Veículo",
     "today": "Hoje",
     "also": "Também:",
-    "switchTo": "Lançar {{category}}"
+    "switchTo": "Lançar {{category}}",
+    "deleted": "Lançamento de {{amount}} excluído",
+    "saved": "Lançamento salvo"
   },
   "alreadyInCost_km": "{{category}} já está no custo por km. O valor serve para comparar o previsto com o pago.",
   "alreadyInCost_mi": "{{category}} já está no custo por milha. O valor serve para comparar o previsto com o pago.",

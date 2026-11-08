@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { i18n } from '@shared/i18n';
 import { reportError } from '@shared/utils/reportError';
+import { subscribeDataChanges } from './dataChanges';
 import { useLatest } from './useLatest';
 
 export interface AsyncData<T> {
@@ -50,6 +51,7 @@ export function useAsyncData<T>(loader: () => Promise<T>, deps: readonly unknown
   useFocusEffect(
     useCallback(() => {
       void reload();
+      return subscribeDataChanges(() => void reload());
     }, [reload]),
   );
 

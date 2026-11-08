@@ -61,7 +61,8 @@ app -> features -> application -> data -> domain -> shared/utils
 - Early return no lugar de `if` aninhado.
 - Sem lógica repetida: o que aparecer em duas funcionalidades vai para `domain` ou `shared`.
 - Números com significado viram constantes nomeadas.
-- Telas usam componentes de `shared/ui`, nunca estilos de texto ou botão próprios.
+- Telas usam componentes de `shared/ui`, nunca estilos de texto ou botão próprios. As primitivas ficam em `shared/ui/primitives`, divididas em texto, layout, botões, linhas e retorno, e são importadas por `@shared/ui/primitives`.
+- Confirmação de salvar e desfazer de exclusão usam `showToast`. Exclusão guarda uma cópia exata (`snapshot`) e o desfazer a devolve com o mesmo id (`restore`), avisando as telas em foco por `notifyDataChanged`.
 - Componente de tela não acessa o banco diretamente, salvo pelo hook da funcionalidade.
 - Dinheiro é guardado em centavos. Taxas por km podem ter fração de centavo. Contas, leitura e formatação de reais passam pela classe `Money`.
 - Datas são guardadas como `AAAA-MM-DD`. Contas e formatação de datas ficam em `shared/utils/dates.ts`, sobre o Luxon.

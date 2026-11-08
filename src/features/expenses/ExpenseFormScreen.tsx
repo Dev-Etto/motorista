@@ -9,14 +9,15 @@ import { useUnsavedChangesGuard } from '@shared/hooks/useUnsavedChangesGuard';
 import { useFormat } from '@shared/i18n/format';
 import { MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@shared/theme/theme';
 import { DateField } from '@shared/ui/DateField';
-import { confirmAction, showDialog } from '@shared/ui/dialog';
+import { showDialog } from '@shared/ui/dialog';
 import { MoneyField, NumberField, TextField } from '@shared/ui/fields';
 import { FilterChips } from '@shared/ui/FilterChips';
 import { AppText, Button, Card, Collapsible, Notice, Screen } from '@shared/ui/primitives';
+import { showToast } from '@shared/ui/toast';
 import { today } from '@shared/utils/dates';
 import { reportError } from '@shared/utils/reportError';
 import { ExpenseField, ExpenseFieldError, expenseFormErrors } from './expenseFormErrors';
-import { findExpense, removeExpense, saveExpense } from './saveExpense';
+import { findExpense, removeExpense, restoreExpense, saveExpense } from './saveExpense';
 import { useExpenseVehicles } from './useExpenseVehicles';
 
 type LooseCategory = 'fuel' | 'maintenance' | 'other';
@@ -75,19 +76,20 @@ export default function ExpenseFormScreen() {
 
   const vehicleName = vehicles.length > 1 ? (vehicles.find((vehicle) => vehicle.id === vehicleId)?.name ?? null) : null;
 
-  const confirmRemove = () => {
+  const remove = useSubmit(async () => {
     if (!expenseId) return;
 
-    confirmAction({
-      title: t('form.deleteConfirm.title', { label: t(`category.${category}`) }),
-      message: t('form.deleteConfirm.message', { amount: format.money(format.parseCents(value) ?? 0) }),
-      actionLabel: t('common:actions.delete'),
-      onConfirm: async () => {
-        await removeExpense(expenseId);
-        leave(() => router.back());
-      },
+    const snapshot = await findExpense(expenseId);
+    await removeExpense(expenseId);
+    leave(() => router.back());
+    if (!snapshot) return;
+
+    showToast({
+      message: t('form.deleted', { amount: format.money(snapshot.cents) }),
+      actionLabel: t('common:actions.undo'),
+      onAction: () => restoreExpense(snapshot),
     });
-  };
+  });
 
   const saving = useSubmit(async () => {
     const cents = format.parseCents(value);
@@ -114,7 +116,7 @@ export default function ExpenseFormScreen() {
     );
     const suggestion = category === 'fuel' ? await fuelPriceSuggestion(vehicleId, cents, savedLiters) : null;
     leave(() => router.back());
-    if (!suggestion) return;
+    if (!suggestion) return showToast({ message: t('form.saved') });
 
     showDialog({
       title: t('fuelPrice.title', { name: suggestion.vehicle.name }),
@@ -175,7 +177,7 @@ export default function ExpenseFormScreen() {
       </View>
       {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
       <Button label={t('common:actions.save')} busy={saving.busy} onPress={saving.submit} />
-      {expenseId ? <Button label={t('common:actions.delete')} variant="danger" onPress={confirmRemove} /> : null}
+      {expenseId ? <Button label={t('common:actions.delete')} variant="danger" busy={remove.busy} onPress={remove.submit} /> : null}
     </Screen>
   );
 }

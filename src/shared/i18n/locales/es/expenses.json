@@ -22,14 +22,12 @@
     "odometerLabel": "Odómetro (opcional)",
     "noteLabel": "Nota (opcional)",
     "editTitle": "Editar registro",
-    "deleteConfirm": {
-      "title": "¿Eliminar {{label}}?",
-      "message": "El registro de {{amount}} sale de tus resultados."
-    },
     "vehicleLabel": "Vehículo",
     "today": "Hoy",
     "also": "También:",
-    "switchTo": "Registrar {{category}}"
+    "switchTo": "Registrar {{category}}",
+    "deleted": "Registro de {{amount}} eliminado",
+    "saved": "Registro guardado"
   },
   "alreadyInCost_km": "{{category}} ya está en el costo por km. El valor sirve para comparar lo previsto con lo pagado.",
   "alreadyInCost_mi": "{{category}} ya está en el costo por milla. El valor sirve para comparar lo previsto con lo pagado.",

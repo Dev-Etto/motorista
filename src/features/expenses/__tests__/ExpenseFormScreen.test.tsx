@@ -2,8 +2,9 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { fuelPriceSuggestion, updateFuelPrice } from '@application/vehicles';
 import ExpenseFormScreen from '@features/expenses/ExpenseFormScreen';
-import { removeExpense, saveExpense } from '@features/expenses/saveExpense';
-import { confirmAction, showDialog } from '@shared/ui/dialog';
+import { removeExpense, restoreExpense, saveExpense } from '@features/expenses/saveExpense';
+import { showDialog } from '@shared/ui/dialog';
+import { showToast } from '@shared/ui/toast';
 
 const mockBack = jest.fn();
 const mockParams: { id?: string; category?: string } = {};
@@ -19,6 +20,7 @@ jest.mock('expo-router', () => ({
   },
 }));
 jest.mock('@shared/ui/dialog', () => ({ confirmAction: jest.fn(), showDialog: jest.fn() }));
+jest.mock('@shared/ui/toast', () => ({ showToast: jest.fn() }));
 jest.mock('@application/vehicleInUse', () => ({ vehicleInUse: jest.fn().mockResolvedValue({ id: 2, name: 'Moto' }) }));
 jest.mock('@application/vehicles', () => ({ fuelPriceSuggestion: jest.fn().mockResolvedValue(null), updateFuelPrice: jest.fn() }));
 jest.mock('@data/repositories/vehicleRepository', () => ({
@@ -33,6 +35,7 @@ jest.mock('@features/expenses/saveExpense', () => ({
   findExpense: jest.fn().mockResolvedValue({ id: 7, date: '2026-11-03', category: 'other', cents: 1500, liters: null, odometer: null, note: 'Café' }),
   saveExpense: jest.fn(),
   removeExpense: jest.fn(),
+  restoreExpense: jest.fn(),
 }));
 
 const METRICS = { frame: { x: 0, y: 0, width: 390, height: 800 }, insets: { top: 0, left: 0, right: 0, bottom: 0 } };
@@ -60,15 +63,18 @@ describe('editar lançamento avulso', () => {
     expect(mockBack).toHaveBeenCalled();
   });
 
-  it('excluir pede confirmação', async () => {
+  it('excluir apaga na hora e oferece desfazer', async () => {
     await renderForm();
     await screen.findByDisplayValue('Café');
 
     await fireEvent.press(screen.getByText('Excluir'));
-    expect(removeExpense).not.toHaveBeenCalled();
-
-    await jest.mocked(confirmAction).mock.calls[0]?.[0].onConfirm();
     expect(removeExpense).toHaveBeenCalledWith(7);
+
+    const toast = jest.mocked(showToast).mock.calls[0]?.[0];
+    expect(toast?.message).toBe('Lançamento de R$ 15,00 excluído');
+    expect(toast?.actionLabel).toBe('Desfazer');
+    await toast?.onAction?.();
+    expect(restoreExpense).toHaveBeenCalledWith(expect.objectContaining({ id: 7, cents: 1500 }));
   });
 
   it('novo lançamento não mostra excluir', async () => {

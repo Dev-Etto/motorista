@@ -16,6 +16,7 @@ import { DurationField, IntegerField, MoneyField, NumberField } from '@shared/ui
 import { FilterChips } from '@shared/ui/FilterChips';
 import { PlatformBadge } from '@shared/ui/PlatformBadge';
 import { AppText, Button, ButtonRow, Card, Collapsible, ListRow, Notice, Screen, Segmented, StepDots } from '@shared/ui/primitives';
+import { showToast } from '@shared/ui/toast';
 import { clockAfter, dayRange } from '@shared/utils/dates';
 import { LiveTrackingCard } from './LiveTrackingCard';
 import { ShiftResultCard } from './ShiftResultCard';
@@ -80,6 +81,7 @@ export default function ShiftFormScreen() {
     const savedId = await form.save();
     if (!savedId) return showStepOfProblem();
 
+    showToast({ message: t('form.saved') });
     if (id) return leave(() => router.back());
     if (live.started) await live.discard();
     leave(() => router.replace(`/shift/${savedId}`));

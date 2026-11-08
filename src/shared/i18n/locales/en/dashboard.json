@@ -27,13 +27,17 @@
   },
   "today": {
     "title": "Left today",
-    "details": "Details",
     "gross": "Earned",
     "perKm_km": "Per km",
     "perKm_mi": "Per mile",
     "perHour": "Per hour",
     "goal": "{{percent}}% of today's goal · {{remaining}} to go",
-    "goalReached": "Today's goal reached · {{percent}}%"
+    "goalReached": "Today's goal reached · {{percent}}%",
+    "seeGoal": "See goal",
+    "empty": "No shifts today yet.",
+    "emptyRunning": "The numbers show up when you finish the shift.",
+    "recordPast": "Log a past one",
+    "start": "Start shift"
   },
   "lastOffer": {
     "title": "Last offer · {{ago}}",

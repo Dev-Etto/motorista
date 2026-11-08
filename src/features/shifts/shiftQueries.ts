@@ -1,7 +1,8 @@
 import { expenseRepository } from '@data/repositories/expenseRepository';
-import { shiftRepository } from '@data/repositories/shiftRepository';
+import { shiftRepository, ShiftSnapshot } from '@data/repositories/shiftRepository';
 import { vehicleRepository } from '@data/repositories/vehicleRepository';
 import { copilot } from '@modules/copilot';
+import { notifyDataChanged } from '@shared/hooks/dataChanges';
 import { dayRange } from '@shared/utils/dates';
 
 export async function loadPeriod(start: string, end: string) {
@@ -25,4 +26,13 @@ export async function loadShiftDetail(shiftId: number) {
 
 export type ShiftDetail = NonNullable<Awaited<ReturnType<typeof loadShiftDetail>>>;
 
-export const removeShift = (id: number) => shiftRepository.remove(id);
+export async function removeShift(id: number): Promise<ShiftSnapshot | null> {
+  const snapshot = await shiftRepository.snapshot(id);
+  await shiftRepository.remove(id);
+  return snapshot;
+}
+
+export async function restoreShift(snapshot: ShiftSnapshot): Promise<void> {
+  await shiftRepository.restore(snapshot);
+  notifyDataChanged();
+}

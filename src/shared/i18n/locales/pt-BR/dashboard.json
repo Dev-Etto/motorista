@@ -27,13 +27,17 @@
   },
   "today": {
     "title": "Sobrou hoje",
-    "details": "Detalhes",
     "gross": "Faturou",
     "perKm_km": "Por km",
     "perKm_mi": "Por milha",
     "perHour": "Por hora",
     "goal": "{{percent}}% da meta de hoje · faltam {{remaining}}",
-    "goalReached": "Meta de hoje batida · {{percent}}%"
+    "goalReached": "Meta de hoje batida · {{percent}}%",
+    "seeGoal": "Ver meta",
+    "empty": "Nenhuma jornada hoje ainda.",
+    "emptyRunning": "Os valores aparecem quando você encerrar a jornada.",
+    "recordPast": "Registrar passada",
+    "start": "Iniciar jornada"
   },
   "lastOffer": {
     "title": "Última oferta · {{ago}}",

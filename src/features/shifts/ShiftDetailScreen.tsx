@@ -10,8 +10,9 @@ import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
 import { confirmAction } from '@shared/ui/dialog';
 import { PlatformBadge } from '@shared/ui/PlatformBadge';
 import { AppText, Button, Card, EmptyState, ListRow, Notice, Screen, Stat, StatGrid } from '@shared/ui/primitives';
+import { showToast } from '@shared/ui/toast';
 import { profitTone } from '@shared/utils/format';
-import { loadShiftDetail, removeShift, ShiftDetail } from './shiftQueries';
+import { loadShiftDetail, removeShift, restoreShift, ShiftDetail } from './shiftQueries';
 
 export default function ShiftDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -47,8 +48,11 @@ function ShiftDetailContent({ shiftId, detail }: { shiftId: number; detail: Shif
       message: t('detail.deleteMessage', { date: format.date(shift.date), value: format.money(result.grossCents) }),
       actionLabel: t('common:actions.delete'),
       onConfirm: async () => {
-        await removeShift(shiftId);
+        const snapshot = await removeShift(shiftId);
         router.back();
+        if (!snapshot) return;
+
+        showToast({ message: t('detail.deleted'), actionLabel: t('common:actions.undo'), onAction: () => restoreShift(snapshot) });
       },
     });
   };

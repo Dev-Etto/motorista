@@ -48,7 +48,8 @@
     "endsAround": "Parou por volta das {{time}}",
     "resultMath": "{{gross}} de ganhos − {{vehicle}} do carro − {{expenses}} de despesas",
     "inCostHint_km": "Abastecimento e manutenção já estão no custo por km. Lance-os pelo botão da jornada, para comparar o previsto com o pago.",
-    "inCostHint_mi": "Abastecimento e manutenção já estão no custo por milha. Lance-os pelo botão da jornada, para comparar o previsto com o pago."
+    "inCostHint_mi": "Abastecimento e manutenção já estão no custo por milha. Lance-os pelo botão da jornada, para comparar o previsto com o pago.",
+    "saved": "Jornada salva"
   },
   "result": {
     "title": "Resultado",
@@ -97,7 +98,7 @@
     "notFoundTitle": "Jornada não encontrada",
     "notFoundMessage": "Ela pode ter sido excluída.",
     "deleteTitle": "Excluir jornada?",
-    "deleteMessage": "A jornada de {{date}}, com {{value}} de ganhos, será excluída. Essa ação não pode ser desfeita.",
+    "deleteMessage": "A jornada de {{date}}, com {{value}} de ganhos, será excluída.",
     "time": "Tempo",
     "distance": "Distância",
     "dayOffers": "Ofertas do dia",
@@ -107,7 +108,8 @@
     "earnings": "Ganhos",
     "vehicleCost_km": "Custo do carro · {{cost}}/km",
     "vehicleCost_mi": "Custo do carro · {{cost}}/mi",
-    "byPlatform": "Por plataforma"
+    "byPlatform": "Por plataforma",
+    "deleted": "Jornada excluída"
   },
   "live": {
     "idleTitle": "Medir agora",
