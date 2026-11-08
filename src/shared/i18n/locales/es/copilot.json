@@ -113,6 +113,32 @@
       "testAgain": "Probar de nuevo"
     },
     "stepOf": "Paso {{current}} de {{total}}",
-    "later": "Hacerlo después"
+    "later": "Hacerlo después",
+    "disclosure": {
+      "title": "Antes de activarlo: qué lee el Copiloto",
+      "intro": "Para calificar las ofertas, el Copiloto usa el permiso de accesibilidad de Android. Mira qué significa antes de decidir.",
+      "read": {
+        "title": "Qué se lee",
+        "body": "El texto de las pantallas de oferta de las apps que elijas en el Copiloto, como Uber, 99 e inDrive. Si activas la lectura por imagen, también una imagen de esa pantalla, leída en tu propio celular."
+      },
+      "purpose": {
+        "title": "Para qué",
+        "body": "Calcular la calificación, la ganancia por distancia, la ganancia por hora y la ganancia estimada de cada oferta, y mostrarlas en la tarjeta, por voz o en la notificación."
+      },
+      "stored": {
+        "title": "Qué se guarda",
+        "body": "Solo los números de cada oferta, como valor, distancia, tiempo y calificación, en tu celular, para el historial. No se guardan nombres, teléfonos ni direcciones."
+      },
+      "never": {
+        "title": "Qué no pasa",
+        "body": "El texto y la imagen leídos no se envían a nosotros ni a nadie. El Copiloto no toca la pantalla y no acepta ni rechaza ofertas por ti."
+      },
+      "control": {
+        "title": "Tú decides",
+        "body": "Puedes desactivarlo cuando quieras, en la app o en los ajustes de accesibilidad de Android."
+      },
+      "accept": "Acepto y continúo",
+      "decline": "Ahora no"
+    }
   }
 }

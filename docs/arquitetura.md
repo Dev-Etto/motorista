@@ -101,6 +101,8 @@ app -> features -> application -> data -> domain -> shared/utils
 
 **Copiloto só leitura.** O serviço declara `canPerformGestures=false`. O cartão recebe toques só para ser arrastado e usa `FLAG_NOT_TOUCH_MODAL`, para os toques fora dele chegarem ao app embaixo. Qualquer automação de toque, aceite ou recusa está fora do produto.
 
+**Divulgação antes da acessibilidade.** Exigência da Play para apps que não são ferramentas de acessibilidade. Nenhum caminho abre as configurações de acessibilidade sem o aceite da divulgação, guardado com a data em `accessibility_consent_at`. A regra fica em `application/accessibilityConsent.ts`, e a tela de configuração do Copiloto mostra a divulgação antes do passo da permissão.
+
 **Regra `set-state-in-effect` desligada.** Ela acusa carregamentos assíncronos que só alteram o estado depois de um `await`, o que é falso positivo neste projeto.
 
 **Sessão da oferta sem Android.** `OfferSession` recebe canais, relógio de tarefas e preferências por parâmetro, para ser testada sem aparelho.

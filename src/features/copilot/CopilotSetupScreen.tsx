@@ -5,6 +5,8 @@ import { MIN_TOUCH_TARGET, spacing } from '@shared/theme/theme';
 import { Illustration } from '@shared/ui/illustrations/Illustration';
 import { LearnMore } from '@shared/ui/LearnMore';
 import { AppText, Button, Card, Notice, Screen, StepDots } from '@shared/ui/primitives';
+import { AccessibilityDisclosure } from './AccessibilityDisclosure';
+import { useAccessibilityConsent } from './useAccessibilityConsent';
 import { useCopilot } from './useCopilot';
 
 const SETUP_STEPS = 2;
@@ -30,6 +32,7 @@ export default function CopilotSetupScreen() {
   const { t } = useTranslation(['copilot', 'common']);
   const router = useRouter();
   const copilot = useCopilot();
+  const consent = useAccessibilityConsent();
   const status = copilot.status.current;
 
   const activate = async () => {
@@ -37,6 +40,12 @@ export default function CopilotSetupScreen() {
     await copilot.status.setEnabled(true);
     copilot.tests.test();
   };
+
+  if (!status.accessibilityGranted && consent.accepted === null) return null;
+
+  if (!status.accessibilityGranted && !consent.accepted) {
+    return <AccessibilityDisclosure onAccept={consent.accept} onDecline={() => router.back()} />;
+  }
 
   if (!status.accessibilityGranted) {
     return (

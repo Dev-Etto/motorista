@@ -113,6 +113,32 @@
       "testAgain": "Testar de novo"
     },
     "stepOf": "Passo {{current}} de {{total}}",
-    "later": "Fazer depois"
+    "later": "Fazer depois",
+    "disclosure": {
+      "title": "Antes de ligar: o que o Copiloto lê",
+      "intro": "Para dar a nota das ofertas, o Copiloto usa a permissão de acessibilidade do Android. Veja o que isso significa antes de decidir.",
+      "read": {
+        "title": "O que é lido",
+        "body": "O texto das telas de oferta dos apps que você escolher no Copiloto, como Uber, 99 e inDrive. Se você ligar a leitura pela imagem, também uma imagem dessa tela, lida no próprio celular."
+      },
+      "purpose": {
+        "title": "Para quê",
+        "body": "Calcular a nota, o valor por km, o valor por hora e o lucro estimado de cada oferta, e mostrar no cartão, na voz ou na notificação."
+      },
+      "stored": {
+        "title": "O que fica guardado",
+        "body": "Só os números de cada oferta, como valor, distância, tempo e nota, no seu celular, para o histórico. Nomes, telefones e endereços não são guardados."
+      },
+      "never": {
+        "title": "O que não acontece",
+        "body": "O texto e a imagem lidos não são enviados para nós nem para ninguém. O Copiloto não toca na tela e não aceita nem recusa ofertas por você."
+      },
+      "control": {
+        "title": "Você controla",
+        "body": "Dá para desligar quando quiser, no app ou nas configurações de acessibilidade do Android."
+      },
+      "accept": "Concordo e continuar",
+      "decline": "Agora não"
+    }
   }
 }

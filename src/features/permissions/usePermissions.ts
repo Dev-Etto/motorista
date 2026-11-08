@@ -1,6 +1,7 @@
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { AppState } from 'react-native';
+import { openAccessibilityWithConsent } from '@application/accessibilityConsent';
 import { syncCopilotTargets } from '@application/offerSettings';
 import { copilot, CopilotStatus } from '@modules/copilot';
 import { ensureLocation, hasLocationPermission } from '@shared/platform/location';
@@ -36,6 +37,7 @@ export async function enableCopilotIfGranted(): Promise<void> {
 }
 
 export function usePermissions() {
+  const router = useRouter();
   const [state, setState] = useState<PermissionsState>({ notifications: false, location: false, overlay: false, accessibility: false, battery: false });
 
   const refresh = useCallback(async () => {
@@ -69,7 +71,7 @@ export function usePermissions() {
     requestNotifications,
     requestLocation,
     openOverlay: copilot.openOverlaySettings,
-    openAccessibility: copilot.openAccessibilitySettings,
+    openAccessibility: () => openAccessibilityWithConsent(() => router.push('/copilot-setup')),
     openAppSettings: copilot.openAppSettings,
     openBattery: copilot.openBatterySettings,
   };
