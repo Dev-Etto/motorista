@@ -3,7 +3,8 @@
     "gasoline": "Gasolina",
     "ethanol": "Etanol",
     "cng": "GNV",
-    "electric": "Eléctrico"
+    "electric": "Eléctrico",
+    "diesel": "Diesel"
   },
   "kind": {
     "car": "Carro",
@@ -90,7 +91,6 @@
   },
   "manage": {
     "intro": "El vehículo actual define el costo por distancia del Copiloto, la calculadora y la meta. En cada jornada, eliges el vehículo usado.",
-    "currentName": "{{name}} · actual",
     "add": "Agregar vehículo",
     "useNow": "Usar ahora",
     "archive": "Archivar",
@@ -115,7 +115,8 @@
     "reactivateConfirm": {
       "title": "¿Reactivar {{name}}?",
       "message": "Vuelve a las opciones de jornada y gasto."
-    }
+    },
+    "currentBadge": "Actual"
   },
   "costHero": {
     "title_km": "Cada km cuesta",

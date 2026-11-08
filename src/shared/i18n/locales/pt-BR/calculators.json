@@ -20,7 +20,9 @@
     "perHour": "Paga por hora",
     "scoreTitle": "Como a nota é calculada?",
     "scoreExplain": "A nota compara a corrida com o seu custo e os seus mínimos. De {{target}} para cima, ela atinge os dois mínimos. Abaixo de {{belowCost}}, não cobre o custo do carro.",
-    "scoreDisclaimer": "A nota só ajuda: quem decide é sempre você."
+    "scoreDisclaimer": "A nota só ajuda: quem decide é sempre você.",
+    "aboveTarget": "▲ {{percent}}%",
+    "belowTarget": "▼ {{percent}}%"
   },
   "quote": {
     "title": "Quanto cobrar nessa corrida?",

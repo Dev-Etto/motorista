@@ -20,7 +20,9 @@
     "perHour": "Paga por hora",
     "scoreTitle": "¿Cómo se calcula la puntuación?",
     "scoreExplain": "La puntuación compara el viaje con tu costo y tus mínimos. De {{target}} para arriba, alcanza los dos mínimos. Por debajo de {{belowCost}}, no cubre el costo del carro.",
-    "scoreDisclaimer": "La puntuación solo ayuda: quien decide siempre eres tú."
+    "scoreDisclaimer": "La puntuación solo ayuda: quien decide siempre eres tú.",
+    "aboveTarget": "▲ {{percent}}%",
+    "belowTarget": "▼ {{percent}}%"
   },
   "quote": {
     "title": "¿Cuánto cobrar por este viaje?",

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
-import { classifyOffer } from '@domain/offer/offer';
+import { classifyOffer, compareToTarget, TargetComparison } from '@domain/offer/offer';
 import { OfferTargetsSummary, useOfferTargets } from '@features/copilot';
 import { useFormFields } from '@shared/hooks/useFormFields';
 import { useFormat } from '@shared/i18n/format';
@@ -57,8 +57,16 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
           )}
           <AppText center>{describeOfferReason(result.reason, tOffers, format.distanceUnit)}</AppText>
           <StatGrid>
-            <Stat label={t('offer.perDistance', { unit: format.distanceUnit })} value={format.perDistance(result.perKm)} />
-            <Stat label={t('offer.perHour')} value={format.perHour(result.perHour)} />
+            <ComparedStat
+              label={t('offer.perDistance', { unit: format.distanceUnit })}
+              value={format.perDistance(result.perKm)}
+              comparison={compareToTarget(result.perKm, targets.values.targetPerKmCents)}
+            />
+            <ComparedStat
+              label={t('offer.perHour')}
+              value={format.perHour(result.perHour)}
+              comparison={compareToTarget(result.perHour, targets.values.targetPerHourCents)}
+            />
           </StatGrid>
           <LearnMore title={t('offer.scoreTitle')}>
             <AppText variant="caption">
@@ -76,3 +84,12 @@ export function OfferCalculator({ costPerKm }: { costPerKm: number }) {
 const styles = StyleSheet.create({
   score: { alignItems: 'center' },
 });
+
+function ComparedStat({ label, value, comparison }: { label: string; value: string; comparison: TargetComparison }) {
+  const { t } = useTranslation('calculators');
+  if (comparison.kind !== 'above' && comparison.kind !== 'below') return <Stat label={label} value={value} />;
+
+  const above = comparison.kind === 'above';
+  const delta = t(above ? 'offer.aboveTarget' : 'offer.belowTarget', { percent: comparison.percent });
+  return <Stat label={label} value={`${value} · ${delta}`} tone={above ? 'positive' : 'negative'} />;
+}

@@ -39,9 +39,10 @@ export default function VehiclesScreen() {
                   <ListRow
                     key={vehicle.id}
                     icon={vehicle.kind === 'motorcycle' ? 'motorcycle' : 'vehicle'}
-                    title={current ? t('manage.currentName', { name: vehicle.name }) : vehicle.name}
-                    subtitle={t(`kind.${vehicle.kind}`)}
-                    value={costs ? format.perDistance(costs.fullPerKm) : undefined}
+                    title={vehicle.name}
+                    subtitle={[t(`fuel.${vehicle.fuel}`), costs ? format.perDistance(costs.fullPerKm) : null].filter(Boolean).join(' · ')}
+                    value={current ? t('manage.currentBadge') : undefined}
+                    valueTone="positive"
                     chevron
                     onPress={() => router.push({ pathname: '/vehicle', params: { id: String(vehicle.id) } })}
                   />

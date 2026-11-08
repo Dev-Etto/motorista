@@ -20,7 +20,9 @@
     "perHour": "Pays per hour",
     "scoreTitle": "How is the score calculated?",
     "scoreExplain": "The score compares the ride with your cost and your minimums. At {{target}} or higher, it meets both minimums. Below {{belowCost}}, it doesn't cover the cost of the car.",
-    "scoreDisclaimer": "The score is only a guide: the decision is always yours."
+    "scoreDisclaimer": "The score is only a guide: the decision is always yours.",
+    "aboveTarget": "▲ {{percent}}%",
+    "belowTarget": "▼ {{percent}}%"
   },
   "quote": {
     "title": "How much to charge for this ride?",
