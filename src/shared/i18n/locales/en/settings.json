@@ -95,8 +95,6 @@
     "never": "Never",
     "tip": "Keep the file outside your phone, like in Drive or your email. When you switch devices, use Restore.",
     "intro": "Your data is stored only on this phone. With a backup, you can take it anywhere, including if you switch devices or reinstall the app. The file has no password: keep it somewhere only you can access.",
-    "cardTitle": "Backup",
-    "lastBackup": "Last backup",
     "exportButton": "Back up now",
     "restoreButton": "Restore from a file",
     "undoButton": "Undo the last restore",
@@ -134,7 +132,11 @@
       "yes": "I saved it",
       "no": "I didn't"
     },
-    "preview": "Backup from {{date}}. Shifts: {{shifts}}. Vehicles: {{vehicles}}."
+    "preview": "Backup from {{date}}. Shifts: {{shifts}}. Vehicles: {{vehicles}}.",
+    "protected": "Data protected",
+    "attention": "Make a backup",
+    "lastLine": "Last backup: {{date}}",
+    "othersTitle": "Other options"
   },
   "dailyReminder": {
     "title": "End of day",

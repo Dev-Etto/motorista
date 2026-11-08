@@ -95,8 +95,6 @@
     "never": "Nunca",
     "tip": "Guarde o arquivo fora do celular, como no Drive ou em seu e-mail. Na troca de aparelho, use Restaurar.",
     "intro": "Seus dados ficam só neste celular. Com um backup, você os leva para onde quiser, inclusive se trocar de aparelho ou reinstalar o app. O arquivo não tem senha: guarde em um lugar só seu.",
-    "cardTitle": "Backup",
-    "lastBackup": "Último backup",
     "exportButton": "Fazer backup",
     "restoreButton": "Restaurar de um arquivo",
     "undoButton": "Desfazer a última restauração",
@@ -134,7 +132,11 @@
       "yes": "Salvei",
       "no": "Não salvei"
     },
-    "preview": "Backup de {{date}}. Jornadas: {{shifts}}. Veículos: {{vehicles}}."
+    "preview": "Backup de {{date}}. Jornadas: {{shifts}}. Veículos: {{vehicles}}.",
+    "protected": "Dados protegidos",
+    "attention": "Faça um backup",
+    "lastLine": "Último backup: {{date}}",
+    "othersTitle": "Outros"
   },
   "dailyReminder": {
     "title": "Fim do dia",

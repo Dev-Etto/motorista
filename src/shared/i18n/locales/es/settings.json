@@ -95,8 +95,6 @@
     "never": "Nunca",
     "tip": "Guarda el archivo fuera del celular, como en Drive o en tu correo. Al cambiar de dispositivo, usa Restaurar.",
     "intro": "Tus datos quedan solo en este celular. Con una copia de seguridad, te los llevas adonde quieras, incluso si cambias de dispositivo o reinstalas la app. El archivo no tiene contraseña: guárdalo en un lugar solo tuyo.",
-    "cardTitle": "Copia de seguridad",
-    "lastBackup": "Última copia de seguridad",
     "exportButton": "Hacer copia de seguridad",
     "restoreButton": "Restaurar desde un archivo",
     "undoButton": "Deshacer la última restauración",
@@ -134,7 +132,11 @@
       "yes": "Lo guardé",
       "no": "No lo guardé"
     },
-    "preview": "Copia del {{date}}. Jornadas: {{shifts}}. Vehículos: {{vehicles}}."
+    "preview": "Copia del {{date}}. Jornadas: {{shifts}}. Vehículos: {{vehicles}}.",
+    "protected": "Datos protegidos",
+    "attention": "Haz una copia de seguridad",
+    "lastLine": "Última copia: {{date}}",
+    "othersTitle": "Otras opciones"
   },
   "dailyReminder": {
     "title": "Fin del día",

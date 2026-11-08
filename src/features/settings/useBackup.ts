@@ -37,7 +37,7 @@ export function useBackup() {
   const format = useFormat();
   const [message, setMessage] = useState<{ tone: 'positive' | 'negative'; text: string } | null>(null);
   const [canUndo, setCanUndo] = useState(() => safetyCopy().exists === true);
-  const lastBackup = useAsyncData(() => settingsRepository.get(SETTING_KEYS.lastBackupAt));
+  const lastBackup = useAsyncData(async () => ({ at: await settingsRepository.get(SETTING_KEYS.lastBackupAt), checkedAt: Date.now() }));
 
   const replaceData = async (backup: BackupFile, outcome: ReplaceOutcome) => {
     writeSafetyCopy(JSON.stringify(await fullBackup()));
@@ -119,7 +119,8 @@ export function useBackup() {
 
   return {
     message,
-    lastBackupAt: lastBackup.data,
+    lastBackupAt: lastBackup.data?.at ?? null,
+    loadedAt: lastBackup.data?.checkedAt ?? 0,
     canUndo,
     busy: exporting.busy || importing.busy || undoing.busy,
     exportBackup: exporting.submit,
