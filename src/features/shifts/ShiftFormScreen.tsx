@@ -1,7 +1,7 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import type { ExpenseCategory } from '@domain/expense/expense';
 import { isShiftForgotten } from '@domain/shift/forgotten';
 import { KmEntryMode, SHIFT_FORM_STEPS, ShiftFormStep, stepOfError } from '@domain/shift/shiftForm';
@@ -10,13 +10,13 @@ import { TipBanner } from '@features/tips';
 import { useSubmit } from '@shared/hooks/useSubmit';
 import { useUnsavedChangesGuard } from '@shared/hooks/useUnsavedChangesGuard';
 import { useFormat } from '@shared/i18n/format';
-import { spacing } from '@shared/theme/theme';
+import { MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@shared/theme/theme';
 import { DateField } from '@shared/ui/DateField';
 import { DurationField, IntegerField, MoneyField, NumberField } from '@shared/ui/fields';
 import { FilterChips } from '@shared/ui/FilterChips';
 import { PlatformBadge } from '@shared/ui/PlatformBadge';
 import { AppText, Button, ButtonRow, Card, Collapsible, ListRow, Notice, Screen, Segmented, StepDots } from '@shared/ui/primitives';
-import { dayRange } from '@shared/utils/dates';
+import { clockAfter, dayRange } from '@shared/utils/dates';
 import { LiveTrackingCard } from './LiveTrackingCard';
 import { ShiftResultCard } from './ShiftResultCard';
 import { useLiveTracking } from './useLiveTracking';
@@ -28,6 +28,7 @@ export default function ShiftFormScreen() {
   const router = useRouter();
   const { t } = useTranslation(['shifts', 'expenses', 'common']);
   const format = useFormat();
+  const colors = useTheme();
   const { id, finish } = useLocalSearchParams<{ id?: string; finish?: string }>();
   const form = useShiftForm(id ? Number(id) : undefined);
   const live = useLiveTracking(form.applyLive);
@@ -50,6 +51,9 @@ export default function ShiftFormScreen() {
 
   const leave = useUnsavedChangesGuard(form.dirty);
   const [step, setStep] = useState<ShiftFormStep>('time');
+  const [shownExpenses, setShownExpenses] = useState<ExpenseCategory[]>([]);
+  const toggleExpense = (category: ExpenseCategory) =>
+    setShownExpenses((current) => (current.includes(category) ? current.filter((item) => item !== category) : [...current, category]));
   const stepIndex = SHIFT_FORM_STEPS.indexOf(step);
   const moveBy = (delta: number) => setStep(SHIFT_FORM_STEPS[stepIndex + delta] ?? step);
 
@@ -58,6 +62,8 @@ export default function ShiftFormScreen() {
     const problemStep = problem ? stepOfError(problem) : null;
     if (problemStep) setStep(problemStep);
   };
+
+  const endsAround = form.startHour === null || form.minutes <= 0 ? null : clockAfter(form.startHour, form.minutes);
 
   const goNext = () => {
     const problem = form.validate();
@@ -95,7 +101,24 @@ export default function ShiftFormScreen() {
       </Card>
 
       <Card title={t('form.timeAndDistance')}>
-        <DurationField label={t('form.hoursLabel')} {...form.bind('hours')} hint={t('form.hoursHint')} error={form.fieldError('hours')} />
+        <View style={styles.row}>
+          <View style={styles.flex}>
+            <IntegerField
+              label={t('form.startedLabel')}
+              {...form.bind('startHour')}
+              maxDigits={2}
+              placeholder="8"
+              suffix="h"
+              error={form.fieldError('startHour')}
+            />
+          </View>
+          <View style={styles.flex}>
+            <DurationField label={t('form.hoursLabel')} {...form.bind('hours')} error={form.fieldError('hours')} />
+          </View>
+        </View>
+        <AppText variant="caption" tone="muted">
+          {endsAround === null ? t('form.hoursHint') : t('form.endsAround', { time: endsAround })}
+        </AppText>
         <Segmented value={form.kmMode} options={kmOptions} onChange={form.setKmMode} />
         {form.kmMode === 'manual' ? (
           <NumberField
@@ -112,15 +135,7 @@ export default function ShiftFormScreen() {
         )}
       </Card>
 
-      <Collapsible title={t('form.moreDetails')} forceOpen={form.fieldError('startHour') !== null}>
-        <IntegerField
-          label={t('form.startHourLabel')}
-          {...form.bind('startHour')}
-          maxDigits={2}
-          placeholder="8"
-          hint={t('form.startHourHint')}
-          error={form.fieldError('startHour')}
-        />
+      <Collapsible title={t('form.moreDetails')}>
         <IntegerField label={t('form.tripsLabel')} {...form.bind('trips')} />
       </Collapsible>
     </>
@@ -141,13 +156,54 @@ export default function ShiftFormScreen() {
     </>
   );
 
-  const expenseFields = JOURNEY_EXPENSES.map((category) => (
+  const visibleExpenses = JOURNEY_EXPENSES.filter((category) => id || shownExpenses.includes(category) || (form.expenses[category] ?? '') !== '');
+  const expenseFields = visibleExpenses.map((category) => (
     <MoneyField key={category} label={expenseLabel(category)} value={form.expenses[category] ?? ''} onChangeText={(text) => form.setExpense(category, text)} />
   ));
+  const expenseChips = (
+    <View style={styles.chips}>
+      {JOURNEY_EXPENSES.map((category) => {
+        const selected = visibleExpenses.includes(category);
+        return (
+          <Pressable
+            key={category}
+            accessibilityRole="checkbox"
+            accessibilityState={{ checked: selected }}
+            onPress={() => toggleExpense(category)}
+            style={[styles.chip, selected ? { backgroundColor: colors.primary, borderColor: colors.primary } : { borderColor: colors.borderStrong }]}
+          >
+            <AppText bold style={{ color: selected ? colors.onPrimary : colors.text }}>
+              {expenseLabel(category)}
+            </AppText>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+  const resultMath = t('form.resultMath', {
+    gross: format.money(form.preview.grossCents),
+    vehicle: format.money(form.preview.vehicleCostCents),
+    expenses: format.money(form.preview.expensesCents),
+  });
 
   const resultSection = (
     <>
-      {id ? <Collapsible title={t('form.expensesTitle')}>{expenseFields}</Collapsible> : <Card title={t('form.expensesTitle')}>{expenseFields}</Card>}
+      {id ? (
+        <Collapsible title={t('form.expensesTitle')}>{expenseFields}</Collapsible>
+      ) : (
+        <Card>
+          {expenseChips}
+          {expenseFields}
+          <AppText variant="caption" tone="muted">
+            {t('form.inCostHint', { context: format.distanceUnit })}
+          </AppText>
+        </Card>
+      )}
+      {id ? null : (
+        <AppText tone="muted" accessibilityLabel={resultMath}>
+          {resultMath}
+        </AppText>
+      )}
       <ShiftResultCard result={form.preview} />
       {form.error ? <Notice tone="negative" message={form.error} /> : null}
       {measureError ? <Notice message={measureError} /> : null}
@@ -196,5 +252,9 @@ export default function ShiftFormScreen() {
 }
 
 const styles = StyleSheet.create({
+  flex: { flex: 1 },
+  row: { flexDirection: 'row', gap: spacing.md },
   platform: { gap: spacing.xs },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  chip: { minHeight: MIN_TOUCH_TARGET - spacing.sm, justifyContent: 'center', paddingHorizontal: spacing.md, borderRadius: radius.pill, borderWidth: 1 },
 });

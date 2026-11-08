@@ -24,7 +24,7 @@ jest.mock('@features/shifts/useLiveTracking', () => ({
   useLiveTracking: () => ({ started: false, pending: false, startedAt: 0, elapsedMs: 0, apply: jest.fn(), discard: jest.fn() }),
 }));
 jest.mock('@features/shifts/useShiftForm', () => ({
-  JOURNEY_EXPENSES: ['fuel'],
+  JOURNEY_EXPENSES: ['toll', 'food'],
   useShiftForm: () => ({
     ...mockForm,
     platforms: [{ id: 1, name: 'Uber' }],
@@ -42,7 +42,9 @@ jest.mock('@features/shifts/useShiftForm', () => ({
     expenses: {},
     setExpense: jest.fn(),
     dirty: false,
-    preview: { grossCents: 26800 },
+    preview: { grossCents: 26800, vehicleCostCents: 8004, expensesCents: 3180 },
+    minutes: 500,
+    startHour: 6,
     error: null,
     fieldError: () => null,
   }),
@@ -69,6 +71,7 @@ describe('nova jornada em etapas', () => {
     expect(screen.getByLabelText('Passo 1 de 3')).toBeTruthy();
 
     expect(screen.getByText('Etapa 1 de 3')).toBeTruthy();
+    expect(screen.getByText('Parou por volta das 14:20')).toBeTruthy();
 
     await fireEvent.press(screen.getByRole('button', { name: 'Continuar' }));
     expect(screen.getByRole('header', { name: 'Quanto você ganhou?' })).toBeTruthy();
@@ -76,6 +79,10 @@ describe('nova jornada em etapas', () => {
 
     await fireEvent.press(screen.getByRole('button', { name: 'Continuar' }));
     expect(screen.getByRole('header', { name: 'Gastou com algo hoje?' })).toBeTruthy();
+    expect(screen.getByText(/R\$\s268,00 de ganhos − R\$\s80,04 do carro − R\$\s31,80 de despesas/)).toBeTruthy();
+    expect(screen.queryByLabelText('Pedágio')).toBeNull();
+    await fireEvent.press(screen.getByRole('checkbox', { name: 'Pedágio' }));
+    expect(screen.getByLabelText('Pedágio')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Salvar jornada' })).toBeTruthy();
 
     await fireEvent.press(screen.getByRole('button', { name: 'Voltar' }));

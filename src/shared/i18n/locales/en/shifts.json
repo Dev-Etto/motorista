@@ -27,8 +27,6 @@
     "expensesTitle": "Expenses for the day",
     "otherExpenses": "Other expenses",
     "moreDetails": "More details",
-    "startHourLabel": "Start time",
-    "startHourHint": "Helps find your best time of day.",
     "tripsLabel": "Rides",
     "saveButton": "Save shift",
     "errors": {
@@ -45,7 +43,12 @@
       "result": "Did you spend on anything today?"
     },
     "stepOf": "Step {{current}} of {{total}}",
-    "earnedTotal": "Earned"
+    "earnedTotal": "Earned",
+    "startedLabel": "Started at",
+    "endsAround": "Stopped around {{time}}",
+    "resultMath": "{{gross}} earned − {{vehicle}} for the vehicle − {{expenses}} in expenses",
+    "inCostHint_km": "Fuel and maintenance are already in the cost per km. Log them from the shift button to compare planned and paid.",
+    "inCostHint_mi": "Fuel and maintenance are already in the cost per mile. Log them from the shift button to compare planned and paid."
   },
   "result": {
     "title": "Result",

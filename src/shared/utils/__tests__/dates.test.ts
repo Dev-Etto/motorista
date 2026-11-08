@@ -7,6 +7,7 @@ import {
   dayRange,
   daysBetween,
   formatClock,
+  clockAfter,
   formatElapsedShort,
   formatDate,
   formatDuration,
@@ -145,5 +146,12 @@ describe('tempo de jornada abreviado', () => {
 describe('dia por extenso', () => {
   it('mostra o dia da semana, o dia e o mês, com maiúscula', () => {
     expect(formatLongDay('2026-11-07', 'pt-BR')).toBe('Sábado, 7 de novembro');
+  });
+});
+
+describe('hora de parada', () => {
+  it('soma as horas trabalhadas ao início, virando o dia', () => {
+    expect(clockAfter(6, 500)).toBe('14:20');
+    expect(clockAfter(20, 300)).toBe('01:00');
   });
 });

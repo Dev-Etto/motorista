@@ -121,6 +121,11 @@ export function elapsedParts(elapsedMs: number): ElapsedParts {
   return { hours, minutes: total % MINUTES_PER_HOUR, overDay: hours >= HOURS_PER_DAY };
 }
 
+export function clockAfter(startHour: number, minutes: number): string {
+  const total = (startHour * MINUTES_PER_HOUR + Math.round(minutes)) % (HOURS_PER_DAY * MINUTES_PER_HOUR);
+  return `${String(Math.floor(total / MINUTES_PER_HOUR)).padStart(2, '0')}:${String(total % MINUTES_PER_HOUR).padStart(2, '0')}`;
+}
+
 export function formatElapsedShort(elapsedMs: number): string {
   const { hours, minutes, overDay } = elapsedParts(elapsedMs);
   if (overDay) return `${HOURS_PER_DAY}h+`;

@@ -218,6 +218,8 @@ export function useShiftForm(shiftId?: number) {
     setExpense: touching((category: ExpenseCategory, text: string) => setExpenses((current) => ({ ...current, [category]: text }))),
     dirty: touched,
     preview,
+    minutes,
+    startHour: format.parseInt(fields.startHour),
     error: problem && !fieldOfError(problem) ? describeFormError(problem, t, format) : null,
     fieldError: (field: ShiftFormField) => (problem && fieldOfError(problem) === field ? describeFormError(problem, t, format) : null),
     applyLive,
