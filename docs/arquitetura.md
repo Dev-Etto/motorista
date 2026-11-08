@@ -101,6 +101,8 @@ app -> features -> application -> data -> domain -> shared/utils
 
 **Copiloto só leitura.** O serviço declara `canPerformGestures=false`. O cartão recebe toques só para ser arrastado e usa `FLAG_NOT_TOUCH_MODAL`, para os toques fora dele chegarem ao app embaixo. Qualquer automação de toque, aceite ou recusa está fora do produto. O cartão nunca fica no terço inferior da tela, onde ficam os botões de aceitar e recusar das plataformas: a posição salva pelo arrasto é ajustada ao mostrar o cartão. Só os pacotes das plataformas suportadas são lidos, mesmo que as preferências tragam outro nome.
 
+**Backup automático do Android.** `allowBackup` ligado com regras em `plugins/withBackupRules.js`: entram o banco do app, o histórico de ofertas e as preferências. O cronômetro da jornada e a posição do botão flutuante ficam de fora, porque não fazem sentido em outro aparelho. O backup na nuvem só acontece com criptografia de ponta a ponta (`disableIfNoEncryptionCapabilities` e `clientSideEncryption`). O limite do Android é 25 MB por app.
+
 **Divulgação antes da acessibilidade.** Exigência da Play para apps que não são ferramentas de acessibilidade. Nenhum caminho abre as configurações de acessibilidade sem o aceite da divulgação, guardado com a data em `accessibility_consent_at`. A regra fica em `application/accessibilityConsent.ts`, e a tela de configuração do Copiloto mostra a divulgação antes do passo da permissão.
 
 **Regra `set-state-in-effect` desligada.** Ela acusa carregamentos assíncronos que só alteram o estado depois de um `await`, o que é falso positivo neste projeto.

@@ -26,7 +26,7 @@ As issues da Fase 2 e da Fase 5 vão acrescentar saídas. Cada uma deve ser regi
 | Relatórios de falha (Crashlytics) | #59 | Erro, modelo do aparelho, versão do Android e do app | Legítimo interesse, ligado por padrão, com opção de desligar em Escolhas de privacidade |
 | Métricas de uso (Analytics) | #59 | Eventos anônimos: `onboarding_complete`, `copilot_enabled` (lista em `src/application/analytics.ts`) | Consentimento, desligado por padrão. Escolha guardada em `privacy_choices` |
 | Relatar problema | #60 | A definir na implementação | Ação do usuário |
-| Backup automático do Android | #61 | Banco e preferências, criptografado na conta Google do usuário | Configuração do sistema |
+| Backup automático do Android | #61 | Banco do app (`files/SQLite`), histórico de ofertas (`databases`) e preferências, menos o cronômetro e a posição do botão flutuante. Regras em `plugins/withBackupRules.js` | Configuração do sistema. Só com criptografia de ponta a ponta (bloqueio de tela) |
 | Backup no Google Drive | #75 | Arquivo de backup na pasta privada do app no Drive do usuário | Ação do usuário |
 | Cobrança (Google Play e RevenueCat) | #78 | Compra e estado da assinatura, com ID anônimo | Execução do contrato |
 | ML Kit | #89 | Verificar se envia métricas de uso ao Google com a internet liberada | A confirmar |
