@@ -91,5 +91,13 @@
     "evaluateSubtitle": "Enter fare, distance and time",
     "quote": "Private ride quote",
     "quoteSubtitle": "Work out the price and share it"
+  },
+  "correct": {
+    "title": "Fix the result",
+    "message": "Mark what happened to this offer. This adjusts the estimated earnings.",
+    "accepted": "I accepted",
+    "declined": "I didn't accept",
+    "cancel": "Cancel",
+    "hint": "Fixes whether the offer was accepted"
   }
 }

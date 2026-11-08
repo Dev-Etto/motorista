@@ -27,7 +27,9 @@ jest.mock('@data/repositories/vehicleRepository', () => ({
 jest.mock('@application/vehicleInUse', () => ({
   vehicleInUse: jest.fn(() => jest.requireMock('@data/repositories/vehicleRepository').vehicleRepository.getCurrent()),
 }));
-jest.mock('@data/repositories/shiftRepository', () => ({ shiftRepository: { findById: jest.fn(), save: jest.fn() } }));
+jest.mock('@data/repositories/shiftRepository', () => ({
+  shiftRepository: { findById: jest.fn(), save: jest.fn(), lastOdometerEnd: jest.fn().mockResolvedValue(null) },
+}));
 jest.mock('@shared/utils/reportError', () => ({ reportError: jest.fn() }));
 
 const SAVED = {
@@ -169,6 +171,14 @@ describe('mensagens de erro do formulário da jornada', () => {
       });
       expect(shiftRepository.save).toHaveBeenLastCalledWith(expect.objectContaining({ vehicleId: 1 }));
       expect(savedId).toBe(42);
+    });
+
+    it('jornada nova sugere o último odômetro final como inicial', async () => {
+      jest.mocked(shiftRepository.lastOdometerEnd).mockResolvedValueOnce(45380);
+      const { result } = await renderHook(() => useShiftForm());
+
+      await waitFor(() => expect(result.current.bind('odometerStart').value).toBe('45380'));
+      expect(result.current.dirty).toBe(false);
     });
 
     it('com jornada iniciada, o encerramento abre com o veículo da jornada', async () => {

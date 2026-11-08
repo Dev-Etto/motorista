@@ -8,6 +8,7 @@ import { KmEntryMode } from '@domain/shift/shiftForm';
 import { ShiftEstimateCard } from '@features/offers';
 import { TipBanner } from '@features/tips';
 import { useSubmit } from '@shared/hooks/useSubmit';
+import { useUnsavedChangesGuard } from '@shared/hooks/useUnsavedChangesGuard';
 import { useFormat } from '@shared/i18n/format';
 import { spacing } from '@shared/theme/theme';
 import { DateField } from '@shared/ui/DateField';
@@ -47,6 +48,8 @@ export default function ShiftFormScreen() {
     void live.apply();
   }, [finish, live]);
 
+  const allowLeave = useUnsavedChangesGuard(form.dirty);
+
   const saving = useSubmit(async () => {
     if (!id && live.pending) return setMeasureError(t('form.measurePending', { context: format.distanceUnit }));
 
@@ -54,6 +57,7 @@ export default function ShiftFormScreen() {
     const savedId = await form.save();
     if (!savedId) return;
 
+    allowLeave();
     if (id) return router.back();
     if (live.started) await live.discard();
     router.replace(`/shift/${savedId}`);

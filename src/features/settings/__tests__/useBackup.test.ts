@@ -57,7 +57,11 @@ describe('fazer backup', () => {
   });
 });
 
+const confirmRestore = () => act(async () => jest.mocked(confirmAction).mock.calls.at(-1)?.[0].onConfirm());
+
 describe('restaurar backup', () => {
+  beforeEach(() => jest.mocked(confirmAction).mockClear());
+
   it('mostra uma mensagem quando o seletor de arquivo falha', async () => {
     jest.mocked(DocumentPicker.getDocumentAsync).mockRejectedValue(new Error('sem seletor'));
     const { result } = await renderHook(() => useBackup());
@@ -71,7 +75,9 @@ describe('restaurar backup', () => {
     jest.mocked(restoreBackup).mockClear();
     jest.mocked(DocumentPicker.getDocumentAsync).mockResolvedValue({ canceled: false, assets: [{ uri: 'file:///ok.json' }] } as never);
     jest.mocked(File).mockImplementation(() => ({ textSync: () => '{}', exists: false, create: jest.fn(), write: jest.fn() }) as never);
-    jest.mocked(parseBackup).mockReturnValue({ ok: true, backup: { tables: {} } } as never);
+    jest
+      .mocked(parseBackup)
+      .mockReturnValue({ ok: true, backup: { exportedAt: '2026-11-01T10:00:00.000Z', tables: { shifts: [{}], vehicles: [{}, {}] } } } as never);
     const { result } = await renderHook(() => useBackup());
 
     await act(async () => {
@@ -79,6 +85,9 @@ describe('restaurar backup', () => {
       void result.current.importBackup();
     });
 
+    expect(confirmAction).toHaveBeenCalledTimes(1);
+    expect(restoreBackup).not.toHaveBeenCalled();
+    await confirmRestore();
     expect(restoreBackup).toHaveBeenCalledTimes(1);
   });
 
@@ -103,11 +112,15 @@ describe('restaurar backup', () => {
     const write = jest.fn();
     jest.mocked(DocumentPicker.getDocumentAsync).mockResolvedValue({ canceled: false, assets: [{ uri: 'file:///ok.json' }] } as never);
     jest.mocked(File).mockImplementation(() => ({ textSync: () => '{}', exists: false, create: jest.fn(), write }) as never);
-    jest.mocked(parseBackup).mockReturnValue({ ok: true, backup: { tables: {} } } as never);
+    jest
+      .mocked(parseBackup)
+      .mockReturnValue({ ok: true, backup: { exportedAt: '2026-11-01T10:00:00.000Z', tables: { shifts: [{}], vehicles: [{}, {}] } } } as never);
     const { result } = await renderHook(() => useBackup());
     expect(result.current.canUndo).toBe(false);
 
     await act(async () => result.current.importBackup());
+    expect(jest.mocked(confirmAction).mock.calls[0]?.[0].message).toContain('Jornadas: 1. Veículos: 2.');
+    await confirmRestore();
 
     expect(write).toHaveBeenCalled();
     expect(restoreBackup).toHaveBeenCalled();
@@ -119,11 +132,14 @@ describe('restaurar backup', () => {
   it('restauração concluída não vira falha se os lembretes não voltarem', async () => {
     jest.mocked(DocumentPicker.getDocumentAsync).mockResolvedValue({ canceled: false, assets: [{ uri: 'file:///ok.json' }] } as never);
     jest.mocked(File).mockImplementation(() => ({ textSync: () => '{}', exists: false, create: jest.fn(), write: jest.fn() }) as never);
-    jest.mocked(parseBackup).mockReturnValue({ ok: true, backup: { tables: {} } } as never);
+    jest
+      .mocked(parseBackup)
+      .mockReturnValue({ ok: true, backup: { exportedAt: '2026-11-01T10:00:00.000Z', tables: { shifts: [{}], vehicles: [{}, {}] } } } as never);
     jest.mocked(applyRestoredState).mockRejectedValueOnce(new Error('sem permissão'));
     const { result } = await renderHook(() => useBackup());
 
     await act(async () => result.current.importBackup());
+    await confirmRestore();
 
     expect(result.current.message?.tone).toBe('positive');
     expect(result.current.message?.text).toContain('Confira os lembretes');
@@ -133,7 +149,9 @@ describe('restaurar backup', () => {
     jest.mocked(restoreBackup).mockClear();
     jest.mocked(DocumentPicker.getDocumentAsync).mockResolvedValue({ canceled: false, assets: [{ uri: 'file:///usd.json' }] } as never);
     jest.mocked(File).mockImplementation(() => ({ textSync: () => '{}', exists: false, create: jest.fn(), write: jest.fn() }) as never);
-    jest.mocked(parseBackup).mockReturnValue({ ok: true, backup: { tables: {} } } as never);
+    jest
+      .mocked(parseBackup)
+      .mockReturnValue({ ok: true, backup: { exportedAt: '2026-11-01T10:00:00.000Z', tables: { shifts: [{}], vehicles: [{}, {}] } } } as never);
     jest.mocked(backupMarket).mockReturnValueOnce('XX' as never);
     const { result } = await renderHook(() => useBackup());
 

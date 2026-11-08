@@ -52,7 +52,9 @@
     "savedTitle": "Cotizaciones guardadas",
     "noDescription": "Sin descripción",
     "tapToRemove": "Toca para quitar",
-    "removeTitle": "¿Quitar la cotización?"
+    "removeTitle": "¿Quitar la cotización?",
+    "tapToOpen": "Toca para abrir o eliminar",
+    "open": "Abrir"
   },
   "costOf": "Costo de {{name}}: {{cost}}"
 }

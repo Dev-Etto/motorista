@@ -25,7 +25,7 @@ export function useReminders() {
     const notificationId = dueDate ? await scheduleDateReminder(title, dueDate) : null;
     const vehicleId = kmFromNow === null ? null : (data?.vehicleId ?? null);
     const dueKm = kmFromNow === null || !data ? kmFromNow : kmFor(vehicleId, data.totals) + kmFromNow;
-    await reminderRepository.add({ title, dueDate, dueKm, notificationId, vehicleId });
+    await reminderRepository.add({ title, dueDate, dueKm, notificationId, vehicleId, repeatKm: kmFromNow });
     await reload();
     return { notifies: !dueDate || notificationId !== null };
   };

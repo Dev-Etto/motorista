@@ -54,6 +54,7 @@ export function useOffers() {
     setSource: resettingList(setSourceState),
     showMore: () => setVisible((current) => current + PAGE_SIZE),
     clear: history.clear,
+    reload: history.reload,
     toggleEstimating,
   };
 }

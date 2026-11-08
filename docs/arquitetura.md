@@ -303,3 +303,6 @@ app -> features -> application -> data -> domain -> shared/utils
 - **Botão flutuante acessível:** `WindowDrag` chama `performClick` no toque sem arraste, então o leitor de tela também abre e fecha o painel. A descrição e o estado do botão são atualizados a cada render.
 - **Mês fechado com vários veículos:** `proratedFixedMonthly` divide o custo fixo de cada veículo pelos dias com jornada dele no mês. A Meta continua planejando com o veículo atual, porque olha para frente, e avisa isso quando há mais de um veículo.
 - **Despesa com veículo:** `expenses.vehicle_id` liga o lançamento ao veículo. Um abastecimento com litros calcula o preço pago por litro e oferece gravar um perfil de custo novo a partir de hoje, só para gasolina, etanol e diesel, porque GNV e elétrico não usam litro.
+- **Alterações não salvas:** `useUnsavedChangesGuard` usa `usePreventRemove` do expo-router. O formulário da jornada só fica "alterado" pelo que a pessoa digita, e não pela hidratação, pela medição aplicada ou pelo odômetro sugerido. Salvar chama a liberação antes de navegar.
+- **Correção da oferta:** `copilot.setOfferStatus` grava o resultado pelo `timestamp`, a chave do registro, com o mesmo `markOutcome` usado no toque.
+- **Lembrete que se repete:** `reminders.repeat_km` guarda o intervalo de um lembrete por km, para oferecer o próximo ao concluir.

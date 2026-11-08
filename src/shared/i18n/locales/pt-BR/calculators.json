@@ -52,7 +52,9 @@
     "savedTitle": "Orçamentos salvos",
     "noDescription": "Sem descrição",
     "tapToRemove": "Toque para remover",
-    "removeTitle": "Remover orçamento?"
+    "removeTitle": "Remover orçamento?",
+    "tapToOpen": "Toque para abrir ou remover",
+    "open": "Abrir"
   },
   "costOf": "Custo do {{name}}: {{cost}}"
 }

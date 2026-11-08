@@ -27,7 +27,7 @@ export default function OffersHubScreen() {
       <Card title={t('hub.recentTitle')}>
         {status.history.length === 0 ? <AppText tone="muted">{t('hub.empty')}</AppText> : null}
         {status.history.map((entry) => (
-          <OfferRow key={entry.timestamp} entry={entry} />
+          <OfferRow key={entry.timestamp} entry={entry} onCorrected={status.refresh} />
         ))}
         <Button label={t('hub.seeAll')} variant="secondary" onPress={() => router.push('/offers')} />
       </Card>

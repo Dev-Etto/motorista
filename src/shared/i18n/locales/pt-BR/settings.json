@@ -123,7 +123,8 @@
       "message": "O backup só conta como feito se o arquivo foi salvo, por exemplo no Google Drive ou nos arquivos do celular.",
       "yes": "Salvei",
       "no": "Não salvei"
-    }
+    },
+    "preview": "Backup de {{date}}. Jornadas: {{shifts}}. Veículos: {{vehicles}}."
   },
   "dailyReminder": {
     "title": "Fim do dia",
@@ -158,6 +159,11 @@
       "private": "Corridas combinadas direto com o passageiro",
       "other": "Outro app de corrida ou entrega. Sem Copiloto",
       "legacy": "Desativada, sai da lista. Jornadas antigas mantêm o nome"
+    },
+    "turnOff": {
+      "title": "Desligar {{name}}?",
+      "message": "O campo de ganho some das jornadas, e o Copiloto para de ler as ofertas da {{name}}.",
+      "action": "Desligar"
     }
   },
   "privacy": {
@@ -247,6 +253,11 @@
       "remaining": "faltam {{distance}}",
       "reached": "já chegou a hora",
       "dateOrDistance": "{{date}} ou {{distance}}"
+    },
+    "next": {
+      "title": "Criar o próximo?",
+      "message": "Lembrar de \"{{title}}\" de novo daqui a {{distance}}.",
+      "action": "Criar"
     }
   },
   "report": {

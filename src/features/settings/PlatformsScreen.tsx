@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { hasCopilot, type PlatformEntry } from '@application/platforms';
 import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
+import { confirmAction } from '@shared/ui/dialog';
 import { AppText, Card, Notice, Screen, ToggleRow } from '@shared/ui/primitives';
 import { usePlatforms } from './usePlatforms';
 
@@ -9,6 +10,20 @@ const OWN_HINT_KEYS = { private: 'platforms.hint.private', other: 'platforms.hin
 export default function PlatformsScreen() {
   const { t } = useTranslation('settings');
   const { state: platforms, toggle } = usePlatforms();
+
+  const change = (platform: PlatformEntry, active: boolean) => {
+    if (active || !hasCopilot(platform.key)) {
+      void toggle(platform.id, active);
+      return;
+    }
+
+    confirmAction({
+      title: t('platforms.turnOff.title', { name: platform.name }),
+      message: t('platforms.turnOff.message', { name: platform.name }),
+      actionLabel: t('platforms.turnOff.action'),
+      onConfirm: () => toggle(platform.id, false),
+    });
+  };
 
   const hintOf = (platform: PlatformEntry) => {
     if (hasCopilot(platform.key)) return t('platforms.hint.copilot');
@@ -28,7 +43,7 @@ export default function PlatformsScreen() {
               label={platform.name}
               hint={hintOf(platform)}
               value={platform.active}
-              onChange={(active) => (active || activeCount > 1 ? toggle(platform.id, active) : undefined)}
+              onChange={(active) => (active || activeCount > 1 ? change(platform, active) : undefined)}
             />
           );
           const apps = list.filter((platform) => hasCopilot(platform.key));

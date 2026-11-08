@@ -59,7 +59,7 @@ export default function OffersScreen() {
       <Card title={t('screen.listTitle')}>
         <FilterChips label={t('screen.outcomeLabel')} value={offers.outcome} options={outcomeOptions} onChange={offers.setOutcome} />
         {offers.offers.map((entry) => (
-          <OfferRow key={entry.timestamp} entry={entry} />
+          <OfferRow key={entry.timestamp} entry={entry} onCorrected={offers.reload} />
         ))}
         {offers.hasMore ? <Button label={t('screen.seeMore')} variant="secondary" onPress={offers.showMore} /> : null}
       </Card>

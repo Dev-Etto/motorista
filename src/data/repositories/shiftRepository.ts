@@ -171,6 +171,15 @@ export function createShiftRepository(connection: () => SqlExecutor = getDb, veh
       return { shift: toShiftRecord(row), earnings, expenses };
     },
 
+    async lastOdometerEnd(vehicleId: number | null): Promise<number | null> {
+      const row = await connection().getFirstAsync<{ odometer_end: number }>(
+        'SELECT odometer_end FROM shifts WHERE odometer_end IS NOT NULL AND (? IS NULL OR vehicle_id = ?) ORDER BY date DESC, id DESC LIMIT 1',
+        vehicleId,
+        vehicleId,
+      );
+      return row?.odometer_end ?? null;
+    },
+
     async listFacts(start: string, end: string): Promise<ShiftListItem[]> {
       const db = connection();
       const [shifts, earnings, expenses] = await Promise.all([

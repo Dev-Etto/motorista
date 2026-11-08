@@ -10,5 +10,5 @@ export function useOfferHistory({ from, to }: OfferRange) {
     await history.reload();
   };
 
-  return { entries: history.data ?? [], loading: history.loading, error: history.error, clear };
+  return { entries: history.data ?? [], loading: history.loading, error: history.error, clear, reload: history.reload };
 }
