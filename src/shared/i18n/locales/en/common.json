@@ -30,7 +30,8 @@
     "notNow": "Not now",
     "later": "Do this later",
     "clear": "Clear",
-    "retry": "Try again"
+    "retry": "Try again",
+    "back": "Back"
   },
   "irreversible": "This action can't be undone.",
   "invalidNumber": "Check the numbers you entered. Use numbers only, like {{example}}.",
@@ -61,7 +62,8 @@
     "region": "Language and region",
     "regionLanguage": "Language",
     "regionFormat": "Regional format",
-    "calculator": "Calculator"
+    "calculator": "Calculator",
+    "about": "About"
   },
   "tabs": {
     "home": "Home",

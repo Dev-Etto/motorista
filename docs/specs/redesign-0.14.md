@@ -105,3 +105,24 @@ O cartão nativo já segue o design aprovado: o topo tem só a bandeira do app, 
 | --- | --- | --- |
 | F4.2.1 | Cada passo mostra o progresso no topo e "Pular" no canto. Pular a introdução leva ao veículo, pular o veículo conclui, pular o resultado leva às permissões e pular as permissões leva ao fim | Jest |
 | F4.2.2 | O cadastro rápido do veículo oferece gasolina, etanol, GNV e elétrico. No elétrico, o consumo usa kWh | Jest |
+
+## Fase 5. Mais e encerramento
+
+Mais tem cinco grupos e mistura ajustes do dia a dia com termos e versão. O formulário de nova jornada é uma página longa, com tempo, ganhos, despesas e resultado juntos.
+
+### F5.1 Mais
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F5.1.1 | Mais tem três grupos: Trabalho (veículos, meta, plataformas e Copiloto), App (aparência, idioma, lembretes, backup e permissões) e Ajuda e sobre | Jest |
+| F5.1.2 | A tela Sobre reúne a logo e a versão, Meu resumo, Relatar um problema, Privacidade, Termos, Apoiar o projeto, atualização e código | Jest |
+| F5.1.3 | Cada item aponta para uma rota existente | Jest |
+
+### F5.2 Nova jornada em etapas
+
+| ID | Critério de aceite | Teste |
+| --- | --- | --- |
+| F5.2.1 | A nova jornada tem três etapas: Tempo e km, Ganhos, e Despesas e resultado, com o progresso e os botões Voltar e Continuar | Jest |
+| F5.2.2 | Continuar valida a etapa atual. O erro de um campo dela segura o avanço e aparece no campo. Erros de outras etapas não seguram | Jest |
+| F5.2.3 | Salvar com erro volta para a etapa do erro | Jest |
+| F5.2.4 | Editar uma jornada salva continua numa tela só | Jest |

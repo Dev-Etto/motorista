@@ -17,6 +17,20 @@ const FIELD_OF_ERROR: Partial<Record<ShiftFormError, ShiftFormField>> = {
 
 export const fieldOfError = (error: ShiftFormError): ShiftFormField | null => FIELD_OF_ERROR[error] ?? null;
 
+export const SHIFT_FORM_STEPS = ['time', 'earnings', 'result'] as const;
+
+export type ShiftFormStep = (typeof SHIFT_FORM_STEPS)[number];
+
+const STEP_OF_ERROR: Partial<Record<ShiftFormError, ShiftFormStep>> = {
+  'invalid-hours': 'time',
+  'too-long': 'time',
+  'invalid-start-hour': 'time',
+  'odometer-order': 'time',
+  'no-earnings': 'earnings',
+};
+
+export const stepOfError = (error: ShiftFormError): ShiftFormStep | null => STEP_OF_ERROR[error] ?? null;
+
 export interface KmEntry {
   mode: KmEntryMode;
   km: number | null;

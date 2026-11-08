@@ -38,7 +38,12 @@
       "noEarnings": "Informe o ganho de pelo menos uma plataforma.",
       "odometerOrder": "O odômetro final precisa ser maior que o inicial."
     },
-    "vehicleLabel": "Veículo"
+    "vehicleLabel": "Veículo",
+    "step": {
+      "time": "Tempo e km",
+      "earnings": "Ganhos",
+      "result": "Despesas e resultado"
+    }
   },
   "result": {
     "title": "Resultado",

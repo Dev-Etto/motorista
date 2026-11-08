@@ -1,11 +1,9 @@
 {
   "more": {
     "section": {
-      "work": "Seu trabalho",
-      "preferences": "Preferências",
-      "copilot": "Copiloto e permissões",
-      "data": "Seus dados",
-      "help": "Ajuda"
+      "work": "Trabalho",
+      "app": "App",
+      "help": "Ajuda e sobre"
     },
     "item": {
       "vehicle": {
@@ -15,10 +13,6 @@
       "goal": {
         "title": "Meta e mínimos",
         "subtitle": "Seu lucro e o mínimo por corrida"
-      },
-      "offers": {
-        "title": "Ofertas e faturamento",
-        "subtitle": "Aceitas, não aceitas e o valor estimado"
       },
       "platforms": {
         "title": "Plataformas",
@@ -63,6 +57,10 @@
       "region": {
         "title": "Idioma e região",
         "subtitle": "Idioma, moeda, unidades e formato de datas"
+      },
+      "about": {
+        "title": "Sobre o app",
+        "subtitle": "Privacidade, termos, versão e apoio"
       }
     },
     "about": {
@@ -72,7 +70,12 @@
       "updateTitle": "Verificar atualização",
       "updateSubtitle": "Abre a página de versões no navegador.",
       "versionTitle": "Versão {{version}}",
-      "versionSubtitle": "Ver o código e as novidades."
+      "versionSubtitle": "Ver o código e as novidades.",
+      "codeTitle": "Código e novidades"
+    },
+    "aboutSection": {
+      "yours": "Seus dados e sugestões",
+      "legal": "Privacidade e termos"
     }
   },
   "appearance": {

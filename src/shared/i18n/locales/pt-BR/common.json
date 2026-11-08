@@ -30,7 +30,8 @@
     "notNow": "Agora não",
     "later": "Fazer isso depois",
     "clear": "Limpar",
-    "retry": "Tentar de novo"
+    "retry": "Tentar de novo",
+    "back": "Voltar"
   },
   "irreversible": "Essa ação não pode ser desfeita.",
   "invalidNumber": "Confira os números digitados. Use só números, como {{example}}.",
@@ -61,7 +62,8 @@
     "region": "Idioma e região",
     "regionLanguage": "Idioma",
     "regionFormat": "Formato regional",
-    "calculator": "Calculadora"
+    "calculator": "Calculadora",
+    "about": "Sobre"
   },
   "tabs": {
     "home": "Início",
