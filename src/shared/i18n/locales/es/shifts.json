@@ -153,8 +153,6 @@
     "notificationBody": "La ubicación queda solo en el dispositivo. Pausa en los trayectos personales."
   },
   "bar": {
-    "running": "Jornada en curso",
-    "paused": "Jornada en pausa",
     "pause": "Pausar",
     "resume": "Reanudar",
     "finish": "Terminar",

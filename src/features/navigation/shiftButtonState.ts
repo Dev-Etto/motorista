@@ -3,7 +3,7 @@ import { elapsedParts } from '@shared/utils/dates';
 
 export type ShiftButtonState = 'idle' | 'running' | 'paused';
 
-export const LONG_TIME_LENGTH = 5;
+export const LONG_TIME_LENGTH = 6;
 
 export function shiftButtonState(started: boolean, running: boolean): ShiftButtonState {
   if (!started) return 'idle';

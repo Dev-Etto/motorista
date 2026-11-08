@@ -9,6 +9,7 @@ import android.os.Build
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -27,12 +28,17 @@ class FloatingPanel(
     val lastOffer: OfferEvaluation?,
     val theme: ThemeMode,
     val night: Boolean,
+    val side: DockSide?,
   )
 
   private var rendered: PanelState? = null
   private val cardTheme = CardTheme(context)
   private val logo = icon(R.drawable.ic_stat_motorista, LOGO_DP).apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
-  private val statusDot = View(context).apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
+  private val statusDot = icon(R.drawable.ic_pill_dot, PILL_LOGO_DP).apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
+  private val mark = FrameLayout(context).apply {
+    addView(logo, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+    addView(statusDot, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+  }
   private val title = text(TITLE_SP, bold = true)
   private val status = text(CAPTION_SP, bold = false)
   private val close = icon(R.drawable.ic_panel_close, ICON_DP).apply { importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO }
@@ -63,8 +69,7 @@ class FloatingPanel(
     gravity = Gravity.CENTER_VERTICAL
     minimumHeight = context.dp(HANDLE_DP)
     minimumWidth = context.dp(HANDLE_DP)
-    addView(logo, LinearLayout.LayoutParams(context.dp(LOGO_DP), context.dp(LOGO_DP)))
-    addView(statusDot, LinearLayout.LayoutParams(context.dp(DOT_DP), context.dp(DOT_DP)).apply { marginEnd = context.dp(SPACE_S_DP) })
+    addView(mark, LinearLayout.LayoutParams(context.dp(LOGO_DP), context.dp(LOGO_DP)))
     addView(titles, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
     addView(close, LinearLayout.LayoutParams(context.dp(ICON_DP), context.dp(ICON_DP)))
   }
@@ -80,19 +85,19 @@ class FloatingPanel(
     addView(menu)
   }
 
-  fun render(timer: TimerState, lastOffer: OfferEvaluation?, open: Boolean, theme: ThemeMode, format: OfferFormat) {
+  fun render(timer: TimerState, lastOffer: OfferEvaluation?, open: Boolean, theme: ThemeMode, format: OfferFormat, side: DockSide?) {
     val clock = OfferFormat.clock(timer.elapsedMs)
     val shown = if (open) clock else OfferFormat.shortClock(timer.elapsedMs)
     if (title.text.toString() != shown) title.text = shown
     describeHandle(clock, timer, open)
 
     val night = cardTheme.isNight(theme)
-    val next = PanelState(open, timer.running, timer.started, lastOffer, theme, night)
+    val next = PanelState(open, timer.running, timer.started, lastOffer, theme, night, side)
     if (next == rendered) return
 
     rendered = next
     menu.visibility = if (open) View.VISIBLE else View.GONE
-    if (open) renderOpen(timer, lastOffer, cardTheme.palette(theme), night, format) else renderClosed(timer)
+    if (open) renderOpen(timer, lastOffer, cardTheme.palette(theme), night, format) else renderClosed(timer, side)
   }
 
   private fun describeHandle(clock: String, timer: TimerState, open: Boolean) {
@@ -109,18 +114,21 @@ class FloatingPanel(
     }
   }
 
-  private fun renderClosed(timer: TimerState) {
-    view.background = rounded(PILL_COLOR, CLOSED_CORNER_DP).apply { setStroke(context.dp(1), PILL_STROKE) }
+  private fun renderClosed(timer: TimerState, side: DockSide?) {
+    view.background = docked(side)
     view.elevation = context.dp(ELEVATION_DP).toFloat()
     view.setPadding(0, 0, 0, 0)
     view.minimumWidth = 0
     handle.gravity = Gravity.CENTER
-    handle.setPadding(context.dp(SPACE_M_DP), 0, context.dp(SPACE_L_DP), 0)
-    logo.visibility = View.VISIBLE
-    logo.layoutParams = LinearLayout.LayoutParams(context.dp(LOGO_WITH_CLOCK_DP), context.dp(LOGO_WITH_CLOCK_DP)).apply { marginEnd = context.dp(SPACE_S_DP) }
+    handle.minimumHeight = context.dp(PILL_DP)
+    val (inner, edge) = context.dp(SPACE_M_DP) to context.dp(PILL_EDGE_DP)
+    if (side == DockSide.START) handle.setPadding(edge, 0, inner, 0) else handle.setPadding(inner, 0, edge, 0)
+    mark.layoutParams = LinearLayout.LayoutParams(context.dp(PILL_LOGO_DP), context.dp(PILL_LOGO_DP)).apply { marginEnd = context.dp(SPACE_S_DP) }
+    logo.setImageResource(R.drawable.ic_pill_logo)
     logo.imageTintList = ColorStateList.valueOf(Color.WHITE)
     titles.visibility = View.VISIBLE
     titles.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+    title.setTextSize(TypedValue.COMPLEX_UNIT_SP, PILL_SP)
     title.setTextColor(Color.WHITE)
     status.visibility = View.GONE
     close.visibility = View.GONE
@@ -128,11 +136,25 @@ class FloatingPanel(
   }
 
   private fun renderDot(timer: TimerState) {
-    statusDot.visibility = if (timer.started) View.VISIBLE else View.GONE
-    statusDot.background = GradientDrawable().apply {
-      shape = GradientDrawable.OVAL
-      setColor(if (timer.running) DOT_RUNNING else DOT_PAUSED)
+    statusDot.visibility = View.VISIBLE
+    val color = when {
+      timer.running -> DOT_RUNNING
+      timer.started -> DOT_PAUSED
+      else -> Color.WHITE
     }
+    statusDot.imageTintList = ColorStateList.valueOf(color)
+  }
+
+  private fun docked(side: DockSide?) = GradientDrawable().apply {
+    setColor(PILL_COLOR)
+    val round = context.dp(PILL_DP / 2).toFloat()
+    if (side == null) {
+      cornerRadius = round
+      return@apply
+    }
+    val inner = floatArrayOf(round, round)
+    val edge = floatArrayOf(0f, 0f)
+    cornerRadii = if (side == DockSide.END) inner + edge + edge + inner else edge + inner + inner + edge
   }
 
   private fun renderOpen(timer: TimerState, lastOffer: OfferEvaluation?, colors: CardPalette, night: Boolean, format: OfferFormat) {
@@ -141,13 +163,15 @@ class FloatingPanel(
     view.setPadding(context.dp(SPACE_M_DP), context.dp(SPACE_S_DP), context.dp(SPACE_M_DP), context.dp(SPACE_M_DP))
     view.minimumWidth = context.dp(OPEN_WIDTH_DP)
     handle.gravity = Gravity.CENTER_VERTICAL
+    handle.minimumHeight = context.dp(HANDLE_DP)
     handle.setPadding(0, 0, 0, 0)
-    logo.visibility = View.VISIBLE
-    logo.layoutParams = LinearLayout.LayoutParams(context.dp(LOGO_DP), context.dp(LOGO_DP)).apply { marginEnd = context.dp(SPACE_S_DP) }
+    mark.layoutParams = LinearLayout.LayoutParams(context.dp(LOGO_DP), context.dp(LOGO_DP)).apply { marginEnd = context.dp(SPACE_S_DP) }
+    logo.setImageResource(R.drawable.ic_stat_motorista)
     logo.imageTintList = ColorStateList.valueOf(colors.text)
     statusDot.visibility = View.GONE
     titles.visibility = View.VISIBLE
     titles.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+    title.setTextSize(TypedValue.COMPLEX_UNIT_SP, TITLE_SP)
     title.setTextColor(colors.text)
     status.visibility = View.VISIBLE
     status.text = statusText(timer)
@@ -236,26 +260,25 @@ class FloatingPanel(
 
   private companion object {
     const val PILL_COLOR = OverlayColors.INK
-    const val PILL_STROKE = OverlayColors.HAIRLINE
     const val DOT_RUNNING = 0xFF4FD08D.toInt()
     const val DOT_PAUSED = 0xFFF1B84B.toInt()
-    const val DOT_DP = 8
     const val RIPPLE_ALPHA = 0x33000000
-    const val CLOSED_CORNER_DP = 18
     const val OPEN_CORNER_DP = 20
     const val ROW_CORNER_DP = 14
     const val OPEN_WIDTH_DP = 272
     const val HANDLE_DP = 56
     const val ROW_DP = 52
     const val LOGO_DP = 40
-    const val LOGO_WITH_CLOCK_DP = 28
+    const val PILL_DP = 52
+    const val PILL_LOGO_DP = 24
+    const val PILL_EDGE_DP = 16
     const val ICON_DP = 22
     const val BADGE_DP = 28
     const val SPACE_S_DP = 8
     const val SPACE_M_DP = 12
-    const val SPACE_L_DP = 14
     const val ELEVATION_DP = 8
     const val TITLE_SP = 20f
+    const val PILL_SP = 16f
     const val ROW_SP = 16f
     const val CAPTION_SP = 13f
   }

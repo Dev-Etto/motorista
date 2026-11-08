@@ -153,8 +153,6 @@
     "notificationBody": "Your location stays on the device only. Pause it for personal trips."
   },
   "bar": {
-    "running": "Shift in progress",
-    "paused": "Shift paused",
     "pause": "Pause",
     "resume": "Resume",
     "finish": "Finish",

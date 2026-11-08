@@ -12,7 +12,6 @@ export const SHIFT_BUTTON_SIZE = 64;
 const TIME_SIZE = 16;
 const LONG_TIME_SIZE = 14;
 const ICON_SIZE = 24;
-const PAUSE_ICON_SIZE = 14;
 
 const ignoreApply = () => undefined;
 
@@ -53,7 +52,6 @@ export function ShiftButton() {
             {time}
           </Text>
         )}
-        {state === 'paused' ? <AppIcon name="pause" color={ink} size={PAUSE_ICON_SIZE} /> : null}
       </Pressable>
       <ShiftSheet live={live} visible={sheetOpen && state !== 'idle'} onClose={() => setSheetOpen(false)} />
     </>

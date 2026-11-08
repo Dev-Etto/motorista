@@ -5,6 +5,8 @@ import android.util.TypedValue
 
 data class ScreenSize(val width: Int, val height: Int)
 
+enum class DockSide { START, END }
+
 object ScreenBounds {
   private const val PILL_AREA_NUMERATOR = 2
   private const val PILL_AREA_DENOMINATOR = 3
@@ -14,6 +16,11 @@ object ScreenBounds {
 
   fun pillY(y: Int, screenHeight: Int, touchTarget: Int): Int =
     y.coerceIn(0, maxOf(0, screenHeight * PILL_AREA_NUMERATOR / PILL_AREA_DENOMINATOR - touchTarget))
+
+  fun dockX(x: Int, width: Int, screenWidth: Int): Int =
+    if (x + width / 2 < screenWidth / 2) 0 else maxOf(0, screenWidth - width)
+
+  fun dockSide(x: Int): DockSide = if (x <= 0) DockSide.START else DockSide.END
 
   fun of(context: Context): ScreenSize = context.resources.displayMetrics.let { ScreenSize(it.widthPixels, it.heightPixels) }
 }

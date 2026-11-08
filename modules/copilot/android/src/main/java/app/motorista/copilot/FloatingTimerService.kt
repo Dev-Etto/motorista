@@ -25,6 +25,7 @@ class FloatingTimerService : Service(), FloatingHost {
   private lateinit var hideZone: DismissZone
   private var lastOffer: OfferEvaluation? = null
   private var menuOpen = false
+  private var dragging = false
   private var offerDismiss: () -> Unit = {}
   private var pillSize = 0 to 0
 
@@ -106,20 +107,46 @@ class FloatingTimerService : Service(), FloatingHost {
       params = window.params,
       windowManager = windowManager,
       clamp = { x, y -> window.clamp(x, y) },
+      onStart = { startDrag() },
       onEnd = { x, y -> settlePill(x, y) },
       onTap = { setMenuOpen(!menuOpen) },
       dismissZone = hideZone,
-      onDismiss = { hideButton() },
+      onDismiss = {
+        dragging = false
+        hideButton()
+      },
     )
+    window.root.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> keepDocked() }
     window.attach()
     refresh()
     applyVisibility()
   }
 
+  private fun startDrag() {
+    dragging = true
+    refresh()
+  }
+
   private fun settlePill(x: Int, y: Int) {
+    dragging = false
+    val settledX = if (menuOpen) x else ScreenBounds.dockX(x, window.root.width, ScreenBounds.of(this).width)
     val settledY = if (menuOpen) y else pill.clampY(y)
-    pill.save(x, settledY)
+    pill.save(settledX, settledY)
+    window.params.x = settledX
     window.params.y = settledY
+    window.update()
+    refresh()
+  }
+
+  private fun keepDocked() {
+    if (menuOpen || cards.showing || window.root.width == 0) return
+    val (x, y) = pill.load()
+    if (window.params.x != x || ScreenBounds.dockSide(x) == DockSide.START) return
+
+    val dockedX = ScreenBounds.dockX(x, window.root.width, ScreenBounds.of(this).width)
+    if (dockedX == x) return
+    pill.save(dockedX, y)
+    window.params.x = dockedX
     window.update()
   }
 
@@ -172,9 +199,11 @@ class FloatingTimerService : Service(), FloatingHost {
     if (cards.showing || window.root.visibility != View.VISIBLE) return
 
     val state = timer.state()
-    panel.render(state, lastOffer, menuOpen, store.preferences.theme, OfferFormat.of(this, store.preferences.regional))
+    panel.render(state, lastOffer, menuOpen, store.preferences.theme, OfferFormat.of(this, store.preferences.regional), dockSide())
     window.root.alpha = if (menuOpen || state.running) 1f else IDLE_ALPHA
   }
+
+  private fun dockSide(): DockSide? = if (dragging) null else ScreenBounds.dockSide(pill.load().first)
 
   companion object {
     private const val TICK_MS = 1000L

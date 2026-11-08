@@ -17,6 +17,7 @@ object WindowDrag {
     params: WindowManager.LayoutParams,
     windowManager: WindowManager,
     clamp: (x: Int, y: Int) -> Pair<Int, Int>,
+    onStart: () -> Unit = {},
     onEnd: (x: Int, y: Int) -> Unit = { _, _ -> },
     onTap: () -> Unit = {},
     dismissZone: DismissZone? = null,
@@ -59,6 +60,7 @@ object WindowDrag {
           if (!dragging && (abs(deltaX) >= slop || abs(deltaY) >= slop)) {
             dragging = true
             dismissZone?.show()
+            onStart()
           }
           if (dragging) {
             dismissZone?.let { setOverZone(it.hover(event.rawY)) }
