@@ -19,7 +19,8 @@ export type MoreItemId =
   | 'help'
   | 'report'
   | 'terms'
-  | 'about';
+  | 'about'
+  | 'appearance';
 
 export interface MoreMenuItem {
   id: MoreItemId;
@@ -40,6 +41,7 @@ export const MORE_SECTIONS: { id: MoreSectionId; items: MoreMenuItem[] }[] = [
   {
     id: 'app',
     items: [
+      { id: 'appearance', icon: 'layers', href: '/appearance' },
       { id: 'region', icon: 'globe', href: '/region' },
       { id: 'reminders', icon: 'bell', href: '/reminders' },
       { id: 'backup', icon: 'backup', href: '/backup' },

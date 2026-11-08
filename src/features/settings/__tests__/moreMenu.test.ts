@@ -19,8 +19,8 @@ describe('menu Mais', () => {
     expect(idsOf('work')).toEqual(['vehicle', 'goal', 'platforms', 'copilot']);
   });
 
-  it('App reúne idioma, lembretes, backup e permissões', () => {
-    expect(idsOf('app')).toEqual(['region', 'reminders', 'backup', 'permissions']);
+  it('App reúne aparência, idioma, lembretes, backup e permissões', () => {
+    expect(idsOf('app')).toEqual(['appearance', 'region', 'reminders', 'backup', 'permissions']);
   });
 
   it('resumo, relato, privacidade e termos ficam em Sobre', () => {

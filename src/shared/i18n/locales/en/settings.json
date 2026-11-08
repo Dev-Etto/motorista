@@ -61,6 +61,10 @@
       "about": {
         "title": "About the app",
         "subtitle": "Privacy, terms, version and support"
+      },
+      "appearance": {
+        "title": "Appearance",
+        "subtitle": "Automatic, light or dark"
       }
     },
     "about": {
@@ -82,7 +86,10 @@
     "title": "Theme",
     "system": "Automatic",
     "light": "Light",
-    "dark": "Dark"
+    "dark": "Dark",
+    "hint": "Automatic follows your phone's theme. Dark is easier on the eyes at night.",
+    "cardTitle": "Copilot card",
+    "cardSubtitle": "Has its own theme, to read over the ride app"
   },
   "backup": {
     "never": "Never",
@@ -261,6 +268,10 @@
       "title": "Create the next one?",
       "message": "Remind about \"{{title}}\" again in {{distance}}.",
       "action": "Create"
+    },
+    "urgency": {
+      "overdue": "Overdue",
+      "soon": "Soon"
     }
   },
   "report": {

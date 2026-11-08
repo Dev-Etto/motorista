@@ -61,6 +61,10 @@
       "about": {
         "title": "Acerca de la app",
         "subtitle": "Privacidad, términos, versión y apoyo"
+      },
+      "appearance": {
+        "title": "Apariencia",
+        "subtitle": "Automático, claro u oscuro"
       }
     },
     "about": {
@@ -82,7 +86,10 @@
     "title": "Tema",
     "system": "Automático",
     "light": "Claro",
-    "dark": "Oscuro"
+    "dark": "Oscuro",
+    "hint": "Automático sigue el tema del celular. El oscuro cansa menos la vista de noche.",
+    "cardTitle": "Tarjeta del Copiloto",
+    "cardSubtitle": "Tiene su propio tema, para leer sobre la app de viajes"
   },
   "backup": {
     "never": "Nunca",
@@ -261,6 +268,10 @@
       "title": "¿Crear el próximo?",
       "message": "Recordar \"{{title}}\" de nuevo dentro de {{distance}}.",
       "action": "Crear"
+    },
+    "urgency": {
+      "overdue": "Atrasado",
+      "soon": "Pronto"
     }
   },
   "report": {
