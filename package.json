@@ -63,6 +63,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "expo lint && prettier --check \"src/**/*.{ts,tsx}\" \"modules/copilot/*.ts\" \"*.{js,ts}\"",
     "build:apk": "bash scripts/release-apk.sh",
+    "build:aab": "bash scripts/release-aab.sh",
     "mock": "bash scripts/mock-oferta.sh",
     "format": "prettier --write \"src/**/*.{ts,tsx}\" \"modules/copilot/*.ts\" \"*.{js,ts}\""
   },

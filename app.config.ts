@@ -62,6 +62,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ['expo-build-properties', { android: { minSdkVersion: 26 } }],
     ['expo-location', { isAndroidForegroundServiceEnabled: true, isAndroidBackgroundLocationEnabled: false }],
     ['expo-notifications', { color: '#171717' }],
+    './plugins/withReleaseSigning',
   ],
   extra: { buildDate: new Date().toISOString().slice(0, 10) },
   experiments: { typedRoutes: false },
