@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react';
 import { i18n } from '@shared/i18n';
+import { reportError } from '@shared/utils/reportError';
 import { useLatest } from './useLatest';
 
 export function useSubmit<Args extends unknown[]>(action: (...args: Args) => Promise<unknown>) {
@@ -17,7 +18,8 @@ export function useSubmit<Args extends unknown[]>(action: (...args: Args) => Pro
       setError(null);
       try {
         await latest.current(...args);
-      } catch {
+      } catch (error) {
+        reportError(error);
         setError(i18n.t('errors.save'));
       } finally {
         inFlight.current = false;

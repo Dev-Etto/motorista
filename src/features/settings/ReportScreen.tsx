@@ -16,7 +16,8 @@ function deviceName(unknownDevice: string) {
 export default function ReportScreen() {
   const { t } = useTranslation('settings');
   const [description, setDescription] = useState('');
-  const status = copilot.getStatus();
+  const [snapshot] = useState(() => ({ status: copilot.getStatus(), readings: copilot.getDiagnostics() }));
+  const { status, readings } = snapshot;
   const report = buildProblemReport(
     {
       description,
@@ -25,7 +26,7 @@ export default function ReportScreen() {
       device: deviceName(t('report.unknownDevice')),
       accessibilityGranted: status.accessibilityGranted,
       failedReads: status.failedReads,
-      readings: copilot.getDiagnostics(),
+      readings,
     },
     t,
   );

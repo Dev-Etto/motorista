@@ -50,7 +50,7 @@ app -> features -> application -> data -> domain -> shared/utils
 |---|---|
 | Repository | `src/data/repositories` |
 | Strategy | Regras em `src/domain/insights/rules.ts` e canais `OfferChannel` do Copiloto |
-| Custom Hooks | `useAsyncData`, `useFormFields`, `useInterval`, `useMonthCursor` e hooks de cada funcionalidade |
+| Custom Hooks | `useAsyncData`, `useFormFields`, `useInterval`, `useWeekCursor` e hooks de cada funcionalidade |
 | Facade | `modules/copilot/index.ts` esconde o módulo nativo |
 | Composition | Telas montadas com componentes de `shared/ui` |
 | Memento | Cópia do custo por km salva em cada jornada |
@@ -195,7 +195,7 @@ app -> features -> application -> data -> domain -> shared/utils
 - **Decisões separadas do Android:** `OfferReadPolicy`, `OfferTextTracker`, `WindowEventGate` e `ScanPacer` não dependem do Android e têm teste. `OfferTreeReader` e `OfferImageReader` só coletam. A spec fica em `docs/specs/leitura-de-ofertas.md`.
 - **Gravar fora da thread principal:** a oferta é gravada na thread de leitura. Como é uma fila única, gravação e atualização mantêm a ordem.
 - **Botão flutuante ligado por padrão:** `floatingButton` nasce ligado, e `useFloatingVisibility` inicia o botão ao abrir o app ou voltar a ele, se houver permissão de sobreposição. Desligar nas configurações fica salvo. "Ocultar o botão", ou arrastar o botão até a `DismissZone`, é temporário: `FloatingVisibility` esconde até o motorista entrar no app e sair dele, com o serviço ativo e as ofertas no cartão avulso. Sem a permissão, o app não insiste: ela segue sendo pedida só quando o motorista liga a opção.
-- **Selo da plataforma:** nome e cor, em tamanho fixo, para Uber, 99 e inDrive ficarem na mesma proporção. Nenhuma imagem de marca entra no repositório.
+- **Selo da plataforma:** nome e cor, em tamanho fixo, para Uber, 99 e inDrive ficarem na mesma proporção. Nenhuma imagem de marca entra no repositório. Pacote, nome e cores de cada app ficam só em `modules/copilot/rideApps.json`, lido pelo TypeScript, e `RideAppsCatalogTest` confere que o `OfferSources` do Kotlin bate com ele.
 - **Nota do passageiro:** não aparece no cartão, no botão nem na notificação. O parser só a reconhece com estrela ou contagem de avaliações.
 - **Idade do pedido não é tempo de viagem:** no inDrive, `N min.` com ponto e `Agora mesmo` dizem há quanto tempo o pedido existe, e `~N km` é a distância até o passageiro. Sem os dois trechos, o tempo vem da estimativa, com `~`.
 - **Cartão no botão flutuante:** o cartão cresce a partir do botão e encolhe de volta. `OfferCardMotion` calcula o ponto de partida e não depende do Android. Um toque em qualquer ponto, ou arrastar até a `DismissZone`, fecha o cartão e a voz, via `OfferSession.dismiss`. A sessão guarda a oferta, para ela não reabrir enquanto seguir na tela.

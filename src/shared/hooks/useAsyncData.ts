@@ -50,15 +50,12 @@ export function useAsyncData<T>(loader: () => Promise<T>, deps: readonly unknown
   useFocusEffect(
     useCallback(() => {
       void reload();
+      const subscription = AppState.addEventListener('change', (state) => {
+        if (state === 'active') void reload();
+      });
+      return () => subscription.remove();
     }, [reload]),
   );
-
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', (state) => {
-      if (state === 'active') void reload();
-    });
-    return () => subscription.remove();
-  }, [reload]);
 
   return { data, loading, error, reload };
 }

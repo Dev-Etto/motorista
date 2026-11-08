@@ -14,6 +14,7 @@ import { AppSplash, keepNativeSplash } from '@shared/ui/AppSplash';
 import { DialogHost } from '@shared/ui/DialogHost';
 import { Notice, Screen } from '@shared/ui/primitives';
 import { ThemedStatusBar } from '@shared/ui/ThemedStatusBar';
+import { reportError } from '@shared/utils/reportError';
 
 keepNativeSplash();
 
@@ -58,7 +59,8 @@ function useAppBootstrap() {
         const { onboarded } = await prepareApp(restoreThemeMode);
         setState('ready');
         if (!onboarded) setTimeout(() => router.replace('/onboarding'));
-      } catch {
+      } catch (error) {
+        reportError(error);
         setState('failed');
       }
     }
