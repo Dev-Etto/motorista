@@ -7,6 +7,20 @@ import { addDays, monthBounds, today } from '@shared/utils/dates';
 const mockPush = jest.fn();
 const MOCK_FIRST_DAY = monthBounds(today()).start;
 const MOCK_SECOND_DAY = addDays(MOCK_FIRST_DAY, 1);
+const mockShifts: { list: object[] } = { list: [] };
+const shiftOn = (id: number, date: string, startHour: number | null) => ({
+  id,
+  date,
+  startHour,
+  minutes: 240,
+  km: 100,
+  grossCents: 30000,
+  expensesCents: 0,
+  costPerKm: 50,
+  partial: false,
+  vehicleId: 1,
+  earnings: [],
+});
 
 jest.mock('expo-router', () => ({
   useRouter: () => ({ push: mockPush }),
@@ -24,7 +38,7 @@ jest.mock('@features/reports', () => ({
 }));
 jest.mock('@features/shifts/shiftQueries', () => ({
   loadMonth: jest.fn(async () => ({
-    shifts: [],
+    shifts: mockShifts.list,
     expenses: [
       { id: 1, date: MOCK_FIRST_DAY, category: 'fuel', cents: 20000 },
       { id: 2, date: MOCK_SECOND_DAY, category: 'other', cents: 1500 },
@@ -41,7 +55,10 @@ const renderScreen = () =>
   );
 
 describe('tela Jornadas', () => {
-  beforeEach(() => jest.clearAllMocks());
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockShifts.list = [];
+  });
 
   it('um botão Adicionar oferece jornada, abastecimento e outra despesa', async () => {
     await renderScreen();
@@ -78,5 +95,18 @@ describe('tela Jornadas', () => {
 
     expect(screen.getByText('Resumo do período')).toBeTruthy();
     expect(screen.queryByText('Adicionar')).toBeNull();
+  });
+
+  it('agrupa as jornadas por dia, com o lucro do dia no topo do card', async () => {
+    mockShifts.list = [shiftOn(3, MOCK_SECOND_DAY, 6), shiftOn(2, MOCK_SECOND_DAY, null), shiftOn(1, MOCK_FIRST_DAY, 15)];
+    await renderScreen();
+
+    const headers = await screen.findAllByRole('header', { name: /lucro do dia/ });
+    expect(headers).toHaveLength(2);
+    expect(headers[0]?.props.accessibilityLabel).toMatch(/2 jornadas · 200,0 km, lucro do dia R\$\s500,00$/);
+    expect(headers[1]?.props.accessibilityLabel).toMatch(/1 jornada · 100,0 km, lucro do dia R\$\s250,00$/);
+    expect(screen.getAllByText('Lucro do dia')).toHaveLength(2);
+    expect(screen.getByText(/^Jornada · 0?6/)).toBeTruthy();
+    expect(screen.getByText('Jornada')).toBeTruthy();
   });
 });

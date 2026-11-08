@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { buildCalendar } from '@domain/calendar/calendar';
+import { groupShiftsByDay } from '@domain/shift/days';
 import { computeShift } from '@domain/shift/shift';
 import { ReportSummary } from '@features/reports';
 import { useAsyncData } from '@shared/hooks/useAsyncData';
@@ -13,7 +14,7 @@ import { MonthCalendar } from '@shared/ui/MonthCalendar';
 import { MonthSwitcher } from '@shared/ui/MonthSwitcher';
 import { AppText, Button, Card, EmptyState, ListRow, Screen, Segmented } from '@shared/ui/primitives';
 import { monthKey } from '@shared/utils/dates';
-import { profitTone } from '@shared/utils/format';
+import { ShiftDayCard } from './ShiftDayCard';
 import { loadMonth } from './shiftQueries';
 
 type ShiftsView = 'list' | 'summary';
@@ -54,6 +55,7 @@ function ShiftList() {
       ),
     [cursor.date, allShifts, format.profile.firstWeekday],
   );
+  const days = useMemo(() => groupShiftsByDay(shifts.map((shift) => ({ ...shift, profitCents: computeShift(shift).profitCents }))), [shifts]);
   const allExpenses = data?.expenses ?? [];
   const expenses = selectedDate ? allExpenses.filter((expense) => expense.date === selectedDate) : allExpenses;
 
@@ -84,22 +86,7 @@ function ShiftList() {
             {shifts.length === 0 ? (
               <EmptyState icon="shifts" title={selectedDate ? t('list.emptyDay') : t('list.emptyMonth')} message={t('list.emptyMessage')} />
             ) : (
-              <Card title={selectedDate ? t('list.dayTitle', { date: format.date(selectedDate) }) : t('list.title')}>
-                {shifts.map((shift) => {
-                  const { profitCents } = computeShift(shift);
-                  const subtitle = { gross: format.money(shift.grossCents), duration: format.duration(shift.minutes) };
-                  return (
-                    <ListRow
-                      key={shift.id}
-                      title={format.date(shift.date)}
-                      subtitle={shift.partial ? t('list.shiftSubtitlePartial', subtitle) : t('list.shiftSubtitle', subtitle)}
-                      value={format.money(profitCents)}
-                      valueTone={profitTone(profitCents)}
-                      onPress={() => router.push(`/shift/${shift.id}`)}
-                    />
-                  );
-                })}
-              </Card>
+              days.map((day) => <ShiftDayCard key={day.date} day={day} />)
             )}
 
             {expenses.length === 0 ? null : (

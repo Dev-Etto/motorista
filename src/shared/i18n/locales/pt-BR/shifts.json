@@ -57,8 +57,6 @@
     "emptyDay": "Nenhuma jornada neste dia",
     "emptyMonth": "Nenhuma jornada neste mês",
     "emptyMessage": "Registre sua primeira jornada para ver seu lucro real.",
-    "title": "Jornadas",
-    "dayTitle": "Jornadas de {{date}}",
     "shiftSubtitle": "{{gross}} em {{duration}}",
     "shiftSubtitlePartial": "{{gross}} em {{duration}} • parcial",
     "looseTitle": "Lançamentos avulsos",
@@ -73,7 +71,17 @@
       "shift": "Jornada",
       "fuel": "Abastecimento",
       "other": "Outra despesa"
-    }
+    },
+    "today": "Hoje",
+    "yesterday": "Ontem",
+    "dayProfit": "Lucro do dia",
+    "dayShifts_one": "{{count}} jornada",
+    "dayShifts_other": "{{count}} jornadas",
+    "dayShiftsKm_one": "{{count}} jornada · {{distance}}",
+    "dayShiftsKm_other": "{{count}} jornadas · {{distance}}",
+    "dayLabel": "{{day}}, {{shifts}}, lucro do dia {{profit}}",
+    "shiftTitle": "Jornada",
+    "shiftTitleHour": "Jornada · {{hour}}"
   },
   "detail": {
     "notFoundTitle": "Jornada não encontrada",
