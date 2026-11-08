@@ -280,8 +280,18 @@ export function Stat({ label, value, tone = 'default' }: { label: string; value:
   );
 }
 
-export function StatGrid({ children }: { children: ReactNode }) {
-  return <View style={styles.statGrid}>{children}</View>;
+export function StatGrid({ children, columns }: { children: ReactNode; columns?: number }) {
+  if (!columns) return <View style={styles.statGrid}>{children}</View>;
+
+  return (
+    <View style={styles.statRow}>
+      {Children.toArray(children).map((child, index) => (
+        <View key={index} style={styles.flex}>
+          {child}
+        </View>
+      ))}
+    </View>
+  );
 }
 
 export function ProgressBar({ progress }: { progress: number }) {
@@ -412,6 +422,7 @@ const styles = StyleSheet.create({
   },
   stat: { flexBasis: '45%', flexGrow: 1, gap: 2 },
   statGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
+  statRow: { flexDirection: 'row', gap: spacing.md },
   progress: { flexDirection: 'row', gap: spacing.xs },
   progressSegment: { flex: 1, height: 8 },
   iconBadge: { width: 40, height: 40, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center' },

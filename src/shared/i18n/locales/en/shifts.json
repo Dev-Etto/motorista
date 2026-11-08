@@ -165,7 +165,7 @@
   },
   "sheet": {
     "since": "Running since {{time}}",
-    "pausedAt": "Paused at {{time}}",
+    "pausedAt": "Paused · started at {{time}}",
     "measured_km": "{{distance}} measured by GPS",
     "measured_mi": "{{distance}} measured by GPS",
     "fuel": "Log fuel",
