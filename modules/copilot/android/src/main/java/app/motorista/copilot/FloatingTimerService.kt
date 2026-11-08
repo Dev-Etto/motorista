@@ -26,6 +26,7 @@ class FloatingTimerService : Service(), FloatingHost {
   private var lastOffer: OfferEvaluation? = null
   private var menuOpen = false
   private var dragging = false
+  private var side = DockSide.END
   private var offerDismiss: () -> Unit = {}
   private var pillSize = 0 to 0
 
@@ -101,6 +102,7 @@ class FloatingTimerService : Service(), FloatingHost {
     cards = FloatingCardPresenter(this, window, windowManager, store, pill, dismissZone)
     window.root.addView(panel.view)
     window.moveTo(pill.load())
+    side = ScreenBounds.dockSide(pill.load().first)
     WindowDrag.attach(
       handle = panel.handle,
       window = window.root,
@@ -132,6 +134,7 @@ class FloatingTimerService : Service(), FloatingHost {
     val settledX = if (menuOpen) x else ScreenBounds.dockX(x, window.root.width, ScreenBounds.of(this).width)
     val settledY = if (menuOpen) y else pill.clampY(y)
     pill.save(settledX, settledY)
+    side = ScreenBounds.dockSide(settledX)
     window.params.x = settledX
     window.params.y = settledY
     window.update()
@@ -203,7 +206,7 @@ class FloatingTimerService : Service(), FloatingHost {
     window.root.alpha = if (menuOpen || state.running) 1f else IDLE_ALPHA
   }
 
-  private fun dockSide(): DockSide? = if (dragging) null else ScreenBounds.dockSide(pill.load().first)
+  private fun dockSide(): DockSide? = if (dragging) null else side
 
   companion object {
     private const val TICK_MS = 1000L

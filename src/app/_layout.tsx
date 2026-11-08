@@ -12,6 +12,7 @@ import { fonts, useTheme } from '@shared/theme/theme';
 import { DialogHost } from '@shared/ui/DialogHost';
 import { AppText, Notice, Screen } from '@shared/ui/primitives';
 import { ThemedStatusBar } from '@shared/ui/ThemedStatusBar';
+import { reportError } from '@shared/utils/reportError';
 
 const SCREENS = [
   { name: 'vehicles', titleKey: 'screens.vehicles' },
@@ -54,7 +55,8 @@ function useAppBootstrap() {
         const { onboarded } = await prepareApp(restoreThemeMode);
         setState('ready');
         if (!onboarded) setTimeout(() => router.replace('/onboarding'));
-      } catch {
+      } catch (error) {
+        reportError(error);
         setState('failed');
       }
     }

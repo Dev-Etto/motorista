@@ -89,7 +89,7 @@ class FloatingPanel(
     val clock = OfferFormat.clock(timer.elapsedMs)
     val shown = if (open) clock else OfferFormat.shortClock(timer.elapsedMs)
     if (title.text.toString() != shown) title.text = shown
-    describeHandle(clock, timer, open)
+    describeHandle(clock, timer, open, format)
 
     val night = cardTheme.isNight(theme)
     val next = PanelState(open, timer.running, timer.started, lastOffer, theme, night, side)
@@ -100,17 +100,17 @@ class FloatingPanel(
     if (open) renderOpen(timer, lastOffer, cardTheme.palette(theme), night, format) else renderClosed(timer, side)
   }
 
-  private fun describeHandle(clock: String, timer: TimerState, open: Boolean) {
-    val shift = context.copilotText(
+  private fun describeHandle(clock: String, timer: TimerState, open: Boolean, format: OfferFormat) {
+    val shift = format.text(
       when {
         timer.running -> R.string.panel_shift_running
         timer.started -> R.string.panel_shift_paused
         else -> R.string.panel_shift_idle
       },
     )
-    handle.contentDescription = context.copilotText(R.string.panel_handle_description).format(shift, clock)
+    handle.contentDescription = format.text(R.string.panel_handle_description, shift, clock)
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-      handle.stateDescription = context.copilotText(if (open) R.string.panel_state_open else R.string.panel_state_closed)
+      handle.stateDescription = format.text(if (open) R.string.panel_state_open else R.string.panel_state_closed)
     }
   }
 

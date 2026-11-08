@@ -68,10 +68,6 @@
     "emptyMessage": "Registre sua primeira jornada para ver seu lucro real.",
     "shiftSubtitle": "{{gross}} em {{duration}}",
     "shiftSubtitlePartial": "{{gross}} em {{duration}} • parcial",
-    "deleteExpense": {
-      "title": "Excluir {{label}}?",
-      "message": "O lançamento de {{amount}} sai dos seus resultados."
-    },
     "add": {
       "button": "Adicionar",
       "title": "O que você quer adicionar?",

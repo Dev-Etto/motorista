@@ -1,5 +1,5 @@
 import { DateTime, Duration } from 'luxon';
-import { MS_PER_SECOND } from '@shared/utils/time';
+import { HOURS_PER_DAY, MINUTES_PER_HOUR, MS_PER_SECOND, SECONDS_PER_MINUTE } from '@shared/utils/time';
 
 const ISO_DATE = 'yyyy-MM-dd';
 const NOON = 12;
@@ -109,10 +109,6 @@ export function formatDuration(minutes: number): string {
 export function formatClock(elapsedMs: number): string {
   return Duration.fromMillis(Math.max(0, Math.floor(elapsedMs / MS_PER_SECOND) * MS_PER_SECOND)).toFormat('hh:mm:ss');
 }
-
-const MINUTES_PER_HOUR = 60;
-const SECONDS_PER_MINUTE = 60;
-const HOURS_PER_DAY = 24;
 
 export type ElapsedParts = { hours: number; minutes: number; overDay: boolean };
 

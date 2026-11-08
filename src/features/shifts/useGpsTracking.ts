@@ -11,6 +11,7 @@ import {
   startBackgroundTracking,
   stopBackgroundTracking,
 } from '@shared/platform/location';
+import { reportError } from '@shared/utils/reportError';
 import { GPS_TASK } from './gpsTask';
 
 const METERS_PER_KM = 1000;
@@ -56,7 +57,8 @@ export function useGpsTracking() {
         timeInterval: TIME_INTERVAL_MS,
         notification: { title: t('gps.notificationTitle', { context: distanceUnit }), body: t('gps.notificationBody') },
       });
-    } catch {
+    } catch (error) {
+      reportError(error);
       return setError(t('gps.startError'));
     }
     await gpsSessionRepository.start();

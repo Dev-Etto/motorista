@@ -14,6 +14,7 @@ import { PlatformBadge } from '@shared/ui/PlatformBadge';
 import { AppText, Button, ButtonRow, Card, Collapsible, EmptyState, ListRow, Notice, Segmented } from '@shared/ui/primitives';
 import { today } from '@shared/utils/dates';
 import { profitTone } from '@shared/utils/format';
+import { reportError } from '@shared/utils/reportError';
 import { ChartDataList } from './ChartDataList';
 import { platformShare } from './platformShare';
 import { shareReportCsv, shareReportPdf } from './reportExport';
@@ -35,7 +36,8 @@ export function ReportSummary() {
     setExportError(null);
     try {
       await action();
-    } catch {
+    } catch (error) {
+      reportError(error);
       setExportError(t('exportFailed'));
     }
   };

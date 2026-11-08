@@ -50,7 +50,7 @@ app -> features -> application -> data -> domain -> shared/utils
 |---|---|
 | Repository | `src/data/repositories` |
 | Strategy | Regras em `src/domain/insights/rules.ts` e canais `OfferChannel` do Copiloto |
-| Custom Hooks | `useAsyncData`, `useFormFields`, `useInterval`, `useMonthCursor` e hooks de cada funcionalidade |
+| Custom Hooks | `useAsyncData`, `useFormFields`, `useInterval`, `useWeekCursor` e hooks de cada funcionalidade |
 | Facade | `modules/copilot/index.ts` esconde o módulo nativo |
 | Composition | Telas montadas com componentes de `shared/ui` |
 | Memento | Cópia do custo por km salva em cada jornada |
