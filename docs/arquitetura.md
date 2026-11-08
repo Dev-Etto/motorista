@@ -318,3 +318,6 @@ Spec: `docs/specs/redesign-0.14.md`.
 
 - **Marca "m de rota":** o símbolo é um m minúsculo de traço único com o ponto de destino. Os SVGs de `assets/brand` são a fonte, e os PNGs de `assets` são gerados a partir deles. O ícone da notificação usa a versão pequena, sem o recorte do meio e com traço mais grosso, para continuar legível em 24 dp.
 - **Bandeira de tamanho fixo:** `PlatformBadge` mede sempre 78x32, então as bandeiras alinham em colunas em qualquer lista. Um nome que não cabe diminui a fonte, em vez de alargar a bandeira.
+- **Barra flutuante com botão da jornada:** `AppTabBar` desenha uma cápsula com 4 abas e, ao lado, `ShiftButton`. O botão usa `useLiveTracking`, então iniciar por ele grava o veículo da jornada e liga o GPS como no Início. Com a jornada iniciada, ele leva ao Início, que já tem pausar, retomar e encerrar, em vez de duplicar esses controles. A barra fica no fluxo da tela, então o conteúdo termina acima dela sem precisar de margem extra.
+- **Tempo abreviado:** `formatElapsedShort` cabe no botão de 64: `45min`, `2h14`, `24h+`. O leitor de tela recebe o tempo por extenso, com plural, de `spokenElapsed`.
+- **Relatórios dentro de Jornadas:** o conteúdo virou `ReportSummary`, sem `Screen` própria, e Jornadas alterna Lista e Resumo com `Segmented`.

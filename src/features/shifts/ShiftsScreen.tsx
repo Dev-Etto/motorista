@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { buildCalendar } from '@domain/calendar/calendar';
 import { computeShift } from '@domain/shift/shift';
+import { ReportSummary } from '@features/reports';
 import { useAsyncData } from '@shared/hooks/useAsyncData';
 import { useMonthCursor } from '@shared/hooks/useMonthCursor';
 import { useFormat } from '@shared/i18n/format';
@@ -10,12 +11,30 @@ import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
 import { showDialog } from '@shared/ui/dialog';
 import { MonthCalendar } from '@shared/ui/MonthCalendar';
 import { MonthSwitcher } from '@shared/ui/MonthSwitcher';
-import { AppText, Button, Card, EmptyState, ListRow, Screen } from '@shared/ui/primitives';
+import { AppText, Button, Card, EmptyState, ListRow, Screen, Segmented } from '@shared/ui/primitives';
 import { monthKey } from '@shared/utils/dates';
 import { profitTone } from '@shared/utils/format';
 import { loadMonth } from './shiftQueries';
 
+type ShiftsView = 'list' | 'summary';
+
 export default function ShiftsScreen() {
+  const { t } = useTranslation('shifts');
+  const [view, setView] = useState<ShiftsView>('list');
+  const views = [
+    { value: 'list' as const, label: t('view.list') },
+    { value: 'summary' as const, label: t('view.summary') },
+  ];
+
+  return (
+    <Screen>
+      <Segmented label={t('view.label')} value={view} options={views} onChange={setView} />
+      {view === 'list' ? <ShiftList /> : <ReportSummary />}
+    </Screen>
+  );
+}
+
+function ShiftList() {
   const router = useRouter();
   const { t } = useTranslation(['shifts', 'expenses', 'common']);
   const format = useFormat();
@@ -51,7 +70,7 @@ export default function ShiftsScreen() {
   };
 
   return (
-    <Screen>
+    <>
       <MonthSwitcher date={cursor.date} onPrevious={cursor.previous} onNext={cursor.next} />
       <Button label={t('list.add.button')} onPress={chooseWhatToAdd} />
 
@@ -103,6 +122,6 @@ export default function ShiftsScreen() {
           </>
         )}
       </AsyncBoundary>
-    </Screen>
+    </>
   );
 }

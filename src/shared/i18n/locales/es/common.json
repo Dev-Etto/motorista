@@ -66,12 +66,22 @@
   "tabs": {
     "home": "Inicio",
     "shifts": "Jornadas",
-    "calculator": "Calculadora",
-    "reports": "Informes",
     "more": "Más",
     "offers": "Ofertas",
     "unseenOffers_one": "{{count}} oferta nueva",
-    "unseenOffers_other": "{{count}} ofertas nuevas"
+    "unseenOffers_other": "{{count}} ofertas nuevas",
+    "shiftButton": {
+      "start": "Iniciar jornada",
+      "running": "Jornada en curso, {{time}}. Abrir Inicio",
+      "paused": "Jornada en pausa en {{time}}. Abrir Inicio",
+      "overDay": "más de 24 horas",
+      "lessThanMinute": "menos de 1 minuto",
+      "hours_one": "{{count}} hora",
+      "hours_other": "{{count}} horas",
+      "minutes_one": "{{count}} minuto",
+      "minutes_other": "{{count}} minutos",
+      "hoursAndMinutes": "{{hours}} y {{minutes}}"
+    }
   },
   "location": {
     "permissionNeeded_km": "Permite la ubicación para medir los km por GPS.",

@@ -14,7 +14,7 @@ describe('ofertas novas na aba', () => {
   beforeEach(() => jest.clearAllMocks());
 
   it('as abas são Início, Jornadas, Ofertas, Relatórios e Mais', () => {
-    expect(TABS.map((tab) => tab.titleKey)).toEqual(['tabs.home', 'tabs.shifts', 'tabs.offers', 'tabs.reports', 'tabs.more']);
+    expect(TABS.map((tab) => tab.titleKey)).toEqual(['tabs.home', 'tabs.shifts', 'tabs.offers', 'tabs.more']);
   });
 
   it('o contador vai até 9+', () => {

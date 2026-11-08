@@ -140,5 +140,10 @@
     "finish": "Encerrar",
     "openHint": "Abre a medição da jornada",
     "forgotten": "Jornada aberta há muito tempo"
+  },
+  "view": {
+    "label": "Visão",
+    "list": "Lista",
+    "summary": "Resumo"
   }
 }

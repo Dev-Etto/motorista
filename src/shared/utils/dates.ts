@@ -105,6 +105,24 @@ export function formatClock(elapsedMs: number): string {
   return Duration.fromMillis(Math.max(0, Math.floor(elapsedMs / MS_PER_SECOND) * MS_PER_SECOND)).toFormat('hh:mm:ss');
 }
 
+const MINUTES_PER_HOUR = 60;
+const HOURS_PER_DAY = 24;
+
+export type ElapsedParts = { hours: number; minutes: number; overDay: boolean };
+
+export function elapsedParts(elapsedMs: number): ElapsedParts {
+  const total = Math.max(0, Math.floor(elapsedMs / MS_PER_SECOND / MINUTES_PER_HOUR));
+  const hours = Math.floor(total / MINUTES_PER_HOUR);
+  return { hours, minutes: total % MINUTES_PER_HOUR, overDay: hours >= HOURS_PER_DAY };
+}
+
+export function formatElapsedShort(elapsedMs: number): string {
+  const { hours, minutes, overDay } = elapsedParts(elapsedMs);
+  if (overDay) return `${HOURS_PER_DAY}h+`;
+  if (hours === 0) return minutes === 0 ? '<1min' : `${minutes}min`;
+  return minutes === 0 ? `${hours}h` : `${hours}h${String(minutes).padStart(2, '0')}`;
+}
+
 export type DayPeriod = 'dawn' | 'morning' | 'afternoon' | 'night';
 
 export function dayPeriod(hour: number): DayPeriod {
