@@ -34,6 +34,7 @@ export default function GoalScreen() {
   const [weekdays, setWeekdays] = useState<number[]>(DEFAULT_WORK_WEEKDAYS);
   const [dayTarget, setDayTarget] = useState('');
   const [errors, setErrors] = useState<GoalFormErrors>({});
+  const hasErrors = Object.keys(errors).length > 0;
   const month = monthKey(date);
   const carriedFrom = progress && progress.goal.month !== month ? progress.goal.month : null;
 
@@ -81,29 +82,49 @@ export default function GoalScreen() {
       <AppText tone="muted">{t('screen.intro')}</AppText>
       {vehicleName ? <Notice tone="accent" message={t('screen.planVehicle', { name: vehicleName })} /> : null}
       {carriedFrom ? <Notice tone="accent" message={t('screen.carried', { month: format.month(`${carriedFrom}-01`) })} /> : null}
-      <Card title={t('screen.goalTitle')}>
-        <MoneyField label={t('screen.desired')} value={desired} onChangeText={setDesired} error={errors.desired ? t('screen.errors.desired') : null} />
-        <NumberField
-          label={t('screen.hoursPerDay')}
-          value={hoursPerDay}
-          onChangeText={setHoursPerDay}
-          suffix="h"
-          decimals={1}
-          error={errors.hoursPerDay ? t('screen.errors.hours', { min: MIN_HOURS_PER_DAY, max: MAX_HOURS_PER_DAY }) : null}
-        />
-        <AppText variant="caption" tone="muted">
-          {t('screen.workDays')}
-        </AppText>
-        <WeekdayPicker selected={weekdays} onToggle={toggleWeekday} />
-        {errors.weekdays ? <Notice tone="negative" message={t('screen.errors.weekdays')} /> : null}
-        {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
-        <Button label={progress ? t('screen.update') : t('screen.calculate')} busy={saving.busy} onPress={saving.submit} />
-      </Card>
+      {progress ? null : (
+        <Card title={t('screen.goalTitle')}>
+          <MoneyField label={t('screen.desired')} value={desired} onChangeText={setDesired} error={errors.desired ? t('screen.errors.desired') : null} />
+          <NumberField
+            label={t('screen.hoursPerDay')}
+            value={hoursPerDay}
+            onChangeText={setHoursPerDay}
+            suffix="h"
+            decimals={1}
+            error={errors.hoursPerDay ? t('screen.errors.hours', { min: MIN_HOURS_PER_DAY, max: MAX_HOURS_PER_DAY }) : null}
+          />
+          <AppText variant="caption" tone="muted">
+            {t('screen.workDays')}
+          </AppText>
+          <WeekdayPicker selected={weekdays} onToggle={toggleWeekday} />
+          {errors.weekdays ? <Notice tone="negative" message={t('screen.errors.weekdays')} /> : null}
+          {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
+          <Button label={progress ? t('screen.update') : t('screen.calculate')} busy={saving.busy} onPress={saving.submit} />
+        </Card>
+      )}
       <AsyncBoundary state={goal}>
         {(loaded) => (
           <>
             <GoalProgressCard progress={loaded} />
             <GoalPlanCard progress={loaded} />
+            <Collapsible title={t('screen.editGoal')} forceOpen={hasErrors}>
+              <MoneyField label={t('screen.desired')} value={desired} onChangeText={setDesired} error={errors.desired ? t('screen.errors.desired') : null} />
+              <NumberField
+                label={t('screen.hoursPerDay')}
+                value={hoursPerDay}
+                onChangeText={setHoursPerDay}
+                suffix="h"
+                decimals={1}
+                error={errors.hoursPerDay ? t('screen.errors.hours', { min: MIN_HOURS_PER_DAY, max: MAX_HOURS_PER_DAY }) : null}
+              />
+              <AppText variant="caption" tone="muted">
+                {t('screen.workDays')}
+              </AppText>
+              <WeekdayPicker selected={weekdays} onToggle={toggleWeekday} />
+              {errors.weekdays ? <Notice tone="negative" message={t('screen.errors.weekdays')} /> : null}
+              {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
+              <Button label={progress ? t('screen.update') : t('screen.calculate')} busy={saving.busy} onPress={saving.submit} />
+            </Collapsible>
             <Collapsible title={t('screen.adjustToday')}>
               <MoneyField
                 label={t('screen.todayProfit')}
