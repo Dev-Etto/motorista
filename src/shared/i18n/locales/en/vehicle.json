@@ -116,5 +116,10 @@
       "title": "Reactivate {{name}}?",
       "message": "It returns to the shift and expense choices."
     }
+  },
+  "costHero": {
+    "title_km": "Each km costs",
+    "title_mi": "Each mile costs",
+    "breakdown": "Fuel {{fuel}} · wear {{wear}} · fixed {{fixed}}"
   }
 }
