@@ -1,5 +1,5 @@
-import { createFormatter, DEFAULT_FORMAT } from '@shared/i18n/format';
 import { consumptionLabel, FUEL_CHOICES } from '@features/vehicle/vehicleForm';
+import { createFormatter, DEFAULT_FORMAT } from '@shared/i18n/format';
 
 describe('combustíveis do cadastro rápido', () => {
   it('oferece gasolina, etanol, GNV e elétrico', () => {
