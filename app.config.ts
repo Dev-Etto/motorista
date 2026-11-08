@@ -5,6 +5,9 @@ const isRelease = process.env.APP_VARIANT === 'release';
 const UNUSED_LIBRARY_PERMISSIONS = [
   'com.google.android.c2dm.permission.RECEIVE',
   'com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE',
+  'com.google.android.gms.permission.AD_ID',
+  'android.permission.ACCESS_ADSERVICES_AD_ID',
+  'android.permission.ACCESS_ADSERVICES_ATTRIBUTION',
   'android.permission.READ_APP_BADGE',
   'com.sec.android.provider.badge.permission.READ',
   'com.sec.android.provider.badge.permission.WRITE',
@@ -34,6 +37,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   userInterfaceStyle: 'automatic',
   android: {
     package: PACKAGE,
+    googleServicesFile: './google-services.json',
     versionCode: 25,
     allowBackup: true,
     adaptiveIcon: {
@@ -62,6 +66,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ['expo-build-properties', { android: { minSdkVersion: 26 } }],
     ['expo-location', { isAndroidForegroundServiceEnabled: true, isAndroidBackgroundLocationEnabled: false }],
     ['expo-notifications', { color: '#171717' }],
+    '@react-native-firebase/app',
+    '@react-native-firebase/crashlytics',
     './plugins/withReleaseSigning',
     './plugins/withBackupRules',
   ],

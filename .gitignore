@@ -54,3 +54,6 @@ modules/*/android/.gradle/
 
 # Grafo local do código
 graphify-out/
+
+# Firebase: configuração do app, fica fora do git (CI usa o segredo GOOGLE_SERVICES_JSON)
+google-services.json

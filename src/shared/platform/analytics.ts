@@ -4,9 +4,7 @@ export interface AnalyticsTransport {
   send(event: string, params: AnalyticsParams): Promise<void>;
 }
 
-const noTransport: AnalyticsTransport = { send: async () => undefined };
-
-let transport: AnalyticsTransport = noTransport;
+let transport: AnalyticsTransport = { send: async () => undefined };
 
 export function setAnalyticsTransport(next: AnalyticsTransport): void {
   transport = next;

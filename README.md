@@ -39,6 +39,8 @@ As regras de camadas, imports e estilo de código estão em [docs/arquitetura.md
 
 Requisitos: Node 22 e Android SDK.
 
+O app usa o Firebase (Crashlytics e Analytics) do projeto `motorista-app-br`. Coloque o `google-services.json` na raiz do repositório antes do primeiro build. Ele fica fora do git (`.gitignore`). No CI, o arquivo vem do segredo `GOOGLE_SERVICES_JSON`. As opções de coleta ficam em `firebase.json`: Analytics desligado até o consentimento, sem ID de publicidade.
+
 ```bash
 npm install
 npm run android        # development build no aparelho ou emulador

@@ -17,14 +17,14 @@ Revisado em 08/11/2026 (issue #57).
 
 ## Sai do aparelho
 
-Hoje, nada sai sem ação do usuário: o relato de problema e o backup usam o menu de compartilhar do Android.
+Relatórios de falha saem automaticamente, a menos que o usuário desligue em Escolhas de privacidade. Métricas de uso só saem com o consentimento. O relato de problema e o backup manual usam o menu de compartilhar do Android.
 
 As issues da Fase 2 e da Fase 5 vão acrescentar saídas. Cada uma deve ser registrada aqui quando entrar:
 
 | Saída | Issue | Dados | Base |
 | --- | --- | --- | --- |
-| Relatórios de falha (Crashlytics) | #59 | Erro, modelo do aparelho, versão do Android e do app | Legítimo interesse, ligado por padrão, com opção de desligar em Escolhas de privacidade |
-| Métricas de uso (Analytics) | #59 | Eventos anônimos: `onboarding_complete`, `copilot_enabled` (lista em `src/application/analytics.ts`) | Consentimento, desligado por padrão. Escolha guardada em `privacy_choices` |
+| Relatórios de falha (Firebase Crashlytics, projeto `motorista-app-br`) | #59 | Erro, modelo do aparelho, versão do Android e do app | Legítimo interesse, ligado por padrão, com opção de desligar em Escolhas de privacidade |
+| Métricas de uso (Firebase Analytics, projeto `motorista-app-br`) | #59 | Eventos anônimos: `onboarding_complete`, `copilot_enabled` (lista em `src/application/analytics.ts`) | Consentimento, desligado por padrão. Escolha guardada em `privacy_choices`. Sem ID de publicidade nem SSAID (`firebase.json` e permissão `AD_ID` bloqueada) |
 | Relatar problema | #60 | A definir na implementação | Ação do usuário |
 | Backup automático do Android | #61 | Banco do app (`files/SQLite`), histórico de ofertas (`databases`) e preferências, menos o cronômetro e a posição do botão flutuante. Regras em `plugins/withBackupRules.js` | Configuração do sistema. Só com criptografia de ponta a ponta (bloqueio de tela) |
 | Backup no Google Drive | #75 | Arquivo de backup na pasta privada do app no Drive do usuário | Ação do usuário |
