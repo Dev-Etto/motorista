@@ -18,7 +18,13 @@ jest.mock('@application/offerSettings', () => ({
 }));
 
 const load = jest.mocked(loadOfferSettings);
-const saved = { mode: 'normal' as const, normal: { targetPerKmCents: 200, targetPerHourCents: 4000 }, low: DEFAULT_LOW_DEMAND_TARGETS, followGoal: false };
+const saved = {
+  kind: 'car' as const,
+  mode: 'normal' as const,
+  normal: { targetPerKmCents: 200, targetPerHourCents: 4000 },
+  low: DEFAULT_LOW_DEMAND_TARGETS,
+  followGoal: false,
+};
 
 const focus = async () => act(async () => mockFocus.callback?.());
 
@@ -59,6 +65,21 @@ describe('useOfferTargets', () => {
 
     await act(async () => result.current.perKm.onBlur());
     expect(saveModeTargets).toHaveBeenCalledTimes(1);
-    expect(saveModeTargets).toHaveBeenCalledWith('normal', { targetPerKmCents: 250, targetPerHourCents: 4000 });
+    expect(saveModeTargets).toHaveBeenCalledWith('car', 'normal', { targetPerKmCents: 250, targetPerHourCents: 4000 });
+  });
+
+  it('trocar para a moto carrega e salva os mínimos da moto', async () => {
+    const { result } = await renderHook(() => useOfferTargets());
+    await focus();
+    load.mockResolvedValueOnce({ ...saved, kind: 'motorcycle', normal: { targetPerKmCents: 150, targetPerHourCents: 2000 } });
+
+    await act(async () => result.current.setKind('motorcycle'));
+    expect(load).toHaveBeenLastCalledWith('motorcycle');
+    expect(result.current.kind).toBe('motorcycle');
+    expect(result.current.perKm.value).toBe('1,50');
+
+    await act(async () => result.current.perKm.onChangeText('1,8'));
+    await act(async () => result.current.perKm.onBlur());
+    expect(saveModeTargets).toHaveBeenCalledWith('motorcycle', 'normal', { targetPerKmCents: 180, targetPerHourCents: 2000 });
   });
 });

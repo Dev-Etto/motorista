@@ -1,11 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { OfferMode, OfferTargets } from '@domain/offer/offer';
+import type { VehicleKind } from '@domain/vehicle/costs';
 import { useFormat } from '@shared/i18n/format';
 import { MoneyField } from '@shared/ui/fields';
 import { AppText, Card, ListRow, Notice, Segmented, ToggleRow } from '@shared/ui/primitives';
 import { OfferTargetsState } from './useOfferTargets';
 
 const MODES: OfferMode[] = ['normal', 'low'];
+const KINDS: VehicleKind[] = ['car', 'motorcycle'];
 
 function useModeOptions() {
   const { t } = useTranslation('copilot');
@@ -29,10 +31,12 @@ export function OfferTargetsEditor({ targets, suggestion }: { targets: OfferTarg
   const { t } = useTranslation('copilot');
   const format = useFormat();
   const modes = useModeOptions();
+  const kinds = KINDS.map((value) => ({ value, label: t(`targets.kind.${value}`) }));
 
   return (
     <Card title={t('targets.title')}>
       <AppText tone="muted">{t('targets.editorIntro')}</AppText>
+      <Segmented value={targets.kind} options={kinds} onChange={(kind) => void targets.setKind(kind)} />
       <Segmented value={targets.mode} options={modes} onChange={targets.setMode} />
       {isNormal && suggestion ? (
         <ToggleRow

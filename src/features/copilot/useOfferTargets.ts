@@ -2,10 +2,11 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { loadOfferSettings, saveFollowGoal, saveModeTargets, saveOfferMode } from '@application/offerSettings';
 import { activeTargets, DEFAULT_LOW_DEMAND_TARGETS, DEFAULT_OFFER_TARGETS, type OfferMode, type OfferSettings } from '@domain/offer/offer';
+import type { VehicleKind } from '@domain/vehicle/costs';
 import { useSubmit } from '@shared/hooks/useSubmit';
 import { useFormat } from '@shared/i18n/format';
 
-const INITIAL: OfferSettings = { mode: 'normal', normal: DEFAULT_OFFER_TARGETS, low: DEFAULT_LOW_DEMAND_TARGETS, followGoal: false };
+const INITIAL: OfferSettings = { kind: 'car', mode: 'normal', normal: DEFAULT_OFFER_TARGETS, low: DEFAULT_LOW_DEMAND_TARGETS, followGoal: false };
 
 export function useOfferTargets() {
   const format = useFormat();
@@ -46,9 +47,14 @@ export function useOfferTargets() {
     const targets = settings[settings.mode];
     if (targets.targetPerKmCents <= 0 || targets.targetPerHourCents <= 0) return;
 
-    await saveModeTargets(settings.mode, targets);
+    await saveModeTargets(settings.kind, settings.mode, targets);
     editing.current = false;
   });
+
+  const setKind = async (kind: VehicleKind) => {
+    if (kind === settings.kind) return;
+    loadFields(await loadOfferSettings(kind));
+  };
 
   const setMode = (mode: OfferMode) => {
     loadFields({ ...settings, mode });
@@ -63,6 +69,8 @@ export function useOfferTargets() {
   const values = useMemo(() => activeTargets(settings), [settings]);
 
   return {
+    kind: settings.kind,
+    setKind,
     mode: settings.mode,
     setMode,
     values,
