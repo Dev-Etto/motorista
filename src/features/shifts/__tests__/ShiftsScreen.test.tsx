@@ -117,7 +117,8 @@ describe('tela Jornadas', () => {
     await renderScreen();
     expect(await screen.findByText('Outra despesa')).toBeTruthy();
 
-    await fireEvent.press(screen.getAllByLabelText(/lucro de R\$\s250,00/)[0]!);
+    const dayProfit = MOCK_SECOND_DAY === MOCK_FIRST_DAY ? '235,00' : '250,00';
+    await fireEvent.press(screen.getAllByLabelText(new RegExp(`lucro de R\\$\\s${dayProfit}`))[0]!);
 
     expect(screen.getByText('Lucro do dia')).toBeTruthy();
     if (MOCK_SECOND_DAY !== MOCK_FIRST_DAY) expect(screen.queryByText('Outra despesa')).toBeNull();
