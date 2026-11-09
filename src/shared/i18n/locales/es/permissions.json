@@ -25,7 +25,7 @@
   "notifications": {
     "title": "Notificaciones",
     "description": "Jornada en curso y recordatorios",
-    "missing": "Sin notificaciones no verás la jornada en curso ni los recordatorios del carro."
+    "missing": "Sin notificaciones no verás la jornada en curso ni los recordatorios del vehículo."
   },
   "adjust": "Ajustar",
   "battery": {

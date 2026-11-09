@@ -29,7 +29,7 @@
   "permissions": {
     "title": "Deixe tudo pronto para usar",
     "hint": "Assim você não precisa parar no meio da jornada. Tudo fica no seu celular, e você pode mudar depois.",
-    "notice": "Quem decide as corridas é sempre você: o app não toca na tela. Cada plataforma tem suas regras sobre apps de apoio, e vale conhecê-las. Dirigindo, a voz avisa: toque no celular só com o carro parado.",
+    "notice": "Quem decide as corridas é sempre você: o app não toca na tela. Cada plataforma tem suas regras sobre apps de apoio, e vale conhecê-las. Dirigindo, a voz avisa: toque no celular só com o veículo parado.",
     "previewTitle": "Assim aparece uma oferta",
     "notice_deliveries": "Quem decide as entregas é sempre você: o app não toca na tela. Cada plataforma tem suas regras sobre apps de apoio, e vale conhecê-las. Pilotando, a voz avisa: toque no celular só com o veículo parado.",
     "notice_both": "Quem decide as corridas e entregas é sempre você: o app não toca na tela. Cada plataforma tem suas regras sobre apps de apoio, e vale conhecê-las. Dirigindo, a voz avisa: toque no celular só com o veículo parado."
@@ -40,7 +40,7 @@
     "registerShift": "Registrar uma jornada",
     "backHome": "Voltar ao início",
     "seeHome": "Ver o início",
-    "costItem": "Custo do carro · {{cost}}",
+    "costItem": "Custo do veículo · {{cost}}",
     "copilotOn": "Copiloto ligado",
     "copilotOff": "Copiloto ainda desligado",
     "goalItem": "Definir a meta do mês",

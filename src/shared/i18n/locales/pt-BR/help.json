@@ -33,15 +33,15 @@
   },
   "shift": {
     "title": "Como registrar uma jornada",
-    "howTo_km": "Toque em Nova jornada com o carro parado. Informe ganhos, km e horas, e use o cronômetro ou o GPS se preferir.",
-    "howTo_mi": "Toque em Nova jornada com o carro parado. Informe ganhos, milhas e horas, e use o cronômetro ou o GPS se preferir.",
+    "howTo_km": "Toque em Nova jornada com o veículo parado. Informe ganhos, km e horas, e use o cronômetro ou o GPS se preferir.",
+    "howTo_mi": "Toque em Nova jornada com o veículo parado. Informe ganhos, milhas e horas, e use o cronômetro ou o GPS se preferir.",
     "partial_km": "Sem km, o resultado fica parcial até você completar.",
     "partial_mi": "Sem milhas, o resultado fica parcial até você completar."
   },
   "copilotSetup": {
     "title": "Como configurar o Copiloto",
     "guided": "Em Mais, abra Copiloto de ofertas e use a configuração guiada. Depois, toque em Testar.",
-    "driving": "Dirigindo, a voz avisa por você. Toque no celular só com o carro parado."
+    "driving": "Dirigindo, a voz avisa por você. Toque no celular só com o veículo parado."
   },
   "copilotMissing": {
     "title": "Se o Copiloto não aparecer",
@@ -55,7 +55,7 @@
   },
   "moveCard": {
     "title": "Mover o cartão",
-    "drag": "Com o carro parado, arraste o cartão para onde preferir. A posição fica guardada, e você pode voltar ao topo na tela do Copiloto."
+    "drag": "Com o veículo parado, arraste o cartão para onde preferir. A posição fica guardada, e você pode voltar ao topo na tela do Copiloto."
   },
   "goal": {
     "title": "Como funciona a meta do mês",

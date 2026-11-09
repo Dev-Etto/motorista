@@ -27,7 +27,7 @@
     "title": "Na prática",
     "intro": "Uma corrida de {{value}} com {{distance}}:",
     "received": "Você recebe",
-    "vehicle": "Vai para o carro",
+    "vehicle": "Vai para o veículo",
     "vehicleDetail": "Combustível, desgaste e outros custos",
     "left": "Sobra para você"
   },

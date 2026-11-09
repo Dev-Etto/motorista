@@ -9,7 +9,7 @@
     "outsideTestSent": "Sal de la app ahora. La oferta de ejemplo aparece en {{seconds}} segundos."
   },
   "screen": {
-    "inControl": "Tú tienes el control: el Copiloto solo lee e informa, y quien acepta o rechaza siempre eres tú. Mientras manejas, la voz te avisa: toca el celular solo con el carro detenido. Cada plataforma tiene sus reglas sobre apps de apoyo, y conviene conocerlas.",
+    "inControl": "Tú tienes el control: el Copiloto solo lee e informa, y quien acepta o rechaza siempre eres tú. Mientras manejas, la voz te avisa: toca el celular solo con el vehículo detenido. Cada plataforma tiene sus reglas sobre apps de apoyo, y conviene conocerlas.",
     "rulesTitle": "Tú tienes el control"
   },
   "status": {
@@ -115,7 +115,7 @@
     "active": {
       "title": "Copiloto activo",
       "explanation": "Con cada oferta reconocida, escuchas y ves de dónde viene, la puntuación y tus números. Si alguna no aparece, la Calibración ayuda a ajustar.",
-      "driving": "Mientras manejas, la voz te avisa. Toca el celular solo con el carro detenido.",
+      "driving": "Mientras manejas, la voz te avisa. Toca el celular solo con el vehículo detenido.",
       "testAgain": "Probar de nuevo"
     },
     "stepOf": "Paso {{current}} de {{total}}",

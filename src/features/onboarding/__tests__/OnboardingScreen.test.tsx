@@ -82,7 +82,7 @@ describe('primeiro uso', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Pular' }));
 
     expect(screen.getByRole('header', { name: 'Tudo pronto' })).toBeTruthy();
-    expect(screen.getByLabelText(/^Custo do carro · R\$\s0,69\/km$/)).toBeTruthy();
+    expect(screen.getByLabelText(/^Custo do veículo · R\$\s0,69\/km$/)).toBeTruthy();
     expect(screen.getByLabelText('Copiloto ainda desligado')).toBeTruthy();
     expect(screen.getByRole('button', { name: /Definir a meta do mês/ })).toBeTruthy();
   });

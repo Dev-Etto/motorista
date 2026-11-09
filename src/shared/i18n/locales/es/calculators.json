@@ -5,7 +5,7 @@
   },
   "costNotice": {
     "title": "Primero, descubre tu costo por {{unit}}",
-    "message": "Sin él, la calculadora no sabe cuánto del valor se va en el carro.",
+    "message": "Sin él, la calculadora no sabe cuánto del valor se va en el vehículo.",
     "action": "Calcular costo"
   },
   "offer": {
@@ -17,7 +17,7 @@
     "perDistance": "Paga por {{unit}}",
     "perHour": "Paga por hora",
     "scoreTitle": "¿Cómo se calcula la puntuación?",
-    "scoreExplain": "La puntuación compara el viaje con tu costo y tus mínimos. De {{target}} para arriba, alcanza los dos mínimos. Por debajo de {{belowCost}}, no cubre el costo del carro.",
+    "scoreExplain": "La puntuación compara el viaje con tu costo y tus mínimos. De {{target}} para arriba, alcanza los dos mínimos. Por debajo de {{belowCost}}, no cubre el costo del vehículo.",
     "scoreDisclaimer": "La puntuación solo ayuda: quien decide siempre eres tú.",
     "aboveTarget": "▲ {{percent}}%",
     "belowTarget": "▼ {{percent}}%",
@@ -47,7 +47,7 @@
     "tapToOpen": "Toca para abrir o eliminar",
     "open": "Abrir",
     "countReturn": "Contar el regreso vacío",
-    "covers": "Cubre el carro en {{distance}} y paga {{perHour}}",
+    "covers": "Cubre el vehículo en {{distance}} y paga {{perHour}}",
     "yourMinimum": ", tu mínimo por hora",
     "includesExtras": "Incluye {{value}} de peaje y extras",
     "savedCount_one": "Guardada (1)",

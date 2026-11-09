@@ -6,8 +6,8 @@
   "form": {
     "newTitle": "Nueva jornada",
     "editTitle": "Editar jornada",
-    "tip_km": "Regístrala con el carro detenido. Con las ganancias, los km y las horas ya basta para ver la ganancia.",
-    "tip_mi": "Regístrala con el carro detenido. Con las ganancias, las millas y las horas ya basta para ver la ganancia.",
+    "tip_km": "Regístrala con el vehículo detenido. Con las ganancias, los km y las horas ya basta para ver la ganancia.",
+    "tip_mi": "Regístrala con el vehículo detenido. Con las ganancias, las millas y las horas ya basta para ver la ganancia.",
     "measurePending_km": "Tienes una medición en curso. Toca Usar en el registro para llevar el tiempo y los km, o descarta la medición.",
     "measurePending_mi": "Tienes una medición en curso. Toca Usar en el registro para llevar el tiempo y las millas, o descarta la medición.",
     "timeAndDistance": "Tiempo y distancia",
