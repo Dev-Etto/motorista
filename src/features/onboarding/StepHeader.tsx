@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { MIN_TOUCH_TARGET } from '@shared/theme/theme';
 import { AppText, StepDots } from '@shared/ui/primitives';
 
-export const ONBOARDING_STEPS = ['register', 'offers', 'setup', 'result', 'permissions'] as const;
+export const ONBOARDING_STEPS = ['setup', 'result'] as const;
 
 export type OnboardingStep = (typeof ONBOARDING_STEPS)[number];
 

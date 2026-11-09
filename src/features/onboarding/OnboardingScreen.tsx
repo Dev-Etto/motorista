@@ -5,34 +5,19 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useRegional } from '@application/useRegional';
 import { APP_NAME } from '@config/app';
 import { useCopilotStatus } from '@features/copilot';
-import { OfferRow } from '@features/offers';
-import { enableCopilotIfGranted, PermissionsList } from '@features/permissions';
 import { CostExample, CostHero, useVehicleForm, VehicleQuickForm } from '@features/vehicle';
-import type { OfferHistoryEntry } from '@modules/copilot';
 import { useSubmit } from '@shared/hooks/useSubmit';
 import { useFormat } from '@shared/i18n/format';
 import { MIN_TOUCH_TARGET, spacing, useTheme } from '@shared/theme/theme';
 import { AppIcon } from '@shared/ui/AppIcon';
 import { BrandMark } from '@shared/ui/BrandMark';
-import { Illustration } from '@shared/ui/illustrations/Illustration';
 import { AppText, Button, Card, ListRow, Notice, Screen } from '@shared/ui/primitives';
 import { markOnboarded } from './finishOnboarding';
 import { StepHeader } from './StepHeader';
 
 const BRAND_SIZE = 132;
-const SAMPLE_OFFER: OfferHistoryEntry = {
-  timestamp: new Date(2026, 0, 1, 14, 22).getTime(),
-  source: '99',
-  valueCents: 1800,
-  km: 8.5,
-  minutes: 22,
-  perKmCents: 212,
-  perHourCents: 4909,
-  color: 'green',
-  score: 4.2,
-};
 
-type Step = 'welcome' | 'register' | 'offers' | 'setup' | 'result' | 'permissions' | 'done';
+type Step = 'welcome' | 'setup' | 'result' | 'done';
 
 export default function OnboardingScreen() {
   const router = useRouter();
@@ -48,11 +33,6 @@ export default function OnboardingScreen() {
     await markOnboarded();
     router.replace('/');
     if (nextRoute !== '/') router.push(nextRoute);
-  };
-
-  const finishPermissions = async () => {
-    await enableCopilotIfGranted();
-    setStep('done');
   };
 
   const saving = useSubmit(async () => {
@@ -73,8 +53,7 @@ export default function OnboardingScreen() {
             {t('welcome.tagline')}
           </AppText>
         </View>
-        <Button label={t('welcome.start')} onPress={() => setStep('register')} />
-        <Button label={t('welcome.skipIntro')} variant="secondary" onPress={() => setStep('setup')} />
+        <Button label={t('welcome.start')} onPress={() => setStep('setup')} />
         <AppText variant="caption" tone="muted" center>
           {`${t('welcome.promise')} ${t('welcome.privacy')}`}
         </AppText>
@@ -92,26 +71,6 @@ export default function OnboardingScreen() {
             <Trans t={t} i18nKey="welcome.terms" components={{ bold: <AppText variant="caption" bold /> }} />
           </AppText>
         </Pressable>
-      </Screen>
-    );
-  }
-
-  if (step === 'register' || step === 'offers') {
-    const content =
-      step === 'register'
-        ? { title: t('intro.registerTitle'), body: t('intro.registerBody', { context: format.distanceUnit }) }
-        : { title: t('intro.offersTitle'), body: t('intro.offersBody') };
-    return (
-      <Screen safeTop>
-        <StepHeader step={step} onSkip={() => setStep('setup')} />
-        <Illustration name={step} />
-        <AppText variant="title" bold center>
-          {content.title}
-        </AppText>
-        <AppText variant="subtitle" center>
-          {content.body}
-        </AppText>
-        <Button label={t('common:actions.continue')} onPress={() => setStep(step === 'register' ? 'offers' : 'setup')} />
       </Screen>
     );
   }
@@ -137,32 +96,12 @@ export default function OnboardingScreen() {
   if (step === 'result') {
     return (
       <Screen safeTop>
-        <StepHeader step="result" onSkip={() => setStep('permissions')} />
+        <StepHeader step="result" onSkip={() => setStep('done')} />
         <CostHero costs={form.costs} />
         <CostExample costPerKm={form.costs.fullPerKm} />
         {form.costs.fixedMonthly > 0 ? null : <Notice tone="accent" message={t('result.firstEstimate')} />}
-        <Button label={t('common:actions.continue')} onPress={() => setStep('permissions')} />
+        <Button label={t('common:actions.continue')} onPress={() => setStep('done')} />
         <Button label={t('result.addOtherCosts')} variant="secondary" onPress={() => finish('/vehicle')} />
-      </Screen>
-    );
-  }
-
-  if (step === 'permissions') {
-    return (
-      <Screen safeTop>
-        <StepHeader step="permissions" onSkip={() => setStep('done')} />
-        <AppText variant="title" bold center>
-          {t('permissions.title')}
-        </AppText>
-        <AppText tone="muted" center>
-          {t('permissions.hint')}
-        </AppText>
-        <Card title={t('permissions.previewTitle')}>
-          <OfferRow entry={SAMPLE_OFFER} />
-        </Card>
-        <PermissionsList />
-        <Notice tone="accent" message={t('permissions.notice')} />
-        <Button label={t('common:actions.continue')} onPress={finishPermissions} />
       </Screen>
     );
   }
