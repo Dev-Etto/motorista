@@ -33,14 +33,6 @@
     "perDistanceAccepted": "{{label}} das aceitas",
     "perDistanceNotAccepted": "{{label}} das não aceitas"
   },
-  "shiftEstimate": {
-    "title": "Sugestão pelos aceites",
-    "intro": "Pelas corridas que o app viu você aceitar, estimamos este faturamento:",
-    "total": "Total estimado",
-    "unmatched": "{{platforms}} não está em Plataformas. Inclua para usar este valor.",
-    "applied": "Valores preenchidos abaixo. Confira e ajuste antes de salvar.",
-    "apply": "Usar estes valores"
-  },
   "screen": {
     "periodLabel": "Período",
     "period": {

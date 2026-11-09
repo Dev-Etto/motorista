@@ -5,7 +5,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import type { ExpenseCategory } from '@domain/expense/expense';
 import { isShiftForgotten } from '@domain/shift/forgotten';
 import { KmEntryMode, SHIFT_FORM_STEPS, ShiftFormStep, stepOfError } from '@domain/shift/shiftForm';
-import { ShiftEstimateCard } from '@features/offers';
+import { useAcceptedEarnings } from '@features/offers';
 import { TipBanner } from '@features/tips';
 import { useSubmit } from '@shared/hooks/useSubmit';
 import { useUnsavedChangesGuard } from '@shared/hooks/useUnsavedChangesGuard';
@@ -43,15 +43,25 @@ export default function ShiftFormScreen() {
     [live.started, live.startedAt, form.date],
   );
 
+  const accepted = useAcceptedEarnings(estimateRange, form.platforms);
+  const prefilled = useRef(false);
+
+  useEffect(() => {
+    if (id || prefilled.current || accepted.matched.length === 0) return;
+
+    prefilled.current = true;
+    form.prefillEarnings(Object.fromEntries(accepted.matched.map(({ platformId, cents }) => [platformId, format.moneyInput(cents)])));
+  }, [id, accepted.matched, form, format]);
+
+  const leave = useUnsavedChangesGuard(form.dirty);
+  const [step, setStep] = useState<ShiftFormStep>('time');
+
   useEffect(() => {
     if (!finish || finishApplied.current || !live.started || isShiftForgotten(live.started, live.elapsedMs)) return;
 
     finishApplied.current = true;
-    void live.apply();
+    void live.apply().then(() => setStep('earnings'));
   }, [finish, live]);
-
-  const leave = useUnsavedChangesGuard(form.dirty);
-  const [step, setStep] = useState<ShiftFormStep>('time');
   const [shownExpenses, setShownExpenses] = useState<ExpenseCategory[]>([]);
   const toggleExpense = (category: ExpenseCategory) =>
     setShownExpenses((current) => (current.includes(category) ? current.filter((item) => item !== category) : [...current, category]));
@@ -145,11 +155,23 @@ export default function ShiftFormScreen() {
 
   const earningsSection = (
     <>
-      {id ? null : <ShiftEstimateCard range={estimateRange} platforms={form.platforms} onApply={form.setEarning} />}
       <Card title={t('form.earningsTitle')}>
+        {!id && accepted.trips > 0 ? (
+          <AppText variant="caption" tone="muted">
+            {t('form.acceptedIntro', { count: accepted.trips })}
+          </AppText>
+        ) : null}
+        {!id && accepted.unmatched.length > 0 ? <Notice message={t('form.acceptedUnmatched', { platforms: accepted.unmatched.join(', ') })} /> : null}
         {form.platforms.map((platform) => (
           <View key={platform.id} style={styles.platform}>
-            <PlatformBadge name={platform.name} />
+            <View style={styles.platformHeader}>
+              <PlatformBadge name={platform.name} />
+              {!id && accepted.tripsOf(platform.id) > 0 ? (
+                <AppText variant="caption" tone="muted">
+                  {t('form.acceptedTrips', { count: accepted.tripsOf(platform.id) })}
+                </AppText>
+              ) : null}
+            </View>
             <MoneyField label={platform.name} hideLabel value={form.earnings[platform.id] ?? ''} onChangeText={(text) => form.setEarning(platform.id, text)} />
           </View>
         ))}
@@ -226,6 +248,7 @@ export default function ShiftFormScreen() {
   }
 
   const isLast = stepIndex === SHIFT_FORM_STEPS.length - 1;
+  const canSaveEarly = step === 'earnings';
 
   return (
     <Screen>
@@ -241,12 +264,24 @@ export default function ShiftFormScreen() {
       {step === 'time' ? timeSection : null}
       {step === 'earnings' ? earningsSection : null}
       {step === 'result' ? resultSection : null}
+      {canSaveEarly ? (
+        <>
+          {form.error ? <Notice tone="negative" message={form.error} /> : null}
+          {measureError ? <Notice message={measureError} /> : null}
+          {saving.error ? <Notice tone="negative" message={saving.error} /> : null}
+          <Button label={t('form.saveButton')} busy={saving.busy} onPress={saving.submit} />
+        </>
+      ) : null}
       <ButtonRow>
         {stepIndex > 0 ? <Button label={t('common:actions.back')} variant="secondary" onPress={() => moveBy(-1)} /> : null}
         {isLast ? (
           <Button label={t('form.saveButton')} busy={saving.busy} onPress={saving.submit} />
         ) : (
-          <Button label={t('common:actions.continue')} onPress={goNext} />
+          <Button
+            label={canSaveEarly ? t('form.reviewExpenses') : t('common:actions.continue')}
+            variant={canSaveEarly ? 'secondary' : 'primary'}
+            onPress={goNext}
+          />
         )}
       </ButtonRow>
     </Screen>
@@ -257,6 +292,7 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   row: { flexDirection: 'row', gap: spacing.md },
   platform: { gap: spacing.xs },
+  platformHeader: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   chip: { minHeight: MIN_TOUCH_TARGET - spacing.sm, justifyContent: 'center', paddingHorizontal: spacing.md, borderRadius: radius.pill, borderWidth: 1 },
 });

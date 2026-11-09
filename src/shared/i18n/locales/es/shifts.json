@@ -49,7 +49,13 @@
     "resultMath": "{{gross}} de ganancias − {{vehicle}} del vehículo − {{expenses}} de gastos",
     "inCostHint_km": "El combustible y el mantenimiento ya están en el costo por km. Regístralos con el botón de la jornada para comparar lo previsto con lo pagado.",
     "inCostHint_mi": "El combustible y el mantenimiento ya están en el costo por milla. Regístralos con el botón de la jornada para comparar lo previsto con lo pagado.",
-    "saved": "Jornada guardada"
+    "saved": "Jornada guardada",
+    "acceptedIntro_one": "Sumamos el viaje que el Copiloto vio que aceptaste. Revísalo con la app de la plataforma: propinas y cancelaciones pueden cambiar el valor.",
+    "acceptedIntro_other": "Sumamos los {{count}} viajes que el Copiloto vio que aceptaste. Revísalos con la app de la plataforma: propinas y cancelaciones pueden cambiar el valor.",
+    "acceptedTrips_one": "{{count}} aceptado",
+    "acceptedTrips_other": "{{count}} aceptados",
+    "acceptedUnmatched": "{{platforms}} no está en Plataformas. Agrégala para sumar esos viajes.",
+    "reviewExpenses": "Revisar gastos"
   },
   "result": {
     "title": "Resultado",
