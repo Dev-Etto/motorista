@@ -76,7 +76,7 @@
     <item quantity="one">%d centavo</item>
     <item quantity="other">%d centavos</item>
   </plurals>
-  <string name="panel_handle_description">Motorista, %1$s, %2$s</string>
+  <string name="panel_handle_description">Vali, %1$s, %2$s</string>
   <string name="panel_state_open">Open</string>
   <string name="panel_state_closed">Closed</string>
   <string name="shift_channel_name">Shift in progress</string>

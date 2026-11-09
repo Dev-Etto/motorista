@@ -1,5 +1,5 @@
 import type { ConfigContext, ExpoConfig } from 'expo/config';
-const NAME = 'Motorista';
+const NAME = 'Vali';
 const PACKAGE = 'app.motorista.android';
 const isRelease = process.env.APP_VARIANT === 'release';
 const UNUSED_LIBRARY_PERMISSIONS = [

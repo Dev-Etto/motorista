@@ -35,7 +35,7 @@ describe('primeiro uso', () => {
   it('as boas-vindas mostram a logo, o título e o subtítulo', async () => {
     await renderScreen();
 
-    expect(screen.getByRole('image', { name: 'Motorista' })).toBeTruthy();
+    expect(screen.getByRole('image', { name: 'Vali' })).toBeTruthy();
     expect(screen.getByText('Saiba quanto sobra de cada corrida.')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Começar' })).toBeTruthy();
   });
