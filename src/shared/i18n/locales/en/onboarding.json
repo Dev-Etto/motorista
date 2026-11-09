@@ -1,7 +1,7 @@
 {
   "welcome": {
-    "title": "Know what's left from every ride.",
-    "tagline": "Find out how much you really keep from your work as a ride-hailing driver.",
+    "title": "Know what's left from every ride and delivery.",
+    "tagline": "Find out how much you really keep from your ride-hailing and delivery work.",
     "promise": "No account. No ads. Your data is yours.",
     "privacy": "Your data stays on your phone only.",
     "start": "Get started",
@@ -30,7 +30,9 @@
     "title": "Get everything ready to use",
     "hint": "That way you don't need to stop in the middle of your shift. Everything stays on your phone, and you can change it later.",
     "notice": "You always decide on the rides: the app doesn't touch the screen. Each platform has its own rules about helper apps, and it's worth knowing them. While driving, the voice tells you: only touch your phone when the car is stopped.",
-    "previewTitle": "This is how an offer looks"
+    "previewTitle": "This is how an offer looks",
+    "notice_deliveries": "You always decide on the deliveries: the app doesn't touch the screen. Each platform has its own rules about helper apps, and it's worth knowing them. While riding, the voice tells you: only touch your phone when the vehicle is stopped.",
+    "notice_both": "You always decide on the rides and deliveries: the app doesn't touch the screen. Each platform has its own rules about helper apps, and it's worth knowing them. While driving, the voice tells you: only touch your phone when the vehicle is stopped."
   },
   "done": {
     "title": "All set",
@@ -72,7 +74,13 @@
     "copilot": {
       "title": "Set up the Copilot",
       "message": "It reads offers and shows right away whether the ride pays off. It takes 2 steps.",
-      "action": "Set up"
+      "action": "Set up",
+      "message_deliveries": "It reads offers and shows right away whether the delivery pays off. It takes 2 steps.",
+      "message_both": "It reads offers and shows right away whether the ride or delivery pays off. It takes 2 steps."
     }
+  },
+  "profile": {
+    "title": "How do you work?",
+    "hint": "This way the app shows the right platforms and wording for you. The offer score uses the same math for rides and deliveries. You can change it later in More."
   }
 }

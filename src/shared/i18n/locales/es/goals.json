@@ -24,7 +24,9 @@
     "gross": "Ingresos previstos en el mes",
     "perWorkDay": "Por día de trabajo",
     "plannedDistance_km": "Km previstos por día",
-    "plannedDistance_mi": "Millas previstas por día"
+    "plannedDistance_mi": "Millas previstas por día",
+    "noVehicle_deliveries": "Registra tu vehículo para ver cuánto facturar y cuánto tiene que pagar cada entrega.",
+    "noVehicle_both": "Registra tu vehículo para ver cuánto facturar y cuánto tiene que pagar cada viaje o entrega."
   },
   "progress": {
     "title": "Meta del mes",

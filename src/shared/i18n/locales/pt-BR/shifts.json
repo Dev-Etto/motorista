@@ -49,7 +49,9 @@
     "resultMath": "{{gross}} de ganhos − {{vehicle}} do carro − {{expenses}} de despesas",
     "inCostHint_km": "Abastecimento e manutenção já estão no custo por km. Lance-os pelo botão da jornada, para comparar o previsto com o pago.",
     "inCostHint_mi": "Abastecimento e manutenção já estão no custo por milha. Lance-os pelo botão da jornada, para comparar o previsto com o pago.",
-    "saved": "Jornada salva"
+    "saved": "Jornada salva",
+    "tripsLabel_deliveries": "Entregas",
+    "tripsLabel_both": "Corridas e entregas"
   },
   "result": {
     "title": "Resultado",

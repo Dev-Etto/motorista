@@ -2,6 +2,7 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
+import { useWorkProfile } from '@application/workProfile';
 import type { ExpenseCategory } from '@domain/expense/expense';
 import { isShiftForgotten } from '@domain/shift/forgotten';
 import { KmEntryMode, SHIFT_FORM_STEPS, ShiftFormStep, stepOfError } from '@domain/shift/shiftForm';
@@ -28,6 +29,7 @@ const KM_MODES: KmEntryMode[] = ['manual', 'odometer'];
 export default function ShiftFormScreen() {
   const router = useRouter();
   const { t } = useTranslation(['shifts', 'expenses', 'common']);
+  const workProfile = useWorkProfile();
   const format = useFormat();
   const colors = useTheme();
   const { id, finish } = useLocalSearchParams<{ id?: string; finish?: string }>();
@@ -138,7 +140,7 @@ export default function ShiftFormScreen() {
       </Card>
 
       <Collapsible title={t('form.moreDetails')}>
-        <IntegerField label={t('form.tripsLabel')} {...form.bind('trips')} />
+        <IntegerField label={t('form.tripsLabel', { context: workProfile })} {...form.bind('trips')} />
       </Collapsible>
     </>
   );

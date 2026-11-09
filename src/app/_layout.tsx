@@ -44,6 +44,7 @@ const SCREENS = [
   { name: 'terms', titleKey: 'screens.terms' },
   { name: 'about', titleKey: 'screens.about' },
   { name: 'appearance', titleKey: 'screens.appearance' },
+  { name: 'work-profile', titleKey: 'screens.workProfile' },
   { name: 'shift/new', titleKey: 'screens.shiftNew' },
   { name: 'shift/[id]', titleKey: 'screens.shiftDetail' },
   { name: 'expense/new', titleKey: 'screens.expenseNew' },
