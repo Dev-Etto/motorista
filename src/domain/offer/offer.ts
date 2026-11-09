@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { VehicleKind } from '@domain/vehicle/costs';
 import { MINUTES_PER_HOUR } from '@shared/utils/time';
 
 export type OfferColor = 'green' | 'yellow' | 'red' | 'neutral';
@@ -22,6 +23,7 @@ export const offerTargetsSchema = z.object({
 export type OfferTargets = z.infer<typeof offerTargetsSchema>;
 
 export interface OfferSettings {
+  kind: VehicleKind;
   mode: OfferMode;
   normal: OfferTargets;
   low: OfferTargets;
@@ -30,6 +32,11 @@ export interface OfferSettings {
 
 export const DEFAULT_OFFER_TARGETS: OfferTargets = { targetPerKmCents: 200, targetPerHourCents: 3000 };
 export const DEFAULT_LOW_DEMAND_TARGETS: OfferTargets = { targetPerKmCents: 150, targetPerHourCents: 2000 };
+
+export const DEFAULT_TARGETS_BY_KIND: Record<VehicleKind, Record<OfferMode, OfferTargets>> = {
+  car: { normal: DEFAULT_OFFER_TARGETS, low: DEFAULT_LOW_DEMAND_TARGETS },
+  motorcycle: { normal: { targetPerKmCents: 150, targetPerHourCents: 2000 }, low: { targetPerKmCents: 120, targetPerHourCents: 1500 } },
+};
 
 export const activeTargets = (settings: OfferSettings): OfferTargets => settings[settings.mode];
 

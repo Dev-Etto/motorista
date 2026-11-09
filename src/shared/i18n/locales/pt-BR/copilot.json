@@ -82,10 +82,14 @@
     "minPerDistance_km": "Mínimo por km",
     "minPerDistance_mi": "Mínimo por milha",
     "minPerHour": "Mínimo por hora",
-    "editorIntro": "O menor valor que você quer receber em cada corrida. A nota das ofertas usa estes valores.",
+    "editorIntro": "O menor valor que você quer receber em cada corrida, para o carro e para a moto. O Copiloto usa os do veículo da jornada.",
     "followGoal": "Calcular pela minha meta",
     "followGoalHint": "Sua meta pede {{perDistance}} e {{perHour}}. Ligado, acompanha a meta quando ela mudar.",
-    "belowCostHint": "Oferta abaixo do seu custo fica vermelha em qualquer modo."
+    "belowCostHint": "Oferta abaixo do seu custo fica vermelha em qualquer modo.",
+    "kind": {
+      "car": "Carro",
+      "motorcycle": "Moto"
+    }
   },
   "setup": {
     "permission": {

@@ -6,6 +6,8 @@ export const SETTING_KEYS = {
   lastBackupAt: 'last_backup_at',
   offerTargets: 'offer_targets',
   offerLowTargets: 'offer_low_targets',
+  offerTargetsMotorcycle: 'offer_targets_motorcycle',
+  offerLowTargetsMotorcycle: 'offer_low_targets_motorcycle',
   offerMode: 'offer_mode',
   offerFollowGoal: 'offer_follow_goal',
   theme: 'theme_mode',

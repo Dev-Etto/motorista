@@ -82,10 +82,14 @@
     "minPerDistance_km": "Minimum per km",
     "minPerDistance_mi": "Minimum per mile",
     "minPerHour": "Minimum per hour",
-    "editorIntro": "The lowest amount you want to get for each ride. The offer score uses these values.",
+    "editorIntro": "The least you want to get for each ride, for your car and your motorcycle. Copilot uses the ones for the shift vehicle.",
     "followGoal": "Calculate from my goal",
     "followGoalHint": "Your goal calls for {{perDistance}} and {{perHour}}. When on, it follows the goal whenever it changes.",
-    "belowCostHint": "An offer below your cost turns red in any mode."
+    "belowCostHint": "An offer below your cost turns red in any mode.",
+    "kind": {
+      "car": "Car",
+      "motorcycle": "Motorcycle"
+    }
   },
   "setup": {
     "permission": {
