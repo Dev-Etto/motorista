@@ -69,6 +69,11 @@
       "message": "Seus dados ficam só neste celular. Com um backup, você os leva junto se trocar de aparelho.",
       "action": "Fazer backup"
     },
+    "fixedCosts": {
+      "title": "Inclua seguro, IPVA e parcela",
+      "message": "Sem eles, o lucro do dia parece maior do que é.",
+      "action": "Incluir"
+    },
     "copilot": {
       "title": "Configure o Copiloto",
       "message": "Ele lê as ofertas e mostra na hora se a corrida compensa. Leva 2 passos.",

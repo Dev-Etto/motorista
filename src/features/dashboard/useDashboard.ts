@@ -43,7 +43,6 @@ async function loadDashboard(firstWeekday: number) {
     lastOffer,
     loadedAt: Date.now(),
     todayGoal: goal ? todayGoal(goal) : null,
-    missingFixedCosts: costs !== null && costs.fixedMonthly === 0,
     goal,
     today: withLooseExpenses(summarizeShifts(monthFacts.filter((fact) => fact.date === date)), looseToday),
     backupDue: nextStep?.id !== 'first-backup' && isBackupDue(lastBackupAt, monthFacts.length > 0, Date.now(), BACKUP_REMINDER_DAYS),

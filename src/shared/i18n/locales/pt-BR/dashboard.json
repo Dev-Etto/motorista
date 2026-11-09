@@ -1,12 +1,12 @@
 {
+  "vehicleLabel": "Veículo",
   "copilotStopped": {
     "title": "Copiloto em pausa",
     "message": "A permissão de acessibilidade foi desligada. Ative de novo para voltar a avaliar as ofertas.",
-    "action": "Reativar o Copiloto"
+    "action": "Reativar"
   },
   "gpsProblem_km": "Os km não estão sendo medidos. {{problem}}",
   "gpsProblem_mi": "As milhas não estão sendo medidas. {{problem}}",
-  "missingFixedCosts": "Esse lucro ainda não considera seguro, IPVA, parcela ou aluguel. Inclua em Mais › Veículos e custos para ver o valor real.",
   "backup": {
     "action": "Fazer backup"
   },

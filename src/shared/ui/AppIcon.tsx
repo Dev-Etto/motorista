@@ -23,6 +23,7 @@ const ICON_PATHS = {
   calendar: 'M5 5h14v15H5zM5 10h14M9 3v4M15 3v4',
   check: 'M5 12.5l4.5 4.5L19 7',
   chevron: 'M9 6l6 6-6 6',
+  chevronDown: 'M6 9l6 6 6-6',
   alert: 'M12 4l9 16H3zM12 10v4M12 17h.01',
   document: 'M7 3h7l4 4v14H7zM14 3v4h4M10 12h5M10 16h5',
   flag: 'M6 21V4h12l-3 4 3 4H6',

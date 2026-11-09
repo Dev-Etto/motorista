@@ -6,7 +6,7 @@ import { vehicleRepository } from '@data/repositories/vehicleRepository';
 import { copilot } from '@modules/copilot';
 import { monthKey, today } from '@shared/utils/dates';
 
-const STEP_IDS = ['vehicle', 'copilot', 'first-shift', 'goal', 'first-backup'] as const;
+const STEP_IDS = ['vehicle', 'fixed-costs', 'copilot', 'first-shift', 'goal', 'first-backup'] as const;
 const dismissedSchema = z.array(z.enum(STEP_IDS));
 
 export type NextStepId = (typeof STEP_IDS)[number];
@@ -18,6 +18,7 @@ export interface NextStep {
 
 const STEPS: Record<NextStepId, NextStep> = {
   vehicle: { id: 'vehicle', href: '/vehicle' },
+  'fixed-costs': { id: 'fixed-costs', href: '/vehicle' },
   copilot: { id: 'copilot', href: '/copilot-setup' },
   'first-shift': { id: 'first-shift', href: '/shift/new' },
   goal: { id: 'goal', href: '/goal' },
@@ -36,6 +37,7 @@ export async function loadNextStep(): Promise<NextStep | null> {
 
   const pending: (NextStepId | null)[] = [
     costs ? null : 'vehicle',
+    costs?.fixedMonthly === 0 ? 'fixed-costs' : null,
     copilot.getStatus().accessibilityGranted ? null : 'copilot',
     stats.total > 0 || copilot.getTimer().started ? null : 'first-shift',
     goal ? null : 'goal',

@@ -14,6 +14,8 @@ export function describeNextStep(id: NextStepId, t: TFunction<'onboarding'>, for
   switch (id) {
     case 'vehicle':
       return { title: t('nextStep.vehicle.title', unit), message: t('nextStep.vehicle.message'), actionLabel: t('nextStep.vehicle.action') };
+    case 'fixed-costs':
+      return { title: t('nextStep.fixedCosts.title'), message: t('nextStep.fixedCosts.message'), actionLabel: t('nextStep.fixedCosts.action') };
     case 'copilot':
       return { title: t('nextStep.copilot.title'), message: t('nextStep.copilot.message'), actionLabel: t('nextStep.copilot.action') };
     case 'first-shift':
