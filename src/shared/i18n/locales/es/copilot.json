@@ -85,7 +85,11 @@
     "editorIntro": "El menor valor que quieres recibir en cada viaje. La puntuación de las ofertas usa estos valores.",
     "followGoal": "Calcular según mi meta",
     "followGoalHint": "Tu meta pide {{perDistance}} y {{perHour}}. Activado, sigue la meta cuando cambie.",
-    "belowCostHint": "Una oferta por debajo de tu costo se pone roja en cualquier modo."
+    "belowCostHint": "Una oferta por debajo de tu costo se pone roja en cualquier modo.",
+    "title_deliveries": "Mínimos por entrega",
+    "title_both": "Mínimos por viaje y entrega",
+    "editorIntro_deliveries": "El menor valor que quieres recibir en cada entrega. La puntuación de las ofertas usa estos valores.",
+    "editorIntro_both": "El menor valor que quieres recibir en cada viaje o entrega. La puntuación de las ofertas usa estos valores."
   },
   "setup": {
     "permission": {
@@ -99,7 +103,9 @@
       "fullControl": "Este aviso es estándar y aparece para cualquier app con este permiso. El Copiloto usa la lectura de la pantalla y muestra la tarjeta, sin tocar nada por ti.",
       "shortcut": "La opción de acceso directo puede quedar desactivada: solo pondría un ícono en el borde de la pantalla.",
       "blocked": "Si aparece \"configuración restringida\", abre los detalles de la app, toca los tres puntos y Permitir configuración restringida.",
-      "openAppSettings": "Abrir detalles de la app"
+      "openAppSettings": "Abrir detalles de la app",
+      "explanation_deliveries": "Lee el valor, la distancia y el tiempo de la oferta para darle una puntuación. No toca nada, no acepta ni rechaza entregas, y lo que lee queda en tu celular.",
+      "explanation_both": "Lee el valor, la distancia y el tiempo de la oferta para darle una puntuación. No toca nada, no acepta ni rechaza viajes o entregas, y lo que lee queda en tu celular."
     },
     "ready": {
       "title": "Todo listo para probar",

@@ -92,7 +92,9 @@
     "emptyToday": "Nenhuma oferta lida hoje.",
     "seeAllShort": "Todas as ofertas",
     "evaluateShort": "Avaliar oferta",
-    "quoteShort": "Orçamento"
+    "quoteShort": "Orçamento",
+    "setupMessage_deliveries": "O Copiloto lê as ofertas e mostra se a entrega compensa. Configure em 2 passos.",
+    "setupMessage_both": "O Copiloto lê as ofertas e mostra se a corrida ou a entrega compensa. Configure em 2 passos."
   },
   "correct": {
     "title": "Corrigir o resultado",

@@ -92,7 +92,9 @@
     "emptyToday": "No offers read today.",
     "seeAllShort": "All offers",
     "evaluateShort": "Evaluate offer",
-    "quoteShort": "Quote"
+    "quoteShort": "Quote",
+    "setupMessage_deliveries": "The Copilot reads offers and shows whether the delivery pays off. Set it up in 2 steps.",
+    "setupMessage_both": "The Copilot reads offers and shows whether the ride or delivery pays off. Set it up in 2 steps."
   },
   "correct": {
     "title": "Fix the result",

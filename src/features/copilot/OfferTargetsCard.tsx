@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useWorkProfile } from '@application/workProfile';
 import { OfferMode, OfferTargets } from '@domain/offer/offer';
 import { useFormat } from '@shared/i18n/format';
 import { MoneyField } from '@shared/ui/fields';
@@ -27,12 +28,13 @@ export function OfferTargetsEditor({ targets, suggestion }: { targets: OfferTarg
   const isNormal = targets.mode === 'normal';
   const following = isNormal && targets.followGoal && !!suggestion;
   const { t } = useTranslation('copilot');
+  const workProfile = useWorkProfile();
   const format = useFormat();
   const modes = useModeOptions();
 
   return (
-    <Card title={t('targets.title')}>
-      <AppText tone="muted">{t('targets.editorIntro')}</AppText>
+    <Card title={t('targets.title', { context: workProfile })}>
+      <AppText tone="muted">{t('targets.editorIntro', { context: workProfile })}</AppText>
       <Segmented value={targets.mode} options={modes} onChange={targets.setMode} />
       {isNormal && suggestion ? (
         <ToggleRow

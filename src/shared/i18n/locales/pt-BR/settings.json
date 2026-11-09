@@ -12,7 +12,9 @@
       },
       "goal": {
         "title": "Meta e mínimos",
-        "subtitle": "Seu lucro e o mínimo por corrida"
+        "subtitle": "Seu lucro e o mínimo por corrida",
+        "subtitle_deliveries": "Seu lucro e o mínimo por entrega",
+        "subtitle_both": "Seu lucro e o mínimo por corrida e entrega"
       },
       "platforms": {
         "title": "Plataformas",
@@ -65,6 +67,10 @@
       "appearance": {
         "title": "Aparência",
         "subtitle": "Automático, claro ou escuro"
+      },
+      "workProfile": {
+        "title": "Como você trabalha",
+        "subtitle": "Corridas, entregas ou os dois"
       }
     },
     "about": {
@@ -377,5 +383,22 @@
     "title": "Apagar todos os dados?",
     "message": "Veículos, jornadas, despesas, metas, ofertas e ajustes saem deste celular, e o app fecha e volta como novo. As métricas de uso deixam de ser ligadas a este aparelho e os relatórios de falha ainda não enviados são descartados. Isso não pode ser desfeito. Se quiser guardar uma cópia, faça um backup antes.",
     "confirm": "Apagar tudo"
+  },
+  "workProfile": {
+    "hint": "Assim o app mostra as plataformas e os textos certos para você. A nota das ofertas é a mesma conta para corridas e entregas. Dá para mudar depois em Mais.",
+    "option": {
+      "rides": {
+        "title": "Corridas",
+        "subtitle": "Uber, 99, inDrive"
+      },
+      "deliveries": {
+        "title": "Entregas",
+        "subtitle": "iFood, 99Food, Keeta, Zé Delivery"
+      },
+      "both": {
+        "title": "Corridas e entregas",
+        "subtitle": "Você alterna conforme o dia"
+      }
+    }
   }
 }

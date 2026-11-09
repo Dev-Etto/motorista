@@ -12,7 +12,9 @@
       },
       "goal": {
         "title": "Meta y mínimos",
-        "subtitle": "Tu ganancia y el mínimo por viaje"
+        "subtitle": "Tu ganancia y el mínimo por viaje",
+        "subtitle_deliveries": "Tu ganancia y el mínimo por entrega",
+        "subtitle_both": "Tu ganancia y el mínimo por viaje y entrega"
       },
       "platforms": {
         "title": "Plataformas",
@@ -65,6 +67,10 @@
       "appearance": {
         "title": "Apariencia",
         "subtitle": "Automático, claro u oscuro"
+      },
+      "workProfile": {
+        "title": "Cómo trabajas",
+        "subtitle": "Viajes, entregas o ambos"
       }
     },
     "about": {
@@ -377,5 +383,22 @@
     "title": "¿Borrar todos los datos?",
     "message": "Vehículos, jornadas, gastos, metas, ofertas y ajustes se eliminan de este celular, y la app se cierra y vuelve como nueva. Las métricas de uso dejan de estar vinculadas a este celular y los informes de fallos aún no enviados se descartan. No se puede deshacer. Si quieres guardar una copia, haz una copia de seguridad antes.",
     "confirm": "Borrar todo"
+  },
+  "workProfile": {
+    "hint": "Así la app muestra las plataformas y los textos correctos para ti. La puntuación de las ofertas usa la misma cuenta para viajes y entregas. Puedes cambiarlo después en Más.",
+    "option": {
+      "rides": {
+        "title": "Viajes",
+        "subtitle": "Uber, 99, inDrive"
+      },
+      "deliveries": {
+        "title": "Entregas",
+        "subtitle": "iFood, 99Food, Keeta, Zé Delivery"
+      },
+      "both": {
+        "title": "Viajes y entregas",
+        "subtitle": "Alternas según el día"
+      }
+    }
   }
 }

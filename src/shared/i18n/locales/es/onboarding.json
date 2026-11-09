@@ -1,7 +1,7 @@
 {
   "welcome": {
-    "title": "Sabe cuánto te queda de cada viaje.",
-    "tagline": "Descubre cuánto te queda de verdad en tu trabajo como conductor de aplicación.",
+    "title": "Sabe cuánto te queda de cada viaje y entrega.",
+    "tagline": "Descubre cuánto te queda de verdad en tu trabajo con apps de viajes y entregas.",
     "promise": "Sin cuenta. Sin anuncios. Tus datos son tuyos.",
     "privacy": "Tus datos quedan solo en tu celular.",
     "start": "Comenzar",
@@ -30,7 +30,9 @@
     "title": "Deja todo listo para usar",
     "hint": "Así no tienes que detenerte a mitad de la jornada. Todo queda en tu celular, y puedes cambiarlo después.",
     "notice": "Quien decide los viajes siempre eres tú: la app no toca la pantalla. Cada plataforma tiene sus reglas sobre apps de apoyo, y conviene conocerlas. Mientras manejas, la voz te avisa: toca el celular solo con el carro detenido.",
-    "previewTitle": "Así se ve una oferta"
+    "previewTitle": "Así se ve una oferta",
+    "notice_deliveries": "Quien decide las entregas siempre eres tú: la app no toca la pantalla. Cada plataforma tiene sus reglas sobre apps de apoyo, y conviene conocerlas. Mientras conduces, la voz te avisa: toca el celular solo con el vehículo detenido.",
+    "notice_both": "Quien decide los viajes y entregas siempre eres tú: la app no toca la pantalla. Cada plataforma tiene sus reglas sobre apps de apoyo, y conviene conocerlas. Mientras manejas, la voz te avisa: toca el celular solo con el vehículo detenido."
   },
   "done": {
     "title": "Todo listo",
@@ -72,7 +74,13 @@
     "copilot": {
       "title": "Configura el Copiloto",
       "message": "Lee las ofertas y muestra al instante si el viaje vale la pena. Son 2 pasos.",
-      "action": "Configurar"
+      "action": "Configurar",
+      "message_deliveries": "Lee las ofertas y muestra al instante si la entrega vale la pena. Son 2 pasos.",
+      "message_both": "Lee las ofertas y muestra al instante si el viaje o la entrega vale la pena. Son 2 pasos."
     }
+  },
+  "profile": {
+    "title": "¿Cómo trabajas?",
+    "hint": "Así la app muestra las plataformas y los textos correctos para ti. La puntuación de las ofertas usa la misma cuenta para viajes y entregas. Puedes cambiarlo después en Más."
   }
 }
