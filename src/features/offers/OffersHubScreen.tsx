@@ -1,7 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { useWorkProfile } from '@application/workProfile';
 import { useCopilotStatus } from '@features/copilot';
 import { useFormat } from '@shared/i18n/format';
 import { MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@shared/theme/theme';
@@ -15,7 +14,6 @@ const DOT = 10;
 
 export default function OffersHubScreen() {
   const { t } = useTranslation('offers');
-  const workProfile = useWorkProfile();
   const router = useRouter();
   const colors = useTheme();
   const format = useFormat();
@@ -43,7 +41,7 @@ export default function OffersHubScreen() {
         </Pressable>
       ) : (
         <Card title={t('hub.copilotTitle')}>
-          <AppText tone="muted">{t('hub.setupMessage', { context: workProfile })}</AppText>
+          <AppText tone="muted">{t('hub.setupMessage')}</AppText>
           <Button label={t('hub.setupButton')} onPress={() => router.push('/copilot-setup')} />
         </Card>
       )}

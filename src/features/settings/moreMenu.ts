@@ -6,7 +6,6 @@ export type MoreSectionId = 'work' | 'app' | 'help';
 export type AboutSectionId = 'yours' | 'legal';
 
 export type MoreItemId =
-  | 'workProfile'
   | 'vehicle'
   | 'goal'
   | 'platforms'
@@ -33,7 +32,6 @@ export const MORE_SECTIONS: { id: MoreSectionId; items: MoreMenuItem[] }[] = [
   {
     id: 'work',
     items: [
-      { id: 'workProfile', icon: 'person', href: '/work-profile' },
       { id: 'vehicle', icon: 'vehicle', href: '/vehicles' },
       { id: 'goal', icon: 'goal', href: '/goal' },
       { id: 'platforms', icon: 'apps', href: '/platforms' },

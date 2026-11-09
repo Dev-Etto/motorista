@@ -49,9 +49,7 @@
     "resultMath": "{{gross}} earned − {{vehicle}} for the vehicle − {{expenses}} in expenses",
     "inCostHint_km": "Fuel and maintenance are already in the cost per km. Log them from the shift button to compare planned and paid.",
     "inCostHint_mi": "Fuel and maintenance are already in the cost per mile. Log them from the shift button to compare planned and paid.",
-    "saved": "Shift saved",
-    "tripsLabel_deliveries": "Deliveries",
-    "tripsLabel_both": "Rides and deliveries"
+    "saved": "Shift saved"
   },
   "result": {
     "title": "Result",

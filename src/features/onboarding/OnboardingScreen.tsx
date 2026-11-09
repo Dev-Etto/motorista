@@ -3,12 +3,10 @@ import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useRegional } from '@application/useRegional';
-import { saveWorkProfile, useWorkProfile } from '@application/workProfile';
 import { APP_NAME } from '@config/app';
 import { useCopilotStatus } from '@features/copilot';
 import { OfferRow } from '@features/offers';
 import { enableCopilotIfGranted, PermissionsList } from '@features/permissions';
-import { WorkProfilePicker } from '@features/settings';
 import { CostExample, CostHero, useVehicleForm, VehicleQuickForm } from '@features/vehicle';
 import type { OfferHistoryEntry } from '@modules/copilot';
 import { useSubmit } from '@shared/hooks/useSubmit';
@@ -18,7 +16,6 @@ import { AppIcon } from '@shared/ui/AppIcon';
 import { BrandMark } from '@shared/ui/BrandMark';
 import { Illustration } from '@shared/ui/illustrations/Illustration';
 import { AppText, Button, Card, ListRow, Notice, Screen } from '@shared/ui/primitives';
-import { reportError } from '@shared/utils/reportError';
 import { markOnboarded } from './finishOnboarding';
 import { StepHeader } from './StepHeader';
 
@@ -35,7 +32,7 @@ const SAMPLE_OFFER: OfferHistoryEntry = {
   score: 4.2,
 };
 
-type Step = 'welcome' | 'register' | 'offers' | 'profile' | 'setup' | 'result' | 'permissions' | 'done';
+type Step = 'welcome' | 'register' | 'offers' | 'setup' | 'result' | 'permissions' | 'done';
 
 export default function OnboardingScreen() {
   const router = useRouter();
@@ -44,7 +41,6 @@ export default function OnboardingScreen() {
   const format = useFormat();
   const regional = useRegional();
   const { t } = useTranslation(['onboarding', 'common']);
-  const workProfile = useWorkProfile();
   const [step, setStep] = useState<Step>('welcome');
   const copilotReady = useCopilotStatus().current.accessibilityGranted;
 
@@ -78,7 +74,7 @@ export default function OnboardingScreen() {
           </AppText>
         </View>
         <Button label={t('welcome.start')} onPress={() => setStep('register')} />
-        <Button label={t('welcome.skipIntro')} variant="secondary" onPress={() => setStep('profile')} />
+        <Button label={t('welcome.skipIntro')} variant="secondary" onPress={() => setStep('setup')} />
         <AppText variant="caption" tone="muted" center>
           {`${t('welcome.promise')} ${t('welcome.privacy')}`}
         </AppText>
@@ -107,7 +103,7 @@ export default function OnboardingScreen() {
         : { title: t('intro.offersTitle'), body: t('intro.offersBody') };
     return (
       <Screen safeTop>
-        <StepHeader step={step} onSkip={() => setStep('profile')} />
+        <StepHeader step={step} onSkip={() => setStep('setup')} />
         <Illustration name={step} />
         <AppText variant="title" bold center>
           {content.title}
@@ -115,23 +111,7 @@ export default function OnboardingScreen() {
         <AppText variant="subtitle" center>
           {content.body}
         </AppText>
-        <Button label={t('common:actions.continue')} onPress={() => setStep(step === 'register' ? 'offers' : 'profile')} />
-      </Screen>
-    );
-  }
-
-  if (step === 'profile') {
-    return (
-      <Screen safeTop>
-        <StepHeader step="profile" onSkip={() => setStep('setup')} />
-        <AppText variant="title" bold center>
-          {t('profile.title')}
-        </AppText>
-        <AppText tone="muted" center>
-          {t('profile.hint')}
-        </AppText>
-        <WorkProfilePicker value={workProfile} onChange={(next) => saveWorkProfile(next).catch(reportError)} />
-        <Button label={t('common:actions.continue')} onPress={() => setStep('setup')} />
+        <Button label={t('common:actions.continue')} onPress={() => setStep(step === 'register' ? 'offers' : 'setup')} />
       </Screen>
     );
   }
@@ -181,7 +161,7 @@ export default function OnboardingScreen() {
           <OfferRow entry={SAMPLE_OFFER} />
         </Card>
         <PermissionsList />
-        <Notice tone="accent" message={t('permissions.notice', { context: workProfile })} />
+        <Notice tone="accent" message={t('permissions.notice')} />
         <Button label={t('common:actions.continue')} onPress={finishPermissions} />
       </Screen>
     );

@@ -1,7 +1,6 @@
 import { useRouter } from 'expo-router';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useWorkProfile } from '@application/workProfile';
 import { useFormat } from '@shared/i18n/format';
 import { Card, ListRow } from '@shared/ui/primitives';
 import type { MoreMenuItem } from './moreMenu';
@@ -9,7 +8,6 @@ import type { MoreMenuItem } from './moreMenu';
 export function MenuSection({ title, items, children }: { title: string; items: MoreMenuItem[]; children?: ReactNode }) {
   const router = useRouter();
   const { t } = useTranslation('settings');
-  const workProfile = useWorkProfile();
   const format = useFormat();
   return (
     <Card title={title}>
@@ -19,9 +17,7 @@ export function MenuSection({ title, items, children }: { title: string; items: 
           key={item.id}
           icon={item.icon}
           title={t(`more.item.${item.id}.title`)}
-          subtitle={
-            item.id === 'goal' ? t('more.item.goal.subtitle', { context: workProfile }) : t(`more.item.${item.id}.subtitle`, { unit: format.distanceUnit })
-          }
+          subtitle={t(`more.item.${item.id}.subtitle`, { unit: format.distanceUnit })}
           onPress={() => router.push(item.href)}
         />
       ))}

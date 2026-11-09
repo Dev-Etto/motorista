@@ -1,7 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { useWorkProfile } from '@application/workProfile';
 import { MIN_TOUCH_TARGET, spacing } from '@shared/theme/theme';
 import { Illustration } from '@shared/ui/illustrations/Illustration';
 import { LearnMore } from '@shared/ui/LearnMore';
@@ -31,7 +30,6 @@ function StepTitle({ current, title, explanation }: { current: number; title: st
 
 export default function CopilotSetupScreen() {
   const { t } = useTranslation(['copilot', 'common']);
-  const workProfile = useWorkProfile();
   const router = useRouter();
   const copilot = useCopilot();
   const consent = useAccessibilityConsent();
@@ -52,7 +50,7 @@ export default function CopilotSetupScreen() {
   if (!status.accessibilityGranted) {
     return (
       <Screen>
-        <StepTitle current={0} title={t('setup.permission.title')} explanation={t('setup.permission.explanation', { context: workProfile })} />
+        <StepTitle current={0} title={t('setup.permission.title')} explanation={t('setup.permission.explanation')} />
         <Card>
           {PERMISSION_STEPS.map((step, index) => (
             <View key={step} style={styles.step}>

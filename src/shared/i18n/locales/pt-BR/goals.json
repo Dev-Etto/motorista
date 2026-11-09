@@ -24,9 +24,7 @@
     "gross": "Faturamento previsto no mês",
     "perWorkDay": "Por dia de trabalho",
     "plannedDistance_km": "Km previstos por dia",
-    "plannedDistance_mi": "Milhas previstas por dia",
-    "noVehicle_deliveries": "Cadastre seu veículo para ver quanto faturar e quanto cada entrega precisa pagar.",
-    "noVehicle_both": "Cadastre seu veículo para ver quanto faturar e quanto cada corrida ou entrega precisa pagar."
+    "plannedDistance_mi": "Milhas previstas por dia"
   },
   "progress": {
     "title": "Meta do mês",

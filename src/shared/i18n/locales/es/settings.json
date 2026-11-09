@@ -12,9 +12,7 @@
       },
       "goal": {
         "title": "Meta y mínimos",
-        "subtitle": "Tu ganancia y el mínimo por viaje",
-        "subtitle_deliveries": "Tu ganancia y el mínimo por entrega",
-        "subtitle_both": "Tu ganancia y el mínimo por viaje y entrega"
+        "subtitle": "Tu ganancia y el mínimo por viaje"
       },
       "platforms": {
         "title": "Plataformas",
@@ -67,10 +65,6 @@
       "appearance": {
         "title": "Apariencia",
         "subtitle": "Automático, claro u oscuro"
-      },
-      "workProfile": {
-        "title": "Cómo trabajas",
-        "subtitle": "Viajes, entregas o ambos"
       }
     },
     "about": {
@@ -204,7 +198,7 @@
   "terms": {
     "about": {
       "title": "Qué es la app",
-      "body": "{{appName}} ayuda a conductores y repartidores en auto y moto a entender costos, ganancia y ofertas. No pide cuenta ni muestra anuncios."
+      "body": "{{appName}} ayuda a conductores en auto y moto a entender costos, ganancia y ofertas. No pide cuenta ni muestra anuncios."
     },
     "estimates": {
       "title": "Estimaciones",
@@ -220,7 +214,7 @@
     },
     "platforms": {
       "title": "Plataformas",
-      "body": "{{appName}} es independiente y no está afiliada, patrocinada ni aprobada por Uber, 99, inDrive, iFood, 99Food, Keeta, Zé Delivery u otras plataformas. Las marcas citadas pertenecen a sus dueños. Cada plataforma tiene reglas propias sobre apps de apoyo, y te corresponde conocerlas antes de usar el Copiloto. Las plataformas pueden detectar apps que usan accesibilidad o superposición, y el uso puede tener consecuencias en tu cuenta."
+      "body": "{{appName}} es independiente y no está afiliada, patrocinada ni aprobada por Uber, 99, inDrive u otras plataformas. Las marcas citadas pertenecen a sus dueños. Cada plataforma tiene reglas propias sobre apps de apoyo, y te corresponde conocerlas antes de usar el Copiloto. Las plataformas pueden detectar apps que usan accesibilidad o superposición, y el uso puede tener consecuencias en tu cuenta."
     },
     "data": {
       "title": "Tus datos",
@@ -236,7 +230,7 @@
     },
     "license": {
       "title": "Licencia",
-      "body": "Recibes una licencia personal, no exclusiva e intransferible para usar la app. No está permitido copiar, modificar, revender, redistribuir ni hacer ingeniería inversa de la app, ni usarla para automatizar la aceptación de viajes o entregas."
+      "body": "Recibes una licencia personal, no exclusiva e intransferible para usar la app. No está permitido copiar, modificar, revender, redistribuir ni hacer ingeniería inversa de la app, ni usarla para automatizar la aceptación de viajes."
     },
     "provider": {
       "title": "Responsable",
@@ -383,22 +377,5 @@
     "title": "¿Borrar todos los datos?",
     "message": "Vehículos, jornadas, gastos, metas, ofertas y ajustes se eliminan de este celular, y la app se cierra y vuelve como nueva. Las métricas de uso dejan de estar vinculadas a este celular y los informes de fallos aún no enviados se descartan. No se puede deshacer. Si quieres guardar una copia, haz una copia de seguridad antes.",
     "confirm": "Borrar todo"
-  },
-  "workProfile": {
-    "hint": "Así la app muestra las plataformas y los textos correctos para ti. La puntuación de las ofertas usa la misma cuenta para viajes y entregas. Puedes cambiarlo después en Más.",
-    "option": {
-      "rides": {
-        "title": "Viajes",
-        "subtitle": "Uber, 99, inDrive"
-      },
-      "deliveries": {
-        "title": "Entregas",
-        "subtitle": "iFood, 99Food, Keeta, Zé Delivery"
-      },
-      "both": {
-        "title": "Viajes y entregas",
-        "subtitle": "Alternas según el día"
-      }
-    }
   }
 }

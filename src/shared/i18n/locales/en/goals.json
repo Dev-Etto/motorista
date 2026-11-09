@@ -24,9 +24,7 @@
     "gross": "Estimated earnings for the month",
     "perWorkDay": "Per workday",
     "plannedDistance_km": "Kilometers planned per day",
-    "plannedDistance_mi": "Miles planned per day",
-    "noVehicle_deliveries": "Add your vehicle to see how much to earn and how much each delivery needs to pay.",
-    "noVehicle_both": "Add your vehicle to see how much to earn and how much each ride or delivery needs to pay."
+    "plannedDistance_mi": "Miles planned per day"
   },
   "progress": {
     "title": "Monthly goal",
