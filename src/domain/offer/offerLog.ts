@@ -91,15 +91,15 @@ export function summarizeOutcomes(entries: OfferLogEntry[]): OutcomeSummary {
 
 export function matchPlatforms<T extends { id: number; name: string }>(estimate: EarningsEstimate, platforms: T[]) {
   const byName = new Map(platforms.map((platform) => [platform.name.toLowerCase(), platform.id]));
-  const matched: { platformId: number; cents: number }[] = [];
+  const matched: { platformId: number; cents: number; trips: number }[] = [];
   const unmatched: string[] = [];
-  for (const { source, cents } of estimate.byPlatform) {
+  for (const { source, cents, trips } of estimate.byPlatform) {
     const platformId = byName.get(source.toLowerCase());
     if (platformId === undefined) {
       unmatched.push(source);
       continue;
     }
-    matched.push({ platformId, cents });
+    matched.push({ platformId, cents, trips });
   }
   return { matched, unmatched };
 }

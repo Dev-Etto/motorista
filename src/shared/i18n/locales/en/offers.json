@@ -33,14 +33,6 @@
     "perDistanceAccepted": "{{label}} of accepted",
     "perDistanceNotAccepted": "{{label}} of not accepted"
   },
-  "shiftEstimate": {
-    "title": "Suggestion from accepted rides",
-    "intro": "Based on the rides the app saw you accept, we estimate these earnings:",
-    "total": "Estimated total",
-    "unmatched": "{{platforms}} isn't in Platforms. Add it to use this amount.",
-    "applied": "Amounts filled in below. Check and adjust them before saving.",
-    "apply": "Use these amounts"
-  },
   "screen": {
     "periodLabel": "Period",
     "period": {
