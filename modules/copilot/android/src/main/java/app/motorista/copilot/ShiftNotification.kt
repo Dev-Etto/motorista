@@ -17,7 +17,7 @@ object ShiftNotification {
   private const val FINISH_REQUEST = 2
   private const val OPEN_REQUEST = 3
   const val ACTION_TOGGLE = "app.motorista.copilot.SHIFT_TOGGLE"
-  private const val OPEN_URI = "motorista://shift/new"
+  private const val OPEN_URI = "motorista://shifts"
   private const val FINISH_URI = "motorista://shift/new?finish=1"
 
   fun update(context: Context, state: TimerState, now: Long = System.currentTimeMillis()) {

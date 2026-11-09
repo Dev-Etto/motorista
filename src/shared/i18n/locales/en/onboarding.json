@@ -69,6 +69,11 @@
       "message": "Your data is stored only on this phone. With a backup, you can take it with you if you switch devices.",
       "action": "Back up now"
     },
+    "fixedCosts": {
+      "title": "Add insurance, vehicle tax and loan payments",
+      "message": "Without them, your daily profit looks bigger than it is.",
+      "action": "Add"
+    },
     "copilot": {
       "title": "Set up the Copilot",
       "message": "It reads offers and shows right away whether the ride pays off. It takes 2 steps.",

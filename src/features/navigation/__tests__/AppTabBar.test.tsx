@@ -42,12 +42,13 @@ describe('barra de abas', () => {
     expect(tabs.map((tab) => tab.props.accessibilityState.selected)).toEqual([false, true, false, false]);
   });
 
-  it('só a aba ativa mostra o nome. As outras têm o nome para o leitor de tela', async () => {
+  it('todas as abas mostram o nome, e só a ativa fica selecionada', async () => {
     await renderBar(0);
 
     expect(screen.getByText('index')).toBeTruthy();
-    expect(screen.queryByText('shifts')).toBeNull();
-    expect(screen.getByRole('tab', { name: 'shifts' })).toBeTruthy();
+    expect(screen.getByText('shifts')).toBeTruthy();
+    expect(screen.getByRole('tab', { name: 'index', selected: true })).toBeTruthy();
+    expect(screen.getByRole('tab', { name: 'shifts', selected: false })).toBeTruthy();
   });
 
   it('tocar noutra aba navega', async () => {

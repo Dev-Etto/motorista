@@ -214,6 +214,8 @@ export function useShiftForm(shiftId?: number) {
     kmMeasured,
     earnings,
     setEarning: touching((platformId: number, text: string) => setEarnings((current) => ({ ...current, [platformId]: text }))),
+    prefillEarnings: (values: Record<number, string>) =>
+      setEarnings((current) => ({ ...values, ...Object.fromEntries(Object.entries(current).filter(([, text]) => text !== '')) })),
     expenses,
     setExpense: touching((category: ExpenseCategory, text: string) => setExpenses((current) => ({ ...current, [category]: text }))),
     dirty: touched,

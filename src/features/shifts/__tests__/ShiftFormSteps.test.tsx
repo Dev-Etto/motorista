@@ -17,7 +17,7 @@ jest.mock('expo-router', () => ({
 }));
 jest.mock('@shared/hooks/useUnsavedChangesGuard', () => ({ useUnsavedChangesGuard: () => (navigate: () => void) => navigate() }));
 jest.mock('@features/tips', () => ({ TipBanner: () => null }));
-jest.mock('@features/offers', () => ({ ShiftEstimateCard: () => null }));
+jest.mock('@features/offers', () => ({ useAcceptedEarnings: () => ({ trips: 0, matched: [], unmatched: [], tripsOf: () => 0 }) }));
 jest.mock('@features/shifts/LiveTrackingCard', () => ({ LiveTrackingCard: () => null }));
 jest.mock('@features/shifts/ShiftResultCard', () => ({ ShiftResultCard: () => null }));
 jest.mock('@features/shifts/useLiveTracking', () => ({
@@ -76,8 +76,9 @@ describe('nova jornada em etapas', () => {
     await fireEvent.press(screen.getByRole('button', { name: 'Continuar' }));
     expect(screen.getByRole('header', { name: 'Quanto você ganhou?' })).toBeTruthy();
     expect(screen.getByText('Faturou')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Salvar jornada' })).toBeTruthy();
 
-    await fireEvent.press(screen.getByRole('button', { name: 'Continuar' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Revisar despesas' }));
     expect(screen.getByRole('header', { name: 'Gastou com algo hoje?' })).toBeTruthy();
     expect(screen.getByText(/R\$\s268,00 de ganhos − R\$\s80,04 do veículo − R\$\s31,80 de despesas/)).toBeTruthy();
     expect(screen.queryByLabelText('Pedágio')).toBeNull();
@@ -112,7 +113,7 @@ describe('nova jornada em etapas', () => {
   it('salvar com erro volta para a etapa do erro', async () => {
     await renderScreen();
     await fireEvent.press(screen.getByRole('button', { name: 'Continuar' }));
-    await fireEvent.press(screen.getByRole('button', { name: 'Continuar' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Revisar despesas' }));
     mockState.problem = 'no-earnings';
 
     await fireEvent.press(screen.getByRole('button', { name: 'Salvar jornada' }));

@@ -18,11 +18,11 @@ const summary = {
   partialCount: 0,
 } as unknown as ShiftSummary;
 
-describe('card Sobrou hoje', () => {
+describe('card Lucro hoje', () => {
   it('mostra o lucro, a meta do dia e faturou, por km e por hora', async () => {
     await render(<TodayCard summary={summary} goal={{ percent: 62, remainingCents: 11360, progress: 0.62 }} />);
 
-    expect(screen.getByRole('header', { name: 'Sobrou hoje' })).toBeTruthy();
+    expect(screen.getByRole('header', { name: 'Lucro hoje' })).toBeTruthy();
     expect(screen.getByText(/R\$\s186,40/)).toBeTruthy();
     expect(screen.getByText(/62% da meta de hoje · faltam R\$\s113,60/)).toBeTruthy();
     expect(screen.getByText('Faturou')).toBeTruthy();

@@ -74,8 +74,8 @@ describe('ligação com as plataformas da jornada', () => {
     const estimate = estimateEarnings([...OFFERS, offer({ source: 'inDrive', status: 'accepted' })]);
     const { matched, unmatched } = matchPlatforms(estimate, platforms);
     expect(matched).toEqual([
-      { platformId: 2, cents: 2000 },
-      { platformId: 1, cents: 1000 },
+      { platformId: 2, cents: 2000, trips: 1 },
+      { platformId: 1, cents: 1000, trips: 1 },
     ]);
     expect(unmatched).toEqual(['inDrive']);
   });

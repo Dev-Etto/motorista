@@ -7,7 +7,7 @@ import { useFormat } from '@shared/i18n/format';
 import { MIN_TOUCH_TARGET, radius, spacing, useTheme } from '@shared/theme/theme';
 import { AppIcon } from '@shared/ui/AppIcon';
 import { AsyncBoundary } from '@shared/ui/AsyncBoundary';
-import { AppText, Button, Card, Notice, Screen } from '@shared/ui/primitives';
+import { AppText, Button, Notice, Screen } from '@shared/ui/primitives';
 import { today } from '@shared/utils/dates';
 import { LastOfferCard } from './LastOfferCard';
 import { PendingCard } from './PendingCard';
@@ -22,6 +22,22 @@ export default function DashboardScreen() {
     <Screen>
       <AsyncBoundary state={dashboard}>{(data) => <DashboardContent data={data} onReload={dashboard.reload} />}</AsyncBoundary>
     </Screen>
+  );
+}
+
+function CopilotStoppedBanner() {
+  const router = useRouter();
+  const colors = useTheme();
+  const { t } = useTranslation('dashboard');
+
+  return (
+    <View accessible={false} style={[styles.banner, { backgroundColor: colors.surfaceAlt }]}>
+      <AppIcon name="alert" color={colors.warning} size={20} />
+      <AppText accessibilityRole="alert" style={styles.flex}>
+        {t('copilotStopped.title')}
+      </AppText>
+      <Button label={t('copilotStopped.action')} onPress={() => router.push('/copilot')} />
+    </View>
   );
 }
 
@@ -43,26 +59,26 @@ function DashboardContent({ data, onReload }: { data: DashboardData; onReload: (
             accessibilityRole="button"
             accessibilityLabel={`${t('vehicle:manage.currentRow')}, ${data.vehicle.name}`}
             onPress={() => router.push('/vehicles')}
-            style={[styles.vehicle, { backgroundColor: colors.surface, boxShadow: colors.cardShadow }]}
+            style={[styles.vehicle, { backgroundColor: colors.surface, borderColor: colors.borderStrong }]}
           >
             <AppIcon name={data.vehicle.kind === 'motorcycle' ? 'motorcycle' : 'vehicle'} color={colors.text} size={18} />
-            <AppText bold numberOfLines={1} style={styles.vehicleName}>
-              {data.vehicle.name}
-            </AppText>
+            <View style={styles.vehicleName}>
+              <AppText variant="caption" tone="muted">
+                {t('vehicleLabel')}
+              </AppText>
+              <AppText bold numberOfLines={1}>
+                {data.vehicle.name}
+              </AppText>
+            </View>
+            <AppIcon name="chevronDown" color={colors.textMuted} size={16} />
           </Pressable>
         ) : null}
       </View>
-      {data.copilotStopped ? (
-        <Card title={t('copilotStopped.title')}>
-          <Notice tone="negative" message={t('copilotStopped.message')} />
-          <Button label={t('copilotStopped.action')} variant="secondary" onPress={() => router.push('/copilot')} />
-        </Card>
-      ) : null}
+      <TodayCard summary={data.today} goal={data.todayGoal} />
+      {data.copilotStopped ? <CopilotStoppedBanner /> : null}
       {data.gpsProblem ? <Notice tone="negative" message={t('gpsProblem', { ...unit, problem: data.gpsProblem })} /> : null}
       <NextStepCard step={data.nextStep} onDismiss={onReload} />
       <PrivacyChoicesCard />
-      <TodayCard summary={data.today} goal={data.todayGoal} />
-      {data.missingFixedCosts ? <Notice tone="accent" message={t('missingFixedCosts')} /> : null}
       <PendingCard items={pendingItems(data)} />
       {data.lastOffer ? <LastOfferCard entry={data.lastOffer} now={data.loadedAt} /> : null}
     </>
@@ -79,7 +95,17 @@ const styles = StyleSheet.create({
     minHeight: MIN_TOUCH_TARGET,
     maxWidth: '50%',
     paddingHorizontal: spacing.md,
-    borderRadius: radius.pill,
+    borderRadius: radius.md,
+    borderWidth: 1,
   },
   vehicleName: { flexShrink: 1 },
+  banner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    borderRadius: radius.md,
+    paddingVertical: spacing.sm,
+    paddingLeft: spacing.md,
+    paddingRight: spacing.sm,
+  },
 });

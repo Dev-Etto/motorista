@@ -33,14 +33,6 @@
     "perDistanceAccepted": "{{label}} of accepted",
     "perDistanceNotAccepted": "{{label}} of not accepted"
   },
-  "shiftEstimate": {
-    "title": "Suggestion from accepted rides",
-    "intro": "Based on the rides the app saw you accept, we estimate these earnings:",
-    "total": "Estimated total",
-    "unmatched": "{{platforms}} isn't in Platforms. Add it to use this amount.",
-    "applied": "Amounts filled in below. Check and adjust them before saving.",
-    "apply": "Use these amounts"
-  },
   "screen": {
     "periodLabel": "Period",
     "period": {
@@ -65,6 +57,7 @@
     "seeMore": "See more",
     "emptyTitle": "No offers here",
     "emptyMessage": "Change the filters or wait for the next offers read by Copilot.",
+    "seeAll": "See all",
     "autoRecord": "The app automatically records what you accept. If the suggested amount differs from what you got paid, just correct it when you log the shift.",
     "settingsTitle": "Settings",
     "estimating": "Estimate earnings from accepted rides",

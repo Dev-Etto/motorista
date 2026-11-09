@@ -1,12 +1,12 @@
 {
+  "vehicleLabel": "Vehicle",
   "copilotStopped": {
     "title": "Copilot paused",
     "message": "The accessibility permission was turned off. Turn it back on to evaluate offers again.",
-    "action": "Turn Copilot back on"
+    "action": "Turn on"
   },
   "gpsProblem_km": "Kilometers aren't being tracked. {{problem}}",
   "gpsProblem_mi": "Miles aren't being tracked. {{problem}}",
-  "missingFixedCosts": "This profit doesn't include insurance, vehicle tax, loan payments, or rent yet. Add them in More › Vehicles and costs to see the real amount.",
   "backup": {
     "action": "Back up now"
   },
@@ -26,7 +26,7 @@
     "update": "This version is over a month old. A new one may fix offer reading."
   },
   "today": {
-    "title": "Left today",
+    "title": "Profit today",
     "gross": "Earned",
     "perKm_km": "Per km",
     "perKm_mi": "Per mile",

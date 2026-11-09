@@ -33,14 +33,6 @@
     "perDistanceAccepted": "{{label}} de las aceptadas",
     "perDistanceNotAccepted": "{{label}} de las no aceptadas"
   },
-  "shiftEstimate": {
-    "title": "Sugerencia según lo aceptado",
-    "intro": "Según los viajes que la app te vio aceptar, estimamos estos ingresos:",
-    "total": "Total estimado",
-    "unmatched": "{{platforms}} no está en Plataformas. Agrégala para usar este valor.",
-    "applied": "Valores completados abajo. Revísalos y ajústalos antes de guardar.",
-    "apply": "Usar estos valores"
-  },
   "screen": {
     "periodLabel": "Período",
     "period": {
@@ -65,6 +57,7 @@
     "seeMore": "Ver más",
     "emptyTitle": "No hay ofertas aquí",
     "emptyMessage": "Cambia los filtros o espera las próximas ofertas que lea el Copiloto.",
+    "seeAll": "Ver todas",
     "autoRecord": "La app registra sola lo que aceptas. Si el valor sugerido es distinto de lo que recibiste, solo tienes que corregirlo al registrar la jornada.",
     "settingsTitle": "Ajustes",
     "estimating": "Estimar ingresos según lo aceptado",

@@ -11,9 +11,9 @@ import { useUnseenOffers } from './useUnseenOffers';
 
 const BADGE_SIZE = 16;
 const BADGE_TEXT_SIZE = 10;
-const LABEL_SIZE = 14;
+const LABEL_SIZE = 12;
 const LABEL_MAX_FONT_SCALE = 1.2;
-const ICON_SIZE = 22;
+const ICON_SIZE = 20;
 const BAR_GAP = 10;
 
 export function AppTabBar({ state, descriptors, emitter, navigateToTab, insets }: BottomTabBarProps) {
@@ -47,11 +47,13 @@ export function AppTabBar({ state, descriptors, emitter, navigateToTab, insets }
               style={[styles.tab, focused ? [styles.tabActive, { backgroundColor: colors.primary }] : null]}
             >
               <AppIcon name={icon} color={focused ? colors.onPrimary : colors.textMuted} size={ICON_SIZE} />
-              {focused ? (
-                <AppText numberOfLines={1} maxFontSizeMultiplier={LABEL_MAX_FONT_SCALE} style={[styles.label, { color: colors.onPrimary }]}>
-                  {label}
-                </AppText>
-              ) : null}
+              <AppText
+                numberOfLines={1}
+                maxFontSizeMultiplier={LABEL_MAX_FONT_SCALE}
+                style={[styles.label, { color: focused ? colors.onPrimary : colors.textMuted }]}
+              >
+                {label}
+              </AppText>
               {badge ? (
                 <View style={[styles.badge, { backgroundColor: colors.negative }]}>
                   <AppText style={[styles.badgeText, { color: colors.surface }]}>{badge}</AppText>
@@ -78,15 +80,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
   },
   tab: {
+    flex: 1,
     minWidth: MIN_TOUCH_TARGET,
-    height: MIN_TOUCH_TARGET,
+    height: SHIFT_BUTTON_SIZE - spacing.sm * 2,
     borderRadius: radius.pill,
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: spacing.sm,
+    gap: 2,
   },
-  tabActive: { paddingHorizontal: spacing.md + 2, flexShrink: 1 },
+  tabActive: { paddingHorizontal: spacing.xs },
   label: { fontFamily: fonts.bold, fontSize: LABEL_SIZE },
   badge: {
     position: 'absolute',

@@ -67,7 +67,7 @@ class OfferNotifier(private val context: Context) : OfferChannel {
   }
 
   private fun historyIntent(): PendingIntent {
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("motorista://copilot")).setPackage(context.packageName)
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("motorista://offer-hub")).setPackage(context.packageName)
     val flags = PendingIntent.FLAG_UPDATE_CURRENT or if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
     return PendingIntent.getActivity(context, 0, intent, flags)
   }

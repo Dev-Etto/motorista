@@ -27,7 +27,7 @@ jest.mock('@features/shifts/shiftQueries', () => ({
 const METRICS = { frame: { x: 0, y: 0, width: 390, height: 800 }, insets: { top: 0, left: 0, right: 0, bottom: 0 } };
 
 describe('detalhe da jornada', () => {
-  it('mostra o que sobrou, a conta e cada plataforma', async () => {
+  it('mostra o lucro, a conta e cada plataforma', async () => {
     await render(
       <SafeAreaProvider initialMetrics={METRICS}>
         <ShiftDetailScreen />
@@ -35,7 +35,7 @@ describe('detalhe da jornada', () => {
     );
 
     expect(await screen.findByText('Sábado, 7 de novembro')).toBeTruthy();
-    expect(screen.getByRole('header', { name: /^Sobrou · 0?6.* · Meu carro$/ })).toBeTruthy();
+    expect(screen.getByRole('header', { name: /^Lucro · 0?6.* · Meu carro$/ })).toBeTruthy();
     expect(screen.getByRole('header', { name: 'A conta' })).toBeTruthy();
     expect(screen.getByText('Ganhos')).toBeTruthy();
     expect(screen.getByText(/^Custo do veículo · R\$\s0,69\/km$/)).toBeTruthy();
