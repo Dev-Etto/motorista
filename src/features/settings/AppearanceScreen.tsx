@@ -49,7 +49,7 @@ export default function AppearanceScreen() {
       </View>
       <AppText tone="muted">{t('appearance.hint')}</AppText>
       <Card>
-        <ListRow title={t('appearance.cardTitle')} subtitle={t('appearance.cardSubtitle')} chevron onPress={() => router.push('/copilot')} />
+        <ListRow title={t('appearance.cardTitle')} subtitle={t('appearance.cardSubtitle')} chevron onPress={() => router.push('/copilot-card')} />
       </Card>
     </Screen>
   );

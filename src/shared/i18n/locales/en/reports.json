@@ -60,9 +60,9 @@
     "costPerDistance_mi": "Cost per mile ({{currency}})"
   },
   "summary": {
-    "profitIn_week": "Left this week",
-    "profitIn_month": "Left this month",
-    "profitIn_year": "Left this year",
+    "profitIn_week": "Profit this week",
+    "profitIn_month": "Profit this month",
+    "profitIn_year": "Profit this year",
     "shifts_one": "{{count}} shift",
     "shifts_other": "{{count}} shifts",
     "closeAndExport": "Closed month and export",
