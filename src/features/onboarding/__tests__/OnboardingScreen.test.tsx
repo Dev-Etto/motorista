@@ -40,19 +40,18 @@ describe('primeiro uso', () => {
     expect(screen.getByRole('button', { name: 'Começar' })).toBeTruthy();
   });
 
-  it('cada passo mostra o progresso e Pular', async () => {
+  it('Começar leva direto ao cadastro do veículo, com o progresso e Pular', async () => {
     await renderScreen();
     await fireEvent.press(screen.getByRole('button', { name: 'Começar' }));
 
-    expect(screen.getByLabelText('Passo 1 de 5')).toBeTruthy();
-    await fireEvent.press(screen.getByRole('button', { name: 'Pular' }));
-
-    expect(screen.getByLabelText('Passo 3 de 5')).toBeTruthy();
+    expect(screen.getByLabelText('Passo 1 de 2')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Pular' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Pular introdução' })).toBeNull();
   });
 
   it('Pular no cadastro do veículo conclui o primeiro uso', async () => {
     await renderScreen();
-    await fireEvent.press(screen.getByRole('button', { name: 'Pular introdução' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Começar' }));
 
     await fireEvent.press(screen.getByRole('button', { name: 'Pular' }));
 
@@ -62,13 +61,11 @@ describe('primeiro uso', () => {
   it('no fim, mostra o que ficou pronto e a meta como opcional', async () => {
     mockSave.mockResolvedValueOnce(true);
     await renderScreen();
-    await fireEvent.press(screen.getByRole('button', { name: 'Pular introdução' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Começar' }));
     await fireEvent.press(screen.getByRole('button', { name: 'Ver meu custo' }));
-    expect(await screen.findByLabelText('Passo 4 de 5')).toBeTruthy();
+    expect(await screen.findByLabelText('Passo 2 de 2')).toBeTruthy();
 
-    await fireEvent.press(screen.getByRole('button', { name: 'Pular' }));
-    expect(screen.getByText('Assim aparece uma oferta')).toBeTruthy();
-    await fireEvent.press(screen.getByRole('button', { name: 'Pular' }));
+    await fireEvent.press(screen.getByRole('button', { name: 'Continuar' }));
 
     expect(screen.getByRole('header', { name: 'Tudo pronto' })).toBeTruthy();
     expect(screen.getByLabelText(/^Custo do veículo · R\$\s0,69\/km$/)).toBeTruthy();
