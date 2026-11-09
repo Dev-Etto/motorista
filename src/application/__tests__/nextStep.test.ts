@@ -26,6 +26,13 @@ describe('próximo passo', () => {
     expect(await loadNextStep()).toEqual({ id: 'copilot', href: '/copilot-setup' });
   });
 
+  it('sem custos fixos, pede seguro, IPVA e parcela antes do Copiloto', async () => {
+    jest.mocked(vehicleRepository.getCostsAt).mockResolvedValue({ costs: { fullPerKm: 80, fixedMonthly: 0 } } as never);
+    jest.mocked(copilot.getStatus).mockReturnValue({ accessibilityGranted: false } as never);
+
+    expect(await loadNextStep()).toEqual({ id: 'fixed-costs', href: '/vehicle' });
+  });
+
   it('com o Copiloto pronto, segue para a primeira jornada', async () => {
     jest.mocked(vehicleRepository.getCostsAt).mockResolvedValue({ costs: { fullPerKm: 80 } } as never);
     jest.mocked(copilot.getStatus).mockReturnValue({ accessibilityGranted: true } as never);

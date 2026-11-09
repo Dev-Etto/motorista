@@ -69,6 +69,11 @@
       "message": "Tus datos quedan solo en este celular. Con una copia de seguridad, te los llevas si cambias de dispositivo.",
       "action": "Hacer copia de seguridad"
     },
+    "fixedCosts": {
+      "title": "Incluye seguro, impuesto y cuota",
+      "message": "Sin ellos, la ganancia del día parece mayor de lo que es.",
+      "action": "Incluir"
+    },
     "copilot": {
       "title": "Configura el Copiloto",
       "message": "Lee las ofertas y muestra al instante si el viaje vale la pena. Son 2 pasos.",

@@ -7,7 +7,7 @@ export const TABS = [
   { name: HOME_TAB, titleKey: 'tabs.home', icon: 'home' },
   { name: 'shifts', titleKey: 'tabs.shifts', icon: 'shifts' },
   { name: OFFERS_TAB, titleKey: 'tabs.offers', icon: 'offers' },
-  { name: 'more', titleKey: 'tabs.more', icon: 'person' },
+  { name: 'more', titleKey: 'tabs.more', icon: 'more' },
 ] as const satisfies readonly { name: string; titleKey: string; icon: AppIconName }[];
 
 export const iconOfTab = (name: string): AppIconName => TABS.find((tab) => tab.name === name)?.icon ?? 'more';
