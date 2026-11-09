@@ -67,8 +67,7 @@
     "appearance": "Apariencia",
     "copilotCard": "Apariencia de la tarjeta",
     "copilotReading": "Ajustar la lectura",
-    "privacyChoices": "Opciones de privacidad",
-    "workProfile": "Cómo trabajas"
+    "privacyChoices": "Opciones de privacidad"
   },
   "tabs": {
     "home": "Inicio",

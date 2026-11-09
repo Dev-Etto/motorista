@@ -85,11 +85,7 @@
     "editorIntro": "The lowest amount you want to get for each ride. The offer score uses these values.",
     "followGoal": "Calculate from my goal",
     "followGoalHint": "Your goal calls for {{perDistance}} and {{perHour}}. When on, it follows the goal whenever it changes.",
-    "belowCostHint": "An offer below your cost turns red in any mode.",
-    "title_deliveries": "Minimums per delivery",
-    "title_both": "Minimums per ride and delivery",
-    "editorIntro_deliveries": "The lowest amount you want to get for each delivery. The offer score uses these values.",
-    "editorIntro_both": "The lowest amount you want to get for each ride or delivery. The offer score uses these values."
+    "belowCostHint": "An offer below your cost turns red in any mode."
   },
   "setup": {
     "permission": {
@@ -103,9 +99,7 @@
       "fullControl": "This warning is standard and appears for any app with this permission. Copilot reads the screen and shows the card, without tapping anything for you.",
       "shortcut": "The shortcut option can stay off: it would only add an icon to the side of the screen.",
       "blocked": "If you see \"restricted setting\", open the app details, tap the three dots and then Allow restricted settings.",
-      "openAppSettings": "Open app details",
-      "explanation_deliveries": "It reads the offer's price, distance and time to give it a score. It doesn't tap anything, doesn't accept or decline deliveries, and what it reads stays on your phone.",
-      "explanation_both": "It reads the offer's price, distance and time to give it a score. It doesn't tap anything, doesn't accept or decline rides or deliveries, and what it reads stays on your phone."
+      "openAppSettings": "Open app details"
     },
     "ready": {
       "title": "All set to test",

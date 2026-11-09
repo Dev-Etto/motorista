@@ -1,1 +1,0 @@
-export { WorkProfilePicker } from './WorkProfilePicker';

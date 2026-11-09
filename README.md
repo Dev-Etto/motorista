@@ -2,7 +2,7 @@
 
 Documentação interna. Repositório privado, código proprietário (veja [LICENSE](LICENSE)).
 
-App Android para motoristas e entregadores de aplicativo entenderem o custo real, o lucro de cada jornada e se uma oferta vale a pena. Os dados de trabalho ficam no celular do usuário.
+App Android para motoristas de aplicativo, de carro e moto, entenderem o custo real, o lucro de cada jornada e se uma oferta vale a pena. Os dados de trabalho ficam no celular do usuário.
 
 ## Situação do projeto
 

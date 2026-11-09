@@ -1,7 +1,7 @@
 {
   "welcome": {
-    "title": "Saiba quanto sobra de cada corrida e entrega.",
-    "tagline": "Descubra quanto sobra de verdade no seu trabalho com aplicativos de corrida e entrega.",
+    "title": "Saiba quanto sobra de cada corrida.",
+    "tagline": "Descubra quanto sobra de verdade no seu trabalho como motorista de aplicativo.",
     "promise": "Sem conta. Sem anúncios. Seus dados são seus.",
     "privacy": "Seus dados ficam só no seu celular.",
     "start": "Começar",
@@ -30,9 +30,7 @@
     "title": "Deixe tudo pronto para usar",
     "hint": "Assim você não precisa parar no meio da jornada. Tudo fica no seu celular, e você pode mudar depois.",
     "notice": "Quem decide as corridas é sempre você: o app não toca na tela. Cada plataforma tem suas regras sobre apps de apoio, e vale conhecê-las. Dirigindo, a voz avisa: toque no celular só com o veículo parado.",
-    "previewTitle": "Assim aparece uma oferta",
-    "notice_deliveries": "Quem decide as entregas é sempre você: o app não toca na tela. Cada plataforma tem suas regras sobre apps de apoio, e vale conhecê-las. Pilotando, a voz avisa: toque no celular só com o veículo parado.",
-    "notice_both": "Quem decide as corridas e entregas é sempre você: o app não toca na tela. Cada plataforma tem suas regras sobre apps de apoio, e vale conhecê-las. Dirigindo, a voz avisa: toque no celular só com o veículo parado."
+    "previewTitle": "Assim aparece uma oferta"
   },
   "done": {
     "title": "Tudo pronto",
@@ -74,13 +72,7 @@
     "copilot": {
       "title": "Configure o Copiloto",
       "message": "Ele lê as ofertas e mostra na hora se a corrida compensa. Leva 2 passos.",
-      "action": "Configurar",
-      "message_deliveries": "Ele lê as ofertas e mostra na hora se a entrega compensa. Leva 2 passos.",
-      "message_both": "Ele lê as ofertas e mostra na hora se a corrida ou a entrega compensa. Leva 2 passos."
+      "action": "Configurar"
     }
-  },
-  "profile": {
-    "title": "Como você trabalha?",
-    "hint": "Assim o app mostra as plataformas e os textos certos para você. A nota das ofertas é a mesma conta para corridas e entregas. Dá para mudar depois em Mais."
   }
 }

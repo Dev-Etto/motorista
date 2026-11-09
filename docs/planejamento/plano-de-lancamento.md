@@ -1,12 +1,12 @@
 # Motorista — Plano de lançamento pago na Play Store
 
-Atualizado em 08/11/2026 · João Neto (Dev-Etto)
+Atualizado em 09/11/2026 · João Neto (Dev-Etto)
 
 > Documento de planejamento. As issues do repositório seguem a ordem de execução das fases descritas aqui.
 
 ## Resumo
 
-**Objetivo:** transformar o Motorista em um app pago por assinatura na Google Play, completo para motoristas de carro e moto e para entregadores. O código fica fechado, e o app já nasce dentro das regras da Play e das plataformas suportadas. Preço: 7 dias grátis e depois R$ 9,90/mês (planos mensal, trimestral e anual).
+**Objetivo:** transformar o Motorista em um app pago por assinatura na Google Play, completo para motoristas de carro e moto nos apps de corrida. O código fica fechado, e o app já nasce dentro das regras da Play e das plataformas suportadas. Preço: 7 dias grátis e depois R$ 9,90/mês (planos mensal, trimestral e anual).
 
 **Sem data fixa de lançamento (decisão de 08/11).** O app só vai para a Play quando estiver completo e estável. Até lá, o repositório fica fechado e o APK é distribuído manualmente para o grupo de testers. Play Store, cobrança e divulgação ficam para a última fase. Mesmo assim, tudo o que a Play exige do app em si é feito desde já, para não haver retrabalho na hora de publicar.
 
@@ -14,14 +14,14 @@ Atualizado em 08/11/2026 · João Neto (Dev-Etto)
 
 1. **Fechar e organizar:** repositório privado, licença proprietária, distribuição manual para os testers, nome e marca novos.
 2. **Conformidade com a Play no código:** targetSdk 36, build AAB, divulgação de Acessibilidade, consentimento, dados mínimos, backup e relatório de falhas.
-3. **Entregas e moto:** iFood, 99Food e Keeta, Zé Delivery além de Uber, 99 e inDrive. Perfis de carro e moto. Ofertas de coleta + entrega.
+3. **Moto e mais apps de corrida:** carro e moto com custos e mínimos próprios, ofertas das categorias de moto da Uber, 99 e inDrive, relatórios por plataforma e novos apps de corrida escolhidos por dado.
 4. **Estabilização com os testers**, até atingir os critérios de "pronto".
 5. **Play Store e pagamento:** conta, RevenueCat, paywall, ficha, artes, teste interno e revisão de produção (conta de empresa, sem a regra dos 14 dias).
 6. **Lançamento e divulgação.**
 
-**Decisões que continuam valendo:** o app usa internet só para cobrança, suporte, falhas, backup e métricas opcionais. A coleta de dados é mínima e com consentimento. O backup fica na conta Google do usuário. O app só lê e calcula, nunca age pelo motorista. A marca nova vem antes de publicar.
+**Decisões que continuam valendo:** o app usa internet só para cobrança, suporte, falhas, backup e métricas opcionais. A coleta de dados é mínima e com consentimento. O backup fica na conta Google do usuário. O app só lê e calcula, nunca age pelo motorista. A marca nova vem antes de publicar. O app é só para corridas, de carro e de moto: entregas ficam de fora (decisão de 09/11).
 
-**Os maiores riscos:** reprovação na declaração de Acessibilidade, a manutenção de 6 leitores de plataformas diferentes e a reação jurídica das plataformas.
+**Os maiores riscos:** reprovação na declaração de Acessibilidade, a manutenção dos leitores de cada plataforma e a reação jurídica das plataformas.
 
 ## Diagnóstico do projeto hoje
 
@@ -90,7 +90,7 @@ Crie os preços em BRL e deixe a Play converter para os outros países. No lanç
 - **Comparado com o que ele já paga:** os passes de Uber e 99 para motoristas vão de R$ 6,99 a R$ 40,99. O Motorista fica na parte de baixo da faixa.
 - **O problema é do seu lado:** com R$ 9,90 sobram uns R$ 8,40 depois da Play. Isso limita quanto você pode pagar por cliente em anúncio (veja abaixo).
 
-**Decisão: R$ 9,90/mês, para ganhar em volume de assinantes.** Com carro, moto, corridas e entregas num app só, o público é grande o bastante para essa estratégia: preço baixo derruba a principal objeção ("mais um boleto") e acelera o boca a boca. O anual a R$ 89,90 deve ser o plano em destaque na tela de assinatura, porque dá caixa adiantado e reduz cancelamento.
+**Decisão: R$ 9,90/mês, para ganhar em volume de assinantes.** Com carro e moto num app só, o público é grande o bastante para essa estratégia: preço baixo derruba a principal objeção ("mais um boleto") e acelera o boca a boca. O anual a R$ 89,90 deve ser o plano em destaque na tela de assinatura, porque dá caixa adiantado e reduz cancelamento.
 
 **Observação, alternativa para o futuro:** se um dia quiser subir o preço, teste **R$ 12,90 ou R$ 14,90 só para clientes novos**. A Play permite manter o preço antigo de quem já assina, o que vira argumento ("quem entrou cedo paga menos para sempre") e evita cancelamentos. Um bom momento seria depois de ter uma base estável e boas avaliações, ou quando entrar um recurso grande novo.
 
@@ -102,7 +102,6 @@ Sobre o teste: 7 dias é uma boa escolha. No relatório de 2026 da RevenueCat, t
 | --- | --- | --- |
 | Pessoas que trabalham por aplicativo no Brasil | \~1,96 milhão | IBGE, PNAD 2025 |
 | Motoristas de carro com app como trabalho principal | \~905 mil | IBGE, PNAD 2025 |
-| Entregadores de comida e produtos | \~376 mil (o grupo que mais cresceu: +18,6% em um ano) | IBGE, PNAD 2025 |
 | Usuários do maior concorrente (GigU) | \~200 mil, em mais de mil cidades | Imprensa, abril/2026 |
 
 Com só 0,5% dos motoristas de carro (\~4.500 assinantes), o Motorista faria cerca de **R$ 35 mil/mês líquidos** antes de impostos. O mercado comporta um negócio de verdade. O desafio é alcance, não tamanho.
@@ -252,15 +251,14 @@ A exportação manual por arquivo continua existindo. A camada 1 entra no lança
 
 ## Conformidade com a Play e com os apps suportados
 
-O objetivo é que nem a Play nem Uber, 99, inDrive ou iFood tenham motivo concreto para bloquear o app ou punir o motorista que o usa.
+O objetivo é que nem a Play nem Uber, 99 ou inDrive tenham motivo concreto para bloquear o app ou punir o motorista que o usa.
 
 ### O que as plataformas punem
 
 - A Uber proíbe ferramentas de automação com o app ligado, como robôs que recusam corridas sozinhos. Ela chegou a expor o caso de um motorista que recusou 1,1 mil viagens num dia com um app desses, e foi justamente a recusa automática que motivou o processo contra a StopClub.
 - A Uber também desativa contas por fraude, como apps de terceiros que alteram GPS ou tarifa, e por conta usada por outra pessoa.
 - A Justiça já validou o banimento de um motorista que recusou milhares de corridas num mês, tratando isso como abuso do direito de recusar.
-- No iFood, as desativações mais comuns são por fraude, extravio, conta emprestada e muitos cancelamentos.
-- **Ressalva:** não encontrei, nos termos públicos de 99 e iFood, uma regra específica sobre apps que só leem a tela. A leitura de conteúdo não é proibida de forma expressa nas fontes que achei, mas também não é autorizada. Vale a pena reler os termos atuais de cada plataforma antes do lançamento.
+- **Ressalva:** não encontrei, nos termos públicos da 99 e da inDrive, uma regra específica sobre apps que só leem a tela. A leitura de conteúdo não é proibida de forma expressa nas fontes que achei, mas também não é autorizada. Vale a pena reler os termos atuais de cada plataforma antes do lançamento.
 
 ### Regras de produto que o Motorista deve seguir sempre
 
@@ -269,7 +267,7 @@ O objetivo é que nem a Play nem Uber, 99, inDrive ou iFood tenham motivo concre
 3. **Nunca mexer em GPS, rota ou tarifa** das plataformas. A medição de km do Motorista é só dele e só leitura.
 4. **Dados de terceiros:** não guarde nomes de passageiros, telefones nem endereços completos. Do histórico de ofertas, mantenha só o necessário para o cálculo (valor, km, tempo, plataforma, hora e bairro no máximo). Revise o que o `OfferLogDatabase` grava hoje.
 5. **Ler o mínimo necessário:** filtrar por pacote (só os apps suportados, o `rideApps.json` já faz isso), limitar a frequência de capturas de tela e manter a leitura por imagem como opção desligada por padrão.
-6. **Marcas de terceiros:** não use logos nem cores oficiais de Uber, 99 ou iFood no ícone, no nome, na imagem de destaque ou em anúncios. Na descrição, só de forma descritiva ("funciona com ofertas da Uber, 99 e inDrive"), com uma nota de que o app não é afiliado a essas empresas. Isso vale para a Play, que reprova uso de marca alheia, e para evitar briga de marca.
+6. **Marcas de terceiros:** não use logos nem cores oficiais de Uber, 99 ou inDrive no ícone, no nome, na imagem de destaque ou em anúncios. Na descrição, só de forma descritiva ("funciona com ofertas da Uber, 99 e inDrive"), com uma nota de que o app não é afiliado a essas empresas. Isso vale para a Play, que reprova uso de marca alheia, e para evitar briga de marca.
 7. **Discurso público:** o Motorista ajuda a decidir com informação, não "burla" nem "vence o algoritmo". Evite qualquer comunicação que incentive recusa em massa.
 8. **Guarde provas de boa-fé:** um documento técnico curto (o que o app lê, o que guarda, o que não faz) e o histórico das declarações aprovadas pela Play. Se uma plataforma questionar, isso ajuda muito.
 
@@ -296,7 +294,7 @@ O que deixa o app pronto para a Play mesmo sem publicar agora. Os itens marcados
 
 - [ ] Tela de divulgação em destaque com consentimento explícito, antes de abrir as configurações
 - [ ] Nenhuma ação automática (`canPerformGestures="false"`), sem `isAccessibilityTool`
-- [ ] Leitura filtrada pelos pacotes suportados (corridas e entregas). Leitura por imagem desligada por padrão
+- [ ] Leitura filtrada pelos pacotes suportados (apps de corrida). Leitura por imagem desligada por padrão
 - [ ] Cartão flutuante sem cobrir os botões das plataformas
 - [ ] Vídeo de demonstração gravado (para a declaração)
 
@@ -318,7 +316,7 @@ O que deixa o app pronto para a Play mesmo sem publicar agora. Os itens marcados
 
 - [ ] Nada de "grátis", "sem internet" ou doação nos textos (3 idiomas)
 - [ ] Nome e ícone novos, sem marcas nem cores de terceiros
-- [ ] Aviso de "não afiliado a Uber, 99, inDrive, iFood, Keeta, Zé Delivery"
+- [ ] Aviso de "não afiliado a Uber, 99 e inDrive"
 
 **Fase 5 (Console)**
 
@@ -412,12 +410,12 @@ Sem data fixa: cada fase termina quando cumpre o critério de saída, não quand
 | --- | --- | --- | --- |
 | 1. Fechar e organizar | 1–2 semanas | Aviso aos testers. Arquivar os Releases e fechar o repositório. Licença proprietária. Rotina de distribuição manual do APK. Pedido do D-U-N-S e conta de organização na Play Console. Verificação de desenvolvedor Android e registro do pacote. Escolha do nome (busca no INPI, na Play e de domínio) e briefing do logo | Repositório privado, testers recebendo o APK pelo canal novo, nome escolhido |
 | 2. Conformidade com a Play no código | 2–3 semanas | targetSdk 36 e build AAB. Divulgação em destaque da Acessibilidade. Revisão do que o histórico de ofertas guarda. Tela de consentimento (LGPD). Crashlytics e "Relatar problema". Backup automático do Android. Textos sem "grátis" e sem doação. Rascunho da política de privacidade e dos termos. Marca nova no app | Checklist de conformidade da seção "Pré-lançamento" todo marcado, exceto o que depende da conta da Play |
-| 3. Entregas e moto | 6–10 semanas (o maior bloco) | Perfis de motorista, entregador ou os dois. Carro e moto com custos próprios. Modelo de oferta de entrega (coleta + entrega, pedidos agrupados, espera, gorjeta). Leitores para iFood, 99Food, Keeta e Zé Delivery. Relatórios e metas por plataforma e tipo de trabalho. Testers entregadores e motoboys no grupo | Cada plataforma lendo corretamente as ofertas reais dos testers, com fixtures no repositório |
+| 3. Moto e mais apps de corrida | 3–5 semanas | Carro e moto com custos e mínimos de oferta próprios. Ofertas das categorias de moto da Uber, 99 e inDrive. Relatórios e metas por plataforma. Próximo app de corrida escolhido por dado. Testers que rodam de moto no grupo | Ofertas de carro e de moto lidas corretamente nas plataformas suportadas, com fixtures no repositório |
 | 4. Estabilização com testers | 3–4 semanas ou mais | Correções, desempenho, bateria, aparelhos problemáticos. Botão "Salvar no Google Drive" | Leituras corretas em pelo menos 95% das ofertas, mais de 99% das sessões sem falha e 2 semanas sem bug grave |
 | 5. Play Store e pagamento | 5–7 semanas | Conta na Play Console (pode ser criada antes, veja a nota abaixo). RevenueCat, paywall, Segurança dos dados, declarações, ficha e artes. Teste interno. **Teste fechado curto (1–2 semanas, opcional com CNPJ).** Envio para a revisão de produção | App aprovado na revisão |
 | 6. Lançamento | Contínuo | Lançamento gradual (20% → 100%), códigos para os testers, divulgação (seção de divulgação) | — |
 
-Somando tudo, dá uns 4 a 6 meses até o lançamento: algo entre março e maio de 2027. Evite publicar entre meados de dezembro e o começo de janeiro, quando a revisão da Play costuma ser mais lenta.
+Somando tudo, dá uns 3 a 5 meses até o lançamento: algo entre fevereiro e abril de 2027. Evite publicar entre meados de dezembro e o começo de janeiro, quando a revisão da Play costuma ser mais lenta.
 
 **Nota sobre a conta da Play:** criar a conta cedo (US$ 25) não obriga a publicar. Ela permite usar o **teste interno** (até 100 pessoas, sem revisão) para distribuir as builds aos testers, no lugar do APK manual. A atualização fica automática pela Play, e o relatório de pré-lançamento já aponta problemas de conformidade e de compatibilidade. Com conta de empresa, não há a regra dos 12 testadores por 14 dias. Então, quando o app estiver pronto, ele pode ir direto para a revisão de produção. Vale considerar na fase 1 ou 2.
 
@@ -432,7 +430,7 @@ Somando tudo, dá uns 4 a 6 meses até o lançamento: algo entre março e maio d
 | Semanas 2–6 | 3 a 5 criadores de conteúdo para motoristas, com acesso grátis e código para os seguidores | Público exato e confiança |
 | A partir do mês 2 | Google App Campaigns com R$ 20–30/dia, otimizando por "teste iniciado" | Medir o custo real por assinante antes de escalar |
 | Sempre | Indicação: "indique um colega e ganhe 1 mês" (códigos promocionais). Pedido de avaliação no app depois de uma jornada com lucro | Boca a boca e nota alta |
-| Semanas 4–8 | Onda dedicada a entregadores: grupos de motoboys, pontos de apoio, criadores do nicho | Novo público com o mesmo app |
+| Semanas 4–8 | Onda dedicada a quem roda de moto: grupos de mototáxi por app, pontos de apoio, criadores do nicho | Público de moto com o mesmo app |
 
 **Mensagem central:** "Saiba quanto sobra de verdade em cada corrida. Sem conta, sem anúncio, seus dados são seus." Teste variações com os pilotos. A análise de orgânico x pago e de assinantes passivos está na seção de preço e projeção.
 
@@ -440,7 +438,7 @@ Somando tudo, dá uns 4 a 6 meses até o lançamento: algo entre março e maio d
 
 | Arte | Especificação | Obrigatória? | O que mostrar |
 | --- | --- | --- | --- |
-| Ícone | 512 × 512 px, PNG 32 bits, até 1 MB | Sim | O logo novo, legível em tamanho minúsculo, sem cores ou formas de Uber, 99 ou iFood |
+| Ícone | 512 × 512 px, PNG 32 bits, até 1 MB | Sim | O logo novo, legível em tamanho minúsculo, sem cores ou formas de Uber, 99 ou inDrive |
 | Imagem de destaque | 1024 × 500 px, JPEG ou PNG 24 bits sem transparência | Sim | Uma mensagem só ("Saiba quanto sobra de verdade") com o celular mostrando o Copiloto |
 | Capturas de tela | Mínimo 2, até 8 por tipo de aparelho; sugerido 1080 × 1920 px | Sim (mín. 2) | 6 a 8 telas com legenda grande, nesta ordem: lucro do dia, Copiloto avaliando uma oferta, custo por km, meta do mês, calculadora, relatórios, backup e privacidade, planos com 7 dias grátis |
 | Vídeo promocional | Link do YouTube | Não | Os mesmos 30 s do vídeo de lançamento |
@@ -460,43 +458,36 @@ Além da loja: posts 1080 × 1350 e stories 1080 × 1920 para Instagram e WhatsA
 | Cancelamento no 1º mês | Mais de 20% | Ver no Crashlytics se o Copiloto falha em algum aparelho |
 | Nota na Play | Abaixo de 4,3 | Responder todas as avaliações e corrigir o que mais aparece |
 
-## Expansão: entregas, mais apps e marca nova
+## Expansão: moto, mais apps de corrida e marca nova
 
-**Decisão: entregas, moto e os principais apps de entrega entram antes da primeira publicação, no mesmo app e com a mesma assinatura.** A dinâmica é quase igual: uma oferta com valor, distância e tempo para aceitar ou recusar em segundos. Muita gente roda corrida e entrega no mesmo dia, e a 99 já junta os dois públicos no mesmo app de parceiro. Lançar completo também dá um posicionamento mais forte contra a GigU desde o primeiro dia.
-
-### Por que entregas
-
-- São cerca de 376 mil entregadores de comida e produtos, o grupo de trabalhadores por app que mais cresceu entre 2024 e 2025 (+18,6%).
-- O mercado está em guerra: o iFood tem cerca de 80% de participação, a 99Food voltou em 2025 e está perto de 90 cidades, e a Keeta está crescendo em São Paulo. Com mais plataformas e mais promoções, o entregador tem mais ofertas para comparar, que é exatamente onde o Motorista ajuda.
-- Menos concorrência direta: a GigU nasceu focada em corridas.
+**Decisão (09/11/2026): o app é só para corridas, de carro e de moto.** Entregas ficam de fora. A leitura e a nota de ofertas de corrida já foram validadas com motoristas reais, e um app focado num público só é mais certeiro na mensagem, na loja e no produto. Cada plataforma de entrega também seria um leitor novo para manter, com outro modelo de oferta (coleta, pedidos agrupados, espera, gorjeta).
 
 ### O que muda no produto
 
-- **Perfil:** "Motorista", "Entregador" ou "Os dois" no onboarding. Veículos: carro e moto, cada um com seu perfil de custo (a moto tem custo por km bem menor e outro tipo de manutenção). Bicicleta fica de fora: sem combustível, a conta de custo, que é o centro do app, perde o sentido.
-- **Oferta de entrega:** coleta + entrega (duas distâncias), pedidos agrupados (2 ou mais entregas na mesma rota), espera no restaurante e gorjeta. A nota da oferta precisa considerar o tempo total, não só os km.
-- **Leitura:** um leitor novo para cada app (iFood primeiro, depois 99Food, Keeta e Zé Delivery), com fixtures e calibração como os que já existem. Cada plataforma nova é manutenção permanente, porque elas mudam de tela.
-- **Relatórios e metas:** separar ganhos por tipo de trabalho e por plataforma.
-- **Mesmo preço** para tudo, como você quer. É também o momento natural para testar um preço maior só para clientes novos.
+- **Veículos:** carro e moto, cada um com seu perfil de custo (a moto tem custo por km bem menor e outro tipo de manutenção) e com mínimos de oferta próprios. O Copiloto usa os do veículo da jornada. Bicicleta fica de fora: sem combustível, a conta de custo, que é o centro do app, perde o sentido.
+- **Moto nos apps atuais:** Uber, 99 e inDrive têm categorias de moto. As ofertas dessas categorias precisam de fixtures e calibração próprias, como as de carro.
+- **Relatórios e metas:** separar ganhos por plataforma.
+- **Mesmo preço** para tudo.
 
 ### Mais apps de corrida
 
-Uber, 99 e inDrive cobrem a maior parte do mercado, incluindo as categorias de moto e de envios dentro desses mesmos apps. Para escolher o próximo app, use dado: o "Relatar problema" e as métricas mostram em quais cidades estão os usuários e quais apps regionais eles pedem. Priorize por número de pedidos, não por intuição.
+Uber, 99 e inDrive cobrem a maior parte do mercado, incluindo as categorias de moto. Os próximos apps de corrida entram um por vez, escolhidos por dado: os pedidos dos testers, o "Relatar problema" e as métricas mostram em quais cidades estão os usuários e quais apps regionais eles usam. Priorize por número de pedidos, não por intuição. Cada app novo é manutenção permanente, porque as plataformas mudam de tela.
 
 ### Rebranding: sim, e antes do lançamento
 
 Por que trocar o nome:
 
-- "Motorista" exclui o entregador.
+- "Motorista" soa como carro e não fala com quem roda de moto.
 - É um termo genérico. Palavras descritivas costumam ter registro difícil como marca no INPI e se perdem na busca da Play ("motorista" traz centenas de apps).
 - Trocar o nome **antes** de publicar custa quase nada. Depois, você perde reconhecimento, links e o hábito de busca dos usuários.
 
 O que **não** muda: o nome do pacote (`app.motorista.android`). Ele é invisível para o usuário e precisa continuar igual para a atualização por cima do APK funcionar.
 
-Critérios para o nome novo: curto, fácil de falar em áudio de WhatsApp, que lembre lucro, ganho ou "corre", que sirva para carro e moto, corrida e entrega, e que não lembre Uber, 99 ou iFood. Ideias para começar (**nenhuma verificada**, são só ponto de partida):
+Critérios para o nome novo: curto, fácil de falar em áudio de WhatsApp, que lembre lucro, ganho ou "corre", que sirva para quem dirige carro e para quem pilota moto, e que não lembre Uber, 99 ou inDrive. Ideias para começar (**nenhuma verificada**, são só ponto de partida):
 
 - **Sobra:** conversa com a promessa "quanto sobra de verdade".
-- **Corre Certo:** usa a gíria do "corre", comum entre motoristas e entregadores.
-- **Rodou:** curto e de fácil lembrança.
+- **Corre Certo:** usa a gíria do "corre", comum entre motoristas e motociclistas de app.
+- **Rodou:** curto, de fácil lembrança e vale para carro e moto.
 - **Tô no Lucro:** fala a língua do motorista.
 
 Antes de escolher, para cada candidato: busca na base de marcas do INPI (classes de software, como a 9 e a 42), busca na Play Store, domínio `.com.br` e @ nas redes sociais. Depois, peça o registro da marca no INPI (vale a orientação de um especialista). Com o nome escolhido, posso ajudar a desenhar o logo e o ícone.
@@ -507,14 +498,14 @@ Antes de escolher, para cada candidato: busca na base de marcas do INPI (classes
 | --- | --- | --- |
 | Declaração de Acessibilidade reprovada | Média | Divulgação em destaque bem feita, vídeo claro, nenhuma ação automática, descrição da loja citando o uso. A GigU está na Play com o mesmo modelo. Se reprovar, ajuste e reenvie |
 | Reprovação na revisão de produção | Média | Checklist de conformidade completo e teste interno com relatório de pré-lançamento antes de enviar |
-| Plataforma (Uber, 99, iFood) processa o app ou pune quem usa | Baixa no início, cresce com a escala | Regras da seção de conformidade: só ler, nunca agir, não guardar dados de passageiros, não usar marca alheia. A StopClub derrubou a liminar da Uber em 2023. Documentação técnica de boa-fé guardada |
-| Plataforma muda a tela e quebra a leitura | Alta (recorrente, e maior com entregas) | Fixtures, calibração, Crashlytics e "Relatar problema" para detectar rápido. Avisar "leitura em ajuste" no app em vez de falhar em silêncio |
+| Plataforma (Uber, 99, inDrive) processa o app ou pune quem usa | Baixa no início, cresce com a escala | Regras da seção de conformidade: só ler, nunca agir, não guardar dados de passageiros, não usar marca alheia. A StopClub derrubou a liminar da Uber em 2023. Documentação técnica de boa-fé guardada |
+| Plataforma muda a tela e quebra a leitura | Alta (recorrente, e maior a cada app novo) | Fixtures, calibração, Crashlytics e "Relatar problema" para detectar rápido. Avisar "leitura em ajuste" no app em vez de falhar em silêncio |
 | Divergência entre Segurança dos dados, política de privacidade e o que o app coleta | Média | Uma lista única de tudo que sai do aparelho, revisada a cada versão. Revisão jurídica pontual |
 | Perda de confiança dos pilotos (pago, código fechado, internet) | Média | Aviso antecipado, acesso gratuito para pilotos, consentimento desligado por padrão e explicação honesta do que mudou |
 | Nome novo com conflito de marca | Média | Busca no INPI e na Play antes de escolher. Pedido de registro logo depois |
 | Perder a keystore | Baixa, mas catastrófica | Backup em dois lugares antes de tudo |
 | Backup automático passa de 25 MB | Baixa no início | Medir o banco. Deixar histórico antigo de ofertas fora do backup automático |
-| Concorrência da GigU (maior, com plano grátis) | Alta | Posicionamento em privacidade, custo real, preço e entregas. Plano B: plano gratuito limitado |
+| Concorrência da GigU (maior, com plano grátis) | Alta | Posicionamento em privacidade, custo real, preço e moto. Plano B: plano gratuito limitado |
 | Parte fiscal mal resolvida | Média | Contador antes da primeira receita. Conta bancária em BRL |
 
 ## Fontes
@@ -552,7 +543,5 @@ Antes de escolher, para cada candidato: busca na base de marcas do INPI (classes
 - [Uber proíbe ferramentas de automação — Metrópoles](https://www.metropoles.com/colunas/grande-angular/com-app-robo-motorista-da-uber-recusou-11-mil-viagens-em-um-so-dia)
 - [Uber e apps de terceiros que alteram GPS ou tarifa — Garagem 360](https://garagem360.com.br/uber-envia-comunicado-e-proibe-circulacao-de-motoristas/)
 - [Justiça confirma exclusão de motorista por recusas — AutoPapo](https://autopapo.com.br/curta/justica-confirma-exclusao-de-motorista-da-uber-que-recusou-4-421-corridas-no-aplicativo/)
-- [Guerra do delivery: iFood, 99Food e Keeta — Money Times](https://www.moneytimes.com.br/mercado-bilionario-denuncias-e-espionagem-guerra-do-delivery-no-brasil-coloca-ifood-99food-e-keeta-em-rota-de-colisao/)
-- [99Food chega à Baixada Santista — NeoFeed](https://neofeed.com.br/negocios/guerra-do-delivery-no-brasil-chega-a-um-novo-palco/)
 - [Requisitos de artes da Play — AppRadar](https://appradar.com/academy/android-app-screenshots)
 - [CPI de Google App Campaigns — RocketShip HQ](https://www.rocketshiphq.com/?p=5758)

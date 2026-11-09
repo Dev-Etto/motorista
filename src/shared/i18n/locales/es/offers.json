@@ -92,9 +92,7 @@
     "emptyToday": "Ninguna oferta leída hoy.",
     "seeAllShort": "Todas las ofertas",
     "evaluateShort": "Evaluar oferta",
-    "quoteShort": "Presupuesto",
-    "setupMessage_deliveries": "El Copiloto lee las ofertas y muestra si la entrega vale la pena. Configúralo en 2 pasos.",
-    "setupMessage_both": "El Copiloto lee las ofertas y muestra si el viaje o la entrega vale la pena. Configúralo en 2 pasos."
+    "quoteShort": "Presupuesto"
   },
   "correct": {
     "title": "Corregir el resultado",

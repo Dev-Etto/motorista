@@ -8,13 +8,12 @@ import { syncCopilotTargets } from './offerSettings';
 import { syncMonitoredPlatforms } from './platforms';
 import { loadPrivacyChoices } from './privacyChoices';
 import { regionalStore } from './regional';
-import { loadWorkProfile } from './workProfile';
 
 export async function prepareApp(restoreTheme: () => Promise<void>): Promise<{ onboarded: boolean }> {
   await migrate();
   if (__DEV__) await applyRequestedSeed();
   setAnalyticsTransport(firebaseAnalyticsTransport);
   setProblemReportTransport(firestoreProblemReportTransport);
-  await Promise.allSettled([regionalStore.load(), syncCopilotTargets(), syncMonitoredPlatforms(), restoreTheme(), loadPrivacyChoices(), loadWorkProfile()]);
+  await Promise.allSettled([regionalStore.load(), syncCopilotTargets(), syncMonitoredPlatforms(), restoreTheme(), loadPrivacyChoices()]);
   return { onboarded: Boolean(await settingsRepository.get(SETTING_KEYS.onboarded)) };
 }

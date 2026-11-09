@@ -15,8 +15,8 @@ describe('menu Mais', () => {
     expect(MORE_SECTIONS.map((section) => t(`more.section.${section.id}`))).toEqual(['Trabalho', 'App', 'Ajuda e sobre']);
   });
 
-  it('Trabalho reúne o perfil de trabalho, veículos, meta, plataformas e o Copiloto', () => {
-    expect(idsOf('work')).toEqual(['workProfile', 'vehicle', 'goal', 'platforms', 'copilot']);
+  it('Trabalho reúne veículos, meta, plataformas e o Copiloto', () => {
+    expect(idsOf('work')).toEqual(['vehicle', 'goal', 'platforms', 'copilot']);
   });
 
   it('App reúne aparência, idioma, lembretes, backup e permissões', () => {
