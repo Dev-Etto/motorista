@@ -69,7 +69,8 @@
     },
     "read": "Read",
     "accepted": "Accepted",
-    "averageScore": "Average score"
+    "averageScore": "Average score",
+    "seeAll": "See all"
   },
   "hub": {
     "copilotTitle": "Copilot",
@@ -78,14 +79,9 @@
     "reading": "Copilot reading",
     "paused": "Copilot paused",
     "readingHint": "Tap to adjust reading, card and voice",
-    "readToday": "Read today",
-    "acceptedToday": "Accepted",
-    "estimatedToday": "Estimated",
-    "todayTitle": "Today",
-    "emptyToday": "No offers read today.",
-    "seeAllShort": "All offers",
     "evaluateShort": "Evaluate offer",
-    "quoteShort": "Quote"
+    "quoteShort": "Quote",
+    "estimated": "Estimated"
   },
   "correct": {
     "title": "Fix the result",

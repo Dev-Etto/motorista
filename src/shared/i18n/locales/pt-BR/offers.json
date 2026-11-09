@@ -69,7 +69,8 @@
     },
     "read": "Lidas",
     "accepted": "Aceitas",
-    "averageScore": "Nota média"
+    "averageScore": "Nota média",
+    "seeAll": "Ver todas"
   },
   "hub": {
     "copilotTitle": "Copiloto",
@@ -78,14 +79,9 @@
     "reading": "Copiloto lendo",
     "paused": "Copiloto pausado",
     "readingHint": "Toque para ajustar leitura, cartão e voz",
-    "readToday": "Lidas hoje",
-    "acceptedToday": "Aceitas",
-    "estimatedToday": "Estimado",
-    "todayTitle": "Hoje",
-    "emptyToday": "Nenhuma oferta lida hoje.",
-    "seeAllShort": "Todas as ofertas",
     "evaluateShort": "Avaliar oferta",
-    "quoteShort": "Orçamento"
+    "quoteShort": "Orçamento",
+    "estimated": "Estimado"
   },
   "correct": {
     "title": "Corrigir o resultado",

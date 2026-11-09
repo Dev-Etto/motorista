@@ -4,11 +4,32 @@ import OffersHubScreen from '@features/offers/OffersHubScreen';
 
 const mockPush = jest.fn();
 const mockStatus = { current: { accessibilityGranted: false, enabled: false }, history: [] as unknown[], setEnabled: jest.fn() };
-const mockOffers = { recent: [] as unknown[], day: { read: 0, accepted: 0, estimatedCents: 0 }, refresh: jest.fn() };
+const emptyOffers = () => ({
+  period: 'today',
+  custom: { start: '2026-11-09', end: '2026-11-09' },
+  outcome: 'accepted',
+  source: 'all',
+  sources: [] as string[],
+  estimate: { totalCents: 0, trips: 0, byPlatform: [] },
+  summary: { received: 0, accepted: 0, notAccepted: 0, acceptedPerKm: null, notAcceptedPerKm: null },
+  averageScore: null,
+  offers: [] as unknown[],
+  hasMore: false,
+  estimating: false,
+  setPeriod: jest.fn(),
+  setCustom: jest.fn(),
+  setOutcome: jest.fn(),
+  setSource: jest.fn(),
+  showMore: jest.fn(),
+  clear: jest.fn(),
+  reload: jest.fn(),
+  toggleEstimating: jest.fn(),
+});
+const mockOffers = emptyOffers();
 
 jest.mock('expo-router', () => ({ useRouter: () => ({ push: mockPush }) }));
 jest.mock('@features/copilot', () => ({ useCopilotStatus: () => mockStatus }));
-jest.mock('@features/offers/useTodayOffers', () => ({ useTodayOffers: () => mockOffers }));
+jest.mock('@features/offers/useOffers', () => ({ ALL_SOURCES: 'all', useOffers: () => mockOffers }));
 
 const METRICS = { frame: { x: 0, y: 0, width: 390, height: 800 }, insets: { top: 0, left: 0, right: 0, bottom: 0 } };
 const renderHub = () =>
@@ -24,7 +45,7 @@ describe('aba Ofertas', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     Object.assign(mockStatus, { current: { accessibilityGranted: false, enabled: false } });
-    Object.assign(mockOffers, { recent: [], day: { read: 0, accepted: 0, estimatedCents: 0 } });
+    Object.assign(mockOffers, emptyOffers());
   });
 
   it('sem acessibilidade, leva à configuração guiada', async () => {
@@ -32,7 +53,7 @@ describe('aba Ofertas', () => {
 
     await fireEvent.press(screen.getByText('Configurar o Copiloto'));
     expect(mockPush).toHaveBeenCalledWith('/copilot-setup');
-    expect(screen.getByText('Nenhuma oferta lida hoje.')).toBeTruthy();
+    expect(screen.getByText('Nenhuma oferta aqui')).toBeTruthy();
   });
 
   it('lendo, mostra o status e leva aos ajustes do Copiloto', async () => {
@@ -51,14 +72,25 @@ describe('aba Ofertas', () => {
     expect(screen.getByText('Copiloto pausado')).toBeTruthy();
   });
 
-  it('mostra lidas, aceitas e estimado de hoje, e as ofertas do dia', async () => {
-    Object.assign(mockOffers, { recent: [OFFER], day: { read: 14, accepted: 6, estimatedCents: 26800 } });
+  it('mostra lidas, aceitas e estimado do período e a lista filtrada', async () => {
+    Object.assign(mockOffers, {
+      offers: [OFFER],
+      summary: { ...mockOffers.summary, received: 14, accepted: 6 },
+      estimate: { totalCents: 26800, trips: 6, byPlatform: [] },
+    });
     await renderHub();
 
-    expect(screen.getByLabelText('Lidas hoje, 14')).toBeTruthy();
+    expect(screen.getByLabelText('Lidas, 14')).toBeTruthy();
     expect(screen.getByLabelText('Aceitas, 6')).toBeTruthy();
     expect(screen.getByLabelText(/^Estimado, R\$\s268,00$/)).toBeTruthy();
     expect(screen.getByText('R$ 18,40')).toBeTruthy();
+  });
+
+  it('com o filtro em Aceitas e a lista vazia, oferece ver todas', async () => {
+    await renderHub();
+
+    await fireEvent.press(screen.getByRole('button', { name: 'Ver todas' }));
+    expect(mockOffers.setOutcome).toHaveBeenCalledWith('all');
   });
 
   it('as ferramentas abrem a calculadora no modo certo', async () => {
