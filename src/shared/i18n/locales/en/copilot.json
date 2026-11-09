@@ -22,8 +22,8 @@
     "enableAccessibility": "Set up reading",
     "shortcutNotice": "The icon on the side is an Android shortcut, and Copilot works without it. To remove it, open Offer Copilot on the next screen and turn off the shortcut option.",
     "removeShortcut": "Remove the side icon",
-    "batteryNotice_km": "Android may pause Copilot and kilometer tracking to save battery. If offers stop showing up, choose Motorista on the next screen and select Don't optimize.",
-    "batteryNotice_mi": "Android may pause Copilot and mile tracking to save battery. If offers stop showing up, choose Motorista on the next screen and select Don't optimize.",
+    "batteryNotice_km": "Android may pause Copilot and kilometer tracking to save battery. If offers stop showing up, choose Vali on the next screen and select Don't optimize.",
+    "batteryNotice_mi": "Android may pause Copilot and mile tracking to save battery. If offers stop showing up, choose Vali on the next screen and select Don't optimize.",
     "openBattery": "Open battery settings",
     "failedReads_one": "1 reading was incomplete and wasn't shown, so you only see reliable numbers.",
     "failedReads_other": "{{count}} readings were incomplete and weren't shown, so you only see reliable numbers."

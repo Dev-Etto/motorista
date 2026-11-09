@@ -32,7 +32,7 @@ describe('relato de problema', () => {
     const report = build({ ...base, description: ' ', accessibilityGranted: false, readings: ['R$ 13 | xxxxxx'] });
     expect(report).toBe(
       [
-        'Relato do app Motorista',
+        'Relato do app Vali',
         '',
         '(sem descrição)',
         '',

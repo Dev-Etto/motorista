@@ -1,4 +1,4 @@
-export const APP_NAME = 'Motorista';
+export const APP_NAME = 'Vali';
 export const REPOSITORY_URL = 'https://github.com/Dev-Etto/motorista';
 export const RELEASES_URL = `${REPOSITORY_URL}/releases/latest`;
 export const SITE_URL = 'https://motorista-app-br.web.app';

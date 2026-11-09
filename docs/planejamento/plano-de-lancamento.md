@@ -475,6 +475,8 @@ Uber, 99 e inDrive cobrem a maior parte do mercado, incluindo as categorias de m
 
 ### Rebranding: sim, e antes do lançamento
 
+**Decisão (09/11/2026): o nome novo é Vali** ("vale a pena?"). O ícone é o "v" com o ponto de status da jornada no canto. Falta a busca no INPI (classes 9 e 42) e o pedido de registro; o conflito mais próximo encontrado é a Valia Previdência, de finanças.
+
 Por que trocar o nome:
 
 - "Motorista" soa como carro e não fala com quem roda de moto.

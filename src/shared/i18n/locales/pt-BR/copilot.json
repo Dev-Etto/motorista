@@ -22,8 +22,8 @@
     "enableAccessibility": "Configurar a leitura",
     "shortcutNotice": "O ícone na lateral é um atalho do Android, e o Copiloto funciona sem ele. Para tirá-lo, abra Copiloto de ofertas na próxima tela e desligue a opção de atalho.",
     "removeShortcut": "Remover o ícone da lateral",
-    "batteryNotice_km": "O Android pode pausar o Copiloto e a medição de km para economizar bateria. Se as ofertas pararem de aparecer, escolha Motorista na próxima tela e marque Não otimizar.",
-    "batteryNotice_mi": "O Android pode pausar o Copiloto e a medição de milhas para economizar bateria. Se as ofertas pararem de aparecer, escolha Motorista na próxima tela e marque Não otimizar.",
+    "batteryNotice_km": "O Android pode pausar o Copiloto e a medição de km para economizar bateria. Se as ofertas pararem de aparecer, escolha Vali na próxima tela e marque Não otimizar.",
+    "batteryNotice_mi": "O Android pode pausar o Copiloto e a medição de milhas para economizar bateria. Se as ofertas pararem de aparecer, escolha Vali na próxima tela e marque Não otimizar.",
     "openBattery": "Abrir ajustes de bateria",
     "failedReads_one": "1 leitura ficou incompleta e não foi mostrada, para você só ver números confiáveis.",
     "failedReads_other": "{{count}} leituras ficaram incompletas e não foram mostradas, para você só ver números confiáveis."

@@ -79,15 +79,7 @@ export function AppSplash({ ready, shift = 'idle', onDone }: { ready: boolean; s
       <Animated.View style={[styles.icon, { transform: [{ scale: markScale }] }]}>
         <Svg width={SPLASH_ICON_SIZE} height={SPLASH_ICON_SIZE} viewBox={`0 0 ${VIEW_BOX} ${VIEW_BOX}`}>
           <G transform={MARK_TRANSFORM}>
-            <Path
-              d="M28 88V56a14 14 0 0 1 28 0v12M56 56a14 14 0 0 1 28 0v32"
-              fill="none"
-              stroke={INK}
-              strokeWidth={STROKE}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <Path d="M56 82v6" stroke={INK} strokeWidth={STROKE} strokeLinecap="round" />
+            <Path d="M30 46L56 86L82 46" fill="none" stroke={INK} strokeWidth={STROKE} strokeLinecap="round" strokeLinejoin="round" />
           </G>
         </Svg>
         <Animated.View style={[styles.dot, DOT_FRAME, { transform: [{ scale: dotScale }] }]}>
