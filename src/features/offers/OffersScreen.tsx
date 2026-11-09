@@ -71,7 +71,13 @@ export default function OffersScreen() {
         ))}
         {offers.hasMore ? <Button label={t('screen.seeMore')} variant="secondary" onPress={offers.showMore} /> : null}
       </Card>
-      {offers.offers.length === 0 ? <EmptyState title={t('screen.emptyTitle')} message={t('screen.emptyMessage')} /> : null}
+      {offers.offers.length === 0 ? (
+        <EmptyState
+          title={t('screen.emptyTitle')}
+          message={t('screen.emptyMessage')}
+          action={offers.outcome === 'all' ? undefined : <Button label={t('screen.seeAll')} variant="secondary" onPress={() => offers.setOutcome('all')} />}
+        />
+      ) : null}
       <Notice tone="accent" message={t('screen.autoRecord')} />
       <Card title={t('screen.settingsTitle')}>
         <ToggleRow label={t('screen.estimating')} hint={t('screen.estimatingHint')} value={offers.estimating} onChange={offers.toggleEstimating} />

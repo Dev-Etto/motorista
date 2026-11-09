@@ -60,9 +60,9 @@
     "costPerDistance_mi": "Custo por milha ({{currency}})"
   },
   "summary": {
-    "profitIn_week": "Sobrou na semana",
-    "profitIn_month": "Sobrou no mês",
-    "profitIn_year": "Sobrou no ano",
+    "profitIn_week": "Lucro na semana",
+    "profitIn_month": "Lucro no mês",
+    "profitIn_year": "Lucro no ano",
     "shifts_one": "{{count}} jornada",
     "shifts_other": "{{count}} jornadas",
     "closeAndExport": "Mês fechado e exportar",

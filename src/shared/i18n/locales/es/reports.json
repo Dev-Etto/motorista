@@ -60,9 +60,9 @@
     "costPerDistance_mi": "Costo por milla ({{currency}})"
   },
   "summary": {
-    "profitIn_week": "Te quedó en la semana",
-    "profitIn_month": "Te quedó en el mes",
-    "profitIn_year": "Te quedó en el año",
+    "profitIn_week": "Ganancia de la semana",
+    "profitIn_month": "Ganancia del mes",
+    "profitIn_year": "Ganancia del año",
     "shifts_one": "{{count}} jornada",
     "shifts_other": "{{count}} jornadas",
     "closeAndExport": "Mes cerrado y exportar",
