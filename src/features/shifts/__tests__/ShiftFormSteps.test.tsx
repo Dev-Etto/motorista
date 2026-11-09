@@ -79,7 +79,7 @@ describe('nova jornada em etapas', () => {
 
     await fireEvent.press(screen.getByRole('button', { name: 'Continuar' }));
     expect(screen.getByRole('header', { name: 'Gastou com algo hoje?' })).toBeTruthy();
-    expect(screen.getByText(/R\$\s268,00 de ganhos − R\$\s80,04 do carro − R\$\s31,80 de despesas/)).toBeTruthy();
+    expect(screen.getByText(/R\$\s268,00 de ganhos − R\$\s80,04 do veículo − R\$\s31,80 de despesas/)).toBeTruthy();
     expect(screen.queryByLabelText('Pedágio')).toBeNull();
     await fireEvent.press(screen.getByRole('checkbox', { name: 'Pedágio' }));
     expect(screen.getByLabelText('Pedágio')).toBeTruthy();

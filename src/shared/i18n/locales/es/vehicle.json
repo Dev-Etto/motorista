@@ -27,7 +27,7 @@
     "title": "En la práctica",
     "intro": "Un viaje de {{value}} con {{distance}}:",
     "received": "Recibes",
-    "vehicle": "Se va en el carro",
+    "vehicle": "Se va en el vehículo",
     "vehicleDetail": "Combustible, desgaste y otros costos",
     "left": "Te queda"
   },

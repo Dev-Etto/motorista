@@ -76,6 +76,16 @@ describe('custo por km', () => {
     expect(suggestedProfile('car', 'owned', 'cng')).toMatchObject({ fuelPriceCents: 480, consumptionKmPerUnit: 13 });
   });
 
+  it('a moto tem custos próprios de uso pesado', () => {
+    const c = computeCosts(suggestedProfile('motorcycle', 'owned'));
+    expect(c.fuelPerKm).toBeCloseTo(600 / 35);
+    expect(c.oilPerKm).toBeCloseTo(3);
+    expect(c.tiresPerKm).toBeCloseTo(6);
+    expect(c.maintenancePerKm).toBeCloseTo(3);
+    expect(c.variablePerKm).toBeCloseTo(29.14, 1);
+    expect(c.variablePerKm).toBeLessThan(computeCosts(suggestedProfile('car', 'owned')).variablePerKm / 2);
+  });
+
   it('financiado soma parcela, sem depreciação por padrão', () => {
     const base = suggestedProfile('car', 'financed');
     expect(base.depreciationEnabled).toBe(false);

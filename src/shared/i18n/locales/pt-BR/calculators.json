@@ -5,7 +5,7 @@
   },
   "costNotice": {
     "title": "Primeiro, descubra seu custo por {{unit}}",
-    "message": "Sem ele, a calculadora não sabe quanto do valor vai para o carro.",
+    "message": "Sem ele, a calculadora não sabe quanto do valor vai para o veículo.",
     "action": "Calcular custo"
   },
   "offer": {
@@ -17,7 +17,7 @@
     "perDistance": "Paga por {{unit}}",
     "perHour": "Paga por hora",
     "scoreTitle": "Como a nota é calculada?",
-    "scoreExplain": "A nota compara a corrida com o seu custo e os seus mínimos. De {{target}} para cima, ela atinge os dois mínimos. Abaixo de {{belowCost}}, não cobre o custo do carro.",
+    "scoreExplain": "A nota compara a corrida com o seu custo e os seus mínimos. De {{target}} para cima, ela atinge os dois mínimos. Abaixo de {{belowCost}}, não cobre o custo do veículo.",
     "scoreDisclaimer": "A nota só ajuda: quem decide é sempre você.",
     "aboveTarget": "▲ {{percent}}%",
     "belowTarget": "▼ {{percent}}%",
@@ -47,7 +47,7 @@
     "tapToOpen": "Toque para abrir ou remover",
     "open": "Abrir",
     "countReturn": "Contar a volta vazia",
-    "covers": "Cobre o carro em {{distance}} e paga {{perHour}}",
+    "covers": "Cobre o veículo em {{distance}} e paga {{perHour}}",
     "yourMinimum": ", seu mínimo por hora",
     "includesExtras": "Inclui {{value}} de pedágio e extras",
     "savedCount_one": "Salvo (1)",

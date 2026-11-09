@@ -5,7 +5,7 @@
   },
   "costNotice": {
     "title": "First, find out your cost per {{unit}}",
-    "message": "Without it, the calculator can't tell how much of the fare goes to the car.",
+    "message": "Without it, the calculator can't tell how much of the fare goes to the vehicle.",
     "action": "Calculate cost"
   },
   "offer": {
@@ -17,7 +17,7 @@
     "perDistance": "Pays per {{unit}}",
     "perHour": "Pays per hour",
     "scoreTitle": "How is the score calculated?",
-    "scoreExplain": "The score compares the ride with your cost and your minimums. At {{target}} or higher, it meets both minimums. Below {{belowCost}}, it doesn't cover the cost of the car.",
+    "scoreExplain": "The score compares the ride with your cost and your minimums. At {{target}} or higher, it meets both minimums. Below {{belowCost}}, it doesn't cover the cost of the vehicle.",
     "scoreDisclaimer": "The score is only a guide: the decision is always yours.",
     "aboveTarget": "▲ {{percent}}%",
     "belowTarget": "▼ {{percent}}%",
@@ -47,7 +47,7 @@
     "tapToOpen": "Tap to open or remove",
     "open": "Open",
     "countReturn": "Count the empty return",
-    "covers": "Covers the car for {{distance}} and pays {{perHour}}",
+    "covers": "Covers the vehicle for {{distance}} and pays {{perHour}}",
     "yourMinimum": ", your minimum per hour",
     "includesExtras": "Includes {{value}} in tolls and extras",
     "savedCount_one": "Saved (1)",

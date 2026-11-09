@@ -38,7 +38,7 @@ describe('detalhe da jornada', () => {
     expect(screen.getByRole('header', { name: /^Sobrou · 0?6.* · Meu carro$/ })).toBeTruthy();
     expect(screen.getByRole('header', { name: 'A conta' })).toBeTruthy();
     expect(screen.getByText('Ganhos')).toBeTruthy();
-    expect(screen.getByText(/^Custo do carro · R\$\s0,69\/km$/)).toBeTruthy();
+    expect(screen.getByText(/^Custo do veículo · R\$\s0,69\/km$/)).toBeTruthy();
     expect(screen.getByLabelText(/^Uber, R\$\s164,00$/)).toBeTruthy();
   });
 });

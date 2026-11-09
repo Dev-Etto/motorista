@@ -9,7 +9,7 @@
     "outsideTestSent": "Leave the app now. The sample offer will appear in {{seconds}} seconds."
   },
   "screen": {
-    "inControl": "You're in control: Copilot only reads and informs, and you always decide whether to accept or decline. While driving, the voice tells you: only touch your phone when the car is stopped. Each platform has its own rules about helper apps, and it's worth knowing them.",
+    "inControl": "You're in control: Copilot only reads and informs, and you always decide whether to accept or decline. While driving, the voice tells you: only touch your phone when the vehicle is stopped. Each platform has its own rules about helper apps, and it's worth knowing them.",
     "rulesTitle": "You're in control"
   },
   "status": {
@@ -115,7 +115,7 @@
     "active": {
       "title": "Copilot on",
       "explanation": "For every recognized offer, you hear and see where it comes from, the score, and your numbers. If any offer doesn't show up, Calibration helps you adjust.",
-      "driving": "While driving, the voice tells you. Only touch your phone when the car is stopped.",
+      "driving": "While driving, the voice tells you. Only touch your phone when the vehicle is stopped.",
       "testAgain": "Test again"
     },
     "stepOf": "Step {{current}} of {{total}}",

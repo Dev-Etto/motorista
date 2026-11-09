@@ -31,6 +31,6 @@ describe('permissões', () => {
   it('sem notificações, avisa o que se perde', async () => {
     await render(<PermissionsList />);
 
-    expect(screen.getByText('Sem notificações você não verá a jornada em andamento nem os lembretes do carro.')).toBeTruthy();
+    expect(screen.getByText('Sem notificações você não verá a jornada em andamento nem os lembretes do veículo.')).toBeTruthy();
   });
 });

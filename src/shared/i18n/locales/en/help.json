@@ -33,15 +33,15 @@
   },
   "shift": {
     "title": "How to log a shift",
-    "howTo_km": "Tap New shift with the car stopped. Enter earnings, kilometers, and hours, and use the timer or GPS if you prefer.",
-    "howTo_mi": "Tap New shift with the car stopped. Enter earnings, miles, and hours, and use the timer or GPS if you prefer.",
+    "howTo_km": "Tap New shift with the vehicle stopped. Enter earnings, kilometers, and hours, and use the timer or GPS if you prefer.",
+    "howTo_mi": "Tap New shift with the vehicle stopped. Enter earnings, miles, and hours, and use the timer or GPS if you prefer.",
     "partial_km": "Without kilometers, the result stays partial until you fill them in.",
     "partial_mi": "Without miles, the result stays partial until you fill them in."
   },
   "copilotSetup": {
     "title": "How to set up Copilot",
     "guided": "In More, open Offer Copilot and use the guided setup. Then tap Test.",
-    "driving": "While driving, the voice tells you. Only touch your phone when the car is stopped."
+    "driving": "While driving, the voice tells you. Only touch your phone when the vehicle is stopped."
   },
   "copilotMissing": {
     "title": "If Copilot doesn't show up",
@@ -55,7 +55,7 @@
   },
   "moveCard": {
     "title": "Move the card",
-    "drag": "With the car stopped, drag the card wherever you like. The position is saved, and you can move it back to the top on the Copilot screen."
+    "drag": "With the vehicle stopped, drag the card wherever you like. The position is saved, and you can move it back to the top on the Copilot screen."
   },
   "goal": {
     "title": "How the monthly goal works",

@@ -88,8 +88,8 @@ export function computeCosts(p: CostProfile): CostBreakdown {
 export const MAX_FUEL_PRICE_CENTS = 5000;
 
 const FUEL_SUGGESTIONS: Record<FuelType, { priceCents: number; car: number; motorcycle: number }> = {
-  gasoline: { priceCents: 600, car: 11, motorcycle: 30 },
-  ethanol: { priceCents: 420, car: 8, motorcycle: 21 },
+  gasoline: { priceCents: 600, car: 11, motorcycle: 35 },
+  ethanol: { priceCents: 420, car: 8, motorcycle: 24 },
   diesel: { priceCents: 620, car: 13, motorcycle: 30 },
   cng: { priceCents: 480, car: 13, motorcycle: 30 },
   electric: { priceCents: 95, car: 6.5, motorcycle: 25 },
@@ -105,11 +105,11 @@ export function suggestedProfile(kind: VehicleKind, ownership: Ownership, fuel: 
   return {
     ownership,
     ...suggestedFuel(kind, fuel),
-    oilChangeCents: isCar ? 25000 : 6000,
-    oilIntervalKm: isCar ? 10000 : 3000,
+    oilChangeCents: isCar ? 25000 : 4500,
+    oilIntervalKm: isCar ? 10000 : 1500,
     tiresCents: isCar ? 200000 : 60000,
-    tiresLifeKm: isCar ? 50000 : 20000,
-    maintenanceMonthlyCents: isCar ? 30000 : 10000,
+    tiresLifeKm: isCar ? 50000 : 10000,
+    maintenanceMonthlyCents: isCar ? 30000 : 12000,
     insuranceMonthlyCents: 0,
     ipvaYearlyCents: 0,
     licensingYearlyCents: 0,

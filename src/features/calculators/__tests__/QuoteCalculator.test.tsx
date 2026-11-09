@@ -47,12 +47,12 @@ describe('orçamento de corrida particular', () => {
     await fireEvent.changeText(screen.getByLabelText('Tempo, min'), '45');
 
     expect(screen.getByText('Cobre')).toBeTruthy();
-    expect(screen.getByText(/Cobre o carro em 28 km e paga R\$ 45,00\/h, seu mínimo por hora/)).toBeTruthy();
+    expect(screen.getByText(/Cobre o veículo em 28 km e paga R\$ 45,00\/h, seu mínimo por hora/)).toBeTruthy();
     expect(screen.getByText('Salvar')).toBeTruthy();
     expect(screen.getByText('Enviar ao cliente')).toBeTruthy();
 
     await fireEvent(screen.getByLabelText('Contar a volta vazia'), 'valueChange', true);
-    expect(screen.getByText(/Cobre o carro em 53 km/)).toBeTruthy();
+    expect(screen.getByText(/Cobre o veículo em 53 km/)).toBeTruthy();
   });
 
   it('Salvos no topo mostra os orçamentos, e abrir um carrega os valores', async () => {
