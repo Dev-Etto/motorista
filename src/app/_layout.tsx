@@ -24,7 +24,6 @@ const SCREENS = [
   { name: 'vehicle', titleKey: 'screens.vehicle' },
   { name: 'goal', titleKey: 'screens.goal' },
   { name: 'copilot', titleKey: 'screens.copilot' },
-  { name: 'offers', titleKey: 'screens.offers' },
   { name: 'calculator', titleKey: 'screens.calculator' },
   { name: 'copilot-setup', titleKey: 'screens.copilotSetup' },
   { name: 'copilot-card', titleKey: 'screens.copilotCard' },

@@ -76,7 +76,8 @@
     },
     "read": "Leídas",
     "accepted": "Aceptadas",
-    "averageScore": "Nota media"
+    "averageScore": "Nota media",
+    "seeAll": "Ver todas"
   },
   "hub": {
     "copilotTitle": "Copiloto",
@@ -85,14 +86,9 @@
     "reading": "Copiloto leyendo",
     "paused": "Copiloto en pausa",
     "readingHint": "Toca para ajustar lectura, tarjeta y voz",
-    "readToday": "Leídas hoy",
-    "acceptedToday": "Aceptadas",
-    "estimatedToday": "Estimado",
-    "todayTitle": "Hoy",
-    "emptyToday": "Ninguna oferta leída hoy.",
-    "seeAllShort": "Todas las ofertas",
     "evaluateShort": "Evaluar oferta",
-    "quoteShort": "Presupuesto"
+    "quoteShort": "Presupuesto",
+    "estimated": "Estimado"
   },
   "correct": {
     "title": "Corregir el resultado",
